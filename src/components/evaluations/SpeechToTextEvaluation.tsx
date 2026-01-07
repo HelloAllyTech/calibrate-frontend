@@ -1,6 +1,16 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+} from "recharts";
 
 type AudioTextRow = {
   id: string;
@@ -65,6 +75,29 @@ const providers = [
   "google",
   "sarvam",
 ];
+
+// Pastel color palette for providers
+const pastelColors = [
+  "#A8D5E2", // Light blue
+  "#F4A5AE", // Light pink
+  "#B5E5CF", // Light green
+  "#FFD3A5", // Light orange
+  "#C7B9FF", // Light purple
+  "#FFE5B4", // Light peach
+  "#B8E6B8", // Light mint
+  "#E6B8E6", // Light lavender
+  "#B8D4E6", // Light sky blue
+  "#FFB8D4", // Light rose
+];
+
+// Generate color mapping for providers
+const getProviderColorMap = (providerNames: string[]): Map<string, string> => {
+  const colorMap = new Map<string, string>();
+  providerNames.forEach((provider, index) => {
+    colorMap.set(provider, pastelColors[index % pastelColors.length]);
+  });
+  return colorMap;
+};
 
 export function SpeechToTextEvaluation() {
   const [rows, setRows] = useState<AudioTextRow[]>([
@@ -300,45 +333,6 @@ export function SpeechToTextEvaluation() {
       }
     }
   };
-
-  // TEMPORARY: Start polling with hardcoded task ID on mount
-  useEffect(() => {
-    const taskId = "78776f6d-1e0f-4ba2-b93c-1da6082adbdd";
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-
-    if (!backendUrl) {
-      console.error("BACKEND_URL environment variable is not set");
-      return;
-    }
-
-    // Set initial state
-    setIsEvaluating(true);
-    setEvaluationResult({
-      task_id: taskId,
-      status: "in_progress",
-    });
-    setActiveTab("leaderboard");
-    setActiveProviderTab(null);
-
-    // Start polling immediately
-    const poll = () => {
-      pollTaskStatus(taskId, backendUrl);
-    };
-
-    // Poll immediately
-    poll();
-
-    // Then poll every 2 seconds
-    pollingIntervalRef.current = setInterval(poll, 2000);
-
-    // Cleanup on unmount
-    return () => {
-      if (pollingIntervalRef.current) {
-        clearInterval(pollingIntervalRef.current);
-        pollingIntervalRef.current = null;
-      }
-    };
-  }, []);
 
   const handleEvaluate = async () => {
     // Validate all rows (same check as addRow)
@@ -969,15 +963,276 @@ export function SpeechToTextEvaluation() {
                     </div>
                   </div>
                 )}
-              {evaluationResult.leaderboard_metrics_path && (
-                <div className="border rounded-xl p-4 bg-muted/10">
-                  <img
-                    src={evaluationResult.leaderboard_metrics_path}
-                    alt="Leaderboard metrics"
-                    className="w-full h-auto rounded-lg"
-                  />
-                </div>
-              )}
+              {/* Charts Section */}
+              {evaluationResult.leaderboard_summary &&
+                evaluationResult.leaderboard_summary.length > 0 &&
+                (() => {
+                  const providerNames =
+                    evaluationResult.leaderboard_summary.map((s) => s.run);
+                  const colorMap = getProviderColorMap(providerNames);
+                  return (
+                    <div className="space-y-6">
+                      {/* Row 1: WER and String Similarity */}
+                      <div className="grid grid-cols-2 gap-6">
+                        {/* WER Chart */}
+                        <div className="border rounded-xl p-4 bg-muted/10">
+                          <h3 className="text-[15px] font-semibold mb-4">
+                            WER
+                          </h3>
+                          <ResponsiveContainer width="100%" height={300}>
+                            <BarChart
+                              data={evaluationResult.leaderboard_summary.map(
+                                (s) => ({
+                                  provider: s.run,
+                                  value: s.wer,
+                                })
+                              )}
+                              margin={{
+                                top: 5,
+                                right: 30,
+                                left: 20,
+                                bottom: 80,
+                              }}
+                            >
+                              <CartesianGrid strokeDasharray="3 3" />
+                              <XAxis
+                                dataKey="provider"
+                                tick={{
+                                  fontSize: 13,
+                                  fill: "currentColor",
+                                  fontWeight: 500,
+                                }}
+                                angle={-45}
+                                textAnchor="end"
+                                height={100}
+                              />
+                              <YAxis tick={{ fontSize: 12 }} />
+                              <Tooltip />
+                              <Bar dataKey="value">
+                                {evaluationResult.leaderboard_summary.map(
+                                  (entry, index) => (
+                                    <Cell
+                                      key={`cell-${index}`}
+                                      fill={
+                                        colorMap.get(entry.run) || "#A8D5E2"
+                                      }
+                                    />
+                                  )
+                                )}
+                              </Bar>
+                            </BarChart>
+                          </ResponsiveContainer>
+                        </div>
+
+                        {/* String Similarity Chart */}
+                        <div className="border rounded-xl p-4 bg-muted/10">
+                          <h3 className="text-[15px] font-semibold mb-4">
+                            String Similarity
+                          </h3>
+                          <ResponsiveContainer width="100%" height={300}>
+                            <BarChart
+                              data={evaluationResult.leaderboard_summary.map(
+                                (s) => ({
+                                  provider: s.run,
+                                  value: s.string_similarity,
+                                })
+                              )}
+                              margin={{
+                                top: 5,
+                                right: 30,
+                                left: 20,
+                                bottom: 80,
+                              }}
+                            >
+                              <CartesianGrid strokeDasharray="3 3" />
+                              <XAxis
+                                dataKey="provider"
+                                tick={{
+                                  fontSize: 13,
+                                  fill: "currentColor",
+                                  fontWeight: 500,
+                                }}
+                                angle={-45}
+                                textAnchor="end"
+                                height={100}
+                              />
+                              <YAxis tick={{ fontSize: 12 }} />
+                              <Tooltip />
+                              <Bar dataKey="value">
+                                {evaluationResult.leaderboard_summary.map(
+                                  (entry, index) => (
+                                    <Cell
+                                      key={`cell-${index}`}
+                                      fill={
+                                        colorMap.get(entry.run) || "#A8D5E2"
+                                      }
+                                    />
+                                  )
+                                )}
+                              </Bar>
+                            </BarChart>
+                          </ResponsiveContainer>
+                        </div>
+                      </div>
+
+                      {/* Row 2: LLM Judge Score and TTFB */}
+                      <div className="grid grid-cols-2 gap-6">
+                        {/* LLM Judge Score Chart */}
+                        <div className="border rounded-xl p-4 bg-muted/10">
+                          <h3 className="text-[15px] font-semibold mb-4">
+                            LLM Judge Score
+                          </h3>
+                          <ResponsiveContainer width="100%" height={300}>
+                            <BarChart
+                              data={evaluationResult.leaderboard_summary.map(
+                                (s) => ({
+                                  provider: s.run,
+                                  value: s.llm_judge_score,
+                                })
+                              )}
+                              margin={{
+                                top: 5,
+                                right: 30,
+                                left: 20,
+                                bottom: 80,
+                              }}
+                            >
+                              <CartesianGrid strokeDasharray="3 3" />
+                              <XAxis
+                                dataKey="provider"
+                                tick={{
+                                  fontSize: 13,
+                                  fill: "currentColor",
+                                  fontWeight: 500,
+                                }}
+                                angle={-45}
+                                textAnchor="end"
+                                height={100}
+                              />
+                              <YAxis tick={{ fontSize: 12 }} />
+                              <Tooltip />
+                              <Bar dataKey="value">
+                                {evaluationResult.leaderboard_summary.map(
+                                  (entry, index) => (
+                                    <Cell
+                                      key={`cell-${index}`}
+                                      fill={
+                                        colorMap.get(entry.run) || "#A8D5E2"
+                                      }
+                                    />
+                                  )
+                                )}
+                              </Bar>
+                            </BarChart>
+                          </ResponsiveContainer>
+                        </div>
+
+                        {/* TTFB Chart */}
+                        <div className="border rounded-xl p-4 bg-muted/10">
+                          <h3 className="text-[15px] font-semibold mb-4">
+                            TTFB (s)
+                          </h3>
+                          <ResponsiveContainer width="100%" height={300}>
+                            <BarChart
+                              data={evaluationResult.leaderboard_summary.map(
+                                (s) => ({
+                                  provider: s.run,
+                                  value: s.ttfb,
+                                })
+                              )}
+                              margin={{
+                                top: 5,
+                                right: 30,
+                                left: 20,
+                                bottom: 80,
+                              }}
+                            >
+                              <CartesianGrid strokeDasharray="3 3" />
+                              <XAxis
+                                dataKey="provider"
+                                tick={{
+                                  fontSize: 13,
+                                  fill: "currentColor",
+                                  fontWeight: 500,
+                                }}
+                                angle={-45}
+                                textAnchor="end"
+                                height={100}
+                              />
+                              <YAxis tick={{ fontSize: 12 }} />
+                              <Tooltip />
+                              <Bar dataKey="value">
+                                {evaluationResult.leaderboard_summary.map(
+                                  (entry, index) => (
+                                    <Cell
+                                      key={`cell-${index}`}
+                                      fill={
+                                        colorMap.get(entry.run) || "#A8D5E2"
+                                      }
+                                    />
+                                  )
+                                )}
+                              </Bar>
+                            </BarChart>
+                          </ResponsiveContainer>
+                        </div>
+                      </div>
+
+                      {/* Row 3: Processing Time */}
+                      <div className="grid grid-cols-2 gap-6">
+                        {/* Processing Time Chart */}
+                        <div className="border rounded-xl p-4 bg-muted/10">
+                          <h3 className="text-[15px] font-semibold mb-4">
+                            Processing Time (s)
+                          </h3>
+                          <ResponsiveContainer width="100%" height={300}>
+                            <BarChart
+                              data={evaluationResult.leaderboard_summary.map(
+                                (s) => ({
+                                  provider: s.run,
+                                  value: s.processing_time,
+                                })
+                              )}
+                              margin={{
+                                top: 5,
+                                right: 30,
+                                left: 20,
+                                bottom: 80,
+                              }}
+                            >
+                              <CartesianGrid strokeDasharray="3 3" />
+                              <XAxis
+                                dataKey="provider"
+                                tick={{
+                                  fontSize: 13,
+                                  fill: "currentColor",
+                                  fontWeight: 500,
+                                }}
+                                angle={-45}
+                                textAnchor="end"
+                                height={100}
+                              />
+                              <YAxis tick={{ fontSize: 12 }} />
+                              <Tooltip />
+                              <Bar dataKey="value">
+                                {evaluationResult.leaderboard_summary.map(
+                                  (entry, index) => (
+                                    <Cell
+                                      key={`cell-${index}`}
+                                      fill={
+                                        colorMap.get(entry.run) || "#A8D5E2"
+                                      }
+                                    />
+                                  )
+                                )}
+                              </Bar>
+                            </BarChart>
+                          </ResponsiveContainer>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
             </div>
           )}
 
