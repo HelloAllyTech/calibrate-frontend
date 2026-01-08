@@ -1067,3 +1067,15 @@ Done! I've added a confirmation dialog for removing tools from the agent. The di
 
 ---
 
+_**User (2026-01-07 12:48Z)**_
+
+make the table of agents in the agents tab have the same css as the list of tools 
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+
+
+---
+
