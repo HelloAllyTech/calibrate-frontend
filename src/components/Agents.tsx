@@ -406,7 +406,14 @@ function NewAgentDialog({
         },
         body: JSON.stringify({
           name: agentName.trim(),
-          config: {},
+          config: {
+            system_prompt: "You are a helpful assistant.",
+            stt: { provider: "google" },
+            tts: { provider: "google" },
+            llm: { model: "google/gemini-3-flash-preview" },
+            settings: { agent_speaks_first: false },
+            system_tools: { end_call: true },
+          },
         }),
       });
 

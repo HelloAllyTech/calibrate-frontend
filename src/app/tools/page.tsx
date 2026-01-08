@@ -10,8 +10,6 @@ type Parameter = {
   name: string;
   required: boolean;
   description: string;
-  enumValues: string[];
-  newEnumValue: string;
 };
 
 type ToolData = {
@@ -48,8 +46,6 @@ export default function ToolsPage() {
         name: "",
         required: true,
         description: "",
-        enumValues: [],
-        newEnumValue: "",
       },
     ]);
   };
@@ -62,28 +58,6 @@ export default function ToolsPage() {
     setParameters(
       parameters.map((p) => (p.id === id ? { ...p, ...updates } : p))
     );
-  };
-
-  const addEnumValue = (id: string) => {
-    const param = parameters.find((p) => p.id === id);
-    if (param && param.newEnumValue.trim()) {
-      const trimmedValue = param.newEnumValue.trim();
-      if (!param.enumValues.includes(trimmedValue)) {
-        updateParameter(id, {
-          enumValues: [...param.enumValues, trimmedValue],
-          newEnumValue: "",
-        });
-      }
-    }
-  };
-
-  const removeEnumValue = (paramId: string, index: number) => {
-    const param = parameters.find((p) => p.id === paramId);
-    if (param) {
-      updateParameter(paramId, {
-        enumValues: param.enumValues.filter((_, i) => i !== index),
-      });
-    }
   };
 
   // Fetch tools from backend
@@ -172,7 +146,6 @@ export default function ToolsPage() {
           type: param.dataType,
           description: param.description,
           required: param.required,
-          ...(param.enumValues.length > 0 && { enum: param.enumValues }),
         };
       });
 
@@ -270,8 +243,6 @@ export default function ToolsPage() {
               dataType: paramConfig.type || "string",
               required: paramConfig.required ?? true,
               description: paramConfig.description || "",
-              enumValues: paramConfig.enum || [],
-              newEnumValue: "",
             });
           }
         );
@@ -309,7 +280,6 @@ export default function ToolsPage() {
             type: param.dataType,
             description: param.description,
             required: param.required,
-            ...(param.enumValues.length > 0 && { enum: param.enumValues }),
           };
         }
       });
@@ -821,87 +791,6 @@ export default function ToolsPage() {
                             placeholder="This field will be passed to the LLM and should describe in detail what the parameter is for and how it should be populated"
                             className="w-full px-4 py-3 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none"
                           />
-                        </div>
-
-                        {/* Enum Values */}
-                        <div>
-                          <label className="block text-sm font-medium mb-2">
-                            Enum Values (optional)
-                          </label>
-                          <div className="flex gap-2">
-                            <input
-                              type="text"
-                              value={param.newEnumValue}
-                              onChange={(e) =>
-                                updateParameter(param.id, {
-                                  newEnumValue: e.target.value,
-                                })
-                              }
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                  e.preventDefault();
-                                  addEnumValue(param.id);
-                                }
-                              }}
-                              placeholder="Enter an enum value"
-                              className="flex-1 h-10 px-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
-                            />
-                            <button
-                              onClick={() => addEnumValue(param.id)}
-                              className="w-10 h-10 rounded-md border border-border bg-background hover:bg-muted/50 flex items-center justify-center transition-colors cursor-pointer"
-                            >
-                              <svg
-                                className="w-5 h-5"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth={2}
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M12 4.5v15m7.5-7.5h-15"
-                                />
-                              </svg>
-                            </button>
-                          </div>
-                          {param.enumValues.length > 0 && (
-                            <div className="flex flex-wrap gap-2 mt-3">
-                              {param.enumValues.map((value, index) => (
-                                <div
-                                  key={index}
-                                  className="flex items-center gap-1 px-3 py-1 rounded-md bg-muted text-sm"
-                                >
-                                  <span>{value}</span>
-                                  <button
-                                    onClick={() =>
-                                      removeEnumValue(param.id, index)
-                                    }
-                                    className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-                                  >
-                                    <svg
-                                      className="w-4 h-4"
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                      stroke="currentColor"
-                                      strokeWidth={2}
-                                    >
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M6 18L18 6M6 6l12 12"
-                                      />
-                                    </svg>
-                                  </button>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                          <p className="text-sm text-muted-foreground mt-2">
-                            Add predefined values that the LLM can select from.
-                            If no values are provided, the LLM can use any
-                            string value.
-                          </p>
                         </div>
 
                         {/* Delete button */}

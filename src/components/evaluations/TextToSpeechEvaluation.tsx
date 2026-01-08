@@ -60,7 +60,7 @@ type EvaluationResult = {
 const providers = [
   "cartesia",
   "openai",
-  "whisper",
+  "orpheus",
   "google",
   "elevenlabs",
   "sarvam",

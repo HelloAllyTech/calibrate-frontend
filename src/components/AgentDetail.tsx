@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 
@@ -26,22 +26,22 @@ type ToolData = {
 };
 
 const sttProviders = [
-  "deepgram",
-  "openai",
-  "cartesia",
-  "elevenlabs",
-  "whisper",
-  "google",
-  "sarvam",
+  { label: "deepgram", value: "deepgram" },
+  { label: "openai", value: "openai" },
+  { label: "cartesia", value: "cartesia" },
+  { label: "elevenlabs", value: "elevenlabs" },
+  { label: "whisper", value: "groq" },
+  { label: "google", value: "google" },
+  { label: "sarvam", value: "sarvam" },
 ];
 
 const ttsProviders = [
-  "cartesia",
-  "openai",
-  "whisper",
-  "google",
-  "elevenlabs",
-  "sarvam",
+  { label: "cartesia", value: "cartesia" },
+  { label: "openai", value: "openai" },
+  { label: "orpheus", value: "groq" },
+  { label: "google", value: "google" },
+  { label: "elevenlabs", value: "elevenlabs" },
+  { label: "sarvam", value: "sarvam" },
 ];
 
 type LLMModel = {
@@ -727,8 +727,8 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
     router.push(`?${params.toString()}`, { scroll: false });
   };
   const [systemPrompt, setSystemPrompt] = useState("");
-  const [sttProvider, setSttProvider] = useState<string>("");
-  const [ttsProvider, setTtsProvider] = useState<string>("");
+  const [sttProvider, setSttProvider] = useState<string>("google");
+  const [ttsProvider, setTtsProvider] = useState<string>("google");
   const [selectedLLM, setSelectedLLM] = useState<LLMModel | null>({
     id: "google/gemini-3-flash-preview",
     name: "Gemini 3 Flash Preview",
@@ -736,6 +736,11 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
   const [llmModalOpen, setLlmModalOpen] = useState(false);
   const [llmSearchQuery, setLlmSearchQuery] = useState("");
   const [endConversationEnabled, setEndConversationEnabled] = useState(true);
+  const [agentSpeaksFirst, setAgentSpeaksFirst] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [showSaveToast, setShowSaveToast] = useState(false);
+  const saveRef = useRef<() => void>(() => {});
+  const isSavingRef = useRef(false);
   const [toolsSearchQuery, setToolsSearchQuery] = useState("");
   const [addToolDialogOpen, setAddToolDialogOpen] = useState(false);
   const [addToolDialogSearchQuery, setAddToolDialogSearchQuery] = useState("");
@@ -760,43 +765,70 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
   const [dataPointDataType, setDataPointDataType] = useState("string");
   const [dataPointIdentifier, setDataPointIdentifier] = useState("");
   const [dataPointDescription, setDataPointDescription] = useState("");
-  const [dataPointEnumValues, setDataPointEnumValues] = useState<string[]>([]);
-  const [dataPointNewEnumValue, setDataPointNewEnumValue] = useState("");
+  const [isCreatingDataPoint, setIsCreatingDataPoint] = useState(false);
+  const [createDataPointError, setCreateDataPointError] = useState<
+    string | null
+  >(null);
+
+  // Data extraction fields list state
+  type DataExtractionFieldData = {
+    uuid: string;
+    type: string;
+    name: string;
+    description: string;
+    agent_id: string;
+    created_at: string;
+    updated_at: string;
+  };
+  const [dataExtractionFields, setDataExtractionFields] = useState<
+    DataExtractionFieldData[]
+  >([]);
+  const [dataExtractionFieldsLoading, setDataExtractionFieldsLoading] =
+    useState(false);
+  const [dataExtractionFieldsError, setDataExtractionFieldsError] = useState<
+    string | null
+  >(null);
 
   // Reset data point form
   const resetDataPointForm = () => {
     setDataPointDataType("string");
     setDataPointIdentifier("");
     setDataPointDescription("");
-    setDataPointEnumValues([]);
-    setDataPointNewEnumValue("");
-  };
-
-  // Add enum value for data point
-  const addDataPointEnumValue = () => {
-    if (dataPointNewEnumValue.trim()) {
-      const trimmedValue = dataPointNewEnumValue.trim();
-      if (!dataPointEnumValues.includes(trimmedValue)) {
-        setDataPointEnumValues([...dataPointEnumValues, trimmedValue]);
-        setDataPointNewEnumValue("");
-      }
-    }
-  };
-
-  // Remove enum value for data point
-  const removeDataPointEnumValue = (index: number) => {
-    setDataPointEnumValues(dataPointEnumValues.filter((_, i) => i !== index));
+    setCreateDataPointError(null);
   };
 
   // Evaluation criteria sidebar state
   const [addCriteriaSidebarOpen, setAddCriteriaSidebarOpen] = useState(false);
   const [criteriaName, setCriteriaName] = useState("");
   const [criteriaInstructions, setCriteriaInstructions] = useState("");
+  const [isCreatingCriteria, setIsCreatingCriteria] = useState(false);
+  const [createCriteriaError, setCreateCriteriaError] = useState<string | null>(
+    null
+  );
+
+  // Evaluation criteria list state
+  type EvaluationCriteriaData = {
+    uuid: string;
+    name: string;
+    description: string;
+    agent_id: string;
+    created_at: string;
+    updated_at: string;
+  };
+  const [evaluationCriteria, setEvaluationCriteria] = useState<
+    EvaluationCriteriaData[]
+  >([]);
+  const [evaluationCriteriaLoading, setEvaluationCriteriaLoading] =
+    useState(false);
+  const [evaluationCriteriaError, setEvaluationCriteriaError] = useState<
+    string | null
+  >(null);
 
   // Reset criteria form
   const resetCriteriaForm = () => {
     setCriteriaName("");
     setCriteriaInstructions("");
+    setCreateCriteriaError(null);
   };
 
   useEffect(() => {
@@ -826,45 +858,39 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
 
         // Initialize form fields from agent config if available
         if (data.config) {
-          setSystemPrompt(
-            data.config.system_prompt || "You are a helpful assistant."
-          );
-          if (data.config.stt_provider) {
-            setSttProvider(data.config.stt_provider);
+          if (data.config.system_prompt) {
+            setSystemPrompt(data.config.system_prompt);
           }
-          if (data.config.tts_provider) {
-            setTtsProvider(data.config.tts_provider);
+          if (data.config.stt?.provider) {
+            setSttProvider(data.config.stt.provider);
           }
-        } else {
-          setSystemPrompt("You are a helpful assistant.");
-        }
-
-        // Update header when agent is loaded
-        if (onHeaderUpdate) {
-          onHeaderUpdate(
-            <div className="flex items-center gap-3">
-              <Link
-                href="/agents"
-                className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted transition-colors cursor-pointer"
-                title="Back to agents"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.75 19.5L8.25 12l7.5-7.5"
-                  />
-                </svg>
-              </Link>
-              <h1 className="text-lg font-semibold">{data.name}</h1>
-            </div>
-          );
+          if (data.config.tts?.provider) {
+            setTtsProvider(data.config.tts.provider);
+          }
+          if (data.config.llm?.model) {
+            // Find the matching LLM model from the providers list
+            const modelId = data.config.llm.model;
+            let foundModel: LLMModel | null = null;
+            for (const provider of llmProviders) {
+              const model = provider.models.find((m) => m.id === modelId);
+              if (model) {
+                foundModel = model;
+                break;
+              }
+            }
+            if (foundModel) {
+              setSelectedLLM(foundModel);
+            } else {
+              // If model not found in list, create a basic entry
+              setSelectedLLM({ id: modelId, name: modelId });
+            }
+          }
+          if (data.config.settings?.agent_speaks_first !== undefined) {
+            setAgentSpeaksFirst(data.config.settings.agent_speaks_first);
+          }
+          if (data.config.system_tools?.end_call !== undefined) {
+            setEndConversationEnabled(data.config.system_tools.end_call);
+          }
         }
       } catch (err) {
         console.error("Error fetching agent:", err);
@@ -966,6 +992,224 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
 
     fetchAllTools();
   }, []);
+
+  // Fetch evaluation criteria for this agent
+  useEffect(() => {
+    const fetchEvaluationCriteria = async () => {
+      if (!agentUuid) return;
+
+      try {
+        setEvaluationCriteriaLoading(true);
+        setEvaluationCriteriaError(null);
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+        if (!backendUrl) {
+          throw new Error("BACKEND_URL environment variable is not set");
+        }
+
+        const response = await fetch(
+          `${backendUrl}/evaluation-criteria/agent/${agentUuid}`,
+          {
+            method: "GET",
+            headers: {
+              accept: "application/json",
+              "ngrok-skip-browser-warning": "true",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch evaluation criteria");
+        }
+
+        const data: EvaluationCriteriaData[] = await response.json();
+        setEvaluationCriteria(data);
+      } catch (err) {
+        console.error("Error fetching evaluation criteria:", err);
+        setEvaluationCriteriaError(
+          err instanceof Error
+            ? err.message
+            : "Failed to load evaluation criteria"
+        );
+      } finally {
+        setEvaluationCriteriaLoading(false);
+      }
+    };
+
+    fetchEvaluationCriteria();
+  }, [agentUuid]);
+
+  // Fetch data extraction fields for this agent
+  useEffect(() => {
+    const fetchDataExtractionFields = async () => {
+      if (!agentUuid) return;
+
+      try {
+        setDataExtractionFieldsLoading(true);
+        setDataExtractionFieldsError(null);
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+        if (!backendUrl) {
+          throw new Error("BACKEND_URL environment variable is not set");
+        }
+
+        const response = await fetch(
+          `${backendUrl}/data-extraction-fields/agent/${agentUuid}`,
+          {
+            method: "GET",
+            headers: {
+              accept: "application/json",
+              "ngrok-skip-browser-warning": "true",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch data extraction fields");
+        }
+
+        const data: DataExtractionFieldData[] = await response.json();
+        setDataExtractionFields(data);
+      } catch (err) {
+        console.error("Error fetching data extraction fields:", err);
+        setDataExtractionFieldsError(
+          err instanceof Error
+            ? err.message
+            : "Failed to load data extraction fields"
+        );
+      } finally {
+        setDataExtractionFieldsLoading(false);
+      }
+    };
+
+    fetchDataExtractionFields();
+  }, [agentUuid]);
+
+  // Update save function ref when relevant state changes
+  useEffect(() => {
+    saveRef.current = async () => {
+      if (!agent) return;
+
+      try {
+        setIsSaving(true);
+        isSavingRef.current = true;
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+        if (!backendUrl) {
+          throw new Error("BACKEND_URL environment variable is not set");
+        }
+
+        const response = await fetch(`${backendUrl}/agents/${agentUuid}`, {
+          method: "PUT",
+          headers: {
+            accept: "application/json",
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+          },
+          body: JSON.stringify({
+            name: agent.name,
+            config: {
+              system_prompt: systemPrompt,
+              stt: { provider: sttProvider },
+              tts: { provider: ttsProvider },
+              llm: { model: selectedLLM?.id || "" },
+              settings: { agent_speaks_first: agentSpeaksFirst },
+              system_tools: { end_call: endConversationEnabled },
+            },
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to save agent");
+        }
+
+        // Show success toast
+        setShowSaveToast(true);
+      } catch (err) {
+        console.error("Error saving agent:", err);
+        alert(err instanceof Error ? err.message : "Failed to save agent");
+      } finally {
+        setIsSaving(false);
+        isSavingRef.current = false;
+      }
+    };
+  }, [
+    agent,
+    agentUuid,
+    systemPrompt,
+    sttProvider,
+    ttsProvider,
+    selectedLLM,
+    agentSpeaksFirst,
+    endConversationEnabled,
+  ]);
+
+  // Update header when isSaving changes
+  useEffect(() => {
+    if (agent && onHeaderUpdate) {
+      onHeaderUpdate(
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/agents"
+              className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted transition-colors cursor-pointer"
+              title="Back to agents"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.75 19.5L8.25 12l7.5-7.5"
+                />
+              </svg>
+            </Link>
+            <h1 className="text-lg font-semibold">{agent.name}</h1>
+          </div>
+          <button
+            onClick={() => saveRef.current()}
+            disabled={isSaving}
+            className="h-8 px-6 rounded-md text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            {isSaving && (
+              <svg
+                className="w-4 h-4 animate-spin"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+            )}
+            {isSaving ? "" : "Save"}
+          </button>
+        </div>
+      );
+    }
+  }, [agent, isSaving, onHeaderUpdate]);
+
+  // Auto-dismiss toast after 3 seconds
+  useEffect(() => {
+    if (showSaveToast) {
+      const timer = setTimeout(() => {
+        setShowSaveToast(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showSaveToast]);
 
   if (isLoading) {
     return (
@@ -1135,10 +1379,9 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
                     onChange={(e) => setSttProvider(e.target.value)}
                     className="w-full h-10 px-4 pr-10 rounded-md text-base border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent cursor-pointer appearance-none"
                   >
-                    <option value="">Select STT provider</option>
                     {sttProviders.map((provider) => (
-                      <option key={provider} value={provider}>
-                        {provider}
+                      <option key={provider.value} value={provider.value}>
+                        {provider.label}
                       </option>
                     ))}
                   </select>
@@ -1180,10 +1423,9 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
                     onChange={(e) => setTtsProvider(e.target.value)}
                     className="w-full h-10 px-4 pr-10 rounded-md text-base border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent cursor-pointer appearance-none"
                   >
-                    <option value="">Select TTS provider</option>
                     {ttsProviders.map((provider) => (
-                      <option key={provider} value={provider}>
-                        {provider}
+                      <option key={provider.value} value={provider.value}>
+                        {provider.label}
                       </option>
                     ))}
                   </select>
@@ -1957,41 +2199,201 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
 
       {/* Evaluation Tab Content */}
       {activeTab === "evaluation" && (
-        <div className="space-y-4">
-          {/* Empty State Placeholder */}
-          <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-            <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center mb-4">
-              <svg
-                className="w-7 h-7 text-muted-foreground"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={1.5}
+        <div className="space-y-6">
+          {/* Header with Add button */}
+          {evaluationCriteria.length > 0 && (
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => {
+                  resetCriteriaForm();
+                  setAddCriteriaSidebarOpen(true);
+                }}
+                className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"
-                />
-              </svg>
+                Add criteria
+              </button>
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-1">
-              No evaluation criteria defined
-            </h3>
-            <p className="text-base text-muted-foreground mb-4 text-center max-w-2xl">
-              Define criteria to evaluate whether conversations were successful
-              or not
-            </p>
-            <button
-              onClick={() => {
-                resetCriteriaForm();
-                setAddCriteriaSidebarOpen(true);
-              }}
-              className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
-            >
-              Add criteria
-            </button>
-          </div>
+          )}
+
+          {/* Loading State */}
+          {evaluationCriteriaLoading ? (
+            <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
+              <div className="flex items-center gap-3">
+                <svg
+                  className="w-5 h-5 animate-spin"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+          ) : evaluationCriteriaError ? (
+            /* Error State */
+            <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
+              <p className="text-base text-red-500 mb-2">
+                {evaluationCriteriaError}
+              </p>
+              <button
+                onClick={() => window.location.reload()}
+                className="text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              >
+                Retry
+              </button>
+            </div>
+          ) : evaluationCriteria.length === 0 ? (
+            /* Empty State */
+            <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
+              <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center mb-4">
+                <svg
+                  className="w-7 h-7 text-muted-foreground"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-1">
+                No evaluation criteria defined
+              </h3>
+              <p className="text-base text-muted-foreground mb-4 text-center max-w-2xl">
+                Define criteria to evaluate whether conversations were
+                successful or not
+              </p>
+              <button
+                onClick={() => {
+                  resetCriteriaForm();
+                  setAddCriteriaSidebarOpen(true);
+                }}
+                className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
+              >
+                Add criteria
+              </button>
+            </div>
+          ) : (
+            /* Criteria List */
+            <div className="border border-border rounded-xl overflow-hidden">
+              {/* Table Header */}
+              <div className="grid grid-cols-[1fr_2fr_auto] gap-4 px-4 py-3 border-b border-border bg-muted/30">
+                <div className="text-sm font-medium text-muted-foreground">
+                  Name
+                </div>
+                <div className="text-sm font-medium text-muted-foreground">
+                  Description
+                </div>
+                <div className="w-10"></div>
+              </div>
+              {/* Table Body */}
+              {evaluationCriteria.map((criteria) => (
+                <div
+                  key={criteria.uuid}
+                  className="grid grid-cols-[1fr_2fr_auto] gap-4 px-4 py-4 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors"
+                >
+                  {/* Name Column */}
+                  <div className="flex items-center">
+                    <div className="text-base font-medium text-foreground">
+                      {criteria.name}
+                    </div>
+                  </div>
+                  {/* Description Column */}
+                  <div className="flex items-center">
+                    <p className="text-base text-muted-foreground line-clamp-2">
+                      {criteria.description || "—"}
+                    </p>
+                  </div>
+                  {/* Delete Button */}
+                  <div className="flex items-center">
+                    <button
+                      onClick={async () => {
+                        if (
+                          !confirm(
+                            `Are you sure you want to delete "${criteria.name}"?`
+                          )
+                        )
+                          return;
+
+                        try {
+                          const backendUrl =
+                            process.env.NEXT_PUBLIC_BACKEND_URL;
+                          if (!backendUrl) {
+                            throw new Error(
+                              "BACKEND_URL environment variable is not set"
+                            );
+                          }
+
+                          const response = await fetch(
+                            `${backendUrl}/evaluation-criteria/${criteria.uuid}`,
+                            {
+                              method: "DELETE",
+                              headers: {
+                                accept: "application/json",
+                                "ngrok-skip-browser-warning": "true",
+                              },
+                            }
+                          );
+
+                          if (!response.ok) {
+                            throw new Error(
+                              "Failed to delete evaluation criteria"
+                            );
+                          }
+
+                          // Remove from local state
+                          setEvaluationCriteria((prev) =>
+                            prev.filter((c) => c.uuid !== criteria.uuid)
+                          );
+                        } catch (err) {
+                          console.error(
+                            "Error deleting evaluation criteria:",
+                            err
+                          );
+                          alert(
+                            err instanceof Error
+                              ? err.message
+                              : "Failed to delete evaluation criteria"
+                          );
+                        }
+                      }}
+                      className="w-10 h-10 flex items-center justify-center rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+                      title="Delete criteria"
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -2061,12 +2463,10 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
                 <input
                   type="text"
                   value={criteriaName}
+                  placeholder="Enter the name of the criteria"
                   onChange={(e) => setCriteriaName(e.target.value)}
                   className="w-full h-10 px-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
                 />
-                <p className="text-sm text-muted-foreground mt-2">
-                  Enter the name of the criteria
-                </p>
               </div>
 
               {/* Evaluation instructions */}
@@ -2074,32 +2474,130 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
                 <label className="block text-sm font-medium mb-1">
                   Evaluation instructions
                 </label>
-                <p className="text-sm text-muted-foreground mb-2">
-                  Describe how the agent should evaluate whether the
-                  conversation was a success or not.
-                </p>
                 <textarea
                   value={criteriaInstructions}
                   onChange={(e) => setCriteriaInstructions(e.target.value)}
                   rows={10}
+                  placeholder="Describe how the agent should evaluate whether the
+                  conversation was a success"
                   className="w-full px-4 py-3 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none"
                 />
               </div>
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-4 border-t border-border">
-              <button
-                onClick={() => {
-                  // For now, just close the sidebar
-                  // TODO: Add API integration to save criteria
-                  resetCriteriaForm();
-                  setAddCriteriaSidebarOpen(false);
-                }}
-                className="h-10 px-4 rounded-md text-base font-medium bg-white text-gray-900 hover:opacity-90 transition-opacity cursor-pointer"
-              >
-                Add criteria
-              </button>
+            <div className="px-6 py-4 border-t border-border space-y-3">
+              {createCriteriaError && (
+                <p className="text-sm text-red-500">{createCriteriaError}</p>
+              )}
+              <div className="flex items-center justify-end gap-3">
+                <button
+                  onClick={() => {
+                    resetCriteriaForm();
+                    setAddCriteriaSidebarOpen(false);
+                  }}
+                  disabled={isCreatingCriteria}
+                  className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={async () => {
+                    if (!criteriaName.trim()) return;
+
+                    try {
+                      setIsCreatingCriteria(true);
+                      setCreateCriteriaError(null);
+                      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+                      if (!backendUrl) {
+                        throw new Error(
+                          "BACKEND_URL environment variable is not set"
+                        );
+                      }
+
+                      const response = await fetch(
+                        `${backendUrl}/evaluation-criteria`,
+                        {
+                          method: "POST",
+                          headers: {
+                            accept: "application/json",
+                            "Content-Type": "application/json",
+                            "ngrok-skip-browser-warning": "true",
+                          },
+                          body: JSON.stringify({
+                            name: criteriaName.trim(),
+                            description: criteriaInstructions.trim(),
+                            agent_id: agentUuid,
+                          }),
+                        }
+                      );
+
+                      if (!response.ok) {
+                        throw new Error("Failed to create evaluation criteria");
+                      }
+
+                      const responseData = await response.json();
+
+                      // Construct the criteria object using form data and response uuid
+                      const newCriteria: EvaluationCriteriaData = {
+                        uuid: responseData.uuid || responseData.id,
+                        name: criteriaName.trim(),
+                        description: criteriaInstructions.trim(),
+                        agent_id: agentUuid,
+                        created_at:
+                          responseData.created_at || new Date().toISOString(),
+                        updated_at:
+                          responseData.updated_at || new Date().toISOString(),
+                      };
+
+                      // Add the new criteria to the list
+                      setEvaluationCriteria((prev) => [...prev, newCriteria]);
+
+                      // Reset and close
+                      resetCriteriaForm();
+                      setAddCriteriaSidebarOpen(false);
+                    } catch (err) {
+                      console.error("Error creating evaluation criteria:", err);
+                      setCreateCriteriaError(
+                        err instanceof Error
+                          ? err.message
+                          : "Failed to create evaluation criteria"
+                      );
+                    } finally {
+                      setIsCreatingCriteria(false);
+                    }
+                  }}
+                  disabled={isCreatingCriteria || !criteriaName.trim()}
+                  className="h-10 px-4 rounded-md text-base font-medium bg-white text-gray-900 hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {isCreatingCriteria ? (
+                    <>
+                      <svg
+                        className="w-4 h-4 animate-spin"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      Creating...
+                    </>
+                  ) : (
+                    "Add criteria"
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -2107,41 +2605,210 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
 
       {/* Data Extraction Tab Content */}
       {activeTab === "data-extraction" && (
-        <div className="space-y-4">
-          {/* Empty State Placeholder */}
-          <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-            <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center mb-4">
-              <svg
-                className="w-7 h-7 text-muted-foreground"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={1.5}
+        <div className="space-y-6">
+          {/* Header with Add button */}
+          {dataExtractionFields.length > 0 && (
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => {
+                  resetDataPointForm();
+                  setAddDataPointSidebarOpen(true);
+                }}
+                className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0112 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125M13.125 12h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125M20.625 12c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5M12 14.625v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 14.625c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m0 0v1.5c0 .621-.504 1.125-1.125 1.125M12 18.375h-7.5"
-                />
-              </svg>
+                Add field
+              </button>
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-1">
-              No extraction fields defined
-            </h3>
-            <p className="text-base text-muted-foreground mb-4 text-center max-w-2xl">
-              Define custom data specifications to extract from conversation
-              transcripts
-            </p>
-            <button
-              onClick={() => {
-                resetDataPointForm();
-                setAddDataPointSidebarOpen(true);
-              }}
-              className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
-            >
-              Add field
-            </button>
-          </div>
+          )}
+
+          {/* Loading State */}
+          {dataExtractionFieldsLoading ? (
+            <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
+              <div className="flex items-center gap-3">
+                <svg
+                  className="w-5 h-5 animate-spin"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+          ) : dataExtractionFieldsError ? (
+            /* Error State */
+            <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
+              <p className="text-base text-red-500 mb-2">
+                {dataExtractionFieldsError}
+              </p>
+              <button
+                onClick={() => window.location.reload()}
+                className="text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              >
+                Retry
+              </button>
+            </div>
+          ) : dataExtractionFields.length === 0 ? (
+            /* Empty State */
+            <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
+              <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center mb-4">
+                <svg
+                  className="w-7 h-7 text-muted-foreground"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0112 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125M13.125 12h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125M20.625 12c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5M12 14.625v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 14.625c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m0 0v1.5c0 .621-.504 1.125-1.125 1.125M12 18.375h-7.5"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-1">
+                No extraction fields defined
+              </h3>
+              <p className="text-base text-muted-foreground mb-4 text-center max-w-2xl">
+                Define custom data specifications to extract from conversation
+                transcripts
+              </p>
+              <button
+                onClick={() => {
+                  resetDataPointForm();
+                  setAddDataPointSidebarOpen(true);
+                }}
+                className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
+              >
+                Add field
+              </button>
+            </div>
+          ) : (
+            /* Fields List */
+            <div className="border border-border rounded-xl overflow-hidden">
+              {/* Table Header */}
+              <div className="grid grid-cols-[100px_1fr_2fr_auto] gap-4 px-4 py-3 border-b border-border bg-muted/30">
+                <div className="text-sm font-medium text-muted-foreground">
+                  Type
+                </div>
+                <div className="text-sm font-medium text-muted-foreground">
+                  Name
+                </div>
+                <div className="text-sm font-medium text-muted-foreground">
+                  Description
+                </div>
+                <div className="w-10"></div>
+              </div>
+              {/* Table Body */}
+              {dataExtractionFields.map((field) => (
+                <div
+                  key={field.uuid}
+                  className="grid grid-cols-[100px_1fr_2fr_auto] gap-4 px-4 py-4 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors"
+                >
+                  {/* Type Column */}
+                  <div className="flex items-center">
+                    <span className="text-sm text-muted-foreground capitalize">
+                      {field.type}
+                    </span>
+                  </div>
+                  {/* Name Column */}
+                  <div className="flex items-center">
+                    <div className="text-base font-medium text-foreground">
+                      {field.name}
+                    </div>
+                  </div>
+                  {/* Description Column */}
+                  <div className="flex items-center">
+                    <p className="text-base text-muted-foreground line-clamp-2">
+                      {field.description || "—"}
+                    </p>
+                  </div>
+                  {/* Delete Button */}
+                  <div className="flex items-center">
+                    <button
+                      onClick={async () => {
+                        if (
+                          !confirm(
+                            `Are you sure you want to delete "${field.name}"?`
+                          )
+                        )
+                          return;
+
+                        try {
+                          const backendUrl =
+                            process.env.NEXT_PUBLIC_BACKEND_URL;
+                          if (!backendUrl) {
+                            throw new Error(
+                              "BACKEND_URL environment variable is not set"
+                            );
+                          }
+
+                          const response = await fetch(
+                            `${backendUrl}/data-extraction-fields/${field.uuid}`,
+                            {
+                              method: "DELETE",
+                              headers: {
+                                accept: "application/json",
+                                "ngrok-skip-browser-warning": "true",
+                              },
+                            }
+                          );
+
+                          if (!response.ok) {
+                            throw new Error(
+                              "Failed to delete data extraction field"
+                            );
+                          }
+
+                          // Remove from local state
+                          setDataExtractionFields((prev) =>
+                            prev.filter((f) => f.uuid !== field.uuid)
+                          );
+                        } catch (err) {
+                          console.error(
+                            "Error deleting data extraction field:",
+                            err
+                          );
+                          alert(
+                            err instanceof Error
+                              ? err.message
+                              : "Failed to delete data extraction field"
+                          );
+                        }
+                      }}
+                      className="w-10 h-10 flex items-center justify-center rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+                      title="Delete field"
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -2260,101 +2927,132 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
                   onChange={(e) => setDataPointDescription(e.target.value)}
                   rows={4}
                   className="w-full px-4 py-3 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none"
+                  placeholder="This field will be passed to the LLM and should describe in
+                  detail how to extract the data from the transcript"
                 />
-                <p className="text-sm text-muted-foreground mt-2">
-                  This field will be passed to the LLM and should describe in
-                  detail how to extract the data from the transcript.
-                </p>
-              </div>
-
-              {/* Enum Values */}
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Enum Values (optional)
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={dataPointNewEnumValue}
-                    onChange={(e) => setDataPointNewEnumValue(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        addDataPointEnumValue();
-                      }
-                    }}
-                    placeholder="Enter an enum value"
-                    className="flex-1 h-10 px-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
-                  />
-                  <button
-                    onClick={addDataPointEnumValue}
-                    className="w-10 h-10 rounded-md border border-border bg-background hover:bg-muted/50 flex items-center justify-center transition-colors cursor-pointer"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 4.5v15m7.5-7.5h-15"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                {dataPointEnumValues.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {dataPointEnumValues.map((value, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center gap-1 px-3 py-1 rounded-md bg-muted text-sm"
-                      >
-                        <span>{value}</span>
-                        <button
-                          onClick={() => removeDataPointEnumValue(index)}
-                          className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-                        >
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M6 18L18 6M6 6l12 12"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                <p className="text-sm text-muted-foreground mt-2">
-                  Add predefined values that the LLM can select from. If no
-                  values are provided, the LLM can use any string value.
-                </p>
               </div>
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-4 border-t border-border">
-              <button
-                onClick={() => {
-                  // For now, just close the sidebar
-                  // TODO: Add API integration to save data point
-                  resetDataPointForm();
-                  setAddDataPointSidebarOpen(false);
-                }}
-                className="h-10 px-4 rounded-md text-base font-medium bg-white text-gray-900 hover:opacity-90 transition-opacity cursor-pointer"
-              >
-                Add data point
-              </button>
+            <div className="px-6 py-4 border-t border-border space-y-3">
+              {createDataPointError && (
+                <p className="text-sm text-red-500">{createDataPointError}</p>
+              )}
+              <div className="flex items-center justify-end gap-3">
+                <button
+                  onClick={() => {
+                    resetDataPointForm();
+                    setAddDataPointSidebarOpen(false);
+                  }}
+                  disabled={isCreatingDataPoint}
+                  className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={async () => {
+                    if (!dataPointIdentifier.trim()) return;
+
+                    try {
+                      setIsCreatingDataPoint(true);
+                      setCreateDataPointError(null);
+                      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+                      if (!backendUrl) {
+                        throw new Error(
+                          "BACKEND_URL environment variable is not set"
+                        );
+                      }
+
+                      const response = await fetch(
+                        `${backendUrl}/data-extraction-fields`,
+                        {
+                          method: "POST",
+                          headers: {
+                            accept: "application/json",
+                            "Content-Type": "application/json",
+                            "ngrok-skip-browser-warning": "true",
+                          },
+                          body: JSON.stringify({
+                            type: dataPointDataType,
+                            name: dataPointIdentifier.trim(),
+                            description: dataPointDescription.trim(),
+                            agent_id: agentUuid,
+                          }),
+                        }
+                      );
+
+                      if (!response.ok) {
+                        throw new Error(
+                          "Failed to create data extraction field"
+                        );
+                      }
+
+                      const responseData = await response.json();
+
+                      // Construct the field object using form data and response uuid
+                      const newField: DataExtractionFieldData = {
+                        uuid: responseData.uuid || responseData.id,
+                        type: dataPointDataType,
+                        name: dataPointIdentifier.trim(),
+                        description: dataPointDescription.trim(),
+                        agent_id: agentUuid,
+                        created_at:
+                          responseData.created_at || new Date().toISOString(),
+                        updated_at:
+                          responseData.updated_at || new Date().toISOString(),
+                      };
+
+                      // Add the new field to the list
+                      setDataExtractionFields((prev) => [...prev, newField]);
+
+                      // Reset and close
+                      resetDataPointForm();
+                      setAddDataPointSidebarOpen(false);
+                    } catch (err) {
+                      console.error(
+                        "Error creating data extraction field:",
+                        err
+                      );
+                      setCreateDataPointError(
+                        err instanceof Error
+                          ? err.message
+                          : "Failed to create data extraction field"
+                      );
+                    } finally {
+                      setIsCreatingDataPoint(false);
+                    }
+                  }}
+                  disabled={isCreatingDataPoint || !dataPointIdentifier.trim()}
+                  className="h-10 px-4 rounded-md text-base font-medium bg-white text-gray-900 hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {isCreatingDataPoint ? (
+                    <>
+                      <svg
+                        className="w-4 h-4 animate-spin"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      Creating...
+                    </>
+                  ) : (
+                    "Add field"
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -2362,10 +3060,74 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
 
       {/* Settings Tab Content */}
       {activeTab === "settings" && (
-        <div className="space-y-4">
-          <p className="text-base text-muted-foreground">
-            Settings configuration coming soon.
-          </p>
+        <div className="space-y-6">
+          <div className="border border-border rounded-xl overflow-hidden">
+            <div className="px-4 py-4 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                {/* Toggle Switch */}
+                <button
+                  onClick={() => setAgentSpeaksFirst(!agentSpeaksFirst)}
+                  className={`relative w-11 h-6 rounded-full transition-colors cursor-pointer ${
+                    agentSpeaksFirst ? "bg-foreground" : "bg-muted"
+                  }`}
+                >
+                  <div
+                    className={`absolute top-0.5 w-5 h-5 rounded-full bg-background transition-transform ${
+                      agentSpeaksFirst ? "translate-x-5" : "translate-x-0.5"
+                    }`}
+                  />
+                </button>
+                <div>
+                  <h3 className="text-base font-medium text-foreground">
+                    Agent speaks first
+                  </h3>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    Whether the agent should initiate the conversation.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success Toast */}
+      {showSaveToast && (
+        <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom-4 fade-in duration-300">
+          <div className="flex items-center gap-3 bg-foreground text-background px-4 py-3 rounded-lg shadow-lg">
+            <svg
+              className="w-5 h-5 text-green-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span className="text-sm font-medium">Saved successfully</span>
+            <button
+              onClick={() => setShowSaveToast(false)}
+              className="ml-2 hover:opacity-70 transition-opacity cursor-pointer"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       )}
     </div>
