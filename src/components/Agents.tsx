@@ -258,7 +258,7 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
       ) : (
         <div className="border border-border rounded-xl overflow-hidden">
           {/* Table Header */}
-          <div className="grid grid-cols-[1fr_1fr_auto] gap-4 px-4 py-3 border-b border-border bg-muted/30">
+          <div className="grid grid-cols-[1fr_1fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
             <div className="text-sm font-medium text-muted-foreground">
               Name
             </div>
@@ -285,7 +285,7 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
                 </svg>
               </button>
             </div>
-            <div className="w-10"></div>
+            <div className="w-8"></div>
           </div>
           {/* Table Body */}
           {sortedAgents.map((agent) => (
@@ -296,17 +296,17 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
                   onNavigateToAgent(agent.uuid);
                 }
               }}
-              className="grid grid-cols-[1fr_1fr_auto] gap-4 px-4 py-4 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer"
+              className="grid grid-cols-[1fr_1fr_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer"
             >
               {/* Name Column */}
               <div className="flex items-center">
-                <div className="text-base font-medium text-foreground">
+                <div className="text-sm font-medium text-foreground">
                   {agent.name}
                 </div>
               </div>
               {/* Created At Column */}
               <div className="flex items-center">
-                <span className="text-base text-muted-foreground">
+                <span className="text-sm text-muted-foreground">
                   {agent.createdAt}
                 </span>
               </div>
@@ -318,12 +318,12 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
                     handleDeleteAgent(agent.uuid);
                   }}
                   disabled={deletingAgentUuid === agent.uuid}
-                  className="w-10 h-10 flex items-center justify-center rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                   title="Delete agent"
                 >
                   {deletingAgentUuid === agent.uuid ? (
                     <svg
-                      className="w-5 h-5 animate-spin"
+                      className="w-4 h-4 animate-spin"
                       fill="none"
                       viewBox="0 0 24 24"
                     >
@@ -343,7 +343,7 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
                     </svg>
                   ) : (
                     <svg
-                      className="w-5 h-5"
+                      className="w-4 h-4"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"

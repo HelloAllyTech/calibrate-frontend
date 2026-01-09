@@ -1890,24 +1890,24 @@ export default function LLMPage() {
         ) : (
           <div className="border border-border rounded-xl overflow-hidden">
             {/* Table Header */}
-            <div className="grid grid-cols-[1fr_1fr_auto] gap-4 px-4 py-3 border-b border-border bg-muted/30">
+            <div className="grid grid-cols-[1fr_1fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
               <div className="text-sm font-medium text-muted-foreground">
                 Name
               </div>
               <div className="text-sm font-medium text-muted-foreground">
                 Type
               </div>
-              <div className="w-20"></div>
+              <div className="w-16"></div>
             </div>
             {/* Table Rows */}
             {filteredTests.map((test) => (
               <div
                 key={test.uuid}
                 onClick={() => openEditTest(test.uuid)}
-                className="grid grid-cols-[1fr_1fr_auto] gap-4 px-4 py-4 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer items-center"
+                className="grid grid-cols-[1fr_1fr_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer items-center"
               >
                 <div className="min-w-0">
-                  <p className="text-base font-medium text-foreground truncate">
+                  <p className="text-sm font-medium text-foreground truncate">
                     {test.name}
                   </p>
                 </div>
@@ -1925,10 +1925,10 @@ export default function LLMPage() {
                       e.stopPropagation();
                       // TODO: Implement run test functionality
                     }}
-                    className="group relative w-10 h-10 flex items-center justify-center rounded-lg bg-transparent text-white hover:bg-[#444] transition-colors cursor-pointer"
+                    className="group relative w-8 h-8 flex items-center justify-center rounded-lg bg-transparent text-white hover:bg-[#444] transition-colors cursor-pointer"
                   >
                     <svg
-                      className="w-4 h-4"
+                      className="w-3.5 h-3.5"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
@@ -1955,10 +1955,10 @@ export default function LLMPage() {
                         deleteTest(test.uuid);
                       }
                     }}
-                    className="w-10 h-10 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
+                    className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
                   >
                     <svg
-                      className="w-5 h-5"
+                      className="w-4 h-4"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
