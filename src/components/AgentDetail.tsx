@@ -8,14 +8,12 @@ import {
   ToolsTabContent,
   DataExtractionTabContent,
   TestsTabContent,
-  EvaluationTabContent,
   SettingsTabContent,
   llmProviders,
 } from "@/components/agent-tabs";
 import type {
   LLMModel,
   DataExtractionFieldData,
-  EvaluationCriteriaData,
 } from "@/components/agent-tabs";
 
 type AgentDetailProps = {
@@ -39,20 +37,13 @@ type ToolData = {
   updated_at: string;
 };
 
-type TabType =
-  | "agent"
-  | "tools"
-  | "data-extraction"
-  | "tests"
-  | "evaluation"
-  | "settings";
+type TabType = "agent" | "tools" | "data-extraction" | "tests" | "settings";
 
 const validTabs: TabType[] = [
   "agent",
   "tools",
   "data-extraction",
   "tests",
-  "evaluation",
   "settings",
 ];
 
@@ -73,6 +64,10 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<TabType>(getInitialTab);
+
+  // Name editing dialog state
+  const [isEditNameDialogOpen, setIsEditNameDialogOpen] = useState(false);
+  const [editedName, setEditedName] = useState("");
 
   // Update URL when tab changes
   const handleTabChange = (tab: TabType) => {
@@ -118,16 +113,6 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
   const [dataExtractionFieldsLoading, setDataExtractionFieldsLoading] =
     useState(false);
   const [dataExtractionFieldsError, setDataExtractionFieldsError] = useState<
-    string | null
-  >(null);
-
-  // Evaluation criteria list state
-  const [evaluationCriteria, setEvaluationCriteria] = useState<
-    EvaluationCriteriaData[]
-  >([]);
-  const [evaluationCriteriaLoading, setEvaluationCriteriaLoading] =
-    useState(false);
-  const [evaluationCriteriaError, setEvaluationCriteriaError] = useState<
     string | null
   >(null);
 
@@ -207,20 +192,6 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
               })
             );
             setDataExtractionFields(fields);
-          }
-          // Load evaluation criteria from config
-          if (data.config.evaluation_criteria) {
-            const criteria = data.config.evaluation_criteria.map(
-              (criterion: any) => ({
-                uuid: criterion.uuid || crypto.randomUUID(),
-                name: criterion.name,
-                description: criterion.description,
-                agent_id: agentUuid,
-                created_at: criterion.created_at || new Date().toISOString(),
-                updated_at: criterion.updated_at || new Date().toISOString(),
-              })
-            );
-            setEvaluationCriteria(criteria);
           }
         }
       } catch (err) {
@@ -359,10 +330,6 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
                 description: field.description,
                 required: field.required,
               })),
-              evaluation_criteria: evaluationCriteria.map((criterion) => ({
-                name: criterion.name,
-                description: criterion.description,
-              })),
             },
           }),
         });
@@ -391,8 +358,29 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
     agentSpeaksFirst,
     endConversationEnabled,
     dataExtractionFields,
-    evaluationCriteria,
   ]);
+
+  // Handle name edit dialog open
+  const handleOpenEditNameDialog = () => {
+    if (agent) {
+      setEditedName(agent.name);
+      setIsEditNameDialogOpen(true);
+    }
+  };
+
+  // Handle name save from dialog
+  const handleSaveName = () => {
+    if (agent && editedName.trim() && editedName.trim() !== agent.name) {
+      setAgent({ ...agent, name: editedName.trim() });
+    }
+    setIsEditNameDialogOpen(false);
+  };
+
+  // Handle dialog cancel
+  const handleCancelEditName = () => {
+    setIsEditNameDialogOpen(false);
+    setEditedName("");
+  };
 
   // Update header when isSaving changes
   useEffect(() => {
@@ -419,7 +407,13 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
                 />
               </svg>
             </Link>
-            <h1 className="text-lg font-semibold">{agent.name}</h1>
+            <h1
+              className="text-lg font-semibold cursor-pointer hover:opacity-70 transition-opacity"
+              onClick={handleOpenEditNameDialog}
+              title="Click to edit name"
+            >
+              {agent.name}
+            </h1>
           </div>
           <button
             onClick={() => saveRef.current()}
@@ -452,6 +446,7 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
         </div>
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agent, isSaving, onHeaderUpdate]);
 
   // Auto-dismiss toast after 3 seconds
@@ -560,16 +555,6 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
           Tests
         </button>
         <button
-          onClick={() => handleTabChange("evaluation")}
-          className={`pb-2 text-base font-medium transition-colors cursor-pointer ${
-            activeTab === "evaluation"
-              ? "text-foreground border-b-2 border-foreground"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          Evaluation
-        </button>
-        <button
           onClick={() => handleTabChange("settings")}
           className={`pb-2 text-base font-medium transition-colors cursor-pointer ${
             activeTab === "settings"
@@ -627,24 +612,57 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
         <TestsTabContent agentUuid={agentUuid} agentName={agent.name} />
       )}
 
-      {/* Evaluation Tab Content */}
-      {activeTab === "evaluation" && (
-        <EvaluationTabContent
-          agentUuid={agentUuid}
-          evaluationCriteria={evaluationCriteria}
-          setEvaluationCriteria={setEvaluationCriteria}
-          evaluationCriteriaLoading={evaluationCriteriaLoading}
-          evaluationCriteriaError={evaluationCriteriaError}
-          saveRef={saveRef}
-        />
-      )}
-
       {/* Settings Tab Content */}
       {activeTab === "settings" && (
         <SettingsTabContent
           agentSpeaksFirst={agentSpeaksFirst}
           setAgentSpeaksFirst={setAgentSpeaksFirst}
         />
+      )}
+
+      {/* Edit Name Dialog */}
+      {isEditNameDialogOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          onClick={handleCancelEditName}
+        >
+          <div
+            className="bg-background border border-border rounded-xl p-6 max-w-md w-full mx-4 shadow-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-lg font-semibold mb-4">Edit Agent Name</h2>
+            <input
+              type="text"
+              value={editedName}
+              onChange={(e) => setEditedName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSaveName();
+                } else if (e.key === "Escape") {
+                  handleCancelEditName();
+                }
+              }}
+              className="w-full h-10 px-3 rounded-md text-sm border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent mb-4"
+              maxLength={50}
+              autoFocus
+            />
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={handleCancelEditName}
+                className="h-10 px-4 rounded-md text-sm font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveName}
+                disabled={!editedName.trim()}
+                className="h-10 px-4 rounded-md text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Success Toast */}

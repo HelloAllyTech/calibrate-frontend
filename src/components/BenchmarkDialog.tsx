@@ -114,7 +114,7 @@ export function BenchmarkDialog({
         <div className="flex items-center justify-between px-6 py-4 ">
           <div>
             <h2 className="text-lg font-semibold text-foreground">
-              Run Benchmark
+              Run benchmark
             </h2>
             <p className="text-sm text-muted-foreground mt-0.5">
               Select up to 5 models to benchmark for &quot;{agentName}&quot;
@@ -254,7 +254,7 @@ export function BenchmarkDialog({
                 d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
               />
             </svg>
-            Run Benchmark
+            Run benchmark
           </button>
         </div>
       </div>

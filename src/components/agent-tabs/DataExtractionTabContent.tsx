@@ -53,14 +53,51 @@ export function DataExtractionTabContent({
   const [dataFieldValidationAttempted, setDataFieldValidationAttempted] =
     useState(false);
 
+  // Bulk selection state
+  const [selectedFieldUuids, setSelectedFieldUuids] = useState<Set<string>>(
+    new Set()
+  );
+
   // Delete confirmation state
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [fieldToDelete, setFieldToDelete] =
     useState<DataExtractionFieldData | null>(null);
+  const [fieldsToDeleteBulk, setFieldsToDeleteBulk] = useState<string[]>([]);
 
-  // Open delete confirmation dialog
+  // Toggle field selection
+  const toggleFieldSelection = (uuid: string) => {
+    setSelectedFieldUuids((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(uuid)) {
+        newSet.delete(uuid);
+      } else {
+        newSet.add(uuid);
+      }
+      return newSet;
+    });
+  };
+
+  // Toggle select all
+  const toggleSelectAll = () => {
+    if (selectedFieldUuids.size === dataExtractionFields.length) {
+      setSelectedFieldUuids(new Set());
+    } else {
+      setSelectedFieldUuids(new Set(dataExtractionFields.map((f) => f.uuid)));
+    }
+  };
+
+  // Open delete confirmation dialog for single field
   const openDeleteDialog = (field: DataExtractionFieldData) => {
     setFieldToDelete(field);
+    setFieldsToDeleteBulk([]);
+    setDeleteDialogOpen(true);
+  };
+
+  // Open bulk delete confirmation dialog
+  const openBulkDeleteDialog = () => {
+    if (selectedFieldUuids.size === 0) return;
+    setFieldToDelete(null);
+    setFieldsToDeleteBulk(Array.from(selectedFieldUuids));
     setDeleteDialogOpen(true);
   };
 
@@ -68,16 +105,25 @@ export function DataExtractionTabContent({
   const closeDeleteDialog = () => {
     setDeleteDialogOpen(false);
     setFieldToDelete(null);
+    setFieldsToDeleteBulk([]);
   };
 
-  // Handle delete field
+  // Handle delete field (single or bulk)
   const handleDeleteField = () => {
-    if (!fieldToDelete) return;
-
-    // Remove from local state - will be saved with agent config
-    setDataExtractionFields((prev) =>
-      prev.filter((f) => f.uuid !== fieldToDelete.uuid)
-    );
+    if (fieldsToDeleteBulk.length > 0) {
+      // Bulk delete
+      setDataExtractionFields((prev) =>
+        prev.filter((f) => !fieldsToDeleteBulk.includes(f.uuid))
+      );
+      setSelectedFieldUuids(new Set());
+    } else if (fieldToDelete) {
+      // Single delete
+      setDataExtractionFields((prev) =>
+        prev.filter((f) => f.uuid !== fieldToDelete.uuid)
+      );
+    } else {
+      return;
+    }
     // Trigger save to persist the change
     setTimeout(() => saveRef.current(), 0);
     closeDeleteDialog();
@@ -568,18 +614,28 @@ export function DataExtractionTabContent({
   return (
     <>
       <div className="space-y-6">
-        {/* Header with Add button */}
+        {/* Header with Add button and Bulk Delete */}
         {dataExtractionFields.length > 0 && (
           <div className="flex items-center justify-between">
-            <button
-              onClick={() => {
-                resetDataFieldForm();
-                setAddDataFieldSidebarOpen(true);
-              }}
-              className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
-            >
-              Add field
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => {
+                  resetDataFieldForm();
+                  setAddDataFieldSidebarOpen(true);
+                }}
+                className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
+              >
+                Add field
+              </button>
+              {selectedFieldUuids.size > 0 && (
+                <button
+                  onClick={openBulkDeleteDialog}
+                  className="h-10 px-4 rounded-md text-base font-medium border border-red-500 text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+                >
+                  Delete selected ({selectedFieldUuids.size})
+                </button>
+              )}
+            </div>
           </div>
         )}
 
@@ -660,7 +716,37 @@ export function DataExtractionTabContent({
           /* Fields List */
           <div className="border border-border rounded-xl overflow-hidden">
             {/* Table Header */}
-            <div className="grid grid-cols-[80px_1fr_2fr_70px_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
+            <div className="grid grid-cols-[40px_80px_1fr_2fr_70px_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
+              <div className="flex items-center">
+                <button
+                  type="button"
+                  onClick={toggleSelectAll}
+                  className={`w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors cursor-pointer ${
+                    selectedFieldUuids.size === dataExtractionFields.length &&
+                    dataExtractionFields.length > 0
+                      ? "bg-foreground border-foreground"
+                      : "border-border hover:border-muted-foreground"
+                  }`}
+                  title="Select all"
+                >
+                  {selectedFieldUuids.size === dataExtractionFields.length &&
+                    dataExtractionFields.length > 0 && (
+                      <svg
+                        className="w-3 h-3 text-background"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={3}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M4.5 12.75l6 6 9-13.5"
+                        />
+                      </svg>
+                    )}
+                </button>
+              </div>
               <div className="text-sm font-medium text-muted-foreground">
                 Type
               </div>
@@ -680,8 +766,40 @@ export function DataExtractionTabContent({
               <div
                 key={field.uuid}
                 onClick={() => openEditField(field)}
-                className="grid grid-cols-[80px_1fr_2fr_70px_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer"
+                className="grid grid-cols-[40px_80px_1fr_2fr_70px_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer"
               >
+                {/* Checkbox Column */}
+                <div className="flex items-center">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFieldSelection(field.uuid);
+                    }}
+                    className={`w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors cursor-pointer ${
+                      selectedFieldUuids.has(field.uuid)
+                        ? "bg-foreground border-foreground"
+                        : "border-border hover:border-muted-foreground"
+                    }`}
+                    title="Select field"
+                  >
+                    {selectedFieldUuids.has(field.uuid) && (
+                      <svg
+                        className="w-3 h-3 text-background"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={3}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M4.5 12.75l6 6 9-13.5"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                </div>
                 {/* Type Column */}
                 <div className="flex items-center">
                   <span className="text-sm text-muted-foreground capitalize">
@@ -1159,8 +1277,14 @@ export function DataExtractionTabContent({
         isOpen={deleteDialogOpen}
         onClose={closeDeleteDialog}
         onConfirm={handleDeleteField}
-        title="Delete field"
-        message={`Are you sure you want to delete "${fieldToDelete?.name}"?`}
+        title={fieldsToDeleteBulk.length > 0 ? "Delete fields" : "Delete field"}
+        message={
+          fieldsToDeleteBulk.length > 0
+            ? `Are you sure you want to delete ${
+                fieldsToDeleteBulk.length
+              } field${fieldsToDeleteBulk.length > 1 ? "s" : ""}?`
+            : `Are you sure you want to delete "${fieldToDelete?.name}"?`
+        }
         confirmText="Delete"
       />
     </>

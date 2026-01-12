@@ -6,8 +6,8 @@ import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog"
 type Agent = {
   uuid: string;
   name: string;
-  createdAt: string; // Formatted display date
-  createdAtRaw: string; // Original date for sorting
+  updatedAt: string; // Formatted display date
+  updatedAtRaw: string; // Original date for sorting
 };
 
 type AgentsProps = {
@@ -46,6 +46,10 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [agentToDelete, setAgentToDelete] = useState<Agent | null>(null);
 
+  // Duplicate dialog state
+  const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
+  const [agentToDuplicate, setAgentToDuplicate] = useState<Agent | null>(null);
+
   useEffect(() => {
     const fetchAgents = async () => {
       try {
@@ -73,12 +77,12 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
         const formattedAgents: Agent[] = Array.isArray(data)
           ? data.map((agent: any) => {
               const rawDate =
-                agent.created_at || agent.createdAt || new Date().toISOString();
+                agent.updated_at || agent.updatedAt || new Date().toISOString();
               return {
                 uuid: agent.uuid,
                 name: agent.name || agent.agent_name || String(agent),
-                createdAt: formatDate(rawDate),
-                createdAtRaw: rawDate,
+                updatedAt: formatDate(rawDate),
+                updatedAtRaw: rawDate,
               };
             })
           : [];
@@ -100,13 +104,13 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
 
   const sortedAgents = [...filteredAgents].sort((a, b) => {
     // Use raw date for accurate sorting
-    const dateA = new Date(a.createdAtRaw).getTime();
-    const dateB = new Date(b.createdAtRaw).getTime();
+    const dateA = new Date(a.updatedAtRaw).getTime();
+    const dateB = new Date(b.updatedAtRaw).getTime();
     // Handle invalid dates by falling back to string comparison
     if (isNaN(dateA) || isNaN(dateB)) {
       return sortOrder === "asc"
-        ? a.createdAtRaw.localeCompare(b.createdAtRaw)
-        : b.createdAtRaw.localeCompare(a.createdAtRaw);
+        ? a.updatedAtRaw.localeCompare(b.updatedAtRaw)
+        : b.updatedAtRaw.localeCompare(a.updatedAtRaw);
     }
     return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
   });
@@ -125,6 +129,23 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
     }
   };
 
+  // Open duplicate dialog
+  const openDuplicateDialog = (agent: Agent) => {
+    setAgentToDuplicate(agent);
+    setDuplicateDialogOpen(true);
+  };
+
+  // Close duplicate dialog
+  const closeDuplicateDialog = () => {
+    setDuplicateDialogOpen(false);
+    setAgentToDuplicate(null);
+  };
+
+  // Handle agent duplicated - add to list
+  const handleAgentDuplicated = (newAgent: Agent) => {
+    setAgents((prevAgents) => [newAgent, ...prevAgents]);
+  };
+
   const handleDeleteAgent = async () => {
     if (!agentToDelete) return;
 
@@ -136,13 +157,16 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
       }
 
       // DELETE /agents/{agent_uuid} - agent_uuid is required in path
-      const response = await fetch(`${backendUrl}/agents/${agentToDelete.uuid}`, {
-        method: "DELETE",
-        headers: {
-          accept: "application/json",
-          "ngrok-skip-browser-warning": "true",
-        },
-      });
+      const response = await fetch(
+        `${backendUrl}/agents/${agentToDelete.uuid}`,
+        {
+          method: "DELETE",
+          headers: {
+            accept: "application/json",
+            "ngrok-skip-browser-warning": "true",
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to delete agent");
@@ -271,7 +295,7 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
       ) : (
         <div className="border border-border rounded-xl overflow-hidden">
           {/* Table Header */}
-          <div className="grid grid-cols-[1fr_1fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
+          <div className="grid grid-cols-[1fr_1fr_auto_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
             <div className="text-sm font-medium text-muted-foreground">
               Name
             </div>
@@ -280,7 +304,7 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
                 onClick={toggleSort}
                 className="flex items-center gap-2 hover:text-foreground transition-colors cursor-pointer"
               >
-                Created at
+                Last updated at
                 <svg
                   className={`w-4 h-4 transition-transform ${
                     sortOrder === "asc" ? "rotate-180" : ""
@@ -299,6 +323,7 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
               </button>
             </div>
             <div className="w-8"></div>
+            <div className="w-8"></div>
           </div>
           {/* Table Body */}
           {sortedAgents.map((agent) => (
@@ -309,7 +334,7 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
                   onNavigateToAgent(agent.uuid);
                 }
               }}
-              className="grid grid-cols-[1fr_1fr_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer"
+              className="grid grid-cols-[1fr_1fr_auto_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer"
             >
               {/* Name Column */}
               <div className="flex items-center">
@@ -317,11 +342,36 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
                   {agent.name}
                 </div>
               </div>
-              {/* Created At Column */}
+              {/* Last Updated At Column */}
               <div className="flex items-center">
                 <span className="text-sm text-muted-foreground">
-                  {agent.createdAt}
+                  {agent.updatedAt}
                 </span>
+              </div>
+              {/* Duplicate Button */}
+              <div className="flex items-center">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openDuplicateDialog(agent);
+                  }}
+                  className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-pointer"
+                  title="Duplicate agent"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
+                    />
+                  </svg>
+                </button>
               </div>
               {/* Delete Button */}
               <div className="flex items-center">
@@ -394,6 +444,16 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
         confirmText="Delete"
         isDeleting={!!deletingAgentUuid}
       />
+
+      {/* Duplicate Agent Dialog */}
+      {duplicateDialogOpen && agentToDuplicate && (
+        <DuplicateAgentDialog
+          originalAgent={agentToDuplicate}
+          onClose={closeDuplicateDialog}
+          onDuplicated={handleAgentDuplicated}
+          onNavigateToAgent={onNavigateToAgent}
+        />
+      )}
     </div>
   );
 }
@@ -563,6 +623,188 @@ function NewAgentDialog({
               </>
             ) : (
               "Create Agent"
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DuplicateAgentDialog({
+  originalAgent,
+  onClose,
+  onDuplicated,
+  onNavigateToAgent,
+}: {
+  originalAgent: Agent;
+  onClose: () => void;
+  onDuplicated: (agent: Agent) => void;
+  onNavigateToAgent?: (agentUuid: string) => void;
+}) {
+  const [agentName, setAgentName] = useState(`Copy of ${originalAgent.name}`);
+  const [isDuplicating, setIsDuplicating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const maxLength = 50;
+
+  const handleDuplicate = async () => {
+    if (!agentName.trim()) return;
+
+    try {
+      setIsDuplicating(true);
+      setError(null);
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+      if (!backendUrl) {
+        throw new Error("BACKEND_URL environment variable is not set");
+      }
+
+      // Call the duplicate endpoint
+      const response = await fetch(
+        `${backendUrl}/agents/${originalAgent.uuid}/duplicate`,
+        {
+          method: "POST",
+          headers: {
+            accept: "application/json",
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+          },
+          body: JSON.stringify({
+            name: agentName.trim(),
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to duplicate agent");
+      }
+
+      const data = await response.json();
+      const newAgent: Agent = {
+        uuid: data.uuid,
+        name: agentName.trim(),
+        updatedAt: formatDate(new Date().toISOString()),
+        updatedAtRaw: new Date().toISOString(),
+      };
+
+      onDuplicated(newAgent);
+      onClose();
+
+      if (onNavigateToAgent) {
+        onNavigateToAgent(data.uuid);
+      }
+    } catch (err) {
+      console.error("Error duplicating agent:", err);
+      setError(
+        err instanceof Error ? err.message : "Failed to duplicate agent"
+      );
+    } finally {
+      setIsDuplicating(false);
+    }
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      onClick={onClose}
+    >
+      <div
+        className="bg-background border border-border rounded-xl p-8 max-w-lg w-full mx-4 shadow-lg"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-semibold tracking-tight mb-1">
+            Duplicate agent
+          </h2>
+          <p className="text-muted-foreground text-[15px]">
+            Choose a name for the duplicated agent
+          </p>
+        </div>
+
+        {/* Agent Name Input */}
+        <div className="mb-6">
+          <label className="block text-[13px] font-medium text-foreground mb-2">
+            Agent Name <span className="text-red-500">*</span>
+          </label>
+          <div className="relative">
+            <input
+              type="text"
+              value={agentName}
+              onChange={(e) => {
+                if (e.target.value.length <= maxLength) {
+                  setAgentName(e.target.value);
+                }
+              }}
+              placeholder="Enter agent name"
+              className="w-full h-10 px-3 pr-16 rounded-md text-[13px] border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+              maxLength={maxLength}
+            />
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <span className="text-[12px] text-muted-foreground">
+                {agentName.length}/{maxLength}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="mb-6 p-3 rounded-md bg-red-500/10 border border-red-500/20">
+            <p className="text-[13px] text-red-500">{error}</p>
+          </div>
+        )}
+
+        {/* Footer Buttons */}
+        <div className="flex items-center justify-between">
+          <button
+            onClick={onClose}
+            className="h-9 px-4 rounded-md text-[13px] font-medium bg-muted text-foreground hover:bg-muted/80 transition-colors cursor-pointer flex items-center gap-2"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 19.5L8.25 12l7.5-7.5"
+              />
+            </svg>
+            Cancel
+          </button>
+          <button
+            onClick={handleDuplicate}
+            disabled={!agentName.trim() || isDuplicating}
+            className="h-9 px-4 rounded-md text-[13px] font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            {isDuplicating ? (
+              <>
+                <svg
+                  className="w-4 h-4 animate-spin"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Duplicating...
+              </>
+            ) : (
+              "Duplicate"
             )}
           </button>
         </div>
