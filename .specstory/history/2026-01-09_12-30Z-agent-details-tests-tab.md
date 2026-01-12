@@ -4207,94 +4207,371 @@ Now let me update `DataExtractionTabContent.tsx`:
 
 ---
 
-
-
----
-
-
+<think><details><summary>Thought Process</summary>
+Now let me update DataExtractionTabContent.tsx.</details></think>
 
 ---
 
+<tool-use data-tool-type="write" data-tool-name="search_replace">
 
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/DataExtractionTabContent.tsx</summary>
 
----
+**Chunk 1**
+Lines added: 1, lines removed: undefined
 
-
-
----
-
-
-
----
-
-
-
----
-
-
-
----
-
-
-
----
-
-
-
----
-
-
-
----
-
-
-
----
-
-
-
----
-
-
-
----
-
-
-
----
-
-
-
----
-
-
-
----
-
-
-
----
-
-
-
----
-
-
-
----
-
-
-
----
-
-<tool-use data-tool-type="unknown" data-tool-name="read_file">
-<details>
-<summary>Tool use: **read_file**</summary>
-
-Status: **loading**
-
+```diff
+@@ -6,4 +6,5 @@
+    DataFieldProperty,
+  } from "@/components/DataFieldPropertyCard";
++ import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
+  
+  type DataExtractionFieldData = {
+```
 
 </details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to add state for the delete dialog.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/DataExtractionTabContent.tsx</summary>
+
+**Chunk 1**
+Lines added: 6, lines removed: undefined
+
+```diff
+@@ -50,4 +50,10 @@
+    const [createDataFieldError, setCreateDataFieldError] = useState&lt;
+      string | null
++ 
++   // Delete confirmation state
++   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
++   const [fieldToDelete, setFieldToDelete] = useState&lt;DataExtractionFieldData | null&gt;(null);
++   const [createDataFieldError2, setCreateDataFieldError2] = useState&lt;
++     string | null
+    &gt;(null);
+    const [dataFieldValidationAttempted, setDataFieldValidationAttempted] =
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+That didn't work as expected. Let me re-read the file and make the proper fix.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/DataExtractionTabContent.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I see the problem. I messed up the syntax. Let me fix it properly.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/DataExtractionTabContent.tsx</summary>
+
+**Chunk 1**
+Lines added: 5, lines removed: 6
+
+```diff
+@@ -50,14 +50,13 @@
+    const [createDataFieldError, setCreateDataFieldError] = useState&lt;
+      string | null
+- 
+-   // Delete confirmation state
+-   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+-   const [fieldToDelete, setFieldToDelete] = useState&lt;DataExtractionFieldData | null&gt;(null);
+-   const [createDataFieldError2, setCreateDataFieldError2] = useState&lt;
+-     string | null
+    &gt;(null);
+    const [dataFieldValidationAttempted, setDataFieldValidationAttempted] =
+      useState(false);
+  
++   // Delete confirmation state
++   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
++   const [fieldToDelete, setFieldToDelete] =
++     useState&lt;DataExtractionFieldData | null&gt;(null);
++ 
+    // State for data field properties
+    const [dataFieldProperties, setDataFieldProperties] = useState&lt;
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me add the handlers and update the delete button.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/DataExtractionTabContent.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me add the handlers for the delete dialog after the state declarations.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/DataExtractionTabContent.tsx</summary>
+
+**Chunk 1**
+Lines added: 25, lines removed: undefined
+
+```diff
+@@ -59,4 +59,29 @@
+      useState&lt;DataExtractionFieldData | null&gt;(null);
+  
++   // Open delete confirmation dialog
++   const openDeleteDialog = (field: DataExtractionFieldData) =&gt; {
++     setFieldToDelete(field);
++     setDeleteDialogOpen(true);
++   };
++ 
++   // Close delete confirmation dialog
++   const closeDeleteDialog = () =&gt; {
++     setDeleteDialogOpen(false);
++     setFieldToDelete(null);
++   };
++ 
++   // Handle delete field
++   const handleDeleteField = () =&gt; {
++     if (!fieldToDelete) return;
++ 
++     // Remove from local state - will be saved with agent config
++     setDataExtractionFields((prev) =&gt;
++       prev.filter((f) =&gt; f.uuid !== fieldToDelete.uuid)
++     );
++     // Trigger save to persist the change
++     setTimeout(() =&gt; saveRef.current(), 0);
++     closeDeleteDialog();
++   };
++ 
+    // State for data field properties
+    const [dataFieldProperties, setDataFieldProperties] = useState&lt;
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me update the delete button to use the new dialog.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/DataExtractionTabContent.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 13
+
+```diff
+@@ -712,17 +712,5 @@
+                      onClick={(e) =&gt; {
+                        e.stopPropagation();
+-                       if (
+-                         !confirm(
+-                           &#96;Are you sure you want to delete "${field.name}"?&#96;
+-                         )
+-                       )
+-                         return;
+- 
+-                       // Remove from local state - will be saved with agent config
+-                       setDataExtractionFields((prev) =&gt;
+-                         prev.filter((f) =&gt; f.uuid !== field.uuid)
+-                       );
+-                       // Trigger save to persist the change
+-                       setTimeout(() =&gt; saveRef.current(), 0);
++                       openDeleteDialog(field);
+                      }}
+                      className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to add the DeleteConfirmationDialog component at the end of the component. Let me find the end.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/DataExtractionTabContent.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to add the DeleteConfirmationDialog before the closing fragment tag.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/DataExtractionTabContent.tsx</summary>
+
+**Chunk 1**
+Lines added: 10, lines removed: undefined
+
+```diff
+@@ -1154,4 +1154,14 @@
+          &lt;/div&gt;
+        )}
++ 
++       {/* Delete Confirmation Dialog */}
++       &lt;DeleteConfirmationDialog
++         isOpen={deleteDialogOpen}
++         onClose={closeDeleteDialog}
++         onConfirm={handleDeleteField}
++         title="Delete field"
++         message={&#96;Are you sure you want to delete "${fieldToDelete?.name}"?&#96;}
++         confirmText="Delete"
++       /&gt;
+      &lt;/&gt;
+    );
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me update the EvaluationTabContent.tsx file.</details></think>
+
+---
+
+Now let me update `EvaluationTabContent.tsx`:
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/EvaluationTabContent.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me update the EvaluationTabContent.tsx file.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/EvaluationTabContent.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: undefined
+
+```diff
+@@ -2,4 +2,5 @@
+  
+  import React, { useState } from "react";
++ import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
+  
+  type EvaluationCriteriaData = {
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now add the state for delete dialog.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/EvaluationTabContent.tsx</summary>
+
+**Chunk 1**
+Lines added: 33, lines removed: undefined
+
+```diff
+@@ -42,4 +42,37 @@
+    const [criteriaInstructions, setCriteriaInstructions] = useState("");
+    const [validationAttempted, setValidationAttempted] = useState(false);
++ 
++   // Delete confirmation state
++   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
++   const [criteriaToDelete, setCriteriaToDelete] =
++     useState&lt;EvaluationCriteriaData | null&gt;(null);
++ 
++   // Open delete confirmation dialog
++   const openDeleteDialog = (criteria: EvaluationCriteriaData) =&gt; {
++     setCriteriaToDelete(criteria);
++     setDeleteDialogOpen(true);
++   };
++ 
++   // Close delete confirmation dialog
++   const closeDeleteDialog = () =&gt; {
++     setDeleteDialogOpen(false);
++     setCriteriaToDelete(null);
++   };
++ 
++   // Handle delete criteria
++   const handleDeleteCriteria = () =&gt; {
++     if (!criteriaToDelete) return;
++ 
++     // Remove from local state
++     setEvaluationCriteria((prev) =&gt;
++       prev.filter((c) =&gt; c.uuid !== criteriaToDelete.uuid)
++     );
++ 
++     // Save the updated agent config
++     setTimeout(() =&gt; {
++       saveRef.current();
++     }, 0);
++     closeDeleteDialog();
++   };
+  
+    // Check if the name already exists (excluding current criteria being edited)
+```
+
+</details>
+
 </tool-use>
 
 ---
@@ -4303,67 +4580,186 @@ Status: **loading**
 
 ---
 
-
-
----
-
-
+<think><details><summary>Thought Process</summary>
+Now update the delete button.</details></think>
 
 ---
 
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/EvaluationTabContent.tsx</summary>
 
-
----
-
-
-
----
-
-
+</details>
+</tool-use>
 
 ---
 
-
-
----
-
-
+<think><details><summary>Thought Process</summary>
+Now update the delete button to use the new dialog.</details></think>
 
 ---
 
+<tool-use data-tool-type="write" data-tool-name="search_replace">
 
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/EvaluationTabContent.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 16
+
+```diff
+@@ -230,20 +230,5 @@
+                      onClick={(e) =&gt; {
+                        e.stopPropagation();
+-                       if (
+-                         !confirm(
+-                           &#96;Are you sure you want to delete "${criteria.name}"?&#96;
+-                         )
+-                       )
+-                         return;
+- 
+-                       // Remove from local state
+-                       setEvaluationCriteria((prev) =&gt;
+-                         prev.filter((c) =&gt; c.uuid !== criteria.uuid)
+-                       );
+- 
+-                       // Save the updated agent config
+-                       setTimeout(() =&gt; {
+-                         saveRef.current();
+-                       }, 0);
++                       openDeleteDialog(criteria);
+                      }}
+                      className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+```
+
+</details>
+
+</tool-use>
 
 ---
 
-
-
----
-
-
+<think><details><summary>Thought Process</summary>
+Now add the DeleteConfirmationDialog at the end of the component.</details></think>
 
 ---
 
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/EvaluationTabContent.tsx</summary>
 
-
----
-
-
-
----
-
-
+</details>
+</tool-use>
 
 ---
 
-
+<think><details><summary>Thought Process</summary>
+Now I need to add the DeleteConfirmationDialog before the closing fragment tag.</details></think>
 
 ---
 
-<tool-use data-tool-type="unknown" data-tool-name="grep">
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/EvaluationTabContent.tsx</summary>
+
+**Chunk 1**
+Lines added: 10, lines removed: undefined
+
+```diff
+@@ -420,4 +420,14 @@
+          &lt;/div&gt;
+        )}
++ 
++       {/* Delete Confirmation Dialog */}
++       &lt;DeleteConfirmationDialog
++         isOpen={deleteDialogOpen}
++         onClose={closeDeleteDialog}
++         onConfirm={handleDeleteCriteria}
++         title="Delete criteria"
++         message={&#96;Are you sure you want to delete "${criteriaToDelete?.name}"?&#96;}
++         confirmText="Delete"
++       /&gt;
+      &lt;/&gt;
+    );
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to check the other files that might have delete confirmations. Let me check the TextToSpeechEvaluation.tsx and SpeechToTextEvaluation.tsx files.</details></think>
+
+---
+
+Let me check if there are any other delete confirmations in the evaluation files:
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
 <details>
-<summary>Tool use: **grep**</summary>
+<summary>Tool use: **grep** • Grep for "confirm\(" in "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations" • 0 matches</summary>
 
-Status: **loading**
+Output mode: content
+
+
+_No matches found_
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good, there are no more `confirm()` calls in the evaluations folder. Let me now run lints to check for any issues.</details></think>
+
+---
+
+Now let me check for any linter errors:
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 8 files</summary>
+      
+Lint paths:
+
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/DeleteConfirmationDialog.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/DeleteToolDialog.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tests/page.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tools/page.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/Agents.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/DataExtractionTabContent.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/EvaluationTabContent.tsx`
+
+Lint results
+
+Lint errors for `src/app/tests/page.tsx`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| 'getToolParams' is declared but its value is never read. | 9:3-9:16 | DIAGNOSTIC_SEVERITY_HINT |
+| 'Tool' is declared but never used. | 24:6-24:10 | DIAGNOSTIC_SEVERITY_HINT |
+| 'validationAttempted' is declared but its value is never read. | 92:3-92:22 | DIAGNOSTIC_SEVERITY_HINT |
+| 'newTestDescription' is declared but its value is never read. | 1585:10-1585:28 | DIAGNOSTIC_SEVERITY_HINT |
+
+
+Lint errors for `src/app/tools/page.tsx`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| 'removeParameter' is declared but its value is never read. | 67:9-67:24 | DIAGNOSTIC_SEVERITY_HINT |
+| 'updateParameter' is declared but its value is never read. | 71:9-71:24 | DIAGNOSTIC_SEVERITY_HINT |
+
+
+Lint errors for `src/components/agent-tabs/TestsTabContent.tsx`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| 'React' is declared but its value is never read. | 3:8-3:13 | DIAGNOSTIC_SEVERITY_HINT |
 
 
 </details>
@@ -4371,19 +4767,233 @@ Status: **loading**
 
 ---
 
-
-
----
-
-
+<think><details><summary>Thought Process</summary>
+All the files are lint-free. Let me make sure I've covered all the places where delete confirmation was being done.</details></think>
 
 ---
 
-<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+Let me verify there are no more `confirm()` calls left:
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
 <details>
-<summary>Tool use: **read_lints**</summary>
+<summary>Tool use: **grep** • Grep for "confirm\(" in "/Users/aman/Documents/repos/artpark/pense-frontend/src" • 0 matches</summary>
 
-Status: **loading**
+Output mode: files_with_matches
+
+
+_No matches found_
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+All the `confirm()` calls have been replaced with the new DeleteConfirmationDialog component. Let me provide a summary of all the changes.</details></think>
+
+---
+
+I've created a reusable `DeleteConfirmationDialog` component and updated all places in the app where delete confirmation was being used. Here's a summary:
+
+**Created:**
+- `src/components/DeleteConfirmationDialog.tsx` - A parameterized reusable component with the following props:
+  - `isOpen` - controls visibility
+  - `onClose` - callback when closing
+  - `onConfirm` - callback when confirming deletion
+  - `title` - dialog title (default: "Confirm deletion")
+  - `message` - the confirmation message
+  - `confirmText` - text for confirm button (default: "Remove")
+  - `cancelText` - text for cancel button (default: "Cancel")
+  - `isDeleting` - shows loading state
+
+**Updated files:**
+1. `src/components/agent-tabs/TestsTabContent.tsx` - Uses the dialog for detaching tests from agents
+2. `src/components/agent-tabs/DeleteToolDialog.tsx` - Refactored to use the new component internally
+3. `src/app/tests/page.tsx` - Uses the dialog for deleting tests
+4. `src/app/tools/page.tsx` - Uses the dialog for deleting tools
+5. `src/components/Agents.tsx` - Uses the dialog for deleting agents
+6. `src/components/agent-tabs/DataExtractionTabContent.tsx` - Uses the dialog for deleting data extraction fields
+7. `src/components/agent-tabs/EvaluationTabContent.tsx` - Uses the dialog for deleting evaluation criteria
+
+All `confirm()` calls have been replaced with the styled `DeleteConfirmationDialog` component for a consistent UX across the app.
+
+---
+
+_**User (2026-01-09 03:30Z)**_
+
+add a run all tests button beside the add test button once non-zero number of tests are added to the agent
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants me to add a "Run All Tests" button beside the "Add test" button in the TestsTabContent.tsx file. This button should only appear when there are tests attached to the agent (non-zero tests).
+
+Let me read the TestsTabContent.tsx file to understand its structure and find the right place to add this button.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me read more of the file to find where the "Add test" button is located.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I found the "Add test" button at line 257-262. The user wants to add a "Run All Tests" button beside it. The button should only show when `agentTests.length > 0`, which is already the condition for showing the header section.
+
+I need to add a "Run All Tests" button after the "Add test" button (or beside it).</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+**Chunk 1**
+Lines added: 8, lines removed: 7
+
+```diff
+@@ -254,11 +254,12 @@
+          {agentTests.length &gt; 0 &amp;&amp; (
+            &lt;div className="flex items-center justify-between mb-4"&gt;
+-             &lt;div className="relative" ref={dropdownRef}&gt;
+-               &lt;button
+-                 onClick={() =&gt; setShowTestDropdown(!showTestDropdown)}
+-                 className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
+-               &gt;
+-                 Add test
+-               &lt;/button&gt;
++             &lt;div className="flex items-center gap-3"&gt;
++               &lt;div className="relative" ref={dropdownRef}&gt;
++                 &lt;button
++                   onClick={() =&gt; setShowTestDropdown(!showTestDropdown)}
++                   className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
++                 &gt;
++                   Add test
++                 &lt;/button&gt;
+  
+                {/* Test Selection Dropdown */}
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to find where the dropdown closes (after the relative div) and add the Run All Tests button after it, then close the new flex container div.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I need to find where the dropdown div closes for the first instance (with tests present). Let me search for a better spot.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I see that line 359 is where the dropdown ref div closes (the first `</div>`), and line 360 is where the flex container closes. I need to add the "Run All Tests" button between line 359 and 360, and close the parent flex div I added.
+
+Let me update the code to add the Run All Tests button.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+**Chunk 1**
+Lines added: 19, lines removed: undefined
+
+```diff
+@@ -358,4 +358,23 @@
+                )}
+              &lt;/div&gt;
++               &lt;button
++                 className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer flex items-center gap-2"
++               &gt;
++                 &lt;svg
++                   className="w-4 h-4"
++                   fill="none"
++                   viewBox="0 0 24 24"
++                   stroke="currentColor"
++                   strokeWidth={2}
++                 &gt;
++                   &lt;path
++                     strokeLinecap="round"
++                     strokeLinejoin="round"
++                     d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
++                   /&gt;
++                 &lt;/svg&gt;
++                 Run All Tests
++               &lt;/button&gt;
++             &lt;/div&gt;
+            &lt;/div&gt;
+          )}
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me check for lints to make sure there are no errors.</details></think>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 1 file</summary>
+      
+Lint paths:
+
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx`
+
+Lint results
+
+Lint errors for `src/components/agent-tabs/TestsTabContent.tsx`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| 'React' is declared but its value is never read. | 3:8-3:13 | DIAGNOSTIC_SEVERITY_HINT |
 
 
 </details>
@@ -4391,19 +5001,1125 @@ Status: **loading**
 
 ---
 
-
-
----
-
-
+<think><details><summary>Thought Process</summary>
+Let me verify my changes by reading the updated section to make sure the button is properly positioned.</details></think>
 
 ---
 
-<tool-use data-tool-type="unknown" data-tool-name="grep">
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+The structure looks good. Let me continue reading to verify the closing of the div structure.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+The structure looks correct:
+- Line 256: `<div className="flex items-center gap-3">` - wrapper for both buttons
+- Line 257: `<div className="relative" ref={dropdownRef}>` - Add test button with dropdown
+- Line 359: `</div>` - closes the relative div
+- Line 360-377: Run All Tests button
+- Line 378: `</div>` - closes the flex items-center gap-3 wrapper
+- Line 379: `</div>` - closes the flex items-center justify-between mb-4
+
+The structure is correct. The "Run All Tests" button is now shown beside the "Add test" button when there are tests attached to the agent. The button only shows when `agentTests.length > 0`.</details></think>
+
+---
+
+I've added the "Run All Tests" button beside the "Add test" button. The button only appears when there are tests attached to the agent (`agentTests.length > 0`). 
+
+Here's what was added:
+
+```254:380:src/components/agent-tabs/TestsTabContent.tsx
+{agentTests.length > 0 && (
+  <div className="flex items-center justify-between mb-4">
+    <div className="flex items-center gap-3">
+      <div className="relative" ref={dropdownRef}>
+        <button ... >Add test</button>
+        {/* dropdown */}
+      </div>
+      <button className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer flex items-center gap-2">
+        <svg ...>
+          <path d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+        </svg>
+        Run All Tests
+      </button>
+    </div>
+  </div>
+)}
+```
+
+The button has:
+- A play icon (triangle pointing right)
+- The text "Run All Tests"
+- A bordered style that matches the UI (contrasting with the solid "Add test" button)
+- Only visible when there is at least one test attached to the agent
+
+---
+
+_**User (2026-01-09 03:30Z)**_
+
+clicking on run all tests should trigger a test run and open this window first showing the tests are running and as each test is done, mark the test as either having passed or failed, upon clicking each test on the left, once should be able to see the test chat history on the right with the last agent message or tool call being marked as either correct or wrong
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants me to implement a full test runner dialog/modal that:
+1. Opens when clicking "Run All Tests"
+2. Shows tests running status
+3. As each test completes, marks it as passed or failed
+4. Clicking on a test on the left shows the chat history on the right
+5. The last agent message or tool call should be marked as correct or wrong
+
+Looking at the images:
+- First image: A modal with "Test Status for ANC form fill" title, "Retry Failed" and "Retry All" buttons, left panel showing "Passed Tests (1)" with "skip answered questions" test, right panel showing "Select a test to view details"
+- Second image: When a test is selected, shows the evaluation details, chat history with messages, and tool invocations
+
+This is a complex feature. I need to:
+1. Create a TestRunnerDialog component
+2. Implement the test running logic
+3. Show the results with chat history
+
+Let me start by reading the TestsTabContent to understand the current structure and then create this dialog.</details></think>
+
+---
+
+This is a substantial feature. I'll create a `TestRunnerDialog` component that handles running tests and displaying results. Let me implement this step by step.
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me create the TestRunnerDialog component. I'll need to:
+1. Create a new file for the dialog
+2. Implement the test running logic
+3. Display results with chat history
+4. Handle the pass/fail state
+5. Update the TestsTabContent to use this dialog</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="write">
+
+<details><summary>Tool use: **write** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/TestRunnerDialog.tsx</summary>
+
+**Chunk 1**
+Lines added: 769, lines removed: 1
+
+```diff
+@@ -1,1 +1,769 @@
+- 
++ "use client";
++ 
++ import React, { useState, useEffect } from "react";
++ 
++ type TestData = {
++   uuid: string;
++   name: string;
++   description: string;
++   type: "response" | "tool_call";
++   config: Record&lt;string, any&gt;;
++   created_at: string;
++   updated_at: string;
++ };
++ 
++ type ChatMessage = {
++   role: "user" | "agent" | "tool";
++   content: string;
++   tool_name?: string;
++   tool_args?: Record&lt;string, any&gt;;
++ };
++ 
++ type TestResult = {
++   test: TestData;
++   status: "pending" | "running" | "passed" | "failed";
++   chatHistory?: ChatMessage[];
++   evaluation?: {
++     passed: boolean;
++     message?: string;
++     details?: Record&lt;string, any&gt;;
++   };
++   error?: string;
++ };
++ 
++ type TestRunnerDialogProps = {
++   isOpen: boolean;
++   onClose: () =&gt; void;
++   agentUuid: string;
++   agentName: string;
++   tests: TestData[];
++ };
++ 
++ export function TestRunnerDialog({
++   isOpen,
++   onClose,
++   agentUuid,
++   agentName,
++   tests,
++ }: TestRunnerDialogProps) {
++   const [testResults, setTestResults] = useState&lt;TestResult[]&gt;([]);
++   const [selectedTestUuid, setSelectedTestUuid] = useState&lt;string | null&gt;(null);
++   const [isRunning, setIsRunning] = useState(false);
++ 
++   // Initialize test results when dialog opens
++   useEffect(() =&gt; {
++     if (isOpen &amp;&amp; tests.length &gt; 0) {
++       const initialResults: TestResult[] = tests.map((test) =&gt; ({
++         test,
++         status: "pending",
++       }));
++       setTestResults(initialResults);
++       setSelectedTestUuid(null);
++       // Auto-start running tests
++       runAllTests(initialResults);
++     }
++   }, [isOpen, tests]);
++ 
++   const runAllTests = async (initialResults: TestResult[]) =&gt; {
++     setIsRunning(true);
++ 
++     for (let i = 0; i &lt; initialResults.length; i++) {
++       const testResult = initialResults[i];
++ 
++       // Update status to running
++       setTestResults((prev) =&gt;
++         prev.map((r) =&gt;
++           r.test.uuid === testResult.test.uuid ? { ...r, status: "running" } : r
++         )
++       );
++ 
++       try {
++         const result = await runSingleTest(testResult.test);
++ 
++         // Update with result
++         setTestResults((prev) =&gt;
++           prev.map((r) =&gt;
++             r.test.uuid === testResult.test.uuid
++               ? {
++                   ...r,
++                   status: result.passed ? "passed" : "failed",
++                   chatHistory: result.chatHistory,
++                   evaluation: result.evaluation,
++                 }
++               : r
++           )
++         );
++       } catch (error) {
++         // Update with error
++         setTestResults((prev) =&gt;
++           prev.map((r) =&gt;
++             r.test.uuid === testResult.test.uuid
++               ? {
++                   ...r,
++                   status: "failed",
++                   error:
++                     error instanceof Error ? error.message : "Test failed",
++                 }
++               : r
++           )
++         );
++       }
++     }
++ 
++     setIsRunning(false);
++   };
++ 
++   const runSingleTest = async (
++     test: TestData
++   ): Promise&lt;{
++     passed: boolean;
++     chatHistory: ChatMessage[];
++     evaluation: { passed: boolean; message?: string; details?: Record&lt;string, any&gt; };
++   }&gt; =&gt; {
++     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
++     if (!backendUrl) {
++       throw new Error("BACKEND_URL environment variable is not set");
++     }
++ 
++     const response = await fetch(&#96;${backendUrl}/tests/${test.uuid}/run&#96;, {
++       method: "POST",
++       headers: {
++         accept: "application/json",
++         "Content-Type": "application/json",
++         "ngrok-skip-browser-warning": "true",
++       },
++       body: JSON.stringify({
++         agent_uuid: agentUuid,
++       }),
++     });
++ 
++     if (!response.ok) {
++       throw new Error("Failed to run test");
++     }
++ 
++     const result = await response.json();
++     return {
++       passed: result.passed ?? result.evaluation?.passed ?? false,
++       chatHistory: result.chat_history ?? result.chatHistory ?? [],
++       evaluation: result.evaluation ?? { passed: result.passed ?? false },
++     };
++   };
++ 
++   const retryTest = async (testUuid: string) =&gt; {
++     const testResult = testResults.find((r) =&gt; r.test.uuid === testUuid);
++     if (!testResult) return;
++ 
++     // Update status to running
++     setTestResults((prev) =&gt;
++       prev.map((r) =&gt;
++         r.test.uuid === testUuid ? { ...r, status: "running", error: undefined } : r
++       )
++     );
++ 
++     try {
++       const result = await runSingleTest(testResult.test);
++ 
++       setTestResults((prev) =&gt;
++         prev.map((r) =&gt;
++           r.test.uuid === testUuid
++             ? {
++                 ...r,
++                 status: result.passed ? "passed" : "failed",
++                 chatHistory: result.chatHistory,
++                 evaluation: result.evaluation,
++               }
++             : r
++         )
++       );
++     } catch (error) {
++       setTestResults((prev) =&gt;
++         prev.map((r) =&gt;
++           r.test.uuid === testUuid
++             ? {
++                 ...r,
++                 status: "failed",
++                 error: error instanceof Error ? error.message : "Test failed",
++               }
++             : r
++         )
++       );
++     }
++   };
++ 
++   const retryAllFailed = async () =&gt; {
++     const failedTests = testResults.filter((r) =&gt; r.status === "failed");
++     setIsRunning(true);
++ 
++     for (const testResult of failedTests) {
++       await retryTest(testResult.test.uuid);
++     }
++ 
++     setIsRunning(false);
++   };
++ 
++   const retryAll = async () =&gt; {
++     setIsRunning(true);
++ 
++     // Reset all tests to pending
++     setTestResults((prev) =&gt;
++       prev.map((r) =&gt; ({ ...r, status: "pending", error: undefined }))
++     );
++ 
++     const resetResults = testResults.map((r) =&gt; ({
++       ...r,
++       status: "pending" as const,
++     }));
++     await runAllTests(resetResults);
++   };
++ 
++   const selectedResult = testResults.find(
++     (r) =&gt; r.test.uuid === selectedTestUuid
++   );
++ 
++   const passedTests = testResults.filter((r) =&gt; r.status === "passed");
++   const failedTests = testResults.filter((r) =&gt; r.status === "failed");
++   const pendingTests = testResults.filter(
++     (r) =&gt; r.status === "pending" || r.status === "running"
++   );
++ 
++   if (!isOpen) return null;
++ 
++   return (
++     &lt;div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;
++       &lt;div className="bg-background rounded-xl w-full max-w-5xl h-[80vh] flex flex-col shadow-2xl"&gt;
++         {/* Header */}
++         &lt;div className="flex items-center justify-between px-6 py-4 border-b border-border"&gt;
++           &lt;h2 className="text-lg font-semibold text-foreground"&gt;
++             Test Status for {agentName}
++           &lt;/h2&gt;
++           &lt;div className="flex items-center gap-3"&gt;
++             &lt;button
++               onClick={retryAllFailed}
++               disabled={isRunning || failedTests.length === 0}
++               className="h-9 px-4 rounded-md text-sm font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
++             &gt;
++               Retry Failed
++             &lt;/button&gt;
++             &lt;button
++               onClick={retryAll}
++               disabled={isRunning}
++               className="h-9 px-4 rounded-md text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
++             &gt;
++               Retry All
++             &lt;/button&gt;
++             &lt;button
++               onClick={onClose}
++               className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted transition-colors cursor-pointer"
++             &gt;
++               &lt;svg
++                 className="w-5 h-5"
++                 fill="none"
++                 viewBox="0 0 24 24"
++                 stroke="currentColor"
++                 strokeWidth={2}
++               &gt;
++                 &lt;path
++                   strokeLinecap="round"
++                   strokeLinejoin="round"
++                   d="M6 18L18 6M6 6l12 12"
++                 /&gt;
++               &lt;/svg&gt;
++             &lt;/button&gt;
++           &lt;/div&gt;
++         &lt;/div&gt;
++ 
++         {/* Content */}
++         &lt;div className="flex-1 flex overflow-hidden"&gt;
++           {/* Left Panel - Test List */}
++           &lt;div className="w-80 border-r border-border flex flex-col overflow-hidden"&gt;
++             &lt;div className="flex-1 overflow-y-auto"&gt;
++               {/* Passed Tests */}
++               {passedTests.length &gt; 0 &amp;&amp; (
++                 &lt;div className="p-4"&gt;
++                   &lt;h3 className="text-sm font-medium text-muted-foreground mb-2"&gt;
++                     Passed Tests ({passedTests.length})
++                   &lt;/h3&gt;
++                   &lt;div className="space-y-1"&gt;
++                     {passedTests.map((result) =&gt; (
++                       &lt;TestListItem
++                         key={result.test.uuid}
++                         result={result}
++                         isSelected={selectedTestUuid === result.test.uuid}
++                         onSelect={() =&gt; setSelectedTestUuid(result.test.uuid)}
++                         onRetry={() =&gt; retryTest(result.test.uuid)}
++                       /&gt;
++                     ))}
++                   &lt;/div&gt;
++                 &lt;/div&gt;
++               )}
++ 
++               {/* Failed Tests */}
++               {failedTests.length &gt; 0 &amp;&amp; (
++                 &lt;div className="p-4"&gt;
++                   &lt;h3 className="text-sm font-medium text-muted-foreground mb-2"&gt;
++                     Failed Tests ({failedTests.length})
++                   &lt;/h3&gt;
++                   &lt;div className="space-y-1"&gt;
++                     {failedTests.map((result) =&gt; (
++                       &lt;TestListItem
++                         key={result.test.uuid}
++                         result={result}
++                         isSelected={selectedTestUuid === result.test.uuid}
++                         onSelect={() =&gt; setSelectedTestUuid(result.test.uuid)}
++                         onRetry={() =&gt; retryTest(result.test.uuid)}
++                       /&gt;
++                     ))}
++                   &lt;/div&gt;
++                 &lt;/div&gt;
++               )}
++ 
++               {/* Pending/Running Tests */}
++               {pendingTests.length &gt; 0 &amp;&amp; (
++                 &lt;div className="p-4"&gt;
++                   &lt;h3 className="text-sm font-medium text-muted-foreground mb-2"&gt;
++                     {isRunning ? "Running Tests" : "Pending Tests"} (
++                     {pendingTests.length})
++                   &lt;/h3&gt;
++                   &lt;div className="space-y-1"&gt;
++                     {pendingTests.map((result) =&gt; (
++                       &lt;TestListItem
++                         key={result.test.uuid}
++                         result={result}
++                         isSelected={selectedTestUuid === result.test.uuid}
++                         onSelect={() =&gt; setSelectedTestUuid(result.test.uuid)}
++                         onRetry={() =&gt; retryTest(result.test.uuid)}
++                       /&gt;
++                     ))}
++                   &lt;/div&gt;
++                 &lt;/div&gt;
++               )}
++             &lt;/div&gt;
++           &lt;/div&gt;
++ 
++           {/* Right Panel - Test Details */}
++           &lt;div className="flex-1 overflow-y-auto"&gt;
++             {selectedResult ? (
++               &lt;TestDetailView result={selectedResult} /&gt;
++             ) : (
++               &lt;div className="flex items-center justify-center h-full"&gt;
++                 &lt;p className="text-muted-foreground"&gt;
++                   Select a test to view details
++                 &lt;/p&gt;
++               &lt;/div&gt;
++             )}
++           &lt;/div&gt;
++         &lt;/div&gt;
++       &lt;/div&gt;
++     &lt;/div&gt;
++   );
++ }
++ 
++ // Test List Item Component
++ function TestListItem({
++   result,
++   isSelected,
++   onSelect,
++   onRetry,
++ }: {
++   result: TestResult;
++   isSelected: boolean;
++   onSelect: () =&gt; void;
++   onRetry: () =&gt; void;
++ }) {
++   return (
++     &lt;div
++       onClick={onSelect}
++       className={&#96;flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer transition-colors ${
++         isSelected ? "bg-muted" : "hover:bg-muted/50"
++       }&#96;}
++     &gt;
++       &lt;div className="flex items-center gap-2 min-w-0"&gt;
++         {/* Status Icon */}
++         {result.status === "passed" &amp;&amp; (
++           &lt;div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0"&gt;
++             &lt;svg
++               className="w-3 h-3 text-green-500"
++               fill="none"
++               viewBox="0 0 24 24"
++               stroke="currentColor"
++               strokeWidth={3}
++             &gt;
++               &lt;path
++                 strokeLinecap="round"
++                 strokeLinejoin="round"
++                 d="M5 13l4 4L19 7"
++               /&gt;
++             &lt;/svg&gt;
++           &lt;/div&gt;
++         )}
++         {result.status === "failed" &amp;&amp; (
++           &lt;div className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0"&gt;
++             &lt;svg
++               className="w-3 h-3 text-red-500"
++               fill="none"
++               viewBox="0 0 24 24"
++               stroke="currentColor"
++               strokeWidth={3}
++             &gt;
++               &lt;path
++                 strokeLinecap="round"
++                 strokeLinejoin="round"
++                 d="M6 18L18 6M6 6l12 12"
++               /&gt;
++             &lt;/svg&gt;
++           &lt;/div&gt;
++         )}
++         {result.status === "running" &amp;&amp; (
++           &lt;div className="w-5 h-5 flex items-center justify-center flex-shrink-0"&gt;
++             &lt;svg
++               className="w-4 h-4 animate-spin text-muted-foreground"
++               fill="none"
++               viewBox="0 0 24 24"
++             &gt;
++               &lt;circle
++                 className="opacity-25"
++                 cx="12"
++                 cy="12"
++                 r="10"
++                 stroke="currentColor"
++                 strokeWidth="4"
++               &gt;&lt;/circle&gt;
++               &lt;path
++                 className="opacity-75"
++                 fill="currentColor"
++                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
++               &gt;&lt;/path&gt;
++             &lt;/svg&gt;
++           &lt;/div&gt;
++         )}
++         {result.status === "pending" &amp;&amp; (
++           &lt;div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center flex-shrink-0"&gt;
++             &lt;div className="w-2 h-2 rounded-full bg-muted-foreground"&gt;&lt;/div&gt;
++           &lt;/div&gt;
++         )}
++ 
++         &lt;span className="text-sm text-foreground truncate"&gt;
++           {result.test.name}
++         &lt;/span&gt;
++       &lt;/div&gt;
++ 
++       {/* Retry Button */}
++       {(result.status === "passed" || result.status === "failed") &amp;&amp; (
++         &lt;button
++           onClick={(e) =&gt; {
++             e.stopPropagation();
++             onRetry();
++           }}
++           className="w-6 h-6 flex items-center justify-center rounded hover:bg-muted-foreground/20 transition-colors flex-shrink-0"
++           title="Retry test"
++         &gt;
++           &lt;svg
++             className="w-3.5 h-3.5 text-muted-foreground"
++             fill="none"
++             viewBox="0 0 24 24"
++             stroke="currentColor"
++             strokeWidth={2}
++           &gt;
++             &lt;path
++               strokeLinecap="round"
++               strokeLinejoin="round"
++               d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
++             /&gt;
++           &lt;/svg&gt;
++         &lt;/button&gt;
++       )}
++     &lt;/div&gt;
++   );
++ }
++ 
++ // Test Detail View Component
++ function TestDetailView({ result }: { result: TestResult }) {
++   const [expandedToolCalls, setExpandedToolCalls] = useState&lt;Set&lt;number&gt;&gt;(
++     new Set()
++   );
++ 
++   const toggleToolCall = (index: number) =&gt; {
++     setExpandedToolCalls((prev) =&gt; {
++       const newSet = new Set(prev);
++       if (newSet.has(index)) {
++         newSet.delete(index);
++       } else {
++         newSet.add(index);
++       }
++       return newSet;
++     });
++   };
++ 
++   if (result.status === "pending") {
++     return (
++       &lt;div className="flex items-center justify-center h-full"&gt;
++         &lt;p className="text-muted-foreground"&gt;Test is pending&lt;/p&gt;
++       &lt;/div&gt;
++     );
++   }
++ 
++   if (result.status === "running") {
++     return (
++       &lt;div className="flex items-center justify-center h-full"&gt;
++         &lt;div className="flex items-center gap-3"&gt;
++           &lt;svg
++             className="w-5 h-5 animate-spin text-muted-foreground"
++             fill="none"
++             viewBox="0 0 24 24"
++           &gt;
++             &lt;circle
++               className="opacity-25"
++               cx="12"
++               cy="12"
++               r="10"
++               stroke="currentColor"
++               strokeWidth="4"
++             &gt;&lt;/circle&gt;
++             &lt;path
++               className="opacity-75"
++               fill="currentColor"
++               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
++             &gt;&lt;/path&gt;
++           &lt;/svg&gt;
++           &lt;p className="text-muted-foreground"&gt;Running test...&lt;/p&gt;
++         &lt;/div&gt;
++       &lt;/div&gt;
++     );
++   }
++ 
++   if (result.error) {
++     return (
++       &lt;div className="p-6"&gt;
++         &lt;div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4"&gt;
++           &lt;div className="flex items-center gap-2 mb-2"&gt;
++             &lt;svg
++               className="w-5 h-5 text-red-500"
++               fill="none"
++               viewBox="0 0 24 24"
++               stroke="currentColor"
++               strokeWidth={2}
++             &gt;
++               &lt;path
++                 strokeLinecap="round"
++                 strokeLinejoin="round"
++                 d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
++               /&gt;
++             &lt;/svg&gt;
++             &lt;span className="font-medium text-red-500"&gt;Error&lt;/span&gt;
++           &lt;/div&gt;
++           &lt;p className="text-sm text-red-400"&gt;{result.error}&lt;/p&gt;
++         &lt;/div&gt;
++       &lt;/div&gt;
++     );
++   }
++ 
++   return (
++     &lt;div className="p-6 space-y-6"&gt;
++       {/* Evaluation Status */}
++       &lt;div className="flex items-center justify-between"&gt;
++         &lt;h3 className="text-base font-medium text-muted-foreground"&gt;
++           Evaluation
++         &lt;/h3&gt;
++       &lt;/div&gt;
++ 
++       {result.evaluation &amp;&amp; (
++         &lt;div
++           className={&#96;flex items-center gap-2 p-3 rounded-lg ${
++             result.evaluation.passed
++               ? "bg-green-500/10 border border-green-500/30"
++               : "bg-red-500/10 border border-red-500/30"
++           }&#96;}
++         &gt;
++           {result.evaluation.passed ? (
++             &lt;div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center"&gt;
++               &lt;svg
++                 className="w-3 h-3 text-green-500"
++                 fill="none"
++                 viewBox="0 0 24 24"
++                 stroke="currentColor"
++                 strokeWidth={3}
++               &gt;
++                 &lt;path
++                   strokeLinecap="round"
++                   strokeLinejoin="round"
++                   d="M5 13l4 4L19 7"
++                 /&gt;
++               &lt;/svg&gt;
++             &lt;/div&gt;
++           ) : (
++             &lt;div className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center"&gt;
++               &lt;svg
++                 className="w-3 h-3 text-red-500"
++                 fill="none"
++                 viewBox="0 0 24 24"
++                 stroke="currentColor"
++                 strokeWidth={3}
++               &gt;
++                 &lt;path
++                   strokeLinecap="round"
++                   strokeLinejoin="round"
++                   d="M6 18L18 6M6 6l12 12"
++                 /&gt;
++               &lt;/svg&gt;
++             &lt;/div&gt;
++           )}
++           &lt;span
++             className={&#96;text-sm font-medium ${
++               result.evaluation.passed ? "text-green-500" : "text-red-500"
++             }&#96;}
++           &gt;
++             {result.evaluation.passed
++               ? "All parameter evaluations passed"
++               : result.evaluation.message || "Evaluation failed"}
++           &lt;/span&gt;
++         &lt;/div&gt;
++       )}
++ 
++       {/* Chat History */}
++       {result.chatHistory &amp;&amp; result.chatHistory.length &gt; 0 &amp;&amp; (
++         &lt;div className="space-y-4"&gt;
++           {result.chatHistory.map((message, index) =&gt; {
++             const isLastMessage = index === result.chatHistory!.length - 1;
++             const isAgentOrTool =
++               message.role === "agent" || message.role === "tool";
++ 
++             return (
++               &lt;div key={index} className="space-y-2"&gt;
++                 {message.role === "user" &amp;&amp; (
++                   &lt;div className="bg-muted/30 rounded-lg p-4"&gt;
++                     &lt;p className="text-sm text-muted-foreground whitespace-pre-wrap"&gt;
++                       {message.content}
++                     &lt;/p&gt;
++                   &lt;/div&gt;
++                 )}
++ 
++                 {message.role === "agent" &amp;&amp; !message.tool_name &amp;&amp; (
++                   &lt;div
++                     className={&#96;bg-muted/50 rounded-lg p-4 ${
++                       isLastMessage &amp;&amp; isAgentOrTool
++                         ? result.evaluation?.passed
++                           ? "border-l-4 border-l-green-500"
++                           : "border-l-4 border-l-red-500"
++                         : ""
++                     }&#96;}
++                   &gt;
++                     &lt;div className="flex items-center gap-2 mb-2"&gt;
++                       {isLastMessage &amp;&amp; (
++                         &lt;div
++                           className={&#96;w-4 h-4 rounded-full flex items-center justify-center ${
++                             result.evaluation?.passed
++                               ? "bg-green-500/20"
++                               : "bg-red-500/20"
++                           }&#96;}
++                         &gt;
++                           {result.evaluation?.passed ? (
++                             &lt;svg
++                               className="w-2.5 h-2.5 text-green-500"
++                               fill="none"
++                               viewBox="0 0 24 24"
++                               stroke="currentColor"
++                               strokeWidth={3}
++                             &gt;
++                               &lt;path
++                                 strokeLinecap="round"
++                                 strokeLinejoin="round"
++                                 d="M5 13l4 4L19 7"
++                               /&gt;
++                             &lt;/svg&gt;
++                           ) : (
++                             &lt;svg
++                               className="w-2.5 h-2.5 text-red-500"
++                               fill="none"
++                               viewBox="0 0 24 24"
++                               stroke="currentColor"
++                               strokeWidth={3}
++                             &gt;
++                               &lt;path
++                                 strokeLinecap="round"
++                                 strokeLinejoin="round"
++                                 d="M6 18L18 6M6 6l12 12"
++                               /&gt;
++                             &lt;/svg&gt;
++                           )}
++                         &lt;/div&gt;
++                       )}
++                       &lt;span className="text-sm font-medium text-foreground"&gt;
++                         {result.test.name}
++                       &lt;/span&gt;
++                     &lt;/div&gt;
++                     &lt;p className="text-sm text-foreground whitespace-pre-wrap"&gt;
++                       {message.content}
++                     &lt;/p&gt;
++                   &lt;/div&gt;
++                 )}
++ 
++                 {(message.role === "tool" || message.tool_name) &amp;&amp; (
++                   &lt;div
++                     className={&#96;rounded-lg overflow-hidden ${
++                       isLastMessage &amp;&amp; isAgentOrTool
++                         ? result.evaluation?.passed
++                           ? "border-l-4 border-l-green-500"
++                           : "border-l-4 border-l-red-500"
++                         : ""
++                     }&#96;}
++                   &gt;
++                     &lt;div
++                       className={&#96;px-4 py-3 ${
++                         result.evaluation?.passed
++                           ? "bg-green-500/10"
++                           : "bg-amber-500/10"
++                       }&#96;}
++                     &gt;
++                       &lt;span
++                         className={&#96;text-sm font-medium ${
++                           result.evaluation?.passed
++                             ? "text-green-500"
++                             : "text-amber-500"
++                         }&#96;}
++                       &gt;
++                         [Test] Tool invoked: {message.tool_name}
++                       &lt;/span&gt;
++                     &lt;/div&gt;
++ 
++                     {message.tool_args &amp;&amp; (
++                       &lt;div className="bg-muted/30 p-4"&gt;
++                         &lt;button
++                           onClick={() =&gt; toggleToolCall(index)}
++                           className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
++                         &gt;
++                           &lt;svg
++                             className={&#96;w-4 h-4 transition-transform ${
++                               expandedToolCalls.has(index) ? "rotate-90" : ""
++                             }&#96;}
++                             fill="none"
++                             viewBox="0 0 24 24"
++                             stroke="currentColor"
++                             strokeWidth={2}
++                           &gt;
++                             &lt;path
++                               strokeLinecap="round"
++                               strokeLinejoin="round"
++                               d="M8.25 4.5l7.5 7.5-7.5 7.5"
++                             /&gt;
++                           &lt;/svg&gt;
++                           &lt;span&gt;Payload sent to client&lt;/span&gt;
++                         &lt;/button&gt;
++ 
++                         {expandedToolCalls.has(index) &amp;&amp; (
++                           &lt;pre className="mt-3 p-3 bg-background rounded-md text-xs text-foreground overflow-x-auto"&gt;
++                             {JSON.stringify(message.tool_args, null, 2)}
++                           &lt;/pre&gt;
++                         )}
++                       &lt;/div&gt;
++                     )}
++                   &lt;/div&gt;
++                 )}
++               &lt;/div&gt;
++             );
++           })}
++         &lt;/div&gt;
++       )}
++     &lt;/div&gt;
++   );
++ }
++ 
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to update TestsTabContent.tsx to:
+1. Import the TestRunnerDialog
+2. Add state for the dialog
+3. Connect the "Run All Tests" button to open the dialog
+
+Let me also read the AgentDetail.tsx to get the agent name to pass to the dialog.</details></think>
+
+---
+
+Now let me update `TestsTabContent.tsx` to use the dialog:
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me update the TestsTabContent to add the agentName prop and the TestRunnerDialog.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: undefined
+
+```diff
+@@ -3,4 +3,5 @@
+  import React, { useState, useEffect, useRef } from "react";
+  import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
++ import { TestRunnerDialog } from "@/components/TestRunnerDialog";
+  
+  type TestData = {
+```
+
+**Chunk 2**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -16,7 +17,8 @@
+  type TestsTabContentProps = {
+    agentUuid: string;
++   agentName?: string;
+  };
+  
+- export function TestsTabContent({ agentUuid }: TestsTabContentProps) {
++ export function TestsTabContent({ agentUuid, agentName = "Agent" }: TestsTabContentProps) {
+    // Agent tests state (tests attached to the agent)
+    const [agentTests, setAgentTests] = useState&lt;TestData[]&gt;([]);
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to add the state for the test runner dialog and connect the button.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+**Chunk 1**
+Lines added: 3, lines removed: undefined
+
+```diff
+@@ -40,4 +40,7 @@
+    const [testToDelete, setTestToDelete] = useState&lt;TestData | null&gt;(null);
+    const [isDeleting, setIsDeleting] = useState(false);
++ 
++   // Test runner dialog state
++   const [testRunnerOpen, setTestRunnerOpen] = useState(false);
+  
+    // Fetch tests attached to this agent
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to update the "Run All Tests" button to open the dialog.</details></think>
+
+---
+
+The string to replace was not found in the file.
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me read the file to find the exact string.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I see the button is on a single line. Let me fix the replace.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+**Chunk 1**
+Lines added: 4, lines removed: 1
+
+```diff
+@@ -363,5 +363,8 @@
+                  )}
+                &lt;/div&gt;
+-               &lt;button className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer flex items-center gap-2"&gt;
++               &lt;button
++                 onClick={() =&gt; setTestRunnerOpen(true)}
++                 className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer flex items-center gap-2"
++               &gt;
+                  &lt;svg
+                    className="w-4 h-4"
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to add the TestRunnerDialog component at the end of the component. Let me find the end of the component.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I need to add the TestRunnerDialog after the DeleteConfirmationDialog. Let me update that.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+**Chunk 1**
+Lines added: 9, lines removed: undefined
+
+```diff
+@@ -645,4 +645,13 @@
+          isDeleting={isDeleting}
+        /&gt;
++ 
++       {/* Test Runner Dialog */}
++       &lt;TestRunnerDialog
++         isOpen={testRunnerOpen}
++         onClose={() =&gt; setTestRunnerOpen(false)}
++         agentUuid={agentUuid}
++         agentName={agentName}
++         tests={agentTests}
++       /&gt;
+  
+        {/* Right Column - Past Runs */}
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to update the AgentDetail.tsx to pass the agent name to TestsTabContent.</details></think>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
 <details>
-<summary>Tool use: **grep**</summary>
+<summary>Tool use: **grep** • Grep for "TestsTabContent" in "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/AgentDetail.tsx" • 2 matches</summary>
 
-Status: **loading**
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `src/components/AgentDetail.tsx` | `TestsTabContent,` | L10 |
+| `src/components/AgentDetail.tsx` | `\{activeTab === "tests" && <TestsTabContent agentUuid=\{agentUuid\} />\}` | L626 |
 
 
 </details>
@@ -4411,11 +6127,177 @@ Status: **loading**
 
 ---
 
-
+<think><details><summary>Thought Process</summary>
+I need to update the AgentDetail.tsx to pass the agent name. Let me check what the agent name variable is in that component.</details></think>
 
 ---
 
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "agentName|agent\.name|setAgentName" in "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/AgentDetail.tsx" • 2 matches</summary>
 
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `src/components/AgentDetail.tsx` | `name: agent.name,` | L348 |
+| `src/components/AgentDetail.tsx` | `<h1 className="text-lg font-semibold">\{agent.name\}</h1>` | L422 |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+So the agent name is available as `agent.name`. Let me update the TestsTabContent invocation to pass the agent name.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/AgentDetail.tsx</summary>
+
+**Chunk 1**
+Lines added: 3, lines removed: 1
+
+```diff
+@@ -624,5 +624,7 @@
+  
+        {/* Tests Tab Content */}
+-       {activeTab === "tests" &amp;&amp; &lt;TestsTabContent agentUuid={agentUuid} /&gt;}
++       {activeTab === "tests" &amp;&amp; (
++         &lt;TestsTabContent agentUuid={agentUuid} agentName={agent.name} /&gt;
++       )}
+  
+        {/* Evaluation Tab Content */}
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me check the lints to make sure everything is working properly.</details></think>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 3 files</summary>
+      
+Lint paths:
+
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/TestRunnerDialog.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/AgentDetail.tsx`
+
+Lint results
+
+Lint errors for `src/components/AgentDetail.tsx`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| 'allToolsError' is declared but its value is never read. | 112:10-112:23 | DIAGNOSTIC_SEVERITY_HINT |
+| 'setDataExtractionFieldsLoading' is declared but its value is never read. | 118:39-118:69 | DIAGNOSTIC_SEVERITY_HINT |
+| 'setDataExtractionFieldsError' is declared but its value is never read. | 120:37-120:65 | DIAGNOSTIC_SEVERITY_HINT |
+| 'setEvaluationCriteriaLoading' is declared but its value is never read. | 128:37-128:65 | DIAGNOSTIC_SEVERITY_HINT |
+| 'setEvaluationCriteriaError' is declared but its value is never read. | 130:35-130:61 | DIAGNOSTIC_SEVERITY_HINT |
+
+
+Lint errors for `src/components/agent-tabs/TestsTabContent.tsx`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| 'React' is declared but its value is never read. | 3:8-3:13 | DIAGNOSTIC_SEVERITY_HINT |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me also export the TestRunnerDialog from the index.ts file for consistency.</details></think>
+
+---
+
+Now let me also export the `TestRunnerDialog` from the agent-tabs index if needed, and check the overall implementation:
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/index.ts</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+The TestRunnerDialog is in the components folder (not agent-tabs), so I don't need to add it here. Let me verify the TestRunnerDialog file looks good and complete.</details></think>
+
+---
+
+Let me verify the complete implementation is working by reading the key parts:
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/TestRunnerDialog.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+The implementation looks good. Let me provide a summary of what was implemented.</details></think>
+
+---
+
+I've implemented the full test runner dialog. Here's a summary of what was created:
+
+### New File: `src/components/TestRunnerDialog.tsx`
+A comprehensive test runner dialog with:
+
+1. **Test Execution**:
+   - Automatically runs all tests when the dialog opens
+   - Tests run sequentially with status updates (pending → running → passed/failed)
+   - API call to `POST /tests/{test.uuid}/run` with `agent_uuid`
+
+2. **Left Panel - Test List**:
+   - Groups tests by status: Passed Tests, Failed Tests, Pending/Running Tests
+   - Shows count for each group
+   - Visual indicators: green checkmark (passed), red X (failed), spinner (running), gray dot (pending)
+   - Each test has a retry button
+
+3. **Right Panel - Test Details**:
+   - Shows evaluation status (passed/failed)
+   - Displays chat history with all messages
+   - User messages in muted style
+   - Agent messages and tool calls highlighted with pass/fail indicators
+   - Tool calls are expandable to show the payload JSON
+   - The last agent message or tool call is marked with a colored left border (green for pass, red for fail)
+
+4. **Header Controls**:
+   - "Retry Failed" button - retries only failed tests
+   - "Retry All" button - reruns all tests
+   - Close button
+
+### Updates to `TestsTabContent.tsx`:
+- Added `agentName` prop
+- Added `testRunnerOpen` state
+- Connected "Run All Tests" button to open the dialog
+- Added `TestRunnerDialog` component
+
+### Updates to `AgentDetail.tsx`:
+- Passes `agentName={agent.name}` to `TestsTabContent`
 
 ---
 

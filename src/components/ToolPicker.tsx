@@ -6,6 +6,7 @@ import { INBUILT_TOOLS, getInbuiltToolIcon } from "@/constants/inbuilt-tools";
 export type AvailableTool = {
   uuid: string;
   name: string;
+  description?: string;
   config: Record<string, any>;
   created_at: string;
   updated_at: string;
@@ -26,6 +27,16 @@ type ToolPickerProps = {
 export const getToolParams = (
   tool: AvailableTool
 ): Array<{ name: string; value: string }> => {
+  // Check for array format first (new format)
+  const params = tool.config?.parameters;
+  if (Array.isArray(params)) {
+    return params.map((param: any) => ({
+      name: param.id || param.name || "",
+      value: "",
+    }));
+  }
+
+  // Fallback to object format (legacy)
   const props =
     tool.config?.parameters?.properties ||
     tool.config?.function?.parameters?.properties ||
@@ -49,8 +60,8 @@ export function ToolPicker({
     (tool) =>
       !selectedToolIds.includes(tool.uuid) &&
       (tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (tool.config?.description &&
-          tool.config.description
+        ((tool.description || tool.config?.description) &&
+          (tool.description || tool.config?.description)
             .toLowerCase()
             .includes(searchQuery.toLowerCase())))
   );

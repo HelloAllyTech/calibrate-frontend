@@ -623,7 +623,9 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
       )}
 
       {/* Tests Tab Content */}
-      {activeTab === "tests" && <TestsTabContent agentUuid={agentUuid} />}
+      {activeTab === "tests" && (
+        <TestsTabContent agentUuid={agentUuid} agentName={agent.name} />
+      )}
 
       {/* Evaluation Tab Content */}
       {activeTab === "evaluation" && (

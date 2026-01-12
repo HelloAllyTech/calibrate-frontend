@@ -351,18 +351,31 @@ function AddTestDialog({
   }, [isOpen]);
 
   const addToolFromSelection = (tool: AvailableTool) => {
-    // Extract parameters from tool config - handle different possible structures
-    const params =
-      tool.config?.parameters?.properties ||
-      tool.config?.function?.parameters?.properties ||
-      tool.config?.properties ||
-      tool.config?.parameters ||
-      {};
-    const paramList = Object.keys(params).map((name) => ({
-      id: Date.now().toString() + name,
-      name,
-      value: "",
-    }));
+    // Extract parameters from tool config - handle both array (new) and object (legacy) formats
+    let paramList: Array<{ id: string; name: string; value: string }> = [];
+    const params = tool.config?.parameters;
+
+    if (Array.isArray(params)) {
+      // New array format
+      paramList = params.map((param: any) => ({
+        id: Date.now().toString() + (param.id || param.name),
+        name: param.id || param.name || "",
+        value: "",
+      }));
+    } else {
+      // Legacy object format
+      const propsObj =
+        tool.config?.parameters?.properties ||
+        tool.config?.function?.parameters?.properties ||
+        tool.config?.properties ||
+        tool.config?.parameters ||
+        {};
+      paramList = Object.keys(propsObj).map((name) => ({
+        id: Date.now().toString() + name,
+        name,
+        value: "",
+      }));
+    }
 
     const newTool: SelectedToolConfig = {
       id: tool.uuid,
@@ -400,13 +413,26 @@ function AddTestDialog({
       (t) => t.uuid === toolId || t.name === toolName
     );
     if (!tool) return [];
-    const params =
+
+    const params = tool.config?.parameters;
+
+    // Handle array format (new)
+    if (Array.isArray(params)) {
+      return params.map((param: any) => ({
+        id: Date.now().toString() + (param.id || param.name),
+        name: param.id || param.name || "",
+        value: "",
+      }));
+    }
+
+    // Handle object format (legacy)
+    const propsObj =
       tool.config?.parameters?.properties ||
       tool.config?.function?.parameters?.properties ||
       tool.config?.properties ||
       tool.config?.parameters ||
       {};
-    return Object.keys(params).map((name) => ({
+    return Object.keys(propsObj).map((name) => ({
       id: Date.now().toString() + name,
       name,
       value: "",
@@ -478,13 +504,22 @@ function AddTestDialog({
       (t) => t.uuid === toolId || t.name === toolName
     );
     if (!tool) return false;
-    const params =
+
+    const params = tool.config?.parameters;
+
+    // Handle array format (new)
+    if (Array.isArray(params)) {
+      return params.length > 0;
+    }
+
+    // Handle object format (legacy)
+    const propsObj =
       tool.config?.parameters?.properties ||
       tool.config?.function?.parameters?.properties ||
       tool.config?.properties ||
       tool.config?.parameters ||
       {};
-    return Object.keys(params).length > 0;
+    return Object.keys(propsObj).length > 0;
   };
 
   // Generate a UUID for tool calls
@@ -1041,9 +1076,9 @@ function AddTestDialog({
                     {/* Tooltip for disabled state */}
                     {isLastMessageAgent && !isCreating && !isLoading && (
                       <div className="absolute bottom-full mb-2 right-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-                        <div className="px-3 py-2 text-sm text-gray-900 bg-white rounded-lg shadow-lg whitespace-nowrap max-w-[280px]">
-                          A test should end with a user message, or a tool. Not
-                          agent text message.
+                        <div className="px-3 py-2 text-sm text-gray-900 bg-white rounded-lg shadow-lg w-72">
+                          A test should end with a user message, not an agent
+                          message or agent tool call
                         </div>
                         {/* Arrow */}
                         <div className="absolute top-full right-4 -mt-1 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-white"></div>

@@ -9,6 +9,7 @@ import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog"
 type ToolData = {
   uuid: string;
   name: string;
+  description?: string;
   config: Record<string, any>;
   created_at: string;
   updated_at: string;
@@ -576,19 +577,20 @@ export default function ToolsPage() {
     return schema;
   };
 
-  // Helper function to build parameters config for API
-  const buildParametersConfig = (params: Parameter[]): Record<string, any> => {
-    const config: Record<string, any> = {};
-    params.forEach((param) => {
-      if (param.name) {
+  // Helper function to build parameters config for API (returns array format)
+  const buildParametersConfig = (
+    params: Parameter[]
+  ): Array<Record<string, any>> => {
+    return params
+      .filter((param) => param.name)
+      .map((param) => {
         const schema = parameterToJsonSchema(param);
-        config[param.name] = {
+        return {
+          id: param.name,
           ...schema,
           required: param.required,
         };
-      }
-    });
-    return config;
+      });
   };
 
   // Create tool via POST API
@@ -620,7 +622,6 @@ export default function ToolsPage() {
           name: newToolName.trim(),
           description: newToolDescription.trim(),
           config: {
-            description: newToolDescription.trim(),
             parameters: parametersConfig,
           },
         }),
@@ -764,16 +765,27 @@ export default function ToolsPage() {
 
       // Populate form fields with tool data
       setNewToolName(toolData.name || "");
-      setNewToolDescription(toolData.config?.description || "");
+      setNewToolDescription(
+        toolData.description || toolData.config?.description || ""
+      );
 
       // Convert parameters from config to Parameter array using JSON Schema parser
       const toolParams: Parameter[] = [];
       if (toolData.config?.parameters) {
-        Object.entries(toolData.config.parameters).forEach(
-          ([paramName, paramConfig]: [string, any]) => {
+        // Handle both array format (new) and object format (legacy)
+        if (Array.isArray(toolData.config.parameters)) {
+          toolData.config.parameters.forEach((paramConfig: any) => {
+            const paramName = paramConfig.id || paramConfig.name || "";
             toolParams.push(parseParameterSchema(paramName, paramConfig));
-          }
-        );
+          });
+        } else {
+          // Legacy object format
+          Object.entries(toolData.config.parameters).forEach(
+            ([paramName, paramConfig]: [string, any]) => {
+              toolParams.push(parseParameterSchema(paramName, paramConfig));
+            }
+          );
+        }
       }
       setParameters(toolParams);
     } catch (err) {
@@ -816,7 +828,6 @@ export default function ToolsPage() {
           name: newToolName.trim(),
           description: newToolDescription.trim(),
           config: {
-            description: newToolDescription.trim(),
             parameters: parametersConfig,
           },
         }),
@@ -868,8 +879,8 @@ export default function ToolsPage() {
     (tool) =>
       (tool.name &&
         tool.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      (tool.config?.description &&
-        tool.config.description
+      ((tool.description || tool.config?.description) &&
+        (tool.description || tool.config?.description)
           .toLowerCase()
           .includes(searchQuery.toLowerCase()))
   );
@@ -1020,7 +1031,7 @@ export default function ToolsPage() {
                   </p>
                 </div>
                 <p className="text-sm text-muted-foreground line-clamp-1">
-                  {tool.config?.description || "—"}
+                  {tool.description || tool.config?.description || "—"}
                 </p>
                 <button
                   onClick={(e) => {

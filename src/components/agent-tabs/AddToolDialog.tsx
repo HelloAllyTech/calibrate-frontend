@@ -5,6 +5,7 @@ import React, { useState } from "react";
 type ToolData = {
   uuid: string;
   name: string;
+  description?: string;
   config: Record<string, any>;
   created_at: string;
   updated_at: string;
@@ -89,8 +90,8 @@ export function AddToolDialog({
   const availableTools = baseAvailableTools.filter(
     (tool) =>
       tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (tool.config?.description &&
-        tool.config?.description
+      ((tool.description || tool.config?.description) &&
+        (tool.description || tool.config?.description)
           .toLowerCase()
           .includes(searchQuery.toLowerCase()))
   );
@@ -225,7 +226,7 @@ export function AddToolDialog({
                             {tool.name}
                           </h4>
                           <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                            {tool.config?.description}
+                            {tool.description || tool.config?.description}
                           </p>
                         </div>
                       </div>

@@ -8,6 +8,7 @@ import { InbuiltToolsPanel } from "./InbuiltToolsPanel";
 type ToolData = {
   uuid: string;
   name: string;
+  description?: string;
   config: Record<string, any>;
   created_at: string;
   updated_at: string;
@@ -44,8 +45,8 @@ export function ToolsTabContent({
   const filteredTools = agentTools.filter(
     (tool) =>
       tool.name.toLowerCase().includes(toolsSearchQuery.toLowerCase()) ||
-      (tool.config?.description &&
-        tool.config?.description
+      ((tool.description || tool.config?.description) &&
+        (tool.description || tool.config?.description)
           .toLowerCase()
           .includes(toolsSearchQuery.toLowerCase()))
   );
@@ -185,7 +186,7 @@ export function ToolsTabContent({
                   {/* Description Column */}
                   <div className="flex items-center">
                     <p className="text-sm text-muted-foreground line-clamp-1">
-                      {tool.config?.description || "—"}
+                      {tool.description || tool.config?.description || "—"}
                     </p>
                   </div>
                   {/* Delete Button */}
