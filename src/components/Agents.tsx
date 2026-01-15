@@ -57,7 +57,7 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
   useEffect(() => {
     const fetchAgents = async () => {
       if (!backendAccessToken) return;
-      
+
       try {
         setIsLoading(true);
         setError(null);

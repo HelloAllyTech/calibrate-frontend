@@ -435,7 +435,7 @@ export default function ToolsPage() {
   useEffect(() => {
     const fetchTools = async () => {
       if (!backendAccessToken) return;
-      
+
       try {
         setToolsLoading(true);
         setToolsError(null);

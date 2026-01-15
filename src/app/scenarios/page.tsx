@@ -50,7 +50,7 @@ export default function ScenariosPage() {
   useEffect(() => {
     const fetchScenarios = async () => {
       if (!backendAccessToken) return;
-      
+
       try {
         setScenariosLoading(true);
         setScenariosError(null);

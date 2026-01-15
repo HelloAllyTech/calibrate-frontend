@@ -43,13 +43,15 @@ export default function MetricsPage() {
 
   // Duplicate dialog state
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
-  const [metricToDuplicate, setMetricToDuplicate] = useState<MetricData | null>(null);
+  const [metricToDuplicate, setMetricToDuplicate] = useState<MetricData | null>(
+    null
+  );
 
   // Fetch metrics from backend
   useEffect(() => {
     const fetchMetrics = async () => {
       if (!backendAccessToken) return;
-      
+
       try {
         setMetricsLoading(true);
         setMetricsError(null);
@@ -820,7 +822,9 @@ function DuplicateMetricDialog({
   onDuplicated: (metric: MetricData) => void;
   backendAccessToken?: string;
 }) {
-  const [metricName, setMetricName] = useState(`Copy of ${originalMetric.name}`);
+  const [metricName, setMetricName] = useState(
+    `Copy of ${originalMetric.name}`
+  );
   const [isDuplicating, setIsDuplicating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const maxLength = 50;
@@ -828,9 +832,7 @@ function DuplicateMetricDialog({
   // Check if the name already exists
   const isNameDuplicate = (name: string): boolean => {
     const trimmedName = name.trim().toLowerCase();
-    return existingMetrics.some(
-      (m) => m.name.toLowerCase() === trimmedName
-    );
+    return existingMetrics.some((m) => m.name.toLowerCase() === trimmedName);
   };
 
   const handleDuplicate = async () => {
@@ -976,7 +978,9 @@ function DuplicateMetricDialog({
           </button>
           <button
             onClick={handleDuplicate}
-            disabled={!metricName.trim() || isDuplicating || isNameDuplicate(metricName)}
+            disabled={
+              !metricName.trim() || isDuplicating || isNameDuplicate(metricName)
+            }
             className="h-9 px-4 rounded-md text-[13px] font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             {isDuplicating ? (

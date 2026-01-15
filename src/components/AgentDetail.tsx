@@ -56,7 +56,10 @@ const validTabs: TabType[] = [
   "settings",
 ];
 
-export function AgentDetail({ agentUuid, onHeaderStateChange }: AgentDetailProps) {
+export function AgentDetail({
+  agentUuid,
+  onHeaderStateChange,
+}: AgentDetailProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { data: session } = useSession();
@@ -131,7 +134,7 @@ export function AgentDetail({ agentUuid, onHeaderStateChange }: AgentDetailProps
   useEffect(() => {
     const fetchAgent = async () => {
       if (!backendAccessToken) return;
-      
+
       try {
         setIsLoading(true);
         setError(null);
@@ -279,7 +282,7 @@ export function AgentDetail({ agentUuid, onHeaderStateChange }: AgentDetailProps
   useEffect(() => {
     const fetchAllTools = async () => {
       if (!backendAccessToken) return;
-      
+
       try {
         setAllToolsLoading(true);
         setAllToolsError(null);
@@ -455,7 +458,6 @@ export function AgentDetail({ agentUuid, onHeaderStateChange }: AgentDetailProps
     setIsEditNameDialogOpen(false);
     setEditedName("");
   };
-
 
   // Auto-dismiss toast after 3 seconds
   useEffect(() => {

@@ -36,7 +36,7 @@ export function AgentPicker({
   useEffect(() => {
     const fetchAgents = async () => {
       if (!backendAccessToken) return;
-      
+
       try {
         setAgentsLoading(true);
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -89,16 +89,24 @@ export function AgentPicker({
   return (
     <div className={`space-y-1.5 ${className}`}>
       {label && (
-        <label className="block text-sm font-medium text-foreground">{label}</label>
+        <label className="block text-sm font-medium text-foreground">
+          {label}
+        </label>
       )}
       <div className="relative">
         <div
           onClick={() => !disabled && setDropdownOpen(!dropdownOpen)}
           className={`w-full h-11 px-4 rounded-xl text-sm bg-transparent text-foreground border border-border transition-colors flex items-center justify-between ${
-            disabled ? "cursor-default" : "hover:border-muted-foreground cursor-pointer"
+            disabled
+              ? "cursor-default"
+              : "hover:border-muted-foreground cursor-pointer"
           }`}
         >
-          <span className={selectedAgent ? "text-foreground" : "text-muted-foreground"}>
+          <span
+            className={
+              selectedAgent ? "text-foreground" : "text-muted-foreground"
+            }
+          >
             {selectedAgent ? selectedAgent.name : placeholder}
           </span>
           {!disabled && (

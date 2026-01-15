@@ -362,6 +362,7 @@ The app uses NextAuth.js v5 with middleware-based route protection and backend s
 ```
 
 **Accessing user data:**
+
 - **User UUID:** `(session as any)?.backendUser?.user?.uuid`
 - **JWT Token:** `(session as any)?.backendAccessToken`
 
@@ -511,10 +512,11 @@ Key styling:
    - Manual dismiss button
    - Used after successful save operations
 6. **User Profile Dropdown**: Top-right avatar button in `AppLayout` header
-   - Shows user avatar (Google image or initials with purple background)
+   - Shows user avatar (Google image) or placeholder (first letter of first name on purple background)
    - Dropdown contains: user info, theme switcher, logout button
    - Click outside closes dropdown (uses `useRef` + `mousedown` event)
    - Theme preference persisted to `localStorage`
+   - **Important**: Google profile images require `referrerPolicy="no-referrer"` to load properly
 
 ### Data Fetching Pattern
 
@@ -533,7 +535,7 @@ const backendAccessToken = (session as any)?.backendAccessToken;
 // In useEffect - wait for token before making API calls
 useEffect(() => {
   if (!backendAccessToken) return;
-  
+
   const fetchData = async () => {
     const response = await fetch(`${backendUrl}/endpoint`, {
       headers: {
@@ -542,16 +544,16 @@ useEffect(() => {
         "ngrok-skip-browser-warning": "true",
       },
     });
-    
+
     // Handle 401 - logout and redirect
     if (response.status === 401) {
       await signOut({ callbackUrl: "/login" });
       return;
     }
-    
+
     // ... handle response
   };
-  
+
   fetchData();
 }, [backendAccessToken]); // Include token in dependencies
 
@@ -996,10 +998,8 @@ GOOGLE_CLIENT_SECRET=                          # Google OAuth client secret
 
 ### Styling
 
-- **Never use hardcoded colors** like `bg-black`, `bg-[#1a1a1a]`, `text-white`, `border-[#333]`, `text-gray-300`, `text-gray-400`, `bg-white text-gray-900` - these break light mode
+- **Never use hardcoded colors** like `bg-black`, `bg-[#1a1a1a]`, `text-white`, `border-[#333]`, `text-gray-300`, `text-gray-400` - these break light mode
 - **Always use CSS variable classes**: `bg-background`, `text-foreground`, `border-border`, `bg-muted`, `text-muted-foreground`, `bg-accent`, `bg-popover`
-- **Primary buttons**: Use `bg-foreground text-background` (NOT `bg-white text-gray-900`) - inverts properly in both themes
-- **Picker/dropdown components**: Components like `ToolPicker`, `AgentPicker`, `MultiSelectPicker` must use CSS variables for all colors (borders, backgrounds, text, hover states)
 - **Checkboxes need visible borders**: Use `border-muted-foreground` (not `border-border`) and `border-2` for custom checkbox buttons to ensure visibility in both light and dark modes
 
 ### Forms

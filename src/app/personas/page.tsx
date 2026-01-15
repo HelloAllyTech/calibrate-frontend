@@ -62,7 +62,7 @@ export default function PersonasPage() {
   useEffect(() => {
     const fetchPersonas = async () => {
       if (!backendAccessToken) return;
-      
+
       try {
         setPersonasLoading(true);
         setPersonasError(null);
