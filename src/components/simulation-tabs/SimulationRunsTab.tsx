@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 
 type Run = {
   uuid: string;
@@ -17,12 +18,16 @@ type SimulationRunsTabProps = {
 
 export function SimulationRunsTab({ simulationUuid }: SimulationRunsTabProps) {
   const router = useRouter();
+  const { data: session } = useSession();
+  const backendAccessToken = (session as any)?.backendAccessToken;
   const [runs, setRuns] = useState<Run[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   useEffect(() => {
+    if (!backendAccessToken) return;
+
     const fetchRuns = async () => {
       try {
         setIsLoading(true);
@@ -39,9 +44,15 @@ export function SimulationRunsTab({ simulationUuid }: SimulationRunsTabProps) {
             headers: {
               accept: "application/json",
               "ngrok-skip-browser-warning": "true",
+              Authorization: `Bearer ${backendAccessToken}`,
             },
           }
         );
+
+        if (response.status === 401) {
+          await signOut({ callbackUrl: "/login" });
+          return;
+        }
 
         if (!response.ok) {
           throw new Error("Failed to fetch runs");
@@ -58,7 +69,7 @@ export function SimulationRunsTab({ simulationUuid }: SimulationRunsTabProps) {
     };
 
     fetchRuns();
-  }, [simulationUuid]);
+  }, [simulationUuid, backendAccessToken]);
 
   const formatStatus = (status: string) => {
     switch (status.toLowerCase()) {

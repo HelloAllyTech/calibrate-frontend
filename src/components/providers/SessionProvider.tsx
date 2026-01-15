@@ -7,5 +7,12 @@ type Props = {
 };
 
 export function SessionProvider({ children }: Props) {
-  return <NextAuthSessionProvider>{children}</NextAuthSessionProvider>;
+  return (
+    <NextAuthSessionProvider
+      refetchInterval={0} // Disable automatic session polling
+      refetchOnWindowFocus={false} // Don't refetch when window regains focus
+    >
+      {children}
+    </NextAuthSessionProvider>
+  );
 }
