@@ -369,11 +369,46 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
   };
 
   // Handle name save from dialog
-  const handleSaveName = () => {
-    if (agent && editedName.trim() && editedName.trim() !== agent.name) {
-      setAgent({ ...agent, name: editedName.trim() });
+  const handleSaveName = async () => {
+    if (!agent || !editedName.trim() || editedName.trim() === agent.name) {
+      setIsEditNameDialogOpen(false);
+      return;
     }
-    setIsEditNameDialogOpen(false);
+
+    try {
+      setIsSaving(true);
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+      if (!backendUrl) {
+        throw new Error("BACKEND_URL environment variable is not set");
+      }
+
+      const response = await fetch(`${backendUrl}/agents/${agentUuid}`, {
+        method: "PUT",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
+        },
+        body: JSON.stringify({
+          name: editedName.trim(),
+          config: agent.config || {},
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save agent name");
+      }
+
+      // Update local state with new name
+      setAgent({ ...agent, name: editedName.trim() });
+      setIsEditNameDialogOpen(false);
+      setShowSaveToast(true);
+    } catch (err) {
+      console.error("Error saving agent name:", err);
+      alert(err instanceof Error ? err.message : "Failed to save agent name");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   // Handle dialog cancel

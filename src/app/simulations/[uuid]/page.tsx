@@ -139,7 +139,7 @@ export default function SimulationDetailPage() {
           "ngrok-skip-browser-warning": "true",
         },
         body: JSON.stringify({
-          type: type === "voice" ? "audio" : "chat",
+          type: type === "voice" ? "voice" : "chat",
         }),
       });
 
@@ -523,8 +523,9 @@ export default function SimulationDetailPage() {
                 Chat Simulation
               </button>
               <button
-                disabled
-                className="w-full px-4 py-3 text-left text-sm text-gray-500 cursor-not-allowed flex items-center gap-3"
+                onClick={() => handleLaunch("voice")}
+                disabled={isLaunching}
+                className="w-full px-4 py-3 text-left text-sm text-white hover:bg-[#333] transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3"
               >
                 <svg
                   className="w-5 h-5"
