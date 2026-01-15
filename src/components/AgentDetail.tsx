@@ -589,7 +589,8 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
         >
           Tests
         </button>
-        <button
+        {/* Settings tab button - commented out to hide the tab */}
+        {/* <button
           onClick={() => handleTabChange("settings")}
           className={`pb-2 text-base font-medium transition-colors cursor-pointer ${
             activeTab === "settings"
@@ -598,7 +599,7 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
           }`}
         >
           Settings
-        </button>
+        </button> */}
       </div>
 
       {/* Agent Tab Content */}
@@ -647,13 +648,13 @@ export function AgentDetail({ agentUuid, onHeaderUpdate }: AgentDetailProps) {
         <TestsTabContent agentUuid={agentUuid} agentName={agent.name} />
       )}
 
-      {/* Settings Tab Content */}
-      {activeTab === "settings" && (
+      {/* Settings Tab Content - commented out to hide the tab */}
+      {/* {activeTab === "settings" && (
         <SettingsTabContent
           agentSpeaksFirst={agentSpeaksFirst}
           setAgentSpeaksFirst={setAgentSpeaksFirst}
         />
-      )}
+      )} */}
 
       {/* Edit Name Dialog */}
       {isEditNameDialogOpen && (
