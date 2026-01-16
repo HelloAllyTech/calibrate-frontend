@@ -1030,6 +1030,7 @@ GOOGLE_CLIENT_SECRET=                          # Google OAuth client secret
 - **Token expiration**: Backend returns 401 when JWT expires; always handle this by calling `signOut({ callbackUrl: "/login" })`
 - **Import pattern**: Always import both `useSession` and `signOut` from `next-auth/react` when making API calls
 - **Backend token obtained at login**: The `backendAccessToken` is fetched from the backend during the JWT callback (at login time). If the backend URL was misconfigured when a user logged in, their session won't have the token. **Solution**: User must log out and log back in after fixing the backend URL.
+- **Google OAuth forces account selection**: The Google provider is configured with `prompt: "select_account"` to always show the account picker, preventing auto-login with cached credentials. This ensures users consciously choose their account each login.
 
 ### Vercel Deployment
 
