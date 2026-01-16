@@ -233,7 +233,7 @@ export function BenchmarkResultsDialog({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="bg-background rounded-xl w-full max-w-5xl h-[80vh] flex flex-col shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+        <div className="flex items-center justify-between px-6 py-4">
           <h2 className="text-lg font-semibold text-foreground">
             Benchmark for {agentName}
           </h2>
