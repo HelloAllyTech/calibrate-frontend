@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { AppLayout } from "@/components/AppLayout";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
+import { Tooltip } from "@/components/Tooltip";
 
 type PersonaData = {
   uuid: string;
@@ -780,29 +781,52 @@ export default function PersonasPage() {
 
                     {/* Interruption Sensitivity */}
                     <div>
-                      <label className="block text-sm font-medium mb-2">
-                        Interruption Sensitivity
+                      <label className="block text-sm font-medium mb-1">
+                        Interruption sensitivity
                       </label>
+                      <p className="text-sm text-muted-foreground mb-2">
+                        Real users often interrupt agents mid-sentence. Set how
+                        likely this persona is to do the same.
+                      </p>
                       <div className="flex rounded-md border border-border overflow-hidden w-fit">
                         {(["none", "low", "medium", "high"] as const).map(
-                          (level, index) => (
-                            <button
-                              key={level}
-                              type="button"
-                              onClick={() =>
-                                setPersonaInterruptionSensitivity(level)
-                              }
-                              className={`px-4 py-2 text-sm font-medium transition-colors cursor-pointer ${
-                                index > 0 ? "border-l border-border" : ""
-                              } ${
-                                personaInterruptionSensitivity === level
-                                  ? "bg-foreground text-background"
-                                  : "bg-background text-muted-foreground hover:bg-muted/50"
-                              }`}
-                            >
-                              {level.charAt(0).toUpperCase() + level.slice(1)}
-                            </button>
-                          )
+                          (level, index) => {
+                            const tooltipContent: Record<string, string> = {
+                              low: "25% chance that the user will interrupt the agent",
+                              medium:
+                                "50% chance that the user will interrupt the agent",
+                              high: "80% chance that the user will interrupt the agent",
+                            };
+                            const button = (
+                              <button
+                                key={level}
+                                type="button"
+                                onClick={() =>
+                                  setPersonaInterruptionSensitivity(level)
+                                }
+                                className={`px-4 py-2 text-sm font-medium transition-colors cursor-pointer ${
+                                  index > 0 ? "border-l border-border" : ""
+                                } ${
+                                  personaInterruptionSensitivity === level
+                                    ? "bg-foreground text-background"
+                                    : "bg-background text-muted-foreground hover:bg-muted/50"
+                                }`}
+                              >
+                                {level.charAt(0).toUpperCase() + level.slice(1)}
+                              </button>
+                            );
+                            return tooltipContent[level] ? (
+                              <Tooltip
+                                key={level}
+                                content={tooltipContent[level]}
+                                position="top"
+                              >
+                                {button}
+                              </Tooltip>
+                            ) : (
+                              button
+                            );
+                          }
                         )}
                       </div>
                     </div>

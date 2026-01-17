@@ -4596,3 +4596,2342 @@ I made code changes to add error recovery to the benchmark dialogs, but this is 
 
 ---
 
+_**User**_
+
+for each of the tables shown in the app - for leaderboard or benchmark results or stt / tts benchmark add a button to let anyone download the table as a CSV 
+
+make the table a component and add this button to that component and reuse this component everywhere
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants me to:
+1. Create a reusable table component with a download CSV button
+2. Apply this component to all tables in the app (leaderboard, benchmark results, STT/TTS evaluations)
+
+Let me first understand what tables exist in the app by looking at the relevant files:
+1. BenchmarkResultsDialog - has a leaderboard table
+2. STT evaluation page
+3. TTS evaluation page
+
+I need to:
+1. Create a reusable DataTable component with CSV download functionality
+2. Find all the tables and replace them with this component
+
+Let me first create the component, then find and update the tables.</details></think>
+
+---
+
+I'll create a reusable table component with CSV download functionality and then apply it to all the relevant tables. Let me first check where tables are used.
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "&lt;table",
+  "outputMode": "files_with_matches",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "&lt;table",
+    "outputMode": "files_with_matches",
+    "workspaceResults": {
+      "/Users/aman/Documents/repos/artpark/pense-frontend": {
+        "files": {
+          "files": [
+            "./src/components/BenchmarkResultsDialog.tsx",
+            "./src/app/simulations/[uuid]/runs/[runId]/page.tsx",
+            "./src/components/simulation-tabs/SimulationRunsTab.tsx",
+            "./src/components/evaluations/SpeechToTextEvaluation.tsx",
+            "./src/components/evaluations/TextToSpeechEvaluation.tsx",
+            "./.specstory/history/2026-01-08_10-39Z-agent-details-add-tool-dialog-close-button.md"
+          ],
+          "totalFiles": 6
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me look at more of the evaluation files to understand the table structures better.</details></think>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "&lt;table className",
+  "outputMode": "content",
+  "contextBefore": 2,
+  "contextAfter": 20,
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "&lt;table className",
+    "outputMode": "content",
+    "workspaceResults": {
+      "/Users/aman/Documents/repos/artpark/pense-frontend": {
+        "content": {
+          "matches": [
+            {
+              "file": "./src/components/BenchmarkResultsDialog.tsx",
+              "matches": [
+                {
+                  "lineNumber": 343,
+                  "content": "                {leaderboardSummary &amp;&amp; leaderboardSummary.length &gt; 0 &amp;&amp; (",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 344,
+                  "content": "                  &lt;div className=\"border rounded-xl overflow-hidden\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 345,
+                  "content": "                    &lt;table className=\"w-full\"&gt;"
+                },
+                {
+                  "lineNumber": 346,
+                  "content": "                      &lt;thead className=\"bg-muted/50 border-b border-border\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 347,
+                  "content": "                        &lt;tr&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 348,
+                  "content": "                          &lt;th className=\"px-4 py-3 text-left text-sm font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 349,
+                  "content": "                            Model",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 350,
+                  "content": "                          &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 351,
+                  "content": "                          &lt;th className=\"px-4 py-3 text-left text-sm font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 352,
+                  "content": "                            Test pass rate (%)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 353,
+                  "content": "                          &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 354,
+                  "content": "                        &lt;/tr&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 355,
+                  "content": "                      &lt;/thead&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 356,
+                  "content": "                      &lt;tbody&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 357,
+                  "content": "                        {leaderboardSummary.map((summary, index) =&gt; (",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 358,
+                  "content": "                          &lt;tr",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 359,
+                  "content": "                            key={index}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 360,
+                  "content": "                            className=\"border-b border-border last:border-b-0\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 361,
+                  "content": "                          &gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 362,
+                  "content": "                            &lt;td className=\"px-4 py-3 text-sm text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 363,
+                  "content": "                              {summary.model.replace(\"__\", \"/\")}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 364,
+                  "content": "                            &lt;/td&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 365,
+                  "content": "                            &lt;td className=\"px-4 py-3 text-sm text-foreground\"&gt;",
+                  "isContextLine": true
+                }
+              ]
+            },
+            {
+              "file": "./src/app/simulations/[uuid]/runs/[runId]/page.tsx",
+              "matches": [
+                {
+                  "lineNumber": 653,
+                  "content": "                    &lt;div className=\"border border-border rounded-xl overflow-hidden bg-muted/20\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 654,
+                  "content": "                      &lt;div className=\"overflow-x-auto\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 655,
+                  "content": "                        &lt;table className=\"w-full table-fixed\"&gt;"
+                },
+                {
+                  "lineNumber": 656,
+                  "content": "                          &lt;thead className=\"bg-background border-t border-border\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 657,
+                  "content": "                            &lt;tr&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 658,
+                  "content": "                              &lt;th className=\"w-10 px-2 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider\"&gt;&lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 659,
+                  "content": "                              &lt;th className=\"w-44 px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 660,
+                  "content": "                                Persona",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 661,
+                  "content": "                              &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 662,
+                  "content": "                              &lt;th className=\"w-44 px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 663,
+                  "content": "                                Scenario",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 664,
+                  "content": "                              &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 665,
+                  "content": "                              {displayMetricKeys.map((metricKey) =&gt; (",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 666,
+                  "content": "                                &lt;th",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 667,
+                  "content": "                                  key={metricKey}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 668,
+                  "content": "                                  className=\"w-36 px-3 py-3 text-left text-xs font-medium text-muted-foreground tracking-wider\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 669,
+                  "content": "                                &gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 670,
+                  "content": "                                  &lt;div className=\"overflow-x-auto max-w-full\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 671,
+                  "content": "                                    &lt;div className=\"whitespace-nowrap\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 672,
+                  "content": "                                      {metricKey}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 673,
+                  "content": "                                    &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 674,
+                  "content": "                                  &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 675,
+                  "content": "                                &lt;/th&gt;",
+                  "isContextLine": true
+                }
+              ]
+            },
+            {
+              "file": "./src/components/simulation-tabs/SimulationRunsTab.tsx",
+              "matches": [
+                {
+                  "lineNumber": 211,
+                  "content": "  return (",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 212,
+                  "content": "    &lt;div className=\"border border-border rounded-xl overflow-hidden\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 213,
+                  "content": "      &lt;table className=\"w-full table-fixed\"&gt;"
+                },
+                {
+                  "lineNumber": 214,
+                  "content": "        &lt;thead&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 215,
+                  "content": "          &lt;tr className=\"border-b border-border bg-muted/30\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 216,
+                  "content": "            &lt;th className=\"w-1/4 px-6 py-4 text-left text-sm font-medium text-muted-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 217,
+                  "content": "              Name",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 218,
+                  "content": "            &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 219,
+                  "content": "            &lt;th className=\"w-1/4 px-6 py-4 text-left text-sm font-medium text-muted-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 220,
+                  "content": "              Status",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 221,
+                  "content": "            &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 222,
+                  "content": "            &lt;th className=\"w-1/4 px-6 py-4 text-left text-sm font-medium text-muted-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 223,
+                  "content": "              Type",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 224,
+                  "content": "            &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 225,
+                  "content": "            &lt;th className=\"w-1/4 px-6 py-4 text-left text-sm font-medium text-muted-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 226,
+                  "content": "              &lt;button",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 227,
+                  "content": "                onClick={toggleSort}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 228,
+                  "content": "                className=\"flex items-center gap-2 hover:text-foreground transition-colors cursor-pointer\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 229,
+                  "content": "              &gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 230,
+                  "content": "                Updated At",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 231,
+                  "content": "                &lt;svg",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 232,
+                  "content": "                  className={&#96;w-4 h-4 transition-transform ${",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 233,
+                  "content": "                    sortOrder === \"asc\" ? \"rotate-180\" : \"\"",
+                  "isContextLine": true
+                }
+              ]
+            },
+            {
+              "file": "./src/components/evaluations/SpeechToTextEvaluation.tsx",
+              "matches": [
+                {
+                  "lineNumber": 785,
+                  "content": "            &lt;div className=\"space-y-6\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 786,
+                  "content": "              &lt;div className=\"border rounded-xl overflow-hidden\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 787,
+                  "content": "                &lt;table className=\"w-full\"&gt;"
+                },
+                {
+                  "lineNumber": 788,
+                  "content": "                  &lt;thead className=\"bg-muted/50 border-b border-border\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 789,
+                  "content": "                    &lt;tr&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 790,
+                  "content": "                      &lt;th className=\"px-4 py-3 text-left text-[13px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 791,
+                  "content": "                        Metric",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 792,
+                  "content": "                      &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 793,
+                  "content": "                      &lt;th className=\"px-4 py-3 text-left text-[13px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 794,
+                  "content": "                        Description",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 795,
+                  "content": "                      &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 796,
+                  "content": "                      &lt;th className=\"px-4 py-3 text-left text-[13px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 797,
+                  "content": "                        Preference",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 798,
+                  "content": "                      &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 799,
+                  "content": "                      &lt;th className=\"px-4 py-3 text-left text-[13px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 800,
+                  "content": "                        Range",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 801,
+                  "content": "                      &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 802,
+                  "content": "                    &lt;/tr&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 803,
+                  "content": "                  &lt;/thead&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 804,
+                  "content": "                  &lt;tbody&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 805,
+                  "content": "                    &lt;tr className=\"border-b border-border\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 806,
+                  "content": "                      &lt;td className=\"px-4 py-3 text-[13px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 807,
+                  "content": "                        WER (Word Error Rate)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 897,
+                  "content": "                  &lt;div className=\"border rounded-xl overflow-visible\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 898,
+                  "content": "                    &lt;div className=\"overflow-hidden rounded-xl\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 899,
+                  "content": "                      &lt;table className=\"w-full\"&gt;"
+                },
+                {
+                  "lineNumber": 900,
+                  "content": "                        &lt;thead className=\"bg-muted/50 border-b border-border overflow-visible\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 901,
+                  "content": "                          &lt;tr&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 902,
+                  "content": "                            &lt;th className=\"px-4 py-3 text-left text-[13px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 903,
+                  "content": "                              Run",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 904,
+                  "content": "                            &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 905,
+                  "content": "                            &lt;th className=\"px-4 py-3 text-left text-[13px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 906,
+                  "content": "                              Count",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 907,
+                  "content": "                            &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 908,
+                  "content": "                            &lt;th className=\"px-4 py-3 text-left text-[13px] font-medium text-foreground overflow-visible\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 909,
+                  "content": "                              WER",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 910,
+                  "content": "                            &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 911,
+                  "content": "                            &lt;th className=\"px-4 py-3 text-left text-[13px] font-medium text-foreground overflow-visible\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 912,
+                  "content": "                              String Similarity",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 913,
+                  "content": "                            &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 914,
+                  "content": "                            &lt;th className=\"px-4 py-3 text-left text-[13px] font-medium text-foreground overflow-visible\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 915,
+                  "content": "                              LLM Judge Score",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 916,
+                  "content": "                            &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 917,
+                  "content": "                            &lt;th className=\"px-4 py-3 text-left text-[13px] font-medium text-foreground overflow-visible\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 918,
+                  "content": "                              TTFB (s)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 919,
+                  "content": "                            &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1189,
+                  "content": "                            &lt;div className=\"border rounded-xl overflow-visible\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1190,
+                  "content": "                              &lt;div className=\"overflow-hidden rounded-xl\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1191,
+                  "content": "                                &lt;table className=\"w-full\"&gt;"
+                },
+                {
+                  "lineNumber": 1192,
+                  "content": "                                  &lt;thead className=\"bg-muted/50 border-b border-border\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1193,
+                  "content": "                                    &lt;tr&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1194,
+                  "content": "                                      &lt;th className=\"px-4 py-3 text-left text-[12px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1195,
+                  "content": "                                        ID",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1196,
+                  "content": "                                      &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1197,
+                  "content": "                                      &lt;th className=\"px-4 py-3 text-left text-[12px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1198,
+                  "content": "                                        Ground Truth",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1199,
+                  "content": "                                      &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1200,
+                  "content": "                                      &lt;th className=\"px-4 py-3 text-left text-[12px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1201,
+                  "content": "                                        Prediction",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1202,
+                  "content": "                                      &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1203,
+                  "content": "                                      &lt;th className=\"px-4 py-3 text-left text-[12px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1204,
+                  "content": "                                        WER",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1205,
+                  "content": "                                      &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1206,
+                  "content": "                                      &lt;th className=\"px-4 py-3 text-left text-[12px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1207,
+                  "content": "                                        String Similarity",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1208,
+                  "content": "                                      &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1209,
+                  "content": "                                      &lt;th className=\"px-4 py-3 text-left text-[12px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1210,
+                  "content": "                                        LLM Judge Score",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1211,
+                  "content": "                                      &lt;/th&gt;",
+                  "isContextLine": true
+                }
+              ]
+            },
+            {
+              "file": "./src/components/evaluations/TextToSpeechEvaluation.tsx",
+              "matches": [
+                {
+                  "lineNumber": 578,
+                  "content": "            &lt;div className=\"space-y-6\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 579,
+                  "content": "              &lt;div className=\"border rounded-xl overflow-hidden\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 580,
+                  "content": "                &lt;table className=\"w-full\"&gt;"
+                },
+                {
+                  "lineNumber": 581,
+                  "content": "                  &lt;thead className=\"bg-muted/50 border-b border-border\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 582,
+                  "content": "                    &lt;tr&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 583,
+                  "content": "                      &lt;th className=\"px-4 py-3 text-left text-[13px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 584,
+                  "content": "                        Metric",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 585,
+                  "content": "                      &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 586,
+                  "content": "                      &lt;th className=\"px-4 py-3 text-left text-[13px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 587,
+                  "content": "                        Description",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 588,
+                  "content": "                      &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 589,
+                  "content": "                      &lt;th className=\"px-4 py-3 text-left text-[13px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 590,
+                  "content": "                        Preference",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 591,
+                  "content": "                      &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 592,
+                  "content": "                      &lt;th className=\"px-4 py-3 text-left text-[13px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 593,
+                  "content": "                        Range",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 594,
+                  "content": "                      &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 595,
+                  "content": "                    &lt;/tr&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 596,
+                  "content": "                  &lt;/thead&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 597,
+                  "content": "                  &lt;tbody&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 598,
+                  "content": "                    &lt;tr className=\"border-b border-border\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 599,
+                  "content": "                      &lt;td className=\"px-4 py-3 text-[13px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 600,
+                  "content": "                        LLM Judge Score",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 657,
+                  "content": "                    &lt;div className=\"border rounded-xl overflow-visible\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 658,
+                  "content": "                      &lt;div className=\"overflow-hidden rounded-xl\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 659,
+                  "content": "                        &lt;table className=\"w-full\"&gt;"
+                },
+                {
+                  "lineNumber": 660,
+                  "content": "                          &lt;thead className=\"bg-muted/50 border-b border-border overflow-visible\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 661,
+                  "content": "                            &lt;tr&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 662,
+                  "content": "                              &lt;th className=\"px-4 py-3 text-left text-[13px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 663,
+                  "content": "                                Run",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 664,
+                  "content": "                              &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 665,
+                  "content": "                              &lt;th className=\"px-4 py-3 text-left text-[13px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 666,
+                  "content": "                                Count",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 667,
+                  "content": "                              &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 668,
+                  "content": "                              &lt;th className=\"px-4 py-3 text-left text-[13px] font-medium text-foreground overflow-visible\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 669,
+                  "content": "                                LLM Judge Score",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 670,
+                  "content": "                              &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 671,
+                  "content": "                              &lt;th className=\"px-4 py-3 text-left text-[13px] font-medium text-foreground overflow-visible\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 672,
+                  "content": "                                TTFB (s)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 673,
+                  "content": "                              &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 674,
+                  "content": "                              &lt;th className=\"px-4 py-3 text-left text-[13px] font-medium text-foreground overflow-visible\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 675,
+                  "content": "                                Processing Time (s)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 676,
+                  "content": "                              &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 677,
+                  "content": "                            &lt;/tr&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 678,
+                  "content": "                          &lt;/thead&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 679,
+                  "content": "                          &lt;tbody&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 887,
+                  "content": "                            &lt;div className=\"border rounded-xl overflow-visible\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 888,
+                  "content": "                              &lt;div className=\"overflow-hidden rounded-xl\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 889,
+                  "content": "                                &lt;table className=\"w-full\"&gt;"
+                },
+                {
+                  "lineNumber": 890,
+                  "content": "                                  &lt;thead className=\"bg-muted/50 border-b border-border\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 891,
+                  "content": "                                    &lt;tr&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 892,
+                  "content": "                                      &lt;th className=\"px-4 py-3 text-left text-[12px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 893,
+                  "content": "                                        ID",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 894,
+                  "content": "                                      &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 895,
+                  "content": "                                      &lt;th className=\"px-4 py-3 text-left text-[12px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 896,
+                  "content": "                                        Text",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 897,
+                  "content": "                                      &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 898,
+                  "content": "                                      &lt;th className=\"px-4 py-3 text-left text-[12px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 899,
+                  "content": "                                        Audio",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 900,
+                  "content": "                                      &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 901,
+                  "content": "                                      &lt;th className=\"px-4 py-3 text-left text-[12px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 902,
+                  "content": "                                        LLM Judge Score",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 903,
+                  "content": "                                      &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 904,
+                  "content": "                                      &lt;th className=\"px-4 py-3 text-left text-[12px] font-medium text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 905,
+                  "content": "                                        LLM Judge Reasoning",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 906,
+                  "content": "                                      &lt;/th&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 907,
+                  "content": "                                    &lt;/tr&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 908,
+                  "content": "                                  &lt;/thead&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 909,
+                  "content": "                                  &lt;tbody&gt;",
+                  "isContextLine": true
+                }
+              ]
+            }
+          ],
+          "totalLines": 207,
+          "totalMatchedLines": 9
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I see there are multiple tables in the app:
+1. BenchmarkResultsDialog - Leaderboard table
+2. SimulationRunsTab - Runs list table
+3. Simulation run page - Results table
+4. SpeechToTextEvaluation - Multiple tables (metrics description, leaderboard, per-run results)
+5. TextToSpeechEvaluation - Multiple tables (metrics description, leaderboard, per-run results)
+
+However, creating a fully generic table component that handles all these cases might be too complex since they have different structures. Instead, I should create a wrapper component that:
+1. Takes data in a standardized format (columns and rows)
+2. Renders a table with a download CSV button3. Allows for custom rendering of cells if needed
+
+Actually, looking at the user's request more carefully, they want to add a download button to tables that show benchmark/evaluation results. The best approach is to create a `DownloadableTable` component that:
+1. Accepts column definitions and data
+2. Renders the table with a download button
+3. Handles the CSV export
+
+Let me create this component and then apply it to the relevant tables. I'll start with the leaderboard table in BenchmarkResultsDialog since that's the simplest case.</details></think>
+
+---
+
+Let me create a reusable `DownloadableTable` component and then apply it to the relevant tables.
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/DownloadableTable.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me update the BenchmarkResultsDialog to use this new component for the leaderboard table.</details></think>
+
+---
+
+Now let me update the `BenchmarkResultsDialog` to use this component:
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/BenchmarkResultsDialog.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me update the import and then replace the table with the new component.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/BenchmarkResultsDialog.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me find and replace the leaderboard table with the DownloadableTable component.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/BenchmarkResultsDialog.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I'll replace the leaderboard table with the DownloadableTable component.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/BenchmarkResultsDialog.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me update the STT evaluation to use the DownloadableTable for the leaderboard table.</details></think>
+
+---
+
+Now let me update the STT evaluation. First, let me read more of the file to find the leaderboard table:
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me first check the imports at the top of the STT file, then add the import and replace the table.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me add the import and update the table.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to find and read more of the file to see the helper function getProviderLabel so I can use it properly when replacing the table.</details></think>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "getProviderLabel",
+  "path": "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx",
+  "outputMode": "content",
+  "contextBefore": 2,
+  "contextAfter": 8,
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "getProviderLabel",
+    "path": "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx",
+    "outputMode": "content",
+    "workspaceResults": {
+      "/Users/aman/Documents/repos/artpark/pense-frontend": {
+        "content": {
+          "matches": [
+            {
+              "file": "src/components/evaluations/SpeechToTextEvaluation.tsx",
+              "matches": [
+                {
+                  "lineNumber": 68,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 69,
+                  "content": "// Helper function to map provider value back to label",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 70,
+                  "content": "const getProviderLabel = (value: string): string =&gt; {"
+                },
+                {
+                  "lineNumber": 71,
+                  "content": "  const provider = sttProviders.find((p) =&gt; p.value === value);",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 72,
+                  "content": "  return provider ? provider.label : value;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 73,
+                  "content": "};",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 74,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 75,
+                  "content": "export function SpeechToTextEvaluation() {",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 76,
+                  "content": "  const { data: session } = useSession();",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 77,
+                  "content": "  const backendAccessToken = (session as any)?.backendAccessToken;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 78,
+                  "content": "  const [rows, setRows] = useState&lt;AudioTextRow[]&gt;([",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 932,
+                  "content": "                              &gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 933,
+                  "content": "                                &lt;td className=\"px-4 py-3 text-[13px] text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 934,
+                  "content": "                                  {getProviderLabel(summary.run)}"
+                },
+                {
+                  "lineNumber": 935,
+                  "content": "                                &lt;/td&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 936,
+                  "content": "                                &lt;td className=\"px-4 py-3 text-[13px] text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 937,
+                  "content": "                                  {summary.count}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 938,
+                  "content": "                                &lt;/td&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 939,
+                  "content": "                                &lt;td className=\"px-4 py-3 text-[13px] text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 940,
+                  "content": "                                  {summary.wer}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 941,
+                  "content": "                                &lt;/td&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 942,
+                  "content": "                                &lt;td className=\"px-4 py-3 text-[13px] text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 975,
+                  "content": "                          data={evaluationResult.leaderboard_summary.map(",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 976,
+                  "content": "                            (s) =&gt; ({",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 977,
+                  "content": "                              label: getProviderLabel(s.run),"
+                },
+                {
+                  "lineNumber": 978,
+                  "content": "                              value: s.wer,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 979,
+                  "content": "                              colorKey: s.run,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 980,
+                  "content": "                            })",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 981,
+                  "content": "                          )}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 982,
+                  "content": "                          colorMap={colorMap}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 983,
+                  "content": "                        /&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 984,
+                  "content": "                        &lt;LeaderboardBarChart",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 985,
+                  "content": "                          title=\"String Similarity\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 986,
+                  "content": "                          data={evaluationResult.leaderboard_summary.map(",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 987,
+                  "content": "                            (s) =&gt; ({",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 988,
+                  "content": "                              label: getProviderLabel(s.run),"
+                },
+                {
+                  "lineNumber": 989,
+                  "content": "                              value: s.string_similarity,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 990,
+                  "content": "                              colorKey: s.run,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 991,
+                  "content": "                            })",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 992,
+                  "content": "                          )}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 993,
+                  "content": "                          colorMap={colorMap}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 994,
+                  "content": "                        /&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 995,
+                  "content": "                      &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 996,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1001,
+                  "content": "                          data={evaluationResult.leaderboard_summary.map(",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1002,
+                  "content": "                            (s) =&gt; ({",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1003,
+                  "content": "                              label: getProviderLabel(s.run),"
+                },
+                {
+                  "lineNumber": 1004,
+                  "content": "                              value: s.llm_judge_score,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1005,
+                  "content": "                              colorKey: s.run,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1006,
+                  "content": "                            })",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1007,
+                  "content": "                          )}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1008,
+                  "content": "                          colorMap={colorMap}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1009,
+                  "content": "                        /&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1010,
+                  "content": "                        &lt;LeaderboardBarChart",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1011,
+                  "content": "                          title=\"TTFB (s)\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1012,
+                  "content": "                          data={evaluationResult.leaderboard_summary.map(",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1013,
+                  "content": "                            (s) =&gt; ({",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1014,
+                  "content": "                              label: getProviderLabel(s.run),"
+                },
+                {
+                  "lineNumber": 1015,
+                  "content": "                              value: s.ttfb,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1016,
+                  "content": "                              colorKey: s.run,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1017,
+                  "content": "                            })",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1018,
+                  "content": "                          )}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1019,
+                  "content": "                          colorMap={colorMap}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1020,
+                  "content": "                        /&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1021,
+                  "content": "                      &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1022,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1027,
+                  "content": "                          data={evaluationResult.leaderboard_summary.map(",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1028,
+                  "content": "                            (s) =&gt; ({",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1029,
+                  "content": "                              label: getProviderLabel(s.run),"
+                },
+                {
+                  "lineNumber": 1030,
+                  "content": "                              value: s.processing_time,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1031,
+                  "content": "                              colorKey: s.run,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1032,
+                  "content": "                            })",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1033,
+                  "content": "                          )}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1034,
+                  "content": "                          colorMap={colorMap}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1035,
+                  "content": "                        /&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1036,
+                  "content": "                      &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1037,
+                  "content": "                    &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1062,
+                  "content": "                        value={providerResult.provider}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1063,
+                  "content": "                      &gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1064,
+                  "content": "                        {getProviderLabel(providerResult.provider)}"
+                },
+                {
+                  "lineNumber": 1065,
+                  "content": "                      &lt;/option&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1066,
+                  "content": "                    ))}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1067,
+                  "content": "                  &lt;/select&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1068,
+                  "content": "                  &lt;div className=\"absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1069,
+                  "content": "                    &lt;svg",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1070,
+                  "content": "                      className=\"w-4 h-4 text-muted-foreground\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1071,
+                  "content": "                      fill=\"none\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1072,
+                  "content": "                      viewBox=\"0 0 24 24\"",
+                  "isContextLine": true
+                }
+              ]
+            }
+          ],
+          "totalLines": 88,
+          "totalMatchedLines": 8
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me replace the STT leaderboard table with the DownloadableTable component.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me update the TTS evaluation similarly.</details></think>
+
+---
+
+Now let me update the TTS evaluation:
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me add the import and then find and replace the TTS leaderboard table.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me find and read the TTS leaderboard table.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me also check for the getProviderLabel function in TTS.</details></think>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "getProviderLabel",
+  "path": "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx",
+  "outputMode": "content",
+  "contextBefore": 2,
+  "contextAfter": 5,
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "getProviderLabel",
+    "path": "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx",
+    "outputMode": "content",
+    "workspaceResults": {
+      "/Users/aman/Documents/repos/artpark/pense-frontend": {
+        "content": {
+          "matches": [
+            {
+              "file": "src/components/evaluations/TextToSpeechEvaluation.tsx",
+              "matches": [
+                {
+                  "lineNumber": 59,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 60,
+                  "content": "// Helper function to map provider value back to label",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 61,
+                  "content": "const getProviderLabel = (value: string): string =&gt; {"
+                },
+                {
+                  "lineNumber": 62,
+                  "content": "  const provider = ttsProviders.find((p) =&gt; p.value === value);",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 63,
+                  "content": "  return provider ? provider.label : value;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 64,
+                  "content": "};",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 65,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 66,
+                  "content": "export function TextToSpeechEvaluation() {",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 686,
+                  "content": "                                &gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 687,
+                  "content": "                                  &lt;td className=\"px-4 py-3 text-[13px] text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 688,
+                  "content": "                                    {getProviderLabel(summary.run)}"
+                },
+                {
+                  "lineNumber": 689,
+                  "content": "                                  &lt;/td&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 690,
+                  "content": "                                  &lt;td className=\"px-4 py-3 text-[13px] text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 691,
+                  "content": "                                    {summary.count}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 692,
+                  "content": "                                  &lt;/td&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 693,
+                  "content": "                                  &lt;td className=\"px-4 py-3 text-[13px] text-foreground\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 721,
+                  "content": "                              data={evaluationResult.leaderboard_summary.map(",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 722,
+                  "content": "                                (s) =&gt; ({",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 723,
+                  "content": "                                  label: getProviderLabel(s.run),"
+                },
+                {
+                  "lineNumber": 724,
+                  "content": "                                  value: s.llm_judge_score,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 725,
+                  "content": "                                  colorKey: s.run,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 726,
+                  "content": "                                })",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 727,
+                  "content": "                              )}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 728,
+                  "content": "                              colorMap={colorMap}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 732,
+                  "content": "                              data={evaluationResult.leaderboard_summary.map(",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 733,
+                  "content": "                                (s) =&gt; ({",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 734,
+                  "content": "                                  label: getProviderLabel(s.run),"
+                },
+                {
+                  "lineNumber": 735,
+                  "content": "                                  value: s.ttfb,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 736,
+                  "content": "                                  colorKey: s.run,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 737,
+                  "content": "                                })",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 738,
+                  "content": "                              )}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 739,
+                  "content": "                              colorMap={colorMap}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 747,
+                  "content": "                              data={evaluationResult.leaderboard_summary.map(",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 748,
+                  "content": "                                (s) =&gt; ({",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 749,
+                  "content": "                                  label: getProviderLabel(s.run),"
+                },
+                {
+                  "lineNumber": 750,
+                  "content": "                                  value: s.processing_time,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 751,
+                  "content": "                                  colorKey: s.run,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 752,
+                  "content": "                                })",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 753,
+                  "content": "                              )}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 754,
+                  "content": "                              colorMap={colorMap}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 784,
+                  "content": "                        value={providerResult.provider}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 785,
+                  "content": "                      &gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 786,
+                  "content": "                        {getProviderLabel(providerResult.provider)}"
+                },
+                {
+                  "lineNumber": 787,
+                  "content": "                      &lt;/option&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 788,
+                  "content": "                    ))}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 789,
+                  "content": "                  &lt;/select&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 790,
+                  "content": "                  &lt;div className=\"absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 791,
+                  "content": "                    &lt;svg",
+                  "isContextLine": true
+                }
+              ]
+            }
+          ],
+          "totalLines": 48,
+          "totalMatchedLines": 6
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good. Now let me replace the TTS leaderboard table.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me check for linter errors.</details></think>
+
+---
+
+Let me check for any linter errors:
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/DownloadableTable.tsx",
+    "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/BenchmarkResultsDialog.tsx",
+    "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx",
+    "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/DownloadableTable.tsx"
+    },
+    {
+      "relativeWorkspacePath": "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/BenchmarkResultsDialog.tsx"
+    },
+    {
+      "relativeWorkspacePath": "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx"
+    },
+    {
+      "relativeWorkspacePath": "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+All files are lint-free. I've added the DownloadableTable component and applied it to:1. BenchmarkResultsDialog - leaderboard table
+2. SpeechToTextEvaluation - leaderboard table3. TextToSpeechEvaluation - leaderboard table
+
+The component provides:1. A reusable table with consistent styling2. A "Download CSV" button that exports the table data
+3. Support for custom cell rendering via the `render` function
+
+Let me summarize what was done for the user.</details></think>
+
+---
+
+Done! I've created a reusable `DownloadableTable` component and applied it to the leaderboard tables in:
+
+1. **BenchmarkResultsDialog** - Model comparison leaderboard
+2. **SpeechToTextEvaluation** - STT provider leaderboard
+3. **TextToSpeechEvaluation** - TTS provider leaderboard
+
+The component features:
+- A "Download CSV" button in the top-right corner
+- Configurable columns with custom render functions
+- Automatic CSV export with proper escaping for special characters
+- Consistent table styling across the app
+
+To use it elsewhere, import and use like this:
+
+```tsx
+import { DownloadableTable } from "@/components/DownloadableTable";
+
+<DownloadableTable
+  columns={[
+    { key: "name", header: "Name" },
+    { key: "value", header: "Value", render: (v) => v.toFixed(2) },
+  ]}
+  data={[{ name: "Test", value: 1.234 }]}
+  filename="my-export"
+/>
+```
+
+---
+
+_**User**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+I made significant code changes - I created a new `DownloadableTable` component and applied it to multiple files. This is a new reusable component pattern that should be documented.
+
+Let me update the app-details.md to include information about:
+1. The new DownloadableTable component
+2. How to use it
+3. Where it's used
+
+Let me read the current app-details.md to find the right section to add this.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I should add the DownloadableTable component to the Component Patterns section.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I've added the DownloadableTable component to the Component Patterns section. This documents:1. What the component is for2. Its props3. Where it's used
+4. The custom render function capability</details></think>
+
+---
+
+Done. I've added documentation for the new `DownloadableTable` component in the Component Patterns section, including its props, usage locations, and the custom render function capability.
+
+---
+
+_**User**_
+
+even after benchmark is successful add another button to rerun the benchmark 
+@src/components/BenchmarkResultsDialog.tsx 
+
+---
+

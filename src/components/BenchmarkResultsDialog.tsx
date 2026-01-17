@@ -11,6 +11,7 @@ import {
   EmptyStateView,
 } from "./test-results/shared";
 import { LeaderboardBarChart, getColorMap } from "./charts/LeaderboardBarChart";
+import { DownloadableTable } from "./DownloadableTable";
 
 type BenchmarkTestResult = {
   passed: boolean;
@@ -239,12 +240,36 @@ export function BenchmarkResultsDialog({
           <h2 className="text-lg font-semibold text-foreground">
             Benchmark for {agentName}
           </h2>
-          <button
-            onClick={onClose}
-            className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted transition-colors cursor-pointer"
-          >
-            <CloseIcon className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            {/* Rerun button - show when benchmark is complete (not loading and no error) */}
+            {!isLoading && !error && onGoBack && (
+              <button
+                onClick={onGoBack}
+                className="flex items-center gap-2 h-8 px-3 rounded-md text-sm font-medium border border-border hover:bg-muted/50 transition-colors cursor-pointer"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                  />
+                </svg>
+                Rerun
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted transition-colors cursor-pointer"
+            >
+              <CloseIcon className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Loading State */}
@@ -341,35 +366,21 @@ export function BenchmarkResultsDialog({
               <div className="p-6 space-y-6">
                 {/* Leaderboard Table */}
                 {leaderboardSummary && leaderboardSummary.length > 0 && (
-                  <div className="border rounded-xl overflow-hidden">
-                    <table className="w-full">
-                      <thead className="bg-muted/50 border-b border-border">
-                        <tr>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-foreground">
-                            Model
-                          </th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-foreground">
-                            Test pass rate (%)
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {leaderboardSummary.map((summary, index) => (
-                          <tr
-                            key={index}
-                            className="border-b border-border last:border-b-0"
-                          >
-                            <td className="px-4 py-3 text-sm text-foreground">
-                              {summary.model.replace("__", "/")}
-                            </td>
-                            <td className="px-4 py-3 text-sm text-foreground">
-                              {summary.overall}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                  <DownloadableTable
+                    columns={[
+                      {
+                        key: "model",
+                        header: "Model",
+                        render: (value) => value.replace("__", "/"),
+                      },
+                      { key: "overall", header: "Test pass rate (%)" },
+                    ]}
+                    data={leaderboardSummary.map((s) => ({
+                      model: s.model,
+                      overall: s.overall,
+                    }))}
+                    filename={`benchmark-leaderboard-${agentName}`}
+                  />
                 )}
 
                 {/* Charts Section */}

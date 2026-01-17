@@ -7,6 +7,7 @@ import {
   LeaderboardBarChart,
   getColorMap,
 } from "../charts/LeaderboardBarChart";
+import { DownloadableTable } from "../DownloadableTable";
 
 type TextRow = {
   id: string;
@@ -654,57 +655,29 @@ export function TextToSpeechEvaluation() {
               {evaluationResult.leaderboard_summary &&
                 evaluationResult.leaderboard_summary.length > 0 && (
                   <>
-                    <div className="border rounded-xl overflow-visible">
-                      <div className="overflow-hidden rounded-xl">
-                        <table className="w-full">
-                          <thead className="bg-muted/50 border-b border-border overflow-visible">
-                            <tr>
-                              <th className="px-4 py-3 text-left text-[13px] font-medium text-foreground">
-                                Run
-                              </th>
-                              <th className="px-4 py-3 text-left text-[13px] font-medium text-foreground">
-                                Count
-                              </th>
-                              <th className="px-4 py-3 text-left text-[13px] font-medium text-foreground overflow-visible">
-                                LLM Judge Score
-                              </th>
-                              <th className="px-4 py-3 text-left text-[13px] font-medium text-foreground overflow-visible">
-                                TTFB (s)
-                              </th>
-                              <th className="px-4 py-3 text-left text-[13px] font-medium text-foreground overflow-visible">
-                                Processing Time (s)
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {evaluationResult.leaderboard_summary.map(
-                              (summary, index) => (
-                                <tr
-                                  key={index}
-                                  className="border-b border-border last:border-b-0"
-                                >
-                                  <td className="px-4 py-3 text-[13px] text-foreground">
-                                    {getProviderLabel(summary.run)}
-                                  </td>
-                                  <td className="px-4 py-3 text-[13px] text-foreground">
-                                    {summary.count}
-                                  </td>
-                                  <td className="px-4 py-3 text-[13px] text-foreground">
-                                    {summary.llm_judge_score}
-                                  </td>
-                                  <td className="px-4 py-3 text-[13px] text-foreground">
-                                    {summary.ttfb.toFixed(5)}
-                                  </td>
-                                  <td className="px-4 py-3 text-[13px] text-foreground">
-                                    {summary.processing_time.toFixed(5)}
-                                  </td>
-                                </tr>
-                              )
-                            )}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
+                    <DownloadableTable
+                      columns={[
+                        {
+                          key: "run",
+                          header: "Run",
+                          render: (value) => getProviderLabel(value),
+                        },
+                        { key: "count", header: "Count" },
+                        { key: "llm_judge_score", header: "LLM Judge Score" },
+                        {
+                          key: "ttfb",
+                          header: "TTFB (s)",
+                          render: (value) => value.toFixed(5),
+                        },
+                        {
+                          key: "processing_time",
+                          header: "Processing Time (s)",
+                          render: (value) => value.toFixed(5),
+                        },
+                      ]}
+                      data={evaluationResult.leaderboard_summary}
+                      filename="tts-evaluation-leaderboard"
+                    />
 
                     {/* Charts Section */}
                     {(() => {

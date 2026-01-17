@@ -161,7 +161,11 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
   - **Characteristics**: Detailed personality description (age, background, speaking style, temperament)
   - **Gender**: Male or Female (affects voice synthesis)
   - **Language**: English, Hindi, or Kannada
-  - **Interruption Sensitivity**: None, Low, Medium, or High (how likely to interrupt the agent)
+  - **Interruption Sensitivity**: None, Low, Medium, or High (simulates real users interrupting agents mid-sentence)
+    - Low: 25% probability of interruption
+    - Medium: 50% probability of interruption
+    - High: 80% probability of interruption
+    - UI includes helper text and tooltips showing probability percentages
 - **Edit existing personas**
 - **Delete personas**
 - **Search personas**
@@ -209,6 +213,7 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
 **Simulation Run Results** (`/simulations/[uuid]/runs/[runId]`):
 
 - **Polling & Intermediate Results**:
+
   - Page polls API every 3 seconds while status is `in_progress`
   - Simulation results appear incrementally as each simulation completes
   - Overall metrics only shown after run completes (status === "done")
@@ -523,6 +528,11 @@ Key styling:
    - Shows user avatar (Google image) or placeholder (first letter of first name on purple background)
    - Dropdown contains: user info, theme switcher, logout button
    - Click outside closes dropdown (uses `useRef` + `mousedown` event)
+7. **Downloadable Tables**: Reusable `DownloadableTable` component for data tables with CSV export
+   - Props: `columns` (array of `{key, header, render?}`), `data`, `filename`, `title`
+   - Includes "Download CSV" button in top-right corner
+   - Used in: BenchmarkResultsDialog, SpeechToTextEvaluation, TextToSpeechEvaluation leaderboards
+   - Custom cell rendering via optional `render` function in column definition
    - Theme preference persisted to `localStorage`
    - **Important**: Google profile images require `referrerPolicy="no-referrer"` to load properly
 
