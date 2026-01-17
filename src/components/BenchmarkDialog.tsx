@@ -53,6 +53,12 @@ export function BenchmarkDialog({
     handleClose();
   };
 
+  const handleGoBackFromResults = () => {
+    // Go back to model selection without closing the main dialog
+    // This preserves the selected models so user can try again
+    setShowResults(false);
+  };
+
   const handleAddModel = () => {
     setSelectedModels((prev) => [...prev, null]);
   };
@@ -277,6 +283,7 @@ export function BenchmarkDialog({
       <BenchmarkResultsDialog
         isOpen={showResults}
         onClose={handleCloseResults}
+        onGoBack={handleGoBackFromResults}
         agentUuid={agentUuid}
         agentName={agentName}
         testUuids={tests.map((t) => t.uuid)}

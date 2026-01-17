@@ -19,12 +19,14 @@ export function SettingsTabContent({
             {/* Toggle Switch */}
             <button
               onClick={() => setAgentSpeaksFirst(!agentSpeaksFirst)}
-              className={`relative w-11 h-6 rounded-full transition-colors cursor-pointer ${
-                agentSpeaksFirst ? "bg-foreground" : "bg-muted"
+              className={`relative w-12 h-7 rounded-full transition-colors cursor-pointer border-2 ${
+                agentSpeaksFirst
+                  ? "bg-green-500 border-green-500"
+                  : "bg-muted border-muted-foreground/30"
               }`}
             >
               <div
-                className={`absolute top-0.5 w-5 h-5 rounded-full bg-background transition-transform ${
+                className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-md transition-transform ${
                   agentSpeaksFirst ? "translate-x-5" : "translate-x-0.5"
                 }`}
               />

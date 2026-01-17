@@ -825,12 +825,12 @@ export function AddTestDialog({
                 {/* Describe expected next message */}
                 <div>
                   <label className="block text-base font-medium text-foreground mb-2">
-                    Describe expected next message
+                    Describe expected next reply
                   </label>
                   <textarea
                     value={expectedMessage}
                     onChange={(e) => setExpectedMessage(e.target.value)}
-                    placeholder="Describe the ideal response or behavior the agent should exhibit to pass this test (e.g., provides a correct answer, uses a specific tone, includes key information)."
+                    placeholder="Describe the ideal response of the agent given the conversation history on the right to pass this test (e.g., provides a correct answer, uses a specific tone, includes key information)."
                     rows={4}
                     className={`w-full px-4 py-3 rounded-lg text-base bg-background text-foreground placeholder:text-muted-foreground border focus:outline-none focus:ring-2 focus:ring-accent resize-none ${
                       localValidationAttempted &&

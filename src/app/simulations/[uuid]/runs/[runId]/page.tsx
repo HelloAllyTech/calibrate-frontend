@@ -655,11 +655,11 @@ export default function SimulationRunPage() {
                         <table className="w-full table-fixed">
                           <thead className="bg-background border-t border-border">
                             <tr>
-                              <th className="w-16 px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider"></th>
-                              <th className="w-32 px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                              <th className="w-10 px-2 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider"></th>
+                              <th className="w-44 px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                                 Persona
                               </th>
-                              <th className="w-32 px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                              <th className="w-44 px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                                 Scenario
                               </th>
                               {displayMetricKeys.map((metricKey) => (
@@ -683,15 +683,15 @@ export default function SimulationRunPage() {
                                   key={index}
                                   className="hover:bg-muted/30 transition-colors"
                                 >
-                                  <td className="px-3 py-4 whitespace-nowrap">
+                                  <td className="px-2 py-4 whitespace-nowrap">
                                     <button
                                       onClick={() =>
                                         openTranscriptDialog(simulation)
                                       }
-                                      className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted/50 transition-colors cursor-pointer"
+                                      className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-muted/50 transition-colors cursor-pointer"
                                     >
                                       <svg
-                                        className="w-5 h-5 text-foreground"
+                                        className="w-4 h-4 text-foreground"
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         stroke="currentColor"
@@ -705,11 +705,19 @@ export default function SimulationRunPage() {
                                       </svg>
                                     </button>
                                   </td>
-                                  <td className="px-3 py-4 whitespace-nowrap text-sm text-foreground">
-                                    {simulation.persona.label}
+                                  <td className="px-3 py-4 text-sm text-foreground">
+                                    <div className="overflow-x-auto max-w-full">
+                                      <div className="whitespace-nowrap">
+                                        {simulation.persona.label}
+                                      </div>
+                                    </div>
                                   </td>
-                                  <td className="px-3 py-4 whitespace-nowrap text-sm text-foreground">
-                                    {simulation.scenario.name}
+                                  <td className="px-3 py-4 text-sm text-foreground">
+                                    <div className="overflow-x-auto max-w-full">
+                                      <div className="whitespace-nowrap">
+                                        {simulation.scenario.name}
+                                      </div>
+                                    </div>
                                   </td>
                                   {displayMetricKeys.map((metricKey) => {
                                     const value = getEvaluationResult(
