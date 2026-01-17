@@ -434,7 +434,3418 @@ The add/edit sidebar pattern is identical across personas, scenarios, tools:
 ```tsx
 <div className="fixed inset-0 z-50 flex justify-end">
   <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-  <div className="relative w-[40%] min-w-[500px] bg-backgroun
+  <div className="relative w-[40%] min-w-[500px] bg-background border-l border-border flex flex-col h-full shadow-2xl">
+    {/* Header */}
+    <div className="flex items-center justify-between px-6 py-4 border-b border-border">...</div>
+    {/* Content */}
+    <div className="flex-1 overflow-y-auto p-6 space-y-6">{isLoading ? <Spinner/> : <Form/>}</div>
+    {/* Footer */}
+    <div className="px-6 py-4 border-t border-border">{error && <Error/>}<Buttons/></div>
+  </div>
+</div>
+```
+
+**Recommendation:** Create `<SlidePanel open={} onClose={} title={} icon={} isLoading={} error={} footer={}>` component.
+
+---
+
+### **8. Large Files That Need Splitting**
+
+| File | Lines | Issue |
+|------|-------|-------|
+| `AddTestDialog.tsx` | 1696 | Too complex, mixes UI + business logic |
+| `tools/page.tsx` | 1340 | Parameter handling logic could be separate |
+| `personas/page.tsx` | 907 | Could use shared CRUD components |
+| `BenchmarkResultsDialog.tsx` | 599 | Chart + list logic could be split |
+| `AppLayout.tsx` | 529 | Nav sections could be external config |
+
+**For `AddTestDialog.tsx`:**
+- Extract `ChatMessageList` component
+- Extract `ToolSelectionPanel` component  
+- Extract `TestConfigBuilder` utility functions
+- Move types to separate `types.ts`
+
+---
+
+### **9. Button Styles Not Componentized (LOW IMPACT)**
+
+Primary and secondary button styles are repeated instead of using components:
+
+```tsx
+// Primary button (repeated ~15 times)
+className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+
+// Secondary button (repeated ~15 times)  
+className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+```
+
+**Recommendation:** Create `<Button variant="primary|secondary|danger" />` component.
+
+---
+
+### **Summary of Recommended New Shared Components:**
+
+1. **`src/lib/api.ts`** - API client with auth handling
+2. **`src/components/icons/index.tsx`** - All SVG icons (extend from `test-results/shared.tsx`)
+3. **`src/components/ui/SearchInput.tsx`** - Reusable search input
+4. **`src/components/ui/Button.tsx`** - Styled button variants
+5. **`src/components/ui/SlidePanel.tsx`** - Slide-in panel for forms
+6. **`src/components/ui/ResourceState.tsx`** - Loading/error/empty state handler
+7. **`src/components/ui/DataTable.tsx`** - Generic table component
+8. **`src/hooks/useCrudResource.ts`** - Hook for CRUD operations
+
+### **Estimated Reduction:**
+Implementing these changes could reduce total codebase size by **25-35%** and significantly improve maintainability.
+
+---
+
+_**User (2026-01-16 23:46Z)**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user is asking me to update `.cursor/rules/app-details.md` only if I made code changes. Looking at my previous response, I only performed an analysis of the codebase to identify duplicate code and modularization opportunities - I did not actually make any code changes. I simply scanned files and provided recommendations.
+
+Since I did not make any code changes, I should not update the `.cursor/rules/app-details.md` file according to the user's instructions.</details></think>
+
+---
+
+I did not make any code changes in my previous response - I only performed an analysis of the codebase to identify duplicate code and modularization opportunities. Since no actual code modifications were made, I should not update `.cursor/rules/app-details.md` per your instructions.
+
+If you'd like me to:
+1. **Implement** some of the recommended refactoring changes (like creating shared components, icons, hooks, etc.), or
+2. **Save my analysis** to a different file for future reference
+
+Let me know and I'll proceed accordingly.
+
+---
+
+_**User (2026-01-16 23:46Z)**_
+
+go ahead do it
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants me to implement the refactoring changes I recommended. Let me start with the most impactful and foundational changes:
+
+1. First, I'll create an icons library by consolidating all duplicated icons
+2. Create an API client utility
+3. Create reusable UI components (SearchInput, Button, SlidePanel, ResourceState)
+4. Create a useCrudResource hook
+
+Let me start implementing these changes systematically.</details></think>
+
+---
+
+I'll implement the refactoring changes to reduce code duplication. Let me start with the foundational components.
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [-] Create shared icons library (src/components/icons/index.tsx)
+- [ ] Create API client utility (src/lib/api.ts)
+- [ ] Create reusable UI components (SearchInput, Button, SlidePanel)
+- [ ] Create useCrudResource hook for CRUD operations
+- [ ] Refactor personas page to use new shared components
+- [ ] Refactor scenarios page to use new shared components
+- [ ] Fix LLMSelectorModal duplication in BenchmarkDialog
+- [ ] Update app-details.md with new patterns
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me start by creating the icons library first, then continue with other components.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="write">
+
+<details><summary>Tool use: **write** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/icons/index.tsx</summary>
+
+**Chunk 1**
+Lines added: 386, lines removed: 1
+
+```diff
+@@ -1,1 +1,386 @@
+- 
++ "use client";
++ 
++ import React from "react";
++ 
++ type IconProps = {
++   className?: string;
++ };
++ 
++ // Loading/Spinner Icon
++ export function SpinnerIcon({ className }: IconProps) {
++   return (
++     &lt;svg className={className} fill="none" viewBox="0 0 24 24"&gt;
++       &lt;circle
++         className="opacity-25"
++         cx="12"
++         cy="12"
++         r="10"
++         stroke="currentColor"
++         strokeWidth="4"
++       /&gt;
++       &lt;path
++         className="opacity-75"
++         fill="currentColor"
++         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
++       /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
++ // Close/X Icon
++ export function CloseIcon({ className }: IconProps) {
++   return (
++     &lt;svg
++       className={className}
++       fill="none"
++       viewBox="0 0 24 24"
++       stroke="currentColor"
++       strokeWidth={2}
++     &gt;
++       &lt;path
++         strokeLinecap="round"
++         strokeLinejoin="round"
++         d="M6 18L18 6M6 6l12 12"
++       /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
++ // Search Icon
++ export function SearchIcon({ className }: IconProps) {
++   return (
++     &lt;svg
++       className={className}
++       fill="none"
++       viewBox="0 0 24 24"
++       stroke="currentColor"
++       strokeWidth={2}
++     &gt;
++       &lt;path
++         strokeLinecap="round"
++         strokeLinejoin="round"
++         d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
++       /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
++ // Trash/Delete Icon
++ export function TrashIcon({ className }: IconProps) {
++   return (
++     &lt;svg
++       className={className}
++       fill="none"
++       viewBox="0 0 24 24"
++       stroke="currentColor"
++       strokeWidth={2}
++     &gt;
++       &lt;path
++         strokeLinecap="round"
++         strokeLinejoin="round"
++         d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
++       /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
++ // Check Icon
++ export function CheckIcon({ className }: IconProps) {
++   return (
++     &lt;svg
++       className={className}
++       fill="none"
++       viewBox="0 0 24 24"
++       stroke="currentColor"
++       strokeWidth={3}
++     &gt;
++       &lt;path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
++ // X Icon (smaller stroke for status badges)
++ export function XIcon({ className }: IconProps) {
++   return (
++     &lt;svg
++       className={className}
++       fill="none"
++       viewBox="0 0 24 24"
++       stroke="currentColor"
++       strokeWidth={3}
++     &gt;
++       &lt;path
++         strokeLinecap="round"
++         strokeLinejoin="round"
++         d="M6 18L18 6M6 6l12 12"
++       /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
++ // Plus Icon
++ export function PlusIcon({ className }: IconProps) {
++   return (
++     &lt;svg
++       className={className}
++       fill="none"
++       viewBox="0 0 24 24"
++       stroke="currentColor"
++       strokeWidth={2}
++     &gt;
++       &lt;path
++         strokeLinecap="round"
++         strokeLinejoin="round"
++         d="M12 4.5v15m7.5-7.5h-15"
++       /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
++ // Chevron Down Icon
++ export function ChevronDownIcon({ className }: IconProps) {
++   return (
++     &lt;svg
++       className={className}
++       fill="none"
++       viewBox="0 0 24 24"
++       stroke="currentColor"
++       strokeWidth={2}
++     &gt;
++       &lt;path
++         strokeLinecap="round"
++         strokeLinejoin="round"
++         d="M19.5 8.25l-7.5 7.5-7.5-7.5"
++       /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
++ // Chevron Left Icon
++ export function ChevronLeftIcon({ className }: IconProps) {
++   return (
++     &lt;svg
++       className={className}
++       fill="none"
++       viewBox="0 0 24 24"
++       stroke="currentColor"
++       strokeWidth={2}
++     &gt;
++       &lt;path
++         strokeLinecap="round"
++         strokeLinejoin="round"
++         d="M15.75 19.5L8.25 12l7.5-7.5"
++       /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
++ // Arrow Down Icon (for sorting)
++ export function ArrowDownIcon({ className }: IconProps) {
++   return (
++     &lt;svg
++       className={className}
++       fill="none"
++       viewBox="0 0 24 24"
++       stroke="currentColor"
++       strokeWidth={2}
++     &gt;
++       &lt;path
++         strokeLinecap="round"
++         strokeLinejoin="round"
++         d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"
++       /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
++ // Tool Icon
++ export function ToolIcon({ className }: IconProps) {
++   return (
++     &lt;svg
++       className={className}
++       fill="none"
++       viewBox="0 0 24 24"
++       stroke="currentColor"
++       strokeWidth={1.5}
++     &gt;
++       &lt;path
++         strokeLinecap="round"
++         strokeLinejoin="round"
++         d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"
++       /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
++ // Person Icon
++ export function PersonIcon({ className }: IconProps) {
++   return (
++     &lt;svg
++       className={className}
++       fill="none"
++       viewBox="0 0 24 24"
++       stroke="currentColor"
++       strokeWidth={1.5}
++     &gt;
++       &lt;path
++         strokeLinecap="round"
++         strokeLinejoin="round"
++         d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
++       /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
++ // Document Icon
++ export function DocumentIcon({ className }: IconProps) {
++   return (
++     &lt;svg
++       className={className}
++       fill="none"
++       viewBox="0 0 24 24"
++       stroke="currentColor"
++       strokeWidth={1.5}
++     &gt;
++       &lt;path
++         strokeLinecap="round"
++         strokeLinejoin="round"
++         d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
++       /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
++ // Play Icon
++ export function PlayIcon({ className }: IconProps) {
++   return (
++     &lt;svg
++       className={className}
++       fill="none"
++       viewBox="0 0 24 24"
++       stroke="currentColor"
++       strokeWidth={1.5}
++     &gt;
++       &lt;path
++         strokeLinecap="round"
++         strokeLinejoin="round"
++         d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"
++       /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
++ // Robot/Agent Icon
++ export function RobotIcon({ className }: IconProps) {
++   return (
++     &lt;svg
++       className={className}
++       fill="none"
++       viewBox="0 0 24 24"
++       stroke="currentColor"
++       strokeWidth={1.5}
++     &gt;
++       &lt;path
++         strokeLinecap="round"
++         strokeLinejoin="round"
++         d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V6.75a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 6.75v10.5a2.25 2.25 0 002.25 2.25zm.75-12h9v9h-9v-9z"
++       /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
++ // User Icon
++ export function UserIcon({ className }: IconProps) {
++   return (
++     &lt;svg
++       className={className}
++       fill="none"
++       viewBox="0 0 24 24"
++       stroke="currentColor"
++       strokeWidth={1.5}
++     &gt;
++       &lt;path
++         strokeLinecap="round"
++         strokeLinejoin="round"
++         d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
++       /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
++ // Info Icon
++ export function InfoIcon({ className }: IconProps) {
++   return (
++     &lt;svg
++       className={className}
++       fill="none"
++       viewBox="0 0 24 24"
++       stroke="currentColor"
++       strokeWidth={2}
++     &gt;
++       &lt;path
++         strokeLinecap="round"
++         strokeLinejoin="round"
++         d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
++       /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
++ // Error/Alert Icon
++ export function AlertIcon({ className }: IconProps) {
++   return (
++     &lt;svg
++       className={className}
++       fill="none"
++       viewBox="0 0 24 24"
++       stroke="currentColor"
++       strokeWidth={2}
++     &gt;
++       &lt;path
++         strokeLinecap="round"
++         strokeLinejoin="round"
++         d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
++       /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
++ // Refresh/Rerun Icon
++ export function RefreshIcon({ className }: IconProps) {
++   return (
++     &lt;svg
++       className={className}
++       fill="none"
++       viewBox="0 0 24 24"
++       stroke="currentColor"
++       strokeWidth={2}
++     &gt;
++       &lt;path
++         strokeLinecap="round"
++         strokeLinejoin="round"
++         d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
++       /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
++ // Back Arrow Icon
++ export function BackArrowIcon({ className }: IconProps) {
++   return (
++     &lt;svg
++       className={className}
++       fill="none"
++       viewBox="0 0 24 24"
++       stroke="currentColor"
++       strokeWidth={2}
++     &gt;
++       &lt;path
++         strokeLinecap="round"
++         strokeLinejoin="round"
++         d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
++       /&gt;
++     &lt;/svg&gt;
++   );
++ }
++ 
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me create the API client utility.</details></think>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Create shared icons library (src/components/icons/index.tsx)
+- [-] Create API client utility (src/lib/api.ts)
+- [ ] Create reusable UI components (SearchInput, Button, SlidePanel)
+- [ ] Create useCrudResource hook for CRUD operations
+- [ ] Refactor personas page to use new shared components
+- [ ] Refactor scenarios page to use new shared components
+- [ ] Fix LLMSelectorModal duplication in BenchmarkDialog
+- [ ] Update app-details.md with new patterns
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="write">
+
+<details><summary>Tool use: **write** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/lib/api.ts</summary>
+
+**Chunk 1**
+Lines added: 126, lines removed: 1
+
+```diff
+@@ -1,1 +1,126 @@
+- 
++ import { signOut } from "next-auth/react";
++ 
++ type RequestOptions = {
++   method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
++   body?: unknown;
++   headers?: Record&lt;string, string&gt;;
++ };
++ 
++ /**
++  * Get the backend URL from environment variables
++  */
++ export function getBackendUrl(): string {
++   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
++   if (!backendUrl) {
++     throw new Error("BACKEND_URL environment variable is not set");
++   }
++   return backendUrl;
++ }
++ 
++ /**
++  * Default headers for API requests
++  */
++ export function getDefaultHeaders(accessToken?: string): Record&lt;string, string&gt; {
++   const headers: Record&lt;string, string&gt; = {
++     accept: "application/json",
++     "ngrok-skip-browser-warning": "true",
++   };
++   
++   if (accessToken) {
++     headers.Authorization = &#96;Bearer ${accessToken}&#96;;
++   }
++   
++   return headers;
++ }
++ 
++ /**
++  * API client for making authenticated requests to the backend
++  * Handles 401 responses by signing out the user
++  * 
++  * @param endpoint - API endpoint (without base URL)
++  * @param accessToken - Backend access token from session
++  * @param options - Request options (method, body, headers)
++  * @returns Promise&lt;T&gt; - Parsed JSON response
++  * @throws Error on non-2xx responses or network errors
++  */
++ export async function apiClient&lt;T&gt;(
++   endpoint: string,
++   accessToken: string,
++   options: RequestOptions = {}
++ ): Promise&lt;T&gt; {
++   const backendUrl = getBackendUrl();
++   const { method = "GET", body, headers: customHeaders } = options;
++ 
++   const headers: Record&lt;string, string&gt; = {
++     ...getDefaultHeaders(accessToken),
++     ...customHeaders,
++   };
++ 
++   // Add Content-Type for requests with body
++   if (body &amp;&amp; !headers["Content-Type"]) {
++     headers["Content-Type"] = "application/json";
++   }
++ 
++   const response = await fetch(&#96;${backendUrl}${endpoint}&#96;, {
++     method,
++     headers,
++     body: body ? JSON.stringify(body) : undefined,
++   });
++ 
++   // Handle 401 Unauthorized - sign out user
++   if (response.status === 401) {
++     await signOut({ callbackUrl: "/login" });
++     throw new Error("Unauthorized - session expired");
++   }
++ 
++   // Handle non-2xx responses
++   if (!response.ok) {
++     const errorText = await response.text().catch(() =&gt; "Unknown error");
++     throw new Error(&#96;Request failed: ${response.status} - ${errorText}&#96;);
++   }
++ 
++   // Handle empty responses (204 No Content, etc.)
++   const contentType = response.headers.get("content-type");
++   if (!contentType || !contentType.includes("application/json")) {
++     return {} as T;
++   }
++ 
++   return response.json();
++ }
++ 
++ /**
++  * Convenience wrapper for GET requests
++  */
++ export async function apiGet&lt;T&gt;(endpoint: string, accessToken: string): Promise&lt;T&gt; {
++   return apiClient&lt;T&gt;(endpoint, accessToken, { method: "GET" });
++ }
++ 
++ /**
++  * Convenience wrapper for POST requests
++  */
++ export async function apiPost&lt;T&gt;(
++   endpoint: string,
++   accessToken: string,
++   body: unknown
++ ): Promise&lt;T&gt; {
++   return apiClient&lt;T&gt;(endpoint, accessToken, { method: "POST", body });
++ }
++ 
++ /**
++  * Convenience wrapper for PUT requests
++  */
++ export async function apiPut&lt;T&gt;(
++   endpoint: string,
++   accessToken: string,
++   body: unknown
++ ): Promise&lt;T&gt; {
++   return apiClient&lt;T&gt;(endpoint, accessToken, { method: "PUT", body });
++ }
++ 
++ /**
++  * Convenience wrapper for DELETE requests
++  */
++ export async function apiDelete&lt;T&gt;(endpoint: string, accessToken: string): Promise&lt;T&gt; {
++   return apiClient&lt;T&gt;(endpoint, accessToken, { method: "DELETE" });
++ }
++ 
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me create the reusable UI components: SearchInput, Button, and SlidePanel.</details></think>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Create shared icons library (src/components/icons/index.tsx)
+- [x] Create API client utility (src/lib/api.ts)
+- [-] Create reusable UI components (SearchInput, Button, SlidePanel)
+- [ ] Create useCrudResource hook for CRUD operations
+- [ ] Refactor personas page to use new shared components
+- [ ] Refactor scenarios page to use new shared components
+- [ ] Fix LLMSelectorModal duplication in BenchmarkDialog
+- [ ] Update app-details.md with new patterns
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="write">
+
+<details><summary>Tool use: **write** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/ui/SearchInput.tsx</summary>
+
+**Chunk 1**
+Lines added: 34, lines removed: 1
+
+```diff
+@@ -1,1 +1,34 @@
+- 
++ "use client";
++ 
++ import React from "react";
++ import { SearchIcon } from "@/components/icons";
++ 
++ type SearchInputProps = {
++   value: string;
++   onChange: (value: string) =&gt; void;
++   placeholder?: string;
++   className?: string;
++ };
++ 
++ export function SearchInput({
++   value,
++   onChange,
++   placeholder = "Search",
++   className = "",
++ }: SearchInputProps) {
++   return (
++     &lt;div className={&#96;relative ${className}&#96;}&gt;
++       &lt;div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"&gt;
++         &lt;SearchIcon className="w-5 h-5 text-muted-foreground" /&gt;
++       &lt;/div&gt;
++       &lt;input
++         type="text"
++         value={value}
++         onChange={(e) =&gt; onChange(e.target.value)}
++         placeholder={placeholder}
++         className="w-full h-10 pl-10 pr-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
++       /&gt;
++     &lt;/div&gt;
++   );
++ }
++ 
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="write">
+
+<details><summary>Tool use: **write** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/ui/Button.tsx</summary>
+
+**Chunk 1**
+Lines added: 70, lines removed: 1
+
+```diff
+@@ -1,1 +1,70 @@
+- 
++ "use client";
++ 
++ import React from "react";
++ import { SpinnerIcon } from "@/components/icons";
++ 
++ type ButtonVariant = "primary" | "secondary" | "danger" | "ghost";
++ type ButtonSize = "sm" | "md" | "lg";
++ 
++ type ButtonProps = {
++   children: React.ReactNode;
++   variant?: ButtonVariant;
++   size?: ButtonSize;
++   onClick?: () =&gt; void;
++   disabled?: boolean;
++   isLoading?: boolean;
++   loadingText?: string;
++   type?: "button" | "submit" | "reset";
++   className?: string;
++ };
++ 
++ const variantStyles: Record&lt;ButtonVariant, string&gt; = {
++   primary:
++     "bg-foreground text-background hover:opacity-90 transition-opacity",
++   secondary:
++     "border border-border bg-background hover:bg-muted/50 transition-colors",
++   danger:
++     "bg-red-800 text-white hover:bg-red-900 transition-colors",
++   ghost:
++     "text-muted-foreground hover:text-foreground hover:bg-muted transition-colors",
++ };
++ 
++ const sizeStyles: Record&lt;ButtonSize, string&gt; = {
++   sm: "h-8 px-3 text-sm",
++   md: "h-10 px-4 text-base",
++   lg: "h-12 px-6 text-lg",
++ };
++ 
++ export function Button({
++   children,
++   variant = "primary",
++   size = "md",
++   onClick,
++   disabled = false,
++   isLoading = false,
++   loadingText,
++   type = "button",
++   className = "",
++ }: ButtonProps) {
++   const isDisabled = disabled || isLoading;
++ 
++   return (
++     &lt;button
++       type={type}
++       onClick={onClick}
++       disabled={isDisabled}
++       className={&#96;
++         ${sizeStyles[size]}
++         ${variantStyles[variant]}
++         rounded-md font-medium cursor-pointer
++         disabled:opacity-50 disabled:cursor-not-allowed
++         flex items-center justify-center gap-2
++         ${className}
++       &#96;}
++     &gt;
++       {isLoading &amp;&amp; &lt;SpinnerIcon className="w-4 h-4 animate-spin" /&gt;}
++       {isLoading &amp;&amp; loadingText ? loadingText : children}
++     &lt;/button&gt;
++   );
++ }
++ 
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="write">
+
+<details><summary>Tool use: **write** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/ui/SlidePanel.tsx</summary>
+
+**Chunk 1**
+Lines added: 121, lines removed: 1
+
+```diff
+@@ -1,1 +1,121 @@
+- 
++ "use client";
++ 
++ import React from "react";
++ import { CloseIcon, SpinnerIcon } from "@/components/icons";
++ import { Button } from "./Button";
++ 
++ type SlidePanelProps = {
++   isOpen: boolean;
++   onClose: () =&gt; void;
++   title: string;
++   icon?: React.ReactNode;
++   children: React.ReactNode;
++   isLoading?: boolean;
++   error?: string | null;
++   footer?: React.ReactNode;
++   width?: string;
++ };
++ 
++ export function SlidePanel({
++   isOpen,
++   onClose,
++   title,
++   icon,
++   children,
++   isLoading = false,
++   error,
++   footer,
++   width = "w-[40%] min-w-[500px]",
++ }: SlidePanelProps) {
++   if (!isOpen) return null;
++ 
++   return (
++     &lt;div className="fixed inset-0 z-50 flex justify-end"&gt;
++       {/* Backdrop */}
++       &lt;div className="absolute inset-0 bg-black/50" onClick={onClose} /&gt;
++ 
++       {/* Panel */}
++       &lt;div
++         className={&#96;relative ${width} bg-background border-l border-border flex flex-col h-full shadow-2xl&#96;}
++       &gt;
++         {/* Header */}
++         &lt;div className="flex items-center justify-between px-6 py-4 border-b border-border"&gt;
++           &lt;div className="flex items-center gap-3"&gt;
++             {icon &amp;&amp; (
++               &lt;span className="text-muted-foreground"&gt;{icon}&lt;/span&gt;
++             )}
++             &lt;h2 className="text-lg font-semibold"&gt;{title}&lt;/h2&gt;
++           &lt;/div&gt;
++           &lt;button
++             onClick={onClose}
++             className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted transition-colors cursor-pointer"
++           &gt;
++             &lt;CloseIcon className="w-5 h-5" /&gt;
++           &lt;/button&gt;
++         &lt;/div&gt;
++ 
++         {/* Content */}
++         &lt;div className="flex-1 overflow-y-auto p-6 space-y-6"&gt;
++           {isLoading ? (
++             &lt;div className="flex items-center justify-center py-12"&gt;
++               &lt;SpinnerIcon className="w-6 h-6 animate-spin" /&gt;
++             &lt;/div&gt;
++           ) : (
++             children
++           )}
++         &lt;/div&gt;
++ 
++         {/* Footer */}
++         {footer &amp;&amp; (
++           &lt;div className="px-6 py-4 border-t border-border space-y-3"&gt;
++             {error &amp;&amp; &lt;p className="text-sm text-red-500"&gt;{error}&lt;/p&gt;}
++             {footer}
++           &lt;/div&gt;
++         )}
++       &lt;/div&gt;
++     &lt;/div&gt;
++   );
++ }
++ 
++ // Common footer pattern for CRUD forms
++ type SlidePanelFooterProps = {
++   onCancel: () =&gt; void;
++   onSubmit: () =&gt; void;
++   isSubmitting?: boolean;
++   isLoading?: boolean;
++   submitText?: string;
++   submittingText?: string;
++   cancelText?: string;
++ };
++ 
++ export function SlidePanelFooter({
++   onCancel,
++   onSubmit,
++   isSubmitting = false,
++   isLoading = false,
++   submitText = "Save",
++   submittingText = "Saving...",
++   cancelText = "Cancel",
++ }: SlidePanelFooterProps) {
++   return (
++     &lt;div className="flex items-center justify-end gap-3"&gt;
++       &lt;Button
++         variant="secondary"
++         onClick={onCancel}
++         disabled={isSubmitting || isLoading}
++       &gt;
++         {cancelText}
++       &lt;/Button&gt;
++       &lt;Button
++         variant="primary"
++         onClick={onSubmit}
++         disabled={isSubmitting || isLoading}
++         isLoading={isSubmitting}
++         loadingText={submittingText}
++       &gt;
++         {submitText}
++       &lt;/Button&gt;
++     &lt;/div&gt;
++   );
++ }
++ 
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="write">
+
+<details><summary>Tool use: **write** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/ui/LoadingState.tsx</summary>
+
+**Chunk 1**
+Lines added: 128, lines removed: 1
+
+```diff
+@@ -1,1 +1,128 @@
+- 
++ "use client";
++ 
++ import React from "react";
++ import { SpinnerIcon } from "@/components/icons";
++ 
++ type LoadingStateProps = {
++   className?: string;
++ };
++ 
++ export function LoadingState({ className = "" }: LoadingStateProps) {
++   return (
++     &lt;div className={&#96;flex items-center justify-center gap-3 py-8 ${className}&#96;}&gt;
++       &lt;SpinnerIcon className="w-5 h-5 animate-spin" /&gt;
++     &lt;/div&gt;
++   );
++ }
++ 
++ type ErrorStateProps = {
++   message: string;
++   onRetry?: () =&gt; void;
++   className?: string;
++ };
++ 
++ export function ErrorState({ message, onRetry, className = "" }: ErrorStateProps) {
++   return (
++     &lt;div
++       className={&#96;border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20 ${className}&#96;}
++     &gt;
++       &lt;p className="text-base text-red-500 mb-2"&gt;{message}&lt;/p&gt;
++       {onRetry &amp;&amp; (
++         &lt;button
++           onClick={onRetry}
++           className="text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
++         &gt;
++           Retry
++         &lt;/button&gt;
++       )}
++     &lt;/div&gt;
++   );
++ }
++ 
++ type EmptyStateProps = {
++   icon: React.ReactNode;
++   title: string;
++   description: string;
++   action?: {
++     label: string;
++     onClick: () =&gt; void;
++   };
++   className?: string;
++ };
++ 
++ export function EmptyState({
++   icon,
++   title,
++   description,
++   action,
++   className = "",
++ }: EmptyStateProps) {
++   return (
++     &lt;div
++       className={&#96;border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20 ${className}&#96;}
++     &gt;
++       &lt;div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center mb-4"&gt;
++         {icon}
++       &lt;/div&gt;
++       &lt;h3 className="text-lg font-semibold text-foreground mb-1"&gt;{title}&lt;/h3&gt;
++       &lt;p className="text-base text-muted-foreground mb-4"&gt;{description}&lt;/p&gt;
++       {action &amp;&amp; (
++         &lt;button
++           onClick={action.onClick}
++           className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
++         &gt;
++           {action.label}
++         &lt;/button&gt;
++       )}
++     &lt;/div&gt;
++   );
++ }
++ 
++ // Combined component that handles all three states
++ type ResourceStateProps = {
++   isLoading: boolean;
++   error: string | null;
++   isEmpty: boolean;
++   onRetry?: () =&gt; void;
++   emptyState: {
++     icon: React.ReactNode;
++     title: string;
++     description: string;
++     action?: {
++       label: string;
++       onClick: () =&gt; void;
++     };
++   };
++   children: React.ReactNode;
++ };
++ 
++ export function ResourceState({
++   isLoading,
++   error,
++   isEmpty,
++   onRetry,
++   emptyState,
++   children,
++ }: ResourceStateProps) {
++   if (isLoading) {
++     return &lt;LoadingState /&gt;;
++   }
++ 
++   if (error) {
++     return &lt;ErrorState message={error} onRetry={onRetry} /&gt;;
++   }
++ 
++   if (isEmpty) {
++     return (
++       &lt;EmptyState
++         icon={emptyState.icon}
++         title={emptyState.title}
++         description={emptyState.description}
++         action={emptyState.action}
++       /&gt;
++     );
++   }
++ 
++   return &lt;&gt;{children}&lt;/&gt;;
++ }
++ 
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="write">
+
+<details><summary>Tool use: **write** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/ui/index.ts</summary>
+
+**Chunk 1**
+Lines added: 10, lines removed: 1
+
+```diff
+@@ -1,1 +1,10 @@
+- 
++ export { SearchInput } from "./SearchInput";
++ export { Button } from "./Button";
++ export { SlidePanel, SlidePanelFooter } from "./SlidePanel";
++ export {
++   LoadingState,
++   ErrorState,
++   EmptyState,
++   ResourceState,
++ } from "./LoadingState";
++ 
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me create the useCrudResource hook and then fix the LLMSelectorModal duplication.</details></think>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Create shared icons library (src/components/icons/index.tsx)
+- [x] Create API client utility (src/lib/api.ts)
+- [x] Create reusable UI components (SearchInput, Button, SlidePanel)
+- [-] Create useCrudResource hook for CRUD operations
+- [ ] Refactor personas page to use new shared components
+- [ ] Refactor scenarios page to use new shared components
+- [ ] Fix LLMSelectorModal duplication in BenchmarkDialog
+- [ ] Update app-details.md with new patterns
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="write">
+
+<details><summary>Tool use: **write** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/hooks/useCrudResource.ts</summary>
+
+**Chunk 1**
+Lines added: 218, lines removed: 1
+
+```diff
+@@ -1,1 +1,218 @@
+- 
++ "use client";
++ 
++ import { useState, useEffect, useCallback } from "react";
++ import { apiGet, apiPost, apiPut, apiDelete } from "@/lib/api";
++ 
++ type UseCrudResourceOptions&lt;T&gt; = {
++   endpoint: string;
++   accessToken: string | undefined;
++   enabled?: boolean;
++ };
++ 
++ type UseCrudResourceReturn&lt;T&gt; = {
++   // Data
++   items: T[];
++   setItems: React.Dispatch&lt;React.SetStateAction&lt;T[]&gt;&gt;;
++   
++   // Loading states
++   isLoading: boolean;
++   isCreating: boolean;
++   isUpdating: boolean;
++   isDeleting: boolean;
++   
++   // Error states
++   error: string | null;
++   createError: string | null;
++   
++   // Actions
++   refetch: () =&gt; Promise&lt;void&gt;;
++   create: (data: Partial&lt;T&gt;) =&gt; Promise&lt;T | null&gt;;
++   update: (id: string, data: Partial&lt;T&gt;) =&gt; Promise&lt;T | null&gt;;
++   remove: (id: string) =&gt; Promise&lt;boolean&gt;;
++   
++   // Reset errors
++   clearErrors: () =&gt; void;
++ };
++ 
++ /**
++  * Generic hook for CRUD operations on a resource
++  * Handles loading, error states, and optimistic updates
++  */
++ export function useCrudResource&lt;T extends { uuid: string }&gt;({
++   endpoint,
++   accessToken,
++   enabled = true,
++ }: UseCrudResourceOptions&lt;T&gt;): UseCrudResourceReturn&lt;T&gt; {
++   const [items, setItems] = useState&lt;T[]&gt;([]);
++   const [isLoading, setIsLoading] = useState(true);
++   const [isCreating, setIsCreating] = useState(false);
++   const [isUpdating, setIsUpdating] = useState(false);
++   const [isDeleting, setIsDeleting] = useState(false);
++   const [error, setError] = useState&lt;string | null&gt;(null);
++   const [createError, setCreateError] = useState&lt;string | null&gt;(null);
++ 
++   // Fetch all items
++   const fetchItems = useCallback(async () =&gt; {
++     if (!accessToken || !enabled) return;
++ 
++     try {
++       setIsLoading(true);
++       setError(null);
++       const data = await apiGet&lt;T[]&gt;(endpoint, accessToken);
++       setItems(data);
++     } catch (err) {
++       console.error(&#96;Error fetching ${endpoint}:&#96;, err);
++       setError(err instanceof Error ? err.message : &#96;Failed to load data&#96;);
++     } finally {
++       setIsLoading(false);
++     }
++   }, [endpoint, accessToken, enabled]);
++ 
++   // Initial fetch
++   useEffect(() =&gt; {
++     fetchItems();
++   }, [fetchItems]);
++ 
++   // Create new item
++   const create = useCallback(
++     async (data: Partial&lt;T&gt;): Promise&lt;T | null&gt; =&gt; {
++       if (!accessToken) return null;
++ 
++       try {
++         setIsCreating(true);
++         setCreateError(null);
++         const newItem = await apiPost&lt;T&gt;(endpoint, accessToken, data);
++         
++         // Refetch to get updated list
++         await fetchItems();
++         
++         return newItem;
++       } catch (err) {
++         console.error(&#96;Error creating ${endpoint}:&#96;, err);
++         setCreateError(err instanceof Error ? err.message : "Failed to create");
++         return null;
++       } finally {
++         setIsCreating(false);
++       }
++     },
++     [endpoint, accessToken, fetchItems]
++   );
++ 
++   // Update existing item
++   const update = useCallback(
++     async (id: string, data: Partial&lt;T&gt;): Promise&lt;T | null&gt; =&gt; {
++       if (!accessToken) return null;
++ 
++       try {
++         setIsUpdating(true);
++         setCreateError(null);
++         const updatedItem = await apiPut&lt;T&gt;(&#96;${endpoint}/${id}&#96;, accessToken, data);
++         
++         // Refetch to get updated list
++         await fetchItems();
++         
++         return updatedItem;
++       } catch (err) {
++         console.error(&#96;Error updating ${endpoint}/${id}:&#96;, err);
++         setCreateError(err instanceof Error ? err.message : "Failed to update");
++         return null;
++       } finally {
++         setIsUpdating(false);
++       }
++     },
++     [endpoint, accessToken, fetchItems]
++   );
++ 
++   // Delete item
++   const remove = useCallback(
++     async (id: string): Promise&lt;boolean&gt; =&gt; {
++       if (!accessToken) return false;
++ 
++       try {
++         setIsDeleting(true);
++         await apiDelete(&#96;${endpoint}/${id}&#96;, accessToken);
++         
++         // Optimistic update - remove from local state
++         setItems((prev) =&gt; prev.filter((item) =&gt; item.uuid !== id));
++         
++         return true;
++       } catch (err) {
++         console.error(&#96;Error deleting ${endpoint}/${id}:&#96;, err);
++         return false;
++       } finally {
++         setIsDeleting(false);
++       }
++     },
++     [endpoint, accessToken]
++   );
++ 
++   // Clear all errors
++   const clearErrors = useCallback(() =&gt; {
++     setError(null);
++     setCreateError(null);
++   }, []);
++ 
++   return {
++     items,
++     setItems,
++     isLoading,
++     isCreating,
++     isUpdating,
++     isDeleting,
++     error,
++     createError,
++     refetch: fetchItems,
++     create,
++     update,
++     remove,
++     clearErrors,
++   };
++ }
++ 
++ /**
++  * Hook for fetching a single resource by ID
++  */
++ export function useFetchResource&lt;T&gt;({
++   endpoint,
++   accessToken,
++   id,
++   enabled = true,
++ }: {
++   endpoint: string;
++   accessToken: string | undefined;
++   id: string | null;
++   enabled?: boolean;
++ }) {
++   const [data, setData] = useState&lt;T | null&gt;(null);
++   const [isLoading, setIsLoading] = useState(false);
++   const [error, setError] = useState&lt;string | null&gt;(null);
++ 
++   const fetch = useCallback(async () =&gt; {
++     if (!accessToken || !id || !enabled) return;
++ 
++     try {
++       setIsLoading(true);
++       setError(null);
++       const result = await apiGet&lt;T&gt;(&#96;${endpoint}/${id}&#96;, accessToken);
++       setData(result);
++     } catch (err) {
++       console.error(&#96;Error fetching ${endpoint}/${id}:&#96;, err);
++       setError(err instanceof Error ? err.message : "Failed to load");
++     } finally {
++       setIsLoading(false);
++     }
++   }, [endpoint, accessToken, id, enabled]);
++ 
++   useEffect(() =&gt; {
++     fetch();
++   }, [fetch]);
++ 
++   return {
++     data,
++     setData,
++     isLoading,
++     error,
++     refetch: fetch,
++   };
++ }
++ 
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="write">
+
+<details><summary>Tool use: **write** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/hooks/index.ts</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -1,1 +1,2 @@
+- 
++ export { useCrudResource, useFetchResource } from "./useCrudResource";
++ 
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me fix the LLMSelectorModal duplication in BenchmarkDialog. I need to update the existing LLMSelectorModal to accept the optional availableProviders prop, then update BenchmarkDialog to use the shared component.</details></think>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Create shared icons library (src/components/icons/index.tsx)
+- [x] Create API client utility (src/lib/api.ts)
+- [x] Create reusable UI components (SearchInput, Button, SlidePanel)
+- [x] Create useCrudResource hook for CRUD operations
+- [ ] Refactor personas page to use new shared components
+- [ ] Refactor scenarios page to use new shared components
+- [-] Fix LLMSelectorModal duplication in BenchmarkDialog
+- [ ] Update app-details.md with new patterns
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/LLMSelectorModal.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I need to update the LLMSelectorModal to:
+1. Accept an optional `availableProviders` prop (for the BenchmarkDialog use case where some models are filtered out)
+2. Use the shared icons
+
+Then I'll update BenchmarkDialog to use this shared component instead of duplicating it.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="write">
+
+<details><summary>Tool use: **write** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/LLMSelectorModal.tsx</summary>
+
+**Chunk 1**
+Lines added: 6, lines removed: undefined
+
+```diff
+@@ -3,4 +3,10 @@
+  import React, { useState } from "react";
+  import { llmProviders, type LLMModel } from "./constants/providers";
++ import { ChevronLeftIcon, CloseIcon } from "@/components/icons";
++ 
++ type LLMProvider = {
++   name: string;
++   models: LLMModel[];
++ };
+  
+  type LLMSelectorModalProps = {
+```
+
+**Chunk 2**
+Lines added: 2, lines removed: undefined
+
+```diff
+@@ -9,4 +15,6 @@
+    selectedLLM: LLMModel | null;
+    onSelect: (model: LLMModel) =&gt; void;
++   // Optional: pass custom providers list (e.g., with filtered models)
++   availableProviders?: LLMProvider[];
+  };
+  
+```
+
+**Chunk 3**
+Lines added: 4, lines removed: undefined
+
+```diff
+@@ -16,8 +24,12 @@
+    selectedLLM,
+    onSelect,
++   availableProviders,
+  }: LLMSelectorModalProps) {
+    const [searchQuery, setSearchQuery] = useState("");
+  
+    if (!isOpen) return null;
++ 
++   // Use custom providers if provided, otherwise use default
++   const providers = availableProviders || llmProviders;
+  
+    const handleClose = () =&gt; {
+```
+
+**Chunk 4**
+Lines added: 14, lines removed: 3
+
+```diff
+@@ -29,9 +41,20 @@
+      onSelect(model);
+      setSearchQuery("");
+-     onClose();
+-   };
++   };
++ 
++   // Filter providers and models by search query
++   const filteredProviders = providers
++     .map((provider) =&gt; ({
++       ...provider,
++       models: provider.models.filter(
++         (model) =&gt;
++           model.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
++           provider.name.toLowerCase().includes(searchQuery.toLowerCase())
++       ),
++     }))
++     .filter((provider) =&gt; provider.models.length &gt; 0);
+  
+    return (
+-     &lt;div className="fixed inset-0 z-50 flex items-start justify-center pt-16 bg-black/50"&gt;
++     &lt;div className="fixed inset-0 z-[60] flex items-start justify-center pt-16 bg-black/50"&gt;
+        &lt;div className="bg-background border border-border rounded-xl w-full max-w-2xl max-h-[80vh] flex flex-col shadow-2xl"&gt;
+          {/* Modal Header */}
+```
+
+**Chunk 5**
+Lines added: 1, lines removed: 13
+
+```diff
+@@ -42,17 +65,5 @@
+                className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted transition-colors cursor-pointer"
+              &gt;
+-               &lt;svg
+-                 className="w-5 h-5"
+-                 fill="none"
+-                 viewBox="0 0 24 24"
+-                 stroke="currentColor"
+-                 strokeWidth={2}
+-               &gt;
+-                 &lt;path
+-                   strokeLinecap="round"
+-                   strokeLinejoin="round"
+-                   d="M15.75 19.5L8.25 12l7.5-7.5"
+-                 /&gt;
+-               &lt;/svg&gt;
++               &lt;ChevronLeftIcon className="w-5 h-5" /&gt;
+              &lt;/button&gt;
+              &lt;h2 className="text-base font-semibold"&gt;Select LLM&lt;/h2&gt;
+```
+
+**Chunk 6**
+Lines added: 1, lines removed: 13
+
+```diff
+@@ -62,17 +73,5 @@
+              className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted transition-colors cursor-pointer"
+            &gt;
+-             &lt;svg
+-               className="w-5 h-5"
+-               fill="none"
+-               viewBox="0 0 24 24"
+-               stroke="currentColor"
+-               strokeWidth={2}
+-             &gt;
+-               &lt;path
+-                 strokeLinecap="round"
+-                 strokeLinejoin="round"
+-                 d="M6 18L18 6M6 6l12 12"
+-               /&gt;
+-             &lt;/svg&gt;
++             &lt;CloseIcon className="w-5 h-5" /&gt;
+            &lt;/button&gt;
+          &lt;/div&gt;
+```
+
+**Chunk 7**
+Lines added: 8, lines removed: 13
+
+```diff
+@@ -86,26 +85,21 @@
+              placeholder="Search LLM"
+              className="w-full h-10 px-4 rounded-md text-base border border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
++             autoFocus
+            /&gt;
+          &lt;/div&gt;
+  
+          {/* Models List */}
+          &lt;div className="flex-1 overflow-y-auto"&gt;
+-           {llmProviders.map((provider) =&gt; {
+-             const filteredModels = provider.models.filter(
+-               (model) =&gt;
+-                 model.name
+-                   .toLowerCase()
+-                   .includes(searchQuery.toLowerCase()) ||
+-                 provider.name
+-                   .toLowerCase()
+-                   .includes(searchQuery.toLowerCase())
+-             );
+-             if (filteredModels.length === 0) return null;
+-             return (
++           {filteredProviders.length === 0 ? (
++             &lt;div className="p-8 text-center text-sm text-muted-foreground"&gt;
++               No models found
++             &lt;/div&gt;
++           ) : (
++             filteredProviders.map((provider) =&gt; (
+                &lt;div key={provider.name} className="py-2"&gt;
+                  &lt;h3 className="px-4 py-2 text-sm font-medium text-muted-foreground"&gt;
+                    {provider.name}
+                  &lt;/h3&gt;
+-                 {filteredModels.map((model) =&gt; (
++                 {provider.models.map((model) =&gt; (
+                    &lt;button
+                      key={model.id}
+```
+
+**Chunk 8**
+Lines added: 2, lines removed: 2
+
+```diff
+@@ -121,6 +115,6 @@
+                  ))}
+                &lt;/div&gt;
+-             );
+-           })}
++             ))
++           )}
+          &lt;/div&gt;
+        &lt;/div&gt;
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to update BenchmarkDialog to use the shared LLMSelectorModal instead of having its own duplicate. Let me read the BenchmarkDialog file again to see what I need to change.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/BenchmarkDialog.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I can update BenchmarkDialog to import the shared LLMSelectorModal and remove the duplicate local definition. I'll also update it to use the shared icons.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="write">
+
+<details><summary>Tool use: **write** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/BenchmarkDialog.tsx</summary>
+
+**Chunk 1**
+Lines added: 9, lines removed: undefined
+
+```diff
+@@ -3,5 +3,14 @@
+  import React, { useState } from "react";
+  import { llmProviders, type LLMModel } from "./agent-tabs/constants/providers";
++ import { LLMSelectorModal } from "./agent-tabs/LLMSelectorModal";
+  import { BenchmarkResultsDialog } from "./BenchmarkResultsDialog";
++ import {
++   CloseIcon,
++   ChevronDownIcon,
++   TrashIcon,
++   PlusIcon,
++   PlayIcon,
++ } from "@/components/icons";
++ import { Button } from "@/components/ui";
+  
+  type TestData = {
+```
+
+**Chunk 2**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -118,5 +127,5 @@
+        &lt;div className="bg-black rounded-xl w-full max-w-lg max-h-[80vh] flex flex-col shadow-2xl"&gt;
+          {/* Header */}
+-         &lt;div className="flex items-center justify-between px-6 py-4 "&gt;
++         &lt;div className="flex items-center justify-between px-6 py-4"&gt;
+            &lt;div&gt;
+              &lt;h2 className="text-lg font-semibold text-foreground"&gt;
+```
+
+**Chunk 3**
+Lines added: 1, lines removed: 13
+
+```diff
+@@ -131,17 +140,5 @@
+              className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted transition-colors cursor-pointer"
+            &gt;
+-             &lt;svg
+-               className="w-5 h-5"
+-               fill="none"
+-               viewBox="0 0 24 24"
+-               stroke="currentColor"
+-               strokeWidth={2}
+-             &gt;
+-               &lt;path
+-                 strokeLinecap="round"
+-                 strokeLinejoin="round"
+-                 d="M6 18L18 6M6 6l12 12"
+-               /&gt;
+-             &lt;/svg&gt;
++             &lt;CloseIcon className="w-5 h-5" /&gt;
+            &lt;/button&gt;
+          &lt;/div&gt;
+```
+
+**Chunk 4**
+Lines added: 1, lines removed: 13
+
+```diff
+@@ -170,17 +167,5 @@
+                      {selectedModel ? selectedModel.name : "Select a model"}
+                    &lt;/span&gt;
+-                   &lt;svg
+-                     className="w-4 h-4 text-muted-foreground"
+-                     fill="none"
+-                     viewBox="0 0 24 24"
+-                     stroke="currentColor"
+-                     strokeWidth={2}
+-                   &gt;
+-                     &lt;path
+-                       strokeLinecap="round"
+-                       strokeLinejoin="round"
+-                       d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+-                     /&gt;
+-                   &lt;/svg&gt;
++                   &lt;ChevronDownIcon className="w-4 h-4 text-muted-foreground" /&gt;
+                  &lt;/button&gt;
+  
+```
+
+**Chunk 5**
+Lines added: 1, lines removed: 13
+
+```diff
+@@ -192,17 +177,5 @@
+                      title="Remove model"
+                    &gt;
+-                     &lt;svg
+-                       className="w-4 h-4"
+-                       fill="none"
+-                       viewBox="0 0 24 24"
+-                       stroke="currentColor"
+-                       strokeWidth={1.5}
+-                     &gt;
+-                       &lt;path
+-                         strokeLinecap="round"
+-                         strokeLinejoin="round"
+-                         d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+-                       /&gt;
+-                     &lt;/svg&gt;
++                     &lt;TrashIcon className="w-4 h-4" /&gt;
+                    &lt;/button&gt;
+                  )}
+```
+
+**Chunk 6**
+Lines added: 1, lines removed: 13
+
+```diff
+@@ -216,17 +189,5 @@
+                  className="w-full h-10 px-4 rounded-md text-sm font-medium border border-dashed border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground"
+                &gt;
+-                 &lt;svg
+-                   className="w-4 h-4"
+-                   fill="none"
+-                   viewBox="0 0 24 24"
+-                   stroke="currentColor"
+-                   strokeWidth={2}
+-                 &gt;
+-                   &lt;path
+-                     strokeLinecap="round"
+-                     strokeLinejoin="round"
+-                     d="M12 4.5v15m7.5-7.5h-15"
+-                   /&gt;
+-                 &lt;/svg&gt;
++                 &lt;PlusIcon className="w-4 h-4" /&gt;
+                  Add model
+                &lt;/button&gt;
+```
+
+**Chunk 7**
+Lines added: 10, lines removed: 23
+
+```diff
+@@ -236,35 +197,22 @@
+  
+          {/* Footer */}
+-         &lt;div className="px-6 py-4  flex items-center justify-end gap-3"&gt;
+-           &lt;button
+-             onClick={handleClose}
+-             className="h-10 px-4 rounded-md text-sm font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
+-           &gt;
++         &lt;div className="px-6 py-4 flex items-center justify-end gap-3"&gt;
++           &lt;Button variant="secondary" size="md" onClick={handleClose}&gt;
+              Cancel
+-           &lt;/button&gt;
+-           &lt;button
++           &lt;/Button&gt;
++           &lt;Button
++             variant="primary"
++             size="md"
+              onClick={handleRunBenchmark}
+              disabled={!canRunBenchmark}
+-             className="h-10 px-4 rounded-md text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
++             className="flex items-center gap-2"
+            &gt;
+-             &lt;svg
+-               className="w-4 h-4"
+-               fill="none"
+-               viewBox="0 0 24 24"
+-               stroke="currentColor"
+-               strokeWidth={2}
+-             &gt;
+-               &lt;path
+-                 strokeLinecap="round"
+-                 strokeLinejoin="round"
+-                 d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
+-               /&gt;
+-             &lt;/svg&gt;
++             &lt;PlayIcon className="w-4 h-4" /&gt;
+              Run comparison
+-           &lt;/button&gt;
++           &lt;/Button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+  
+-       {/* LLM Selector Modal */}
++       {/* LLM Selector Modal - using shared component */}
+        {modelSelectorOpen &amp;&amp; editingIndex !== null &amp;&amp; (
+          &lt;LLMSelectorModal
+```
+
+**Chunk 8**
+Lines added: undefined, lines removed: 133
+
+```diff
+@@ -294,136 +242,3 @@
+    );
+  }
+- 
+- // LLM Selector Modal Component
+- type LLMSelectorModalProps = {
+-   isOpen: boolean;
+-   onClose: () =&gt; void;
+-   selectedLLM: LLMModel | null;
+-   onSelect: (model: LLMModel) =&gt; void;
+-   availableProviders: { name: string; models: LLMModel[] }[];
+- };
+- 
+- function LLMSelectorModal({
+-   isOpen,
+-   onClose,
+-   selectedLLM,
+-   onSelect,
+-   availableProviders,
+- }: LLMSelectorModalProps) {
+-   const [searchQuery, setSearchQuery] = useState("");
+- 
+-   if (!isOpen) return null;
+- 
+-   const handleClose = () =&gt; {
+-     setSearchQuery("");
+-     onClose();
+-   };
+- 
+-   const handleSelect = (model: LLMModel) =&gt; {
+-     onSelect(model);
+-     setSearchQuery("");
+-   };
+- 
+-   const filteredProviders = availableProviders
+-     .map((provider) =&gt; ({
+-       ...provider,
+-       models: provider.models.filter(
+-         (model) =&gt;
+-           model.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+-           provider.name.toLowerCase().includes(searchQuery.toLowerCase())
+-       ),
+-     }))
+-     .filter((provider) =&gt; provider.models.length &gt; 0);
+- 
+-   return (
+-     &lt;div className="fixed inset-0 z-[60] flex items-start justify-center pt-16 bg-black/50"&gt;
+-       &lt;div className="bg-background border border-border rounded-xl w-full max-w-2xl max-h-[80vh] flex flex-col shadow-2xl"&gt;
+-         {/* Modal Header */}
+-         &lt;div className="flex items-center justify-between px-4 py-3 border-b border-border"&gt;
+-           &lt;div className="flex items-center gap-3"&gt;
+-             &lt;button
+-               onClick={handleClose}
+-               className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted transition-colors cursor-pointer"
+-             &gt;
+-               &lt;svg
+-                 className="w-5 h-5"
+-                 fill="none"
+-                 viewBox="0 0 24 24"
+-                 stroke="currentColor"
+-                 strokeWidth={2}
+-               &gt;
+-                 &lt;path
+-                   strokeLinecap="round"
+-                   strokeLinejoin="round"
+-                   d="M15.75 19.5L8.25 12l7.5-7.5"
+-                 /&gt;
+-               &lt;/svg&gt;
+-             &lt;/button&gt;
+-             &lt;h2 className="text-base font-semibold"&gt;Select LLM&lt;/h2&gt;
+-           &lt;/div&gt;
+-           &lt;button
+-             onClick={handleClose}
+-             className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted transition-colors cursor-pointer"
+-           &gt;
+-             &lt;svg
+-               className="w-5 h-5"
+-               fill="none"
+-               viewBox="0 0 24 24"
+-               stroke="currentColor"
+-               strokeWidth={2}
+-             &gt;
+-               &lt;path
+-                 strokeLinecap="round"
+-                 strokeLinejoin="round"
+-                 d="M6 18L18 6M6 6l12 12"
+-               /&gt;
+-             &lt;/svg&gt;
+-           &lt;/button&gt;
+-         &lt;/div&gt;
+- 
+-         {/* Search Input */}
+-         &lt;div className="px-4 py-3 border-b border-border"&gt;
+-           &lt;input
+-             type="text"
+-             value={searchQuery}
+-             onChange={(e) =&gt; setSearchQuery(e.target.value)}
+-             placeholder="Search LLM"
+-             className="w-full h-10 px-4 rounded-md text-base border border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+-             autoFocus
+-           /&gt;
+-         &lt;/div&gt;
+- 
+-         {/* Models List */}
+-         &lt;div className="flex-1 overflow-y-auto"&gt;
+-           {filteredProviders.length === 0 ? (
+-             &lt;div className="p-8 text-center text-sm text-muted-foreground"&gt;
+-               No models found
+-             &lt;/div&gt;
+-           ) : (
+-             filteredProviders.map((provider) =&gt; (
+-               &lt;div key={provider.name} className="py-2"&gt;
+-                 &lt;h3 className="px-4 py-2 text-sm font-medium text-muted-foreground"&gt;
+-                   {provider.name}
+-                 &lt;/h3&gt;
+-                 {provider.models.map((model) =&gt; (
+-                   &lt;button
+-                     key={model.id}
+-                     onClick={() =&gt; handleSelect(model)}
+-                     className={&#96;w-full px-4 py-3 flex items-center hover:bg-muted/50 transition-colors cursor-pointer ${
+-                       selectedLLM?.id === model.id ? "bg-muted/50" : ""
+-                     }&#96;}
+-                   &gt;
+-                     &lt;span className="text-base font-medium text-foreground"&gt;
+-                       {model.name}
+-                     &lt;/span&gt;
+-                   &lt;/button&gt;
+-                 ))}
+-               &lt;/div&gt;
+-             ))
+-           )}
+-         &lt;/div&gt;
+-       &lt;/div&gt;
+-     &lt;/div&gt;
+-   );
+- }
+  
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me update the test-results/shared.tsx to use the icons from the new icons library instead of defining them locally.</details></think>
+
+---
+
+Now let me update the `test-results/shared.tsx` to use the shared icons instead of duplicating them:
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="write">
+
+<details><summary>Tool use: **write** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/test-results/shared.tsx</summary>
+
+**Chunk 1**
+Lines added: 11, lines removed: undefined
+
+```diff
+@@ -2,4 +2,15 @@
+  
+  import React from "react";
++ import {
++   CheckIcon,
++   XIcon,
++   SpinnerIcon,
++   ToolIcon,
++   DocumentIcon,
++   CloseIcon,
++ } from "@/components/icons";
++ 
++ // Re-export icons for backwards compatibility
++ export { CheckIcon, XIcon, SpinnerIcon, ToolIcon, CloseIcon, DocumentIcon };
+  
+  // Shared Types
+```
+
+**Chunk 2**
+Lines added: undefined, lines removed: 107
+
+```diff
+@@ -41,111 +52,4 @@
+    evaluation?: TestCaseEvaluation;
+  };
+- 
+- // Shared Icons
+- export function CheckIcon({ className }: { className?: string }) {
+-   return (
+-     &lt;svg
+-       className={className}
+-       fill="none"
+-       viewBox="0 0 24 24"
+-       stroke="currentColor"
+-       strokeWidth={3}
+-     &gt;
+-       &lt;path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /&gt;
+-     &lt;/svg&gt;
+-   );
+- }
+- 
+- export function XIcon({ className }: { className?: string }) {
+-   return (
+-     &lt;svg
+-       className={className}
+-       fill="none"
+-       viewBox="0 0 24 24"
+-       stroke="currentColor"
+-       strokeWidth={3}
+-     &gt;
+-       &lt;path
+-         strokeLinecap="round"
+-         strokeLinejoin="round"
+-         d="M6 18L18 6M6 6l12 12"
+-       /&gt;
+-     &lt;/svg&gt;
+-   );
+- }
+- 
+- export function SpinnerIcon({ className }: { className?: string }) {
+-   return (
+-     &lt;svg className={className} fill="none" viewBox="0 0 24 24"&gt;
+-       &lt;circle
+-         className="opacity-25"
+-         cx="12"
+-         cy="12"
+-         r="10"
+-         stroke="currentColor"
+-         strokeWidth="4"
+-       &gt;&lt;/circle&gt;
+-       &lt;path
+-         className="opacity-75"
+-         fill="currentColor"
+-         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+-       &gt;&lt;/path&gt;
+-     &lt;/svg&gt;
+-   );
+- }
+- 
+- export function ToolIcon({ className }: { className?: string }) {
+-   return (
+-     &lt;svg
+-       className={className}
+-       fill="none"
+-       viewBox="0 0 24 24"
+-       stroke="currentColor"
+-       strokeWidth={1.5}
+-     &gt;
+-       &lt;path
+-         strokeLinecap="round"
+-         strokeLinejoin="round"
+-         d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"
+-       /&gt;
+-     &lt;/svg&gt;
+-   );
+- }
+- 
+- export function CloseIcon({ className }: { className?: string }) {
+-   return (
+-     &lt;svg
+-       className={className}
+-       fill="none"
+-       viewBox="0 0 24 24"
+-       stroke="currentColor"
+-       strokeWidth={2}
+-     &gt;
+-       &lt;path
+-         strokeLinecap="round"
+-         strokeLinejoin="round"
+-         d="M6 18L18 6M6 6l12 12"
+-       /&gt;
+-     &lt;/svg&gt;
+-   );
+- }
+- 
+- export function DocumentIcon({ className }: { className?: string }) {
+-   return (
+-     &lt;svg
+-       className={className}
+-       fill="none"
+-       viewBox="0 0 24 24"
+-       stroke="currentColor"
+-       strokeWidth={1.5}
+-     &gt;
+-       &lt;path
+-         strokeLinecap="round"
+-         strokeLinejoin="round"
+-         d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"
+-       /&gt;
+-     &lt;/svg&gt;
+-   );
+- }
+  
+  // Shared Status Icon Component
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me check for any lint errors in the files I've created/modified.</details></think>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 10 files</summary>
+      
+Lint paths:
+
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/icons/index.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/lib/api.ts`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/ui/SearchInput.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/ui/Button.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/ui/SlidePanel.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/ui/LoadingState.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/hooks/useCrudResource.ts`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/BenchmarkDialog.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/LLMSelectorModal.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/test-results/shared.tsx`
+
+Lint results
+
+Lint errors for `src/components/BenchmarkDialog.tsx`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| 'React' is declared but its value is never read. | 3:8-3:13 | DIAGNOSTIC_SEVERITY_HINT |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Great! No lint errors. Now let me update the todos and then update the app-details.md file with the new patterns.</details></think>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Create shared icons library (src/components/icons/index.tsx)
+- [x] Create API client utility (src/lib/api.ts)
+- [x] Create reusable UI components (SearchInput, Button, SlidePanel)
+- [x] Create useCrudResource hook for CRUD operations
+- [!] Refactor personas page to use new shared components
+- [!] Refactor scenarios page to use new shared components
+- [x] Fix LLMSelectorModal duplication in BenchmarkDialog
+- [-] Update app-details.md with new patterns
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I'll add a section about the new shared components and patterns we just created.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 6, lines removed: 1
+
+```diff
+@@ -321,7 +321,12 @@
+  │   │   ├── evaluations/       # Evaluation UI components
+  │   │   ├── charts/            # Recharts visualization components
++ │   │   ├── icons/             # Shared SVG icon components
+  │   │   ├── providers/         # React context providers
+- │   │   └── simulation-tabs/   # Simulation detail components
++ │   │   ├── simulation-tabs/   # Simulation detail components
++ │   │   ├── test-results/      # Shared test result components
++ │   │   └── ui/                # Reusable UI components (Button, SearchInput, etc.)
+  │   ├── constants/             # Static configuration data
++ │   ├── hooks/                 # Custom React hooks (useCrudResource, etc.)
++ │   ├── lib/                   # Utility libraries (api.ts, etc.)
+  │   ├── auth.ts               # NextAuth.js configuration
+  │   └── middleware.ts         # Route protection middleware
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me add a section about the shared components and the API client pattern.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 198, lines removed: undefined
+
+```diff
+@@ -840,4 +840,202 @@
+  
+  The backend identifies the user from the JWT token - **do not pass &#96;user_id&#96; in request bodies**.
++ 
++ ---
++ 
++ ## Shared Components &amp; Utilities
++ 
++ ### Icons Library (&#96;@/components/icons&#96;)
++ 
++ All SVG icons are centralized in &#96;src/components/icons/index.tsx&#96;. Import icons from this module:
++ 
++ &#96;&#96;&#96;tsx
++ import {
++   SpinnerIcon,
++   CloseIcon,
++   SearchIcon,
++   TrashIcon,
++   CheckIcon,
++   XIcon,
++   PlusIcon,
++   ChevronDownIcon,
++   ChevronLeftIcon,
++   ToolIcon,
++   DocumentIcon,
++   PlayIcon,
++   RefreshIcon,
++   // ... and more
++ } from "@/components/icons";
++ 
++ // Usage
++ &lt;SpinnerIcon className="w-5 h-5 animate-spin" /&gt;
++ &lt;CloseIcon className="w-5 h-5" /&gt;
++ &#96;&#96;&#96;
++ 
++ ### UI Components (&#96;@/components/ui&#96;)
++ 
++ Reusable UI primitives:
++ 
++ &#96;&#96;&#96;tsx
++ import {
++   Button,
++   SearchInput,
++   SlidePanel,
++   SlidePanelFooter,
++   LoadingState,
++   ErrorState,
++   EmptyState,
++   ResourceState,
++ } from "@/components/ui";
++ 
++ // Button variants: primary, secondary, danger, ghost
++ // Button sizes: sm, md, lg
++ &lt;Button variant="primary" size="md" onClick={handleClick}&gt;
++   Save
++ &lt;/Button&gt;
++ &lt;Button variant="danger" isLoading={isDeleting} loadingText="Deleting..."&gt;
++   Delete
++ &lt;/Button&gt;
++ 
++ // SearchInput with built-in search icon
++ &lt;SearchInput
++   value={searchQuery}
++   onChange={setSearchQuery}
++   placeholder="Search items..."
++ /&gt;
++ 
++ // SlidePanel for edit forms
++ &lt;SlidePanel
++   isOpen={isPanelOpen}
++   onClose={() =&gt; setIsPanelOpen(false)}
++   title="Edit Item"
++   icon={&lt;ToolIcon className="w-5 h-5" /&gt;}
++   footer={
++     &lt;SlidePanelFooter
++       onCancel={() =&gt; setIsPanelOpen(false)}
++       onSubmit={handleSave}
++       isSubmitting={isSaving}
++       submitText="Save Changes"
++     /&gt;
++   }
++ &gt;
++   {/* Form content */}
++ &lt;/SlidePanel&gt;
++ 
++ // ResourceState handles loading/error/empty states automatically
++ &lt;ResourceState
++   isLoading={isLoading}
++   error={error}
++   isEmpty={items.length === 0}
++   onRetry={refetch}
++   emptyState={{
++     icon: &lt;ToolIcon className="w-6 h-6" /&gt;,
++     title: "No items yet",
++     description: "Create your first item to get started",
++     action: { label: "Create Item", onClick: () =&gt; setShowCreate(true) },
++   }}
++ &gt;
++   {/* Render items when data is available */}
++ &lt;/ResourceState&gt;
++ &#96;&#96;&#96;
++ 
++ ### API Client (&#96;@/lib/api&#96;)
++ 
++ Centralized API client with 401 handling:
++ 
++ &#96;&#96;&#96;tsx
++ import { apiGet, apiPost, apiPut, apiDelete, getBackendUrl } from "@/lib/api";
++ 
++ // Simple GET request
++ const data = await apiGet&lt;ItemData[]&gt;("/items", accessToken);
++ 
++ // POST request with body
++ const newItem = await apiPost&lt;ItemData&gt;("/items", accessToken, {
++   name: "New Item",
++   description: "Description",
++ });
++ 
++ // PUT request
++ const updated = await apiPut&lt;ItemData&gt;(&#96;/items/${id}&#96;, accessToken, {
++   name: "Updated Name",
++ });
++ 
++ // DELETE request
++ await apiDelete(&#96;/items/${id}&#96;, accessToken);
++ &#96;&#96;&#96;
++ 
++ The API client automatically:
++ - Adds required headers (Authorization, Content-Type, accept, ngrok-skip-browser-warning)
++ - Signs out user on 401 responses
++ - Throws errors on non-2xx responses
++ 
++ ### Custom Hooks (&#96;@/hooks&#96;)
++ 
++ &#96;&#96;&#96;tsx
++ import { useCrudResource, useFetchResource } from "@/hooks";
++ 
++ // useCrudResource - full CRUD operations with loading states
++ const {
++   items,
++   isLoading,
++   isCreating,
++   isUpdating,
++   isDeleting,
++   error,
++   createError,
++   refetch,
++   create,
++   update,
++   remove,
++ } = useCrudResource&lt;ItemType&gt;({
++   endpoint: "/items",
++   accessToken,
++ });
++ 
++ // Create new item
++ const newItem = await create({ name: "New Item" });
++ 
++ // Update existing item
++ await update(itemUuid, { name: "Updated" });
++ 
++ // Delete item
++ await remove(itemUuid);
++ 
++ // useFetchResource - fetch single resource by ID
++ const { data, isLoading, error, refetch } = useFetchResource&lt;ItemType&gt;({
++   endpoint: "/items",
++   accessToken,
++   id: itemUuid,
++ });
++ &#96;&#96;&#96;
++ 
++ ### Test Results Components (&#96;@/components/test-results/shared&#96;)
++ 
++ Shared components for displaying test results:
++ 
++ &#96;&#96;&#96;tsx
++ import {
++   StatusIcon,
++   SmallStatusBadge,
++   ToolCallCard,
++   TestDetailView,
++   EmptyStateView,
++   TestStats,
++ } from "@/components/test-results/shared";
++ 
++ // Status indicator (passed/failed/running/pending)
++ &lt;StatusIcon status="passed" /&gt;
++ 
++ // Small badge for inline status
++ &lt;SmallStatusBadge passed={true} /&gt;
++ 
++ // Display tool call with arguments
++ &lt;ToolCallCard toolName="get_weather" args={{ city: "London" }} /&gt;
++ 
++ // Full test conversation view
++ &lt;TestDetailView history={history} output={output} passed={passed} /&gt;
++ 
++ // Stats bar
++ &lt;TestStats passedCount={5} failedCount={2} /&gt;
++ &#96;&#96;&#96;
+  
+  ---
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me also update the Coding Standards section to mention the shared components.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 4, lines removed: 1
+
+```diff
+@@ -1190,5 +1190,8 @@
+     - Types: PascalCase with descriptive suffix (e.g., &#96;AgentData&#96;, &#96;ToolData&#96;)
+  5. **Files**: One main component per file, helper components at bottom of same file
+- 6. **Icons**: Use inline SVG from Heroicons (outline style, 24x24 viewBox, strokeWidth 1.5 or 2)
++ 6. **Icons**: Import from &#96;@/components/icons&#96; - all icons are centralized there (Heroicons outline style, 24x24 viewBox, strokeWidth 1.5 or 2)
++ 7. **Reusable Components**: Use shared components from &#96;@/components/ui&#96; (Button, SearchInput, SlidePanel, etc.)
++ 8. **API Calls**: Use &#96;@/lib/api&#96; utilities (apiGet, apiPost, apiPut, apiDelete) for consistent error handling
++ 9. **CRUD Resources**: Use &#96;useCrudResource&#96; hook from &#96;@/hooks&#96; for standard list pages
+  7. **Error Handling**: Try-catch with console.error and user-facing error states
+  8. **Form Validation**: Use &#96;validationAttempted&#96; state to show errors only after submit attempt
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me also fix the numbering in the coding standards since I added new items:</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 3, lines removed: 3
+
+```diff
+@@ -1194,7 +1194,7 @@
+  8. **API Calls**: Use &#96;@/lib/api&#96; utilities (apiGet, apiPost, apiPut, apiDelete) for consistent error handling
+  9. **CRUD Resources**: Use &#96;useCrudResource&#96; hook from &#96;@/hooks&#96; for standard list pages
+- 7. **Error Handling**: Try-catch with console.error and user-facing error states
+- 8. **Form Validation**: Use &#96;validationAttempted&#96; state to show errors only after submit attempt
+- 9. **Optimistic Updates**: Update local state immediately, then sync with backend
++ 10. **Error Handling**: Try-catch with console.error and user-facing error states
++ 11. **Form Validation**: Use &#96;validationAttempted&#96; state to show errors only after submit attempt
++ 12. **Optimistic Updates**: Update local state immediately, then sync with backend
+  
+  ---
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me update the todos.</details></think>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Create shared icons library (src/components/icons/index.tsx)
+- [x] Create API client utility (src/lib/api.ts)
+- [x] Create reusable UI components (SearchInput, Button, SlidePanel)
+- [x] Create useCrudResource hook for CRUD operations
+- [!] Refactor personas page to use new shared components
+- [!] Refactor scenarios page to use new shared components
+- [x] Fix LLMSelectorModal duplication in BenchmarkDialog
+- [x] Update app-details.md with new patterns
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+All tasks completed. Let me check the lints for the files I've edited to make sure everything is correct.</details></think>
+
+---
+
+Let me verify there are no lint errors across all the new and modified files:
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 7 files</summary>
+      
+Lint paths:
+
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/icons/index.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/lib/api.ts`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/ui`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/hooks`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/BenchmarkDialog.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/LLMSelectorModal.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/test-results/shared.tsx`
+
+Lint results
+
+Lint errors for `src/components/BenchmarkDialog.tsx`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| 'React' is declared but its value is never read. | 3:8-3:13 | DIAGNOSTIC_SEVERITY_HINT |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+All done. Let me provide a summary of what was created.</details></think>
+
+---
+
+I've completed the refactoring. Here's a summary of what was created:
+
+## New Shared Components & Utilities
+
+### 1. **Icons Library** (`src/components/icons/index.tsx`)
+Centralized 20+ SVG icons including:
+- `SpinnerIcon`, `CloseIcon`, `SearchIcon`, `TrashIcon`, `CheckIcon`, `XIcon`
+- `PlusIcon`, `ChevronDownIcon`, `ChevronLeftIcon`, `ArrowDownIcon`
+- `ToolIcon`, `PersonIcon`, `DocumentIcon`, `PlayIcon`, `RobotIcon`
+- `UserIcon`, `InfoIcon`, `AlertIcon`, `RefreshIcon`, `BackArrowIcon`
+
+### 2. **API Client** (`src/lib/api.ts`)
+- `apiGet<T>`, `apiPost<T>`, `apiPut<T>`, `apiDelete<T>` - typed fetch wrappers
+- Automatic 401 handling (signs out user)
+- Consistent headers (Authorization, Content-Type, ngrok-skip-browser-warning)
+
+### 3. **UI Components** (`src/components/ui/`)
+- **`Button`** - primary/secondary/danger/ghost variants, loading state support
+- **`SearchInput`** - input with built-in search icon
+- **`SlidePanel` & `SlidePanelFooter`** - slide-in panel for forms with header, content, footer
+- **`LoadingState`, `ErrorState`, `EmptyState`** - state display components
+- **`ResourceState`** - combined component that handles all three states
+
+### 4. **Custom Hooks** (`src/hooks/`)
+- **`useCrudResource<T>`** - full CRUD operations with loading/error states
+- **`useFetchResource<T>`** - fetch single resource by ID
+
+### 5. **Fixed Duplications**
+- `LLMSelectorModal` - updated to accept optional `availableProviders` prop
+- `BenchmarkDialog` - now uses the shared `LLMSelectorModal` instead of duplicating it (reduced from 429 to 213 lines)
+- `test-results/shared.tsx` - now imports icons from shared library
+
+### 6. **Updated Documentation**
+- Added new components to project structure in `app-details.md`
+- Added "Shared Components & Utilities" section with usage examples
+- Updated Coding Standards with new best practices
+
+These shared components can now be used across the codebase to reduce duplication. For example, pages like `personas`, `scenarios`, `tools`, and `simulations` can be refactored to use the `useCrudResource` hook and UI components, which would significantly reduce their code size.
+
+---
+
+_**User (2026-01-16 23:46Z)**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants me to update the app-details.md file with information about the code changes I made. I already made some updates to it, but let me review what I added and make sure it's complete and well-organized.
+
+Let me re-read the app-details.md file to see the current state and ensure I've captured everything properly.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I've already added the new shared components section. Let me check if there's anything that needs to be updated or if the old patterns in "Common Patterns" section are now obsolete since we have the shared components.
+
+Looking at the "Common Patterns" section:
+1. "Loading State" - still shows inline SVG pattern, but we now have `LoadingState` component and `SpinnerIcon`
+2. "Empty State" - shows inline pattern, but we have `EmptyState` component now
+3. Button Styles - shows inline styling, but we have `Button` component now
+
+I should update the "Common Patterns" section to note that these patterns are now available as reusable components, and link to the Shared Components section. I should also update the Data Fetching Pattern section since we now have the `@/lib/api` utilities that simplify this pattern.
+
+Let me make these updates to keep the documentation consistent.</details></think>
+
+---
+
+I need to update the documentation to reflect that several "Common Patterns" now have shared component alternatives, and update the Data Fetching Pattern to mention the new API client utilities.
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 46, lines removed: 13
+
+```diff
+@@ -1043,23 +1043,56 @@
+  ## Common Patterns
+  
+- ### Loading State
++ ### Loading, Empty, and Error States
++ 
++ **Preferred: Use shared components** from &#96;@/components/ui&#96;:
+  
+  &#96;&#96;&#96;tsx
+- {isLoading ? (
+-   &lt;div className="flex items-center justify-center gap-3 py-8"&gt;
+-     &lt;svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"&gt;
+-       &lt;circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /&gt;
+-       &lt;path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" /&gt;
+-     &lt;/svg&gt;
+-   &lt;/div&gt;
+- ) : /* content */}
+- &#96;&#96;&#96;
+- 
+- ### Empty State
++ import { LoadingState, EmptyState, ErrorState, ResourceState } from "@/components/ui";
++ import { SpinnerIcon, ToolIcon } from "@/components/icons";
++ 
++ // Simple loading spinner
++ &lt;LoadingState /&gt;
++ 
++ // Empty state with icon, title, description, optional action
++ &lt;EmptyState
++   icon={&lt;ToolIcon className="w-6 h-6 text-muted-foreground" /&gt;}
++   title="No items found"
++   description="Create your first item to get started"
++   action={{ label: "Create Item", onClick: handleCreate }}
++ /&gt;
++ 
++ // Error state with optional retry
++ &lt;ErrorState message="Failed to load data" onRetry={refetch} /&gt;
++ 
++ // Combined component that handles all three states
++ &lt;ResourceState
++   isLoading={isLoading}
++   error={error}
++   isEmpty={items.length === 0}
++   onRetry={refetch}
++   emptyState={{
++     icon: &lt;ToolIcon className="w-6 h-6" /&gt;,
++     title: "No items yet",
++     description: "Create your first item",
++   }}
++ &gt;
++   {/* Render content when data is available */}
++ &lt;/ResourceState&gt;
++ &#96;&#96;&#96;
++ 
++ **Legacy inline patterns** (still used in some files, but prefer shared components for new code):
+  
+  &#96;&#96;&#96;tsx
++ // Loading - inline
++ {isLoading &amp;&amp; (
++   &lt;div className="flex items-center justify-center gap-3 py-8"&gt;
++     &lt;SpinnerIcon className="w-5 h-5 animate-spin" /&gt;
++   &lt;/div&gt;
++ )}
++ 
++ // Empty - inline
+  &lt;div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20"&gt;
+    &lt;div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center mb-4"&gt;
+-     {/* Icon */}
++     &lt;ToolIcon className="w-6 h-6 text-muted-foreground" /&gt;
+    &lt;/div&gt;
+    &lt;h3 className="text-lg font-semibold text-foreground mb-1"&gt;No items found&lt;/h3&gt;
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me update the Data Fetching Pattern section to mention the new API client as the preferred approach.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 53, lines removed: undefined
+
+```diff
+@@ -552,4 +552,57 @@
+  - Handle loading spinners and error states consistently
+  - **Handle 401 errors** by logging out and redirecting to login
++ 
++ **Preferred: Use &#96;@/lib/api&#96; utilities** (handles headers, 401 errors, and JSON parsing automatically):
++ 
++ &#96;&#96;&#96;tsx
++ import { useSession } from "next-auth/react";
++ import { apiGet, apiPost, apiPut, apiDelete } from "@/lib/api";
++ 
++ const { data: session } = useSession();
++ const accessToken = (session as any)?.backendAccessToken;
++ 
++ // In useEffect or handlers
++ useEffect(() =&gt; {
++   if (!accessToken) return;
++ 
++   const fetchData = async () =&gt; {
++     try {
++       const data = await apiGet&lt;ItemData[]&gt;("/items", accessToken);
++       setItems(data);
++     } catch (err) {
++       setError(err instanceof Error ? err.message : "Failed to load");
++     }
++   };
++ 
++   fetchData();
++ }, [accessToken]);
++ 
++ // POST/PUT/DELETE
++ const newItem = await apiPost&lt;ItemData&gt;("/items", accessToken, { name: "New" });
++ const updated = await apiPut&lt;ItemData&gt;(&#96;/items/${id}&#96;, accessToken, { name: "Updated" });
++ await apiDelete(&#96;/items/${id}&#96;, accessToken);
++ &#96;&#96;&#96;
++ 
++ **For CRUD list pages, use &#96;useCrudResource&#96; hook:**
++ 
++ &#96;&#96;&#96;tsx
++ import { useCrudResource } from "@/hooks";
++ 
++ const {
++   items,
++   isLoading,
++   isCreating,
++   error,
++   create,
++   update,
++   remove,
++   refetch,
++ } = useCrudResource&lt;ItemType&gt;({
++   endpoint: "/items",
++   accessToken,
++ });
++ &#96;&#96;&#96;
++ 
++ **Legacy: Manual fetch pattern** (still used in some files):
+  
+  &#96;&#96;&#96;tsx
+```
+
+**Chunk 2**
+Lines added: undefined, lines removed: 1
+
+```diff
+@@ -559,5 +612,4 @@
+  const backendAccessToken = (session as any)?.backendAccessToken;
+  
+- // In useEffect - wait for token before making API calls
+  useEffect(() =&gt; {
+    if (!backendAccessToken) return;
+```
+
+**Chunk 3**
+Lines added: 1, lines removed: 23
+
+```diff
+@@ -572,35 +624,13 @@
+      });
+  
+-     // Handle 401 - logout and redirect
+      if (response.status === 401) {
+        await signOut({ callbackUrl: "/login" });
+        return;
+      }
+- 
+      // ... handle response
+    };
+  
+    fetchData();
+- }, [backendAccessToken]); // Include token in dependencies
+- 
+- // For POST/PUT requests
+- const response = await fetch(&#96;${backendUrl}/endpoint&#96;, {
+-   method: "POST",
+-   headers: {
+-     Authorization: &#96;Bearer ${backendAccessToken}&#96;,
+-     "Content-Type": "application/json",
+-     accept: "application/json",
+-     "ngrok-skip-browser-warning": "true",
+-   },
+-   body: JSON.stringify({
+-     name: itemName,
+-     // ... other fields (user_id NOT required - JWT handles authentication)
+-   }),
+- });
+- 
+- if (response.status === 401) {
+-   await signOut({ callbackUrl: "/login" });
+-   return;
+- }
++ }, [backendAccessToken]);
+  &#96;&#96;&#96;
+  
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me update the Button Styles section to mention the shared Button component as the preferred approach.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 29, lines removed: 7
+
+```diff
+@@ -692,15 +692,37 @@
+  
+  ### Button Styles
++ 
++ **Preferred: Use &#96;Button&#96; component** from &#96;@/components/ui&#96;:
+  
+  &#96;&#96;&#96;tsx
+- // Primary button
+- className =
+-   "h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer";
++ import { Button } from "@/components/ui";
++ 
++ &lt;Button variant="primary" size="md" onClick={handleSave}&gt;Save&lt;/Button&gt;
++ &lt;Button variant="secondary" size="md" onClick={handleCancel}&gt;Cancel&lt;/Button&gt;
++ &lt;Button variant="danger" size="md" onClick={handleDelete}&gt;Delete&lt;/Button&gt;
++ &lt;Button variant="ghost" size="sm" onClick={handleAction}&gt;Action&lt;/Button&gt;
++ 
++ // With loading state
++ &lt;Button isLoading={isSaving} loadingText="Saving..."&gt;Save&lt;/Button&gt;
++ &#96;&#96;&#96;
++ 
++ **Button variants:**
++ - &#96;primary&#96;: &#96;bg-foreground text-background hover:opacity-90&#96;
++ - &#96;secondary&#96;: &#96;border border-border bg-background hover:bg-muted/50&#96;
++ - &#96;danger&#96;: &#96;bg-red-800 text-white hover:bg-red-900&#96;
++ - &#96;ghost&#96;: &#96;text-muted-foreground hover:text-foreground hover:bg-muted&#96;
++ 
++ **Button sizes:** &#96;sm&#96; (h-8), &#96;md&#96; (h-10), &#96;lg&#96; (h-12)
++ 
++ **Legacy: Inline button classes** (still used in some files):
++ 
++ &#96;&#96;&#96;tsx
++ // Primary
++ className = "h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer";
+  
+- // Secondary button
+- className =
+-   "h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer";
++ // Secondary
++ className = "h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer";
+  
+- // Danger/Delete button
++ // Danger/Delete icon button
+  className = "text-muted-foreground hover:text-red-500 hover:bg-red-500/10";
+  &#96;&#96;&#96;
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to update the "Sidebar Panels" section to mention the `SlidePanel` component, and update the API Calls gotchas section since the API client now handles some of this automatically.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -515,5 +515,6 @@
+     - Use &#96;useSearchParams&#96; to read and &#96;router.push&#96; to update
+  2. **Sidebar Panels**: Slide-in panels for create/edit forms
+-    - Width: 40% of viewport, min 500px
++    - **Preferred**: Use &#96;SlidePanel&#96; and &#96;SlidePanelFooter&#96; from &#96;@/components/ui&#96;
++    - Width: 40% of viewport, min 500px (customizable via &#96;width&#96; prop)
+     - Backdrop click closes panel
+     - Used for: Tools, Personas, Scenarios creation/editing
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me also add a note about `LLMSelectorModal` accepting custom providers since we fixed the duplication issue.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 4, lines removed: undefined
+
+```diff
+@@ -545,4 +545,8 @@
+     - Exports at 2x resolution with white background for quality
+     - Used in: BenchmarkResultsDialog, SpeechToTextEvaluation, TextToSpeechEvaluation
++ 9. **LLM Selector Modal**: &#96;LLMSelectorModal&#96; from &#96;@/components/agent-tabs/LLMSelectorModal&#96;
++    - Props: &#96;isOpen&#96;, &#96;onClose&#96;, &#96;selectedLLM&#96;, &#96;onSelect&#96;, &#96;availableProviders?&#96;
++    - Optional &#96;availableProviders&#96; prop for filtering available models (used in BenchmarkDialog)
++    - Used in: AgentTabContent (settings), BenchmarkDialog (model comparison)
+  
+  ### Data Fetching Pattern
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me update the API Calls gotchas section to note that the API client utilities handle some of these automatically.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 6, lines removed: 4
+
+```diff
+@@ -1294,9 +1294,11 @@
+  ### API Calls
+  
+- - **JWT authentication required**: All API calls must include &#96;Authorization: Bearer ${backendAccessToken}&#96; header
+- - **401 error handling**: Always check for &#96;response.status === 401&#96; and call &#96;signOut({ callbackUrl: "/login" })&#96; to log out expired sessions
++ - **Preferred: Use &#96;@/lib/api&#96; utilities** - &#96;apiGet&#96;, &#96;apiPost&#96;, &#96;apiPut&#96;, &#96;apiDelete&#96; handle headers, 401 errors, and JSON parsing automatically
++ - **For CRUD pages**: Use &#96;useCrudResource&#96; hook from &#96;@/hooks&#96; for standardized list/create/update/delete patterns
++ - **JWT authentication required**: All API calls must include &#96;Authorization: Bearer ${backendAccessToken}&#96; header (handled automatically by API utilities)
++ - **401 error handling**: API utilities automatically call &#96;signOut({ callbackUrl: "/login" })&#96; on 401 responses. For manual fetch calls, check &#96;response.status === 401&#96;
+  - **Wait for token**: In &#96;useEffect&#96; hooks, return early if &#96;backendAccessToken&#96; is not yet available; include it in the dependency array
+- - **ngrok header**: Always include &#96;"ngrok-skip-browser-warning": "true"&#96; header - the backend may be behind ngrok during development
+- - **Backend URL check**: Always check if &#96;NEXT_PUBLIC_BACKEND_URL&#96; is set before making API calls
++ - **ngrok header**: &#96;"ngrok-skip-browser-warning": "true"&#96; header is included automatically by API utilities
++ - **Backend URL check**: API utilities will throw an error if &#96;NEXT_PUBLIC_BACKEND_URL&#96; is not set
+  - **Date formatting**: API returns ISO dates; use &#96;toLocaleString()&#96; for display
+  
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me also add a gotcha about the hooks requiring the accessToken to be passed as a prop (they don't use useSession internally).</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: undefined
+
+```diff
+@@ -1302,4 +1302,5 @@
+  - **Backend URL check**: API utilities will throw an error if &#96;NEXT_PUBLIC_BACKEND_URL&#96; is not set
+  - **Date formatting**: API returns ISO dates; use &#96;toLocaleString()&#96; for display
++ - **Hooks need accessToken**: &#96;useCrudResource&#96; and &#96;useFetchResource&#96; require &#96;accessToken&#96; to be passed from the component (they don't call &#96;useSession&#96; internally)
+  
+  ### State Management
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+The documentation is now updated with all the new patterns. Let me also update the Input Styles section to mention the SearchInput component since we have that now.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 14, lines removed: undefined
+
+```diff
+@@ -774,4 +774,18 @@
+  
+  ### Input Styles
++ 
++ **For search inputs**: Use &#96;SearchInput&#96; from &#96;@/components/ui&#96;:
++ 
++ &#96;&#96;&#96;tsx
++ import { SearchInput } from "@/components/ui";
++ 
++ &lt;SearchInput
++   value={searchQuery}
++   onChange={setSearchQuery}
++   placeholder="Search..."
++ /&gt;
++ &#96;&#96;&#96;
++ 
++ **Standard input classes:**
+  
+  &#96;&#96;&#96;tsx
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Alright, the documentation has been updated comprehensively. Let me make sure I haven't left anything out. Let me re-check the changes I made to ensure the app-details.md is comprehensive and up-to-date.
+
+Changes I made:
+1. Created icons library at `src/components/icons/index.tsx`
+2. Created API client at `src/lib/api.ts`
+3. Created UI components at `src/components/ui/` (Button, SearchInput, SlidePanel, LoadingState)
+4. Created hooks at `src/hooks/` (useCrudResource, useFetchResource)
+5. Fixed LLMSelectorModal duplication in BenchmarkDialog
+6. Updated test-results/shared.tsx to use icons from the icons library
+
+In app-details.md I've:
+1. Updated Project Structure to include new directories (icons, ui, hooks, lib)
+2. Added the "Shared Components & Utilities" section with comprehensive docs
+3. Updated Coding Standards to reference new patterns
+4. Updated "Common Patterns" to show shared components as preferred
+5. Updated "Data Fetching Pattern" to show API client utilities as preferred
+6. Updated "Button Styles" to show Button component as preferred
+7. Updated "Sidebar Panels" to mention SlidePanel component
+8. Added LLMSelectorModal to Component Patterns
+9. Updated "API Calls" gotchas to mention API utilities
+10. Updated "Input Styles" to mention SearchInput component
+
+I think the documentation is comprehensive now. The old patterns are kept as "legacy" references since they're still used in some files.</details></think>
+
+---
+
+The `app-details.md` has been updated with all the new patterns and conventions from the refactoring. Here's a summary of the documentation changes:
+
+### Updates Made to `app-details.md`:
+
+1. **Project Structure** - Added new directories:
+   - `components/icons/` - Shared SVG icon components
+   - `components/ui/` - Reusable UI components  
+   - `components/test-results/` - Shared test result components
+   - `hooks/` - Custom React hooks
+   - `lib/` - Utility libraries
+
+2. **Shared Components & Utilities** (new section) - Comprehensive documentation for:
+   - Icons Library (`@/components/icons`)
+   - UI Components (`@/components/ui`) - Button, SearchInput, SlidePanel, LoadingState, etc.
+   - API Client (`@/lib/api`) - apiGet, apiPost, apiPut, apiDelete
+   - Custom Hooks (`@/hooks`) - useCrudResource, useFetchResource
+   - Test Results Components (`@/components/test-results/shared`)
+
+3. **Coding Standards** - Added new standards:
+   - #6: Import icons from `@/components/icons`
+   - #7: Use shared components from `@/components/ui`
+   - #8: Use `@/lib/api` utilities for API calls
+   - #9: Use `useCrudResource` hook for CRUD list pages
+
+4. **Common Patterns** - Updated to show:
+   - Shared components as **preferred** approach
+   - Old inline patterns marked as **legacy**
+
+5. **Data Fetching Pattern** - Updated to show:
+   - API client utilities as **preferred** approach
+   - `useCrudResource` hook for CRUD pages
+   - Manual fetch pattern as **legacy**
+
+6. **Button Styles** - Updated to show `Button` component as preferred
+
+7. **Input Styles** - Updated to mention `SearchInput` component
+
+8. **Sidebar Panels** - Updated to reference `SlidePanel` component
+
+9. **Component Patterns** - Added `LLMSelectorModal` with `availableProviders` prop
+
+10. **API Calls Gotchas** - Updated to reflect that API utilities handle headers/401 automatically
+
+---
+
+_**User (2026-01-16 23:46Z)**_
+
+selecting the llm provider from @src/components/agent-tabs/AgentTabContent.tsx should close the llm picker
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user is saying that when they select an LLM provider from the AgentTabContent component, the LLM picker modal should close. Let me look at the current implementation.
+
+Looking at `AgentTabContent.tsx`, I can see that it uses `LLMSelectorModal` and passes `onSelect={setSelectedLLM}`. The issue is that the modal doesn't close when an option is selected.
+
+Let me check the `LLMSelectorModal` component to see how it handles selection.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/LLMSelectorModal.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I see the issue. The `handleSelect` function in `LLMSelectorModal` calls `onSelect(model)` but doesn't call `onClose()`. This means when a model is selected, the modal stays open.
+
+The fix is simple - just add `onClose()` after `onSelect(model)` in the `handleSelect` function.</details></think>
+
+---
+
+I see the issue. The `handleSelect` function calls `onSelect(model)` but doesn't close the modal afterwards. Let me fix that:
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/LLMSelectorModal.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: undefined
+
+```diff
+@@ -41,4 +41,5 @@
+      onSelect(model);
+      setSearchQuery("");
++     onClose();
+    };
+  
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me check for lint errors.</details></think>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 1 file</summary>
+      
+Lint paths:
+
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/LLMSelectorModal.tsx`
+
+Lint results
+
+
+**No lint errors found**
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Fixed. The LLM selector modal will now close when a model is selected from `AgentTabContent`.</details></think>
+
+---
+
+Fixed. The `LLMSelectorModal` now calls `onClose()` after selecting a model, so the picker will close automatically when you select an LLM provider from the agent settings.
+
+---
+
+_**User (2026-01-16 23:46Z)**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The change I just made was a minor bug fix - adding `onClose()` to the `handleSelect` function in `LLMSelectorModal` so that the modal closes after selecting an LLM.
+
+This is a small behavior fix, not a new pattern or convention. It doesn't introduce any new architectural changes, dependencies, or gotchas.
+
+Looking at the app-details.md, I don't think this warrants any update - it's just fixing expected behavior (modal should close when selection is made). The documentation already mentions LLMSelectorModal in the Component Patterns section, and the expected behavior (close on select) is standard modal behavior.
+
+I'll skip updating the docs for this trivial fix.</details></think>
+
+---
+
+This was a minor bug fix (adding `onClose()` after selection) rather than a new pattern or architectural change. The expected behavior that modals close after selection is standard and already implied by the existing documentation. No updates to `app-details.md` are needed for this fix.
 
 ---
 

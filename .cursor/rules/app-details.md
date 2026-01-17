@@ -320,9 +320,14 @@ This enables:
 │   │   ├── agent-tabs/        # Agent detail tab components
 │   │   ├── evaluations/       # Evaluation UI components
 │   │   ├── charts/            # Recharts visualization components
+│   │   ├── icons/             # Shared SVG icon components
 │   │   ├── providers/         # React context providers
-│   │   └── simulation-tabs/   # Simulation detail components
+│   │   ├── simulation-tabs/   # Simulation detail components
+│   │   ├── test-results/      # Shared test result components
+│   │   └── ui/                # Reusable UI components (Button, SearchInput, etc.)
 │   ├── constants/             # Static configuration data
+│   ├── hooks/                 # Custom React hooks (useCrudResource, etc.)
+│   ├── lib/                   # Utility libraries (api.ts, etc.)
 │   ├── auth.ts               # NextAuth.js configuration
 │   └── middleware.ts         # Route protection middleware
 ```
@@ -509,7 +514,8 @@ Key styling:
    - Tabs sync with URL query param (`?tab=agent`, `?tab=tools`, etc.)
    - Use `useSearchParams` to read and `router.push` to update
 2. **Sidebar Panels**: Slide-in panels for create/edit forms
-   - Width: 40% of viewport, min 500px
+   - **Preferred**: Use `SlidePanel` and `SlidePanelFooter` from `@/components/ui`
+   - Width: 40% of viewport, min 500px (customizable via `width` prop)
    - Backdrop click closes panel
    - Used for: Tools, Personas, Scenarios creation/editing
 3. **Modal Dialogs**: Centered overlays for confirmations and simple forms
@@ -538,6 +544,10 @@ Key styling:
    - "PNG" download button in top-right corner of chart card
    - Exports at 2x resolution with white background for quality
    - Used in: BenchmarkResultsDialog, SpeechToTextEvaluation, TextToSpeechEvaluation
+9. **LLM Selector Modal**: `LLMSelectorModal` from `@/components/agent-tabs/LLMSelectorModal`
+   - Props: `isOpen`, `onClose`, `selectedLLM`, `onSelect`, `availableProviders?`
+   - Optional `availableProviders` prop for filtering available models (used in BenchmarkDialog)
+   - Used in: AgentTabContent (settings), BenchmarkDialog (model comparison)
 
 ### Data Fetching Pattern
 
@@ -547,13 +557,65 @@ Key styling:
 - Handle loading spinners and error states consistently
 - **Handle 401 errors** by logging out and redirecting to login
 
+**Preferred: Use `@/lib/api` utilities** (handles headers, 401 errors, and JSON parsing automatically):
+
+```tsx
+import { useSession } from "next-auth/react";
+import { apiGet, apiPost, apiPut, apiDelete } from "@/lib/api";
+
+const { data: session } = useSession();
+const accessToken = (session as any)?.backendAccessToken;
+
+// In useEffect or handlers
+useEffect(() => {
+  if (!accessToken) return;
+
+  const fetchData = async () => {
+    try {
+      const data = await apiGet<ItemData[]>("/items", accessToken);
+      setItems(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load");
+    }
+  };
+
+  fetchData();
+}, [accessToken]);
+
+// POST/PUT/DELETE
+const newItem = await apiPost<ItemData>("/items", accessToken, { name: "New" });
+const updated = await apiPut<ItemData>(`/items/${id}`, accessToken, { name: "Updated" });
+await apiDelete(`/items/${id}`, accessToken);
+```
+
+**For CRUD list pages, use `useCrudResource` hook:**
+
+```tsx
+import { useCrudResource } from "@/hooks";
+
+const {
+  items,
+  isLoading,
+  isCreating,
+  error,
+  create,
+  update,
+  remove,
+  refetch,
+} = useCrudResource<ItemType>({
+  endpoint: "/items",
+  accessToken,
+});
+```
+
+**Legacy: Manual fetch pattern** (still used in some files):
+
 ```tsx
 import { useSession, signOut } from "next-auth/react";
 
 const { data: session } = useSession();
 const backendAccessToken = (session as any)?.backendAccessToken;
 
-// In useEffect - wait for token before making API calls
 useEffect(() => {
   if (!backendAccessToken) return;
 
@@ -566,37 +628,15 @@ useEffect(() => {
       },
     });
 
-    // Handle 401 - logout and redirect
     if (response.status === 401) {
       await signOut({ callbackUrl: "/login" });
       return;
     }
-
     // ... handle response
   };
 
   fetchData();
-}, [backendAccessToken]); // Include token in dependencies
-
-// For POST/PUT requests
-const response = await fetch(`${backendUrl}/endpoint`, {
-  method: "POST",
-  headers: {
-    Authorization: `Bearer ${backendAccessToken}`,
-    "Content-Type": "application/json",
-    accept: "application/json",
-    "ngrok-skip-browser-warning": "true",
-  },
-  body: JSON.stringify({
-    name: itemName,
-    // ... other fields (user_id NOT required - JWT handles authentication)
-  }),
-});
-
-if (response.status === 401) {
-  await signOut({ callbackUrl: "/login" });
-  return;
-}
+}, [backendAccessToken]);
 ```
 
 ---
@@ -657,16 +697,38 @@ The app supports three theme modes (all add a class to `<html>`):
 
 ### Button Styles
 
+**Preferred: Use `Button` component** from `@/components/ui`:
+
 ```tsx
-// Primary button
-className =
-  "h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer";
+import { Button } from "@/components/ui";
 
-// Secondary button
-className =
-  "h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer";
+<Button variant="primary" size="md" onClick={handleSave}>Save</Button>
+<Button variant="secondary" size="md" onClick={handleCancel}>Cancel</Button>
+<Button variant="danger" size="md" onClick={handleDelete}>Delete</Button>
+<Button variant="ghost" size="sm" onClick={handleAction}>Action</Button>
 
-// Danger/Delete button
+// With loading state
+<Button isLoading={isSaving} loadingText="Saving...">Save</Button>
+```
+
+**Button variants:**
+- `primary`: `bg-foreground text-background hover:opacity-90`
+- `secondary`: `border border-border bg-background hover:bg-muted/50`
+- `danger`: `bg-red-800 text-white hover:bg-red-900`
+- `ghost`: `text-muted-foreground hover:text-foreground hover:bg-muted`
+
+**Button sizes:** `sm` (h-8), `md` (h-10), `lg` (h-12)
+
+**Legacy: Inline button classes** (still used in some files):
+
+```tsx
+// Primary
+className = "h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer";
+
+// Secondary
+className = "h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer";
+
+// Danger/Delete icon button
 className = "text-muted-foreground hover:text-red-500 hover:bg-red-500/10";
 ```
 
@@ -711,6 +773,20 @@ className =
 ```
 
 ### Input Styles
+
+**For search inputs**: Use `SearchInput` from `@/components/ui`:
+
+```tsx
+import { SearchInput } from "@/components/ui";
+
+<SearchInput
+  value={searchQuery}
+  onChange={setSearchQuery}
+  placeholder="Search..."
+/>
+```
+
+**Standard input classes:**
 
 ```tsx
 className =
@@ -837,27 +913,258 @@ The backend identifies the user from the JWT token - **do not pass `user_id` in 
 
 ---
 
-## Common Patterns
+## Shared Components & Utilities
 
-### Loading State
+### Icons Library (`@/components/icons`)
+
+All SVG icons are centralized in `src/components/icons/index.tsx`. Import icons from this module:
 
 ```tsx
-{isLoading ? (
-  <div className="flex items-center justify-center gap-3 py-8">
-    <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-    </svg>
-  </div>
-) : /* content */}
+import {
+  SpinnerIcon,
+  CloseIcon,
+  SearchIcon,
+  TrashIcon,
+  CheckIcon,
+  XIcon,
+  PlusIcon,
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ToolIcon,
+  DocumentIcon,
+  PlayIcon,
+  RefreshIcon,
+  // ... and more
+} from "@/components/icons";
+
+// Usage
+<SpinnerIcon className="w-5 h-5 animate-spin" />
+<CloseIcon className="w-5 h-5" />
 ```
 
-### Empty State
+### UI Components (`@/components/ui`)
+
+Reusable UI primitives:
 
 ```tsx
+import {
+  Button,
+  SearchInput,
+  SlidePanel,
+  SlidePanelFooter,
+  LoadingState,
+  ErrorState,
+  EmptyState,
+  ResourceState,
+} from "@/components/ui";
+
+// Button variants: primary, secondary, danger, ghost
+// Button sizes: sm, md, lg
+<Button variant="primary" size="md" onClick={handleClick}>
+  Save
+</Button>
+<Button variant="danger" isLoading={isDeleting} loadingText="Deleting...">
+  Delete
+</Button>
+
+// SearchInput with built-in search icon
+<SearchInput
+  value={searchQuery}
+  onChange={setSearchQuery}
+  placeholder="Search items..."
+/>
+
+// SlidePanel for edit forms
+<SlidePanel
+  isOpen={isPanelOpen}
+  onClose={() => setIsPanelOpen(false)}
+  title="Edit Item"
+  icon={<ToolIcon className="w-5 h-5" />}
+  footer={
+    <SlidePanelFooter
+      onCancel={() => setIsPanelOpen(false)}
+      onSubmit={handleSave}
+      isSubmitting={isSaving}
+      submitText="Save Changes"
+    />
+  }
+>
+  {/* Form content */}
+</SlidePanel>
+
+// ResourceState handles loading/error/empty states automatically
+<ResourceState
+  isLoading={isLoading}
+  error={error}
+  isEmpty={items.length === 0}
+  onRetry={refetch}
+  emptyState={{
+    icon: <ToolIcon className="w-6 h-6" />,
+    title: "No items yet",
+    description: "Create your first item to get started",
+    action: { label: "Create Item", onClick: () => setShowCreate(true) },
+  }}
+>
+  {/* Render items when data is available */}
+</ResourceState>
+```
+
+### API Client (`@/lib/api`)
+
+Centralized API client with 401 handling:
+
+```tsx
+import { apiGet, apiPost, apiPut, apiDelete, getBackendUrl } from "@/lib/api";
+
+// Simple GET request
+const data = await apiGet<ItemData[]>("/items", accessToken);
+
+// POST request with body
+const newItem = await apiPost<ItemData>("/items", accessToken, {
+  name: "New Item",
+  description: "Description",
+});
+
+// PUT request
+const updated = await apiPut<ItemData>(`/items/${id}`, accessToken, {
+  name: "Updated Name",
+});
+
+// DELETE request
+await apiDelete(`/items/${id}`, accessToken);
+```
+
+The API client automatically:
+- Adds required headers (Authorization, Content-Type, accept, ngrok-skip-browser-warning)
+- Signs out user on 401 responses
+- Throws errors on non-2xx responses
+
+### Custom Hooks (`@/hooks`)
+
+```tsx
+import { useCrudResource, useFetchResource } from "@/hooks";
+
+// useCrudResource - full CRUD operations with loading states
+const {
+  items,
+  isLoading,
+  isCreating,
+  isUpdating,
+  isDeleting,
+  error,
+  createError,
+  refetch,
+  create,
+  update,
+  remove,
+} = useCrudResource<ItemType>({
+  endpoint: "/items",
+  accessToken,
+});
+
+// Create new item
+const newItem = await create({ name: "New Item" });
+
+// Update existing item
+await update(itemUuid, { name: "Updated" });
+
+// Delete item
+await remove(itemUuid);
+
+// useFetchResource - fetch single resource by ID
+const { data, isLoading, error, refetch } = useFetchResource<ItemType>({
+  endpoint: "/items",
+  accessToken,
+  id: itemUuid,
+});
+```
+
+### Test Results Components (`@/components/test-results/shared`)
+
+Shared components for displaying test results:
+
+```tsx
+import {
+  StatusIcon,
+  SmallStatusBadge,
+  ToolCallCard,
+  TestDetailView,
+  EmptyStateView,
+  TestStats,
+} from "@/components/test-results/shared";
+
+// Status indicator (passed/failed/running/pending)
+<StatusIcon status="passed" />
+
+// Small badge for inline status
+<SmallStatusBadge passed={true} />
+
+// Display tool call with arguments
+<ToolCallCard toolName="get_weather" args={{ city: "London" }} />
+
+// Full test conversation view
+<TestDetailView history={history} output={output} passed={passed} />
+
+// Stats bar
+<TestStats passedCount={5} failedCount={2} />
+```
+
+---
+
+## Common Patterns
+
+### Loading, Empty, and Error States
+
+**Preferred: Use shared components** from `@/components/ui`:
+
+```tsx
+import { LoadingState, EmptyState, ErrorState, ResourceState } from "@/components/ui";
+import { SpinnerIcon, ToolIcon } from "@/components/icons";
+
+// Simple loading spinner
+<LoadingState />
+
+// Empty state with icon, title, description, optional action
+<EmptyState
+  icon={<ToolIcon className="w-6 h-6 text-muted-foreground" />}
+  title="No items found"
+  description="Create your first item to get started"
+  action={{ label: "Create Item", onClick: handleCreate }}
+/>
+
+// Error state with optional retry
+<ErrorState message="Failed to load data" onRetry={refetch} />
+
+// Combined component that handles all three states
+<ResourceState
+  isLoading={isLoading}
+  error={error}
+  isEmpty={items.length === 0}
+  onRetry={refetch}
+  emptyState={{
+    icon: <ToolIcon className="w-6 h-6" />,
+    title: "No items yet",
+    description: "Create your first item",
+  }}
+>
+  {/* Render content when data is available */}
+</ResourceState>
+```
+
+**Legacy inline patterns** (still used in some files, but prefer shared components for new code):
+
+```tsx
+// Loading - inline
+{isLoading && (
+  <div className="flex items-center justify-center gap-3 py-8">
+    <SpinnerIcon className="w-5 h-5 animate-spin" />
+  </div>
+)}
+
+// Empty - inline
 <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
   <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center mb-4">
-    {/* Icon */}
+    <ToolIcon className="w-6 h-6 text-muted-foreground" />
   </div>
   <h3 className="text-lg font-semibold text-foreground mb-1">No items found</h3>
   <p className="text-base text-muted-foreground mb-4">Description</p>
@@ -986,10 +1293,13 @@ GOOGLE_CLIENT_SECRET=                          # Google OAuth client secret
    - Functions: camelCase
    - Types: PascalCase with descriptive suffix (e.g., `AgentData`, `ToolData`)
 5. **Files**: One main component per file, helper components at bottom of same file
-6. **Icons**: Use inline SVG from Heroicons (outline style, 24x24 viewBox, strokeWidth 1.5 or 2)
-7. **Error Handling**: Try-catch with console.error and user-facing error states
-8. **Form Validation**: Use `validationAttempted` state to show errors only after submit attempt
-9. **Optimistic Updates**: Update local state immediately, then sync with backend
+6. **Icons**: Import from `@/components/icons` - all icons are centralized there (Heroicons outline style, 24x24 viewBox, strokeWidth 1.5 or 2)
+7. **Reusable Components**: Use shared components from `@/components/ui` (Button, SearchInput, SlidePanel, etc.)
+8. **API Calls**: Use `@/lib/api` utilities (apiGet, apiPost, apiPut, apiDelete) for consistent error handling
+9. **CRUD Resources**: Use `useCrudResource` hook from `@/hooks` for standard list pages
+10. **Error Handling**: Try-catch with console.error and user-facing error states
+11. **Form Validation**: Use `validationAttempted` state to show errors only after submit attempt
+12. **Optimistic Updates**: Update local state immediately, then sync with backend
 
 ---
 
@@ -997,12 +1307,15 @@ GOOGLE_CLIENT_SECRET=                          # Google OAuth client secret
 
 ### API Calls
 
-- **JWT authentication required**: All API calls must include `Authorization: Bearer ${backendAccessToken}` header
-- **401 error handling**: Always check for `response.status === 401` and call `signOut({ callbackUrl: "/login" })` to log out expired sessions
+- **Preferred: Use `@/lib/api` utilities** - `apiGet`, `apiPost`, `apiPut`, `apiDelete` handle headers, 401 errors, and JSON parsing automatically
+- **For CRUD pages**: Use `useCrudResource` hook from `@/hooks` for standardized list/create/update/delete patterns
+- **JWT authentication required**: All API calls must include `Authorization: Bearer ${backendAccessToken}` header (handled automatically by API utilities)
+- **401 error handling**: API utilities automatically call `signOut({ callbackUrl: "/login" })` on 401 responses. For manual fetch calls, check `response.status === 401`
 - **Wait for token**: In `useEffect` hooks, return early if `backendAccessToken` is not yet available; include it in the dependency array
-- **ngrok header**: Always include `"ngrok-skip-browser-warning": "true"` header - the backend may be behind ngrok during development
-- **Backend URL check**: Always check if `NEXT_PUBLIC_BACKEND_URL` is set before making API calls
+- **ngrok header**: `"ngrok-skip-browser-warning": "true"` header is included automatically by API utilities
+- **Backend URL check**: API utilities will throw an error if `NEXT_PUBLIC_BACKEND_URL` is not set
 - **Date formatting**: API returns ISO dates; use `toLocaleString()` for display
+- **Hooks need accessToken**: `useCrudResource` and `useFetchResource` require `accessToken` to be passed from the component (they don't call `useSession` internally)
 
 ### State Management
 

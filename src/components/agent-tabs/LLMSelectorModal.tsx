@@ -2,12 +2,20 @@
 
 import React, { useState } from "react";
 import { llmProviders, type LLMModel } from "./constants/providers";
+import { ChevronLeftIcon, CloseIcon } from "@/components/icons";
+
+type LLMProvider = {
+  name: string;
+  models: LLMModel[];
+};
 
 type LLMSelectorModalProps = {
   isOpen: boolean;
   onClose: () => void;
   selectedLLM: LLMModel | null;
   onSelect: (model: LLMModel) => void;
+  // Optional: pass custom providers list (e.g., with filtered models)
+  availableProviders?: LLMProvider[];
 };
 
 export function LLMSelectorModal({
@@ -15,10 +23,14 @@ export function LLMSelectorModal({
   onClose,
   selectedLLM,
   onSelect,
+  availableProviders,
 }: LLMSelectorModalProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
   if (!isOpen) return null;
+
+  // Use custom providers if provided, otherwise use default
+  const providers = availableProviders || llmProviders;
 
   const handleClose = () => {
     setSearchQuery("");
@@ -31,8 +43,20 @@ export function LLMSelectorModal({
     onClose();
   };
 
+  // Filter providers and models by search query
+  const filteredProviders = providers
+    .map((provider) => ({
+      ...provider,
+      models: provider.models.filter(
+        (model) =>
+          model.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          provider.name.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    }))
+    .filter((provider) => provider.models.length > 0);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 bg-black/50">
+    <div className="fixed inset-0 z-[60] flex items-start justify-center pt-16 bg-black/50">
       <div className="bg-background border border-border rounded-xl w-full max-w-2xl max-h-[80vh] flex flex-col shadow-2xl">
         {/* Modal Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-border">
@@ -41,19 +65,7 @@ export function LLMSelectorModal({
               onClick={handleClose}
               className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted transition-colors cursor-pointer"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 19.5L8.25 12l7.5-7.5"
-                />
-              </svg>
+              <ChevronLeftIcon className="w-5 h-5" />
             </button>
             <h2 className="text-base font-semibold">Select LLM</h2>
           </div>
@@ -61,19 +73,7 @@ export function LLMSelectorModal({
             onClick={handleClose}
             className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted transition-colors cursor-pointer"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <CloseIcon className="w-5 h-5" />
           </button>
         </div>
 
@@ -85,28 +85,23 @@ export function LLMSelectorModal({
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search LLM"
             className="w-full h-10 px-4 rounded-md text-base border border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+            autoFocus
           />
         </div>
 
         {/* Models List */}
         <div className="flex-1 overflow-y-auto">
-          {llmProviders.map((provider) => {
-            const filteredModels = provider.models.filter(
-              (model) =>
-                model.name
-                  .toLowerCase()
-                  .includes(searchQuery.toLowerCase()) ||
-                provider.name
-                  .toLowerCase()
-                  .includes(searchQuery.toLowerCase())
-            );
-            if (filteredModels.length === 0) return null;
-            return (
+          {filteredProviders.length === 0 ? (
+            <div className="p-8 text-center text-sm text-muted-foreground">
+              No models found
+            </div>
+          ) : (
+            filteredProviders.map((provider) => (
               <div key={provider.name} className="py-2">
                 <h3 className="px-4 py-2 text-sm font-medium text-muted-foreground">
                   {provider.name}
                 </h3>
-                {filteredModels.map((model) => (
+                {provider.models.map((model) => (
                   <button
                     key={model.id}
                     onClick={() => handleSelect(model)}
@@ -120,8 +115,8 @@ export function LLMSelectorModal({
                   </button>
                 ))}
               </div>
-            );
-          })}
+            ))
+          )}
         </div>
       </div>
     </div>
