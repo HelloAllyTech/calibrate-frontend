@@ -533,8 +533,11 @@ Key styling:
    - Includes "Download CSV" button in top-right corner
    - Used in: BenchmarkResultsDialog, SpeechToTextEvaluation, TextToSpeechEvaluation leaderboards
    - Custom cell rendering via optional `render` function in column definition
-   - Theme preference persisted to `localStorage`
-   - **Important**: Google profile images require `referrerPolicy="no-referrer"` to load properly
+8. **Charts with PNG Export**: `LeaderboardBarChart` component includes built-in PNG download
+   - Props: `title`, `data`, `height?`, `yDomain?`, `formatTooltip?`, `colorMap?`, `filename?`
+   - "PNG" download button in top-right corner of chart card
+   - Exports at 2x resolution with white background for quality
+   - Used in: BenchmarkResultsDialog, SpeechToTextEvaluation, TextToSpeechEvaluation
 
 ### Data Fetching Pattern
 

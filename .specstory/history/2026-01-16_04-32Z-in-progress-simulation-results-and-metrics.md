@@ -6935,3 +6935,156 @@ even after benchmark is successful add another button to rerun the benchmark
 
 ---
 
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants to add a "Rerun" button to the BenchmarkResultsDialog that appears after a benchmark is successful, allowing users to go back to the model selection and run the benchmark again (similar to the "Try again" button that appears on errors).</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/BenchmarkResultsDialog.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I need to add a "Rerun" button in the header area that appears after the benchmark is successful (not loading and no error). Let me update the header to include this button.</details></think>
+
+---
+
+I'll add a "Rerun" button in the header that appears when the benchmark is successful:
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/BenchmarkResultsDialog.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Done. Now when the benchmark completes successfully (not loading and no error), a "Rerun" button will appear in the header next to the close button. Clicking it will take the user back to the model selection dialog (via the onGoBack callback) with their previously selected models preserved, allowing them to run the benchmark again.</details></think>
+
+---
+
+Done. Now when a benchmark completes successfully, a "Rerun" button appears in the header next to the close button. Clicking it takes the user back to the model selection dialog with their previously selected models preserved, so they can run the comparison again.
+
+---
+
+_**User**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+I made a code change - I added a "Rerun" button to the BenchmarkResultsDialog header that appears when the benchmark completes successfully. This is a minor UI addition that follows existing patterns (using the same `onGoBack` callback that was already there for error recovery). It doesn't introduce any new patterns or conventions that need to be documented. The existing documentation about the error recovery and `onGoBack` callback would still apply - it's just now also used for successful reruns.
+
+This is a minor feature enhancement that doesn't warrant documentation updates since:
+1. It uses existing patterns (onGoBack callback)
+2. It's a small UI addition
+3. It doesn't introduce any new gotchas or edge cases</details></think>
+
+---
+
+I made a code change to add a "Rerun" button, but it's a minor UI addition that uses the existing `onGoBack` callback pattern that was already documented/implemented for error recovery. No new patterns or conventions were introduced. No updates needed for app-details.md.
+
+---
+
+_**User**_
+
+now as you did for benchmark table do the same for the plots shown throughout the app - make one reuse component and apply it where and add a button to download the plot as an image on the image card itself (not outside the plot card) 
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants me to:
+1. Create a reusable component for plots/charts that includes a download button
+2. The download button should be on the plot card itself (not outside)
+3. Apply this component to all plots in the app
+
+Let me first find where plots are used in the app. I know there's a LeaderboardBarChart component. Let me check it and understand how it's used.</details></think>
+
+---
+
+Let me first find all the chart components and understand how they're used.
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/charts/LeaderboardBarChart.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "LeaderboardBarChart",
+  "outputMode": "files_with_matches",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "LeaderboardBarChart",
+    "outputMode": "files_with_matches",
+    "workspaceResults": {
+      "/Users/aman/Documents/repos/artpark/pense-frontend": {
+        "files": {
+          "files": [
+            "./.specstory/history/2026-01-16_04-32Z-in-progress-simulation-results-and-metrics.md",
+            "./src/components/BenchmarkResultsDialog.tsx",
+            "./src/components/evaluations/TextToSpeechEvaluation.tsx",
+            "./src/components/evaluations/SpeechToTextEvaluation.tsx",
+            "./src/components/charts/LeaderboardBarChart.tsx",
+            "./.specstory/history/2026-01-12_10-30Z-benchmark-results-dialog-implementation.md"
+          ],
+          "totalFiles": 6
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
