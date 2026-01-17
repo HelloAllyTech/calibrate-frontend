@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useSession, signOut } from "next-auth/react";
 import { sttProviders } from "../agent-tabs/constants/providers";
 import {
   LeaderboardBarChart,
   getColorMap,
 } from "../charts/LeaderboardBarChart";
+import { DownloadableTable } from "../DownloadableTable";
 
 type AudioTextRow = {
   id: string;
@@ -54,7 +56,7 @@ type LeaderboardSummary = {
 
 type EvaluationResult = {
   task_id: string;
-  status: "in_progress" | "done";
+  status: "queued" | "in_progress" | "done";
   provider_results?: ProviderResult[];
   leaderboard_metrics_path?: string;
   leaderboard_summary?: LeaderboardSummary[];
@@ -71,6 +73,8 @@ const getProviderLabel = (value: string): string => {
 };
 
 export function SpeechToTextEvaluation() {
+  const { data: session } = useSession();
+  const backendAccessToken = (session as any)?.backendAccessToken;
   const [rows, setRows] = useState<AudioTextRow[]>([
     { id: "1", audioFile: null, text: "", s3Path: null },
   ]);
@@ -175,6 +179,7 @@ export function SpeechToTextEvaluation() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${backendAccessToken}`,
         },
         body: JSON.stringify({
           task_type: "stt",
@@ -182,6 +187,11 @@ export function SpeechToTextEvaluation() {
           extension: file.type.split("/")[1],
         }),
       });
+
+      if (response.status === 401) {
+        await signOut({ callbackUrl: "/login" });
+        return;
+      }
 
       if (!response.ok) {
         throw new Error("Failed to get presigned URL");
@@ -275,8 +285,14 @@ export function SpeechToTextEvaluation() {
         headers: {
           accept: "application/json",
           "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${backendAccessToken}`,
         },
       });
+
+      if (response.status === 401) {
+        await signOut({ callbackUrl: "/login" });
+        return;
+      }
 
       if (!response.ok) {
         throw new Error("Failed to poll task status");
@@ -359,6 +375,7 @@ export function SpeechToTextEvaluation() {
           "Content-Type": "application/json",
           accept: "application/json",
           "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${backendAccessToken}`,
         },
         body: JSON.stringify({
           audio_paths: audioPaths,
@@ -368,6 +385,11 @@ export function SpeechToTextEvaluation() {
         }),
       });
 
+      if (response.status === 401) {
+        await signOut({ callbackUrl: "/login" });
+        return;
+      }
+
       if (!response.ok) {
         throw new Error("Failed to evaluate");
       }
@@ -375,7 +397,7 @@ export function SpeechToTextEvaluation() {
       const result: EvaluationResult = await response.json();
       setEvaluationResult(result);
 
-      if (result.status === "in_progress" && result.task_id) {
+      if ((result.status === "queued" || result.status === "in_progress") && result.task_id) {
         // Start polling
         pollingIntervalRef.current = setInterval(() => {
           pollTaskStatus(result.task_id, backendUrl);
@@ -686,7 +708,11 @@ export function SpeechToTextEvaluation() {
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               ></path>
             </svg>
-            <span className="text-[14px] font-medium">Evaluating...</span>
+            <span className="text-[14px] font-medium">
+              {evaluationResult?.status === "queued"
+                ? "Evaluation queued..."
+                : "Evaluating..."}
+            </span>
           </div>
         ) : (
           <button
@@ -873,69 +899,35 @@ export function SpeechToTextEvaluation() {
             <div className="space-y-6 -mx-8 px-8 w-[calc(100vw-260px)] ml-[calc((260px-100vw)/2+50%)] relative">
               {evaluationResult.leaderboard_summary &&
                 evaluationResult.leaderboard_summary.length > 0 && (
-                  <div className="border rounded-xl overflow-visible">
-                    <div className="overflow-hidden rounded-xl">
-                      <table className="w-full">
-                        <thead className="bg-muted/50 border-b border-border overflow-visible">
-                          <tr>
-                            <th className="px-4 py-3 text-left text-[13px] font-medium text-foreground">
-                              Run
-                            </th>
-                            <th className="px-4 py-3 text-left text-[13px] font-medium text-foreground">
-                              Count
-                            </th>
-                            <th className="px-4 py-3 text-left text-[13px] font-medium text-foreground overflow-visible">
-                              WER
-                            </th>
-                            <th className="px-4 py-3 text-left text-[13px] font-medium text-foreground overflow-visible">
-                              String Similarity
-                            </th>
-                            <th className="px-4 py-3 text-left text-[13px] font-medium text-foreground overflow-visible">
-                              LLM Judge Score
-                            </th>
-                            <th className="px-4 py-3 text-left text-[13px] font-medium text-foreground overflow-visible">
-                              TTFB (s)
-                            </th>
-                            <th className="px-4 py-3 text-left text-[13px] font-medium text-foreground overflow-visible">
-                              Processing Time (s)
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {evaluationResult.leaderboard_summary.map(
-                            (summary, index) => (
-                              <tr
-                                key={index}
-                                className="border-b border-border last:border-b-0"
-                              >
-                                <td className="px-4 py-3 text-[13px] text-foreground">
-                                  {getProviderLabel(summary.run)}
-                                </td>
-                                <td className="px-4 py-3 text-[13px] text-foreground">
-                                  {summary.count}
-                                </td>
-                                <td className="px-4 py-3 text-[13px] text-foreground">
-                                  {summary.wer}
-                                </td>
-                                <td className="px-4 py-3 text-[13px] text-foreground">
-                                  {summary.string_similarity.toFixed(5)}
-                                </td>
-                                <td className="px-4 py-3 text-[13px] text-foreground">
-                                  {summary.llm_judge_score}
-                                </td>
-                                <td className="px-4 py-3 text-[13px] text-foreground">
-                                  {summary.ttfb.toFixed(5)}
-                                </td>
-                                <td className="px-4 py-3 text-[13px] text-foreground">
-                                  {summary.processing_time.toFixed(5)}
-                                </td>
-                              </tr>
-                            )
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
+                  <DownloadableTable
+                    columns={[
+                      {
+                        key: "run",
+                        header: "Run",
+                        render: (value) => getProviderLabel(value),
+                      },
+                      { key: "count", header: "Count" },
+                      { key: "wer", header: "WER" },
+                      {
+                        key: "string_similarity",
+                        header: "String Similarity",
+                        render: (value) => value.toFixed(5),
+                      },
+                      { key: "llm_judge_score", header: "LLM Judge Score" },
+                      {
+                        key: "ttfb",
+                        header: "TTFB (s)",
+                        render: (value) => value.toFixed(5),
+                      },
+                      {
+                        key: "processing_time",
+                        header: "Processing Time (s)",
+                        render: (value) => value.toFixed(5),
+                      },
+                    ]}
+                    data={evaluationResult.leaderboard_summary}
+                    filename="stt-evaluation-leaderboard"
+                  />
                 )}
               {/* Charts Section */}
               {evaluationResult.leaderboard_summary &&

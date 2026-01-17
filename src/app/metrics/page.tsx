@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 import { AppLayout } from "@/components/AppLayout";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
 
@@ -15,6 +16,8 @@ type MetricData = {
 
 export default function MetricsPage() {
   const router = useRouter();
+  const { data: session } = useSession();
+  const backendAccessToken = (session as any)?.backendAccessToken;
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [addMetricSidebarOpen, setAddMetricSidebarOpen] = useState(false);
@@ -40,11 +43,15 @@ export default function MetricsPage() {
 
   // Duplicate dialog state
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
-  const [metricToDuplicate, setMetricToDuplicate] = useState<MetricData | null>(null);
+  const [metricToDuplicate, setMetricToDuplicate] = useState<MetricData | null>(
+    null
+  );
 
   // Fetch metrics from backend
   useEffect(() => {
     const fetchMetrics = async () => {
+      if (!backendAccessToken) return;
+
       try {
         setMetricsLoading(true);
         setMetricsError(null);
@@ -58,8 +65,14 @@ export default function MetricsPage() {
           headers: {
             accept: "application/json",
             "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${backendAccessToken}`,
           },
         });
+
+        if (response.status === 401) {
+          await signOut({ callbackUrl: "/login" });
+          return;
+        }
 
         if (!response.ok) {
           throw new Error("Failed to fetch metrics");
@@ -78,7 +91,7 @@ export default function MetricsPage() {
     };
 
     fetchMetrics();
-  }, []);
+  }, [backendAccessToken]);
 
   // Open delete confirmation dialog
   const openDeleteDialog = (metric: MetricData) => {
@@ -112,9 +125,15 @@ export default function MetricsPage() {
           headers: {
             accept: "application/json",
             "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${backendAccessToken}`,
           },
         }
       );
+
+      if (response.status === 401) {
+        await signOut({ callbackUrl: "/login" });
+        return;
+      }
 
       if (!response.ok) {
         throw new Error("Failed to delete metric");
@@ -155,8 +174,14 @@ export default function MetricsPage() {
           headers: {
             accept: "application/json",
             "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${backendAccessToken}`,
           },
         });
+
+        if (metricsResponse.status === 401) {
+          await signOut({ callbackUrl: "/login" });
+          return;
+        }
 
         if (metricsResponse.ok) {
           const updatedMetrics: MetricData[] = await metricsResponse.json();
@@ -207,12 +232,18 @@ export default function MetricsPage() {
           accept: "application/json",
           "Content-Type": "application/json",
           "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${backendAccessToken}`,
         },
         body: JSON.stringify({
           name: metricName.trim(),
           description: metricDescription.trim(),
         }),
       });
+
+      if (response.status === 401) {
+        await signOut({ callbackUrl: "/login" });
+        return;
+      }
 
       if (!response.ok) {
         throw new Error("Failed to create metric");
@@ -224,6 +255,7 @@ export default function MetricsPage() {
         headers: {
           accept: "application/json",
           "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${backendAccessToken}`,
         },
       });
 
@@ -263,8 +295,14 @@ export default function MetricsPage() {
         headers: {
           accept: "application/json",
           "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${backendAccessToken}`,
         },
       });
+
+      if (response.status === 401) {
+        await signOut({ callbackUrl: "/login" });
+        return;
+      }
 
       if (!response.ok) {
         throw new Error("Failed to fetch metric details");
@@ -307,6 +345,7 @@ export default function MetricsPage() {
             accept: "application/json",
             "Content-Type": "application/json",
             "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${backendAccessToken}`,
           },
           body: JSON.stringify({
             name: metricName.trim(),
@@ -314,6 +353,11 @@ export default function MetricsPage() {
           }),
         }
       );
+
+      if (response.status === 401) {
+        await signOut({ callbackUrl: "/login" });
+        return;
+      }
 
       if (!response.ok) {
         throw new Error("Failed to update metric");
@@ -325,6 +369,7 @@ export default function MetricsPage() {
         headers: {
           accept: "application/json",
           "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${backendAccessToken}`,
         },
       });
 
@@ -702,7 +747,7 @@ export default function MetricsPage() {
                 <button
                   onClick={editingMetricUuid ? updateMetric : createMetric}
                   disabled={isCreating || isLoadingMetric}
-                  className="h-10 px-4 rounded-md text-base font-medium bg-white text-gray-900 hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
                   {isCreating ? (
                     <>
@@ -746,6 +791,7 @@ export default function MetricsPage() {
           existingMetrics={metrics}
           onClose={closeDuplicateDialog}
           onDuplicated={handleMetricDuplicated}
+          backendAccessToken={backendAccessToken}
         />
       )}
 
@@ -768,13 +814,17 @@ function DuplicateMetricDialog({
   existingMetrics,
   onClose,
   onDuplicated,
+  backendAccessToken,
 }: {
   originalMetric: MetricData;
   existingMetrics: MetricData[];
   onClose: () => void;
   onDuplicated: (metric: MetricData) => void;
+  backendAccessToken?: string;
 }) {
-  const [metricName, setMetricName] = useState(`Copy of ${originalMetric.name}`);
+  const [metricName, setMetricName] = useState(
+    `Copy of ${originalMetric.name}`
+  );
   const [isDuplicating, setIsDuplicating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const maxLength = 50;
@@ -782,9 +832,7 @@ function DuplicateMetricDialog({
   // Check if the name already exists
   const isNameDuplicate = (name: string): boolean => {
     const trimmedName = name.trim().toLowerCase();
-    return existingMetrics.some(
-      (m) => m.name.toLowerCase() === trimmedName
-    );
+    return existingMetrics.some((m) => m.name.toLowerCase() === trimmedName);
   };
 
   const handleDuplicate = async () => {
@@ -807,12 +855,18 @@ function DuplicateMetricDialog({
             accept: "application/json",
             "Content-Type": "application/json",
             "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${backendAccessToken}`,
           },
           body: JSON.stringify({
             name: metricName.trim(),
           }),
         }
       );
+
+      if (response.status === 401) {
+        await signOut({ callbackUrl: "/login" });
+        return;
+      }
 
       if (!response.ok) {
         throw new Error("Failed to duplicate metric");
@@ -924,7 +978,9 @@ function DuplicateMetricDialog({
           </button>
           <button
             onClick={handleDuplicate}
-            disabled={!metricName.trim() || isDuplicating || isNameDuplicate(metricName)}
+            disabled={
+              !metricName.trim() || isDuplicating || isNameDuplicate(metricName)
+            }
             className="h-9 px-4 rounded-md text-[13px] font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             {isDuplicating ? (

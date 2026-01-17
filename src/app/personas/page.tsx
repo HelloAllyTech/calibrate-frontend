@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 import { AppLayout } from "@/components/AppLayout";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
+import { Tooltip } from "@/components/Tooltip";
 
 type PersonaData = {
   uuid: string;
@@ -22,6 +24,8 @@ const DEFAULT_CHARACTERISTICS = `You are Rajesh, a 45-year-old farmer from rural
 
 export default function PersonasPage() {
   const router = useRouter();
+  const { data: session } = useSession();
+  const backendAccessToken = (session as any)?.backendAccessToken;
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [addPersonaSidebarOpen, setAddPersonaSidebarOpen] = useState(false);
@@ -58,6 +62,8 @@ export default function PersonasPage() {
   // Fetch personas from backend
   useEffect(() => {
     const fetchPersonas = async () => {
+      if (!backendAccessToken) return;
+
       try {
         setPersonasLoading(true);
         setPersonasError(null);
@@ -71,8 +77,14 @@ export default function PersonasPage() {
           headers: {
             accept: "application/json",
             "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${backendAccessToken}`,
           },
         });
+
+        if (response.status === 401) {
+          await signOut({ callbackUrl: "/login" });
+          return;
+        }
 
         if (!response.ok) {
           throw new Error("Failed to fetch personas");
@@ -91,7 +103,7 @@ export default function PersonasPage() {
     };
 
     fetchPersonas();
-  }, []);
+  }, [backendAccessToken]);
 
   // Open delete confirmation dialog
   const openDeleteDialog = (persona: PersonaData) => {
@@ -125,9 +137,15 @@ export default function PersonasPage() {
           headers: {
             accept: "application/json",
             "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${backendAccessToken}`,
           },
         }
       );
+
+      if (response.status === 401) {
+        await signOut({ callbackUrl: "/login" });
+        return;
+      }
 
       if (!response.ok) {
         throw new Error("Failed to delete persona");
@@ -176,6 +194,7 @@ export default function PersonasPage() {
           accept: "application/json",
           "Content-Type": "application/json",
           "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${backendAccessToken}`,
         },
         body: JSON.stringify({
           name: personaLabel.trim(),
@@ -188,6 +207,11 @@ export default function PersonasPage() {
         }),
       });
 
+      if (response.status === 401) {
+        await signOut({ callbackUrl: "/login" });
+        return;
+      }
+
       if (!response.ok) {
         throw new Error("Failed to create persona");
       }
@@ -198,6 +222,7 @@ export default function PersonasPage() {
         headers: {
           accept: "application/json",
           "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${backendAccessToken}`,
         },
       });
 
@@ -237,8 +262,14 @@ export default function PersonasPage() {
         headers: {
           accept: "application/json",
           "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${backendAccessToken}`,
         },
       });
+
+      if (response.status === 401) {
+        await signOut({ callbackUrl: "/login" });
+        return;
+      }
 
       if (!response.ok) {
         throw new Error("Failed to fetch persona details");
@@ -292,6 +323,7 @@ export default function PersonasPage() {
             accept: "application/json",
             "Content-Type": "application/json",
             "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${backendAccessToken}`,
           },
           body: JSON.stringify({
             name: personaLabel.trim(),
@@ -305,6 +337,11 @@ export default function PersonasPage() {
         }
       );
 
+      if (response.status === 401) {
+        await signOut({ callbackUrl: "/login" });
+        return;
+      }
+
       if (!response.ok) {
         throw new Error("Failed to update persona");
       }
@@ -315,6 +352,7 @@ export default function PersonasPage() {
         headers: {
           accept: "application/json",
           "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${backendAccessToken}`,
         },
       });
 
@@ -745,29 +783,52 @@ export default function PersonasPage() {
 
                     {/* Interruption Sensitivity */}
                     <div>
-                      <label className="block text-sm font-medium mb-2">
-                        Interruption Sensitivity
+                      <label className="block text-sm font-medium mb-1">
+                        Interruption sensitivity
                       </label>
+                      <p className="text-sm text-muted-foreground mb-2">
+                        Real users often interrupt agents mid-sentence. Set how
+                        likely this persona is to do the same.
+                      </p>
                       <div className="flex rounded-md border border-border overflow-hidden w-fit">
                         {(["none", "low", "medium", "high"] as const).map(
-                          (level, index) => (
-                            <button
-                              key={level}
-                              type="button"
-                              onClick={() =>
-                                setPersonaInterruptionSensitivity(level)
-                              }
-                              className={`px-4 py-2 text-sm font-medium transition-colors cursor-pointer ${
-                                index > 0 ? "border-l border-border" : ""
-                              } ${
-                                personaInterruptionSensitivity === level
-                                  ? "bg-foreground text-background"
-                                  : "bg-background text-muted-foreground hover:bg-muted/50"
-                              }`}
-                            >
-                              {level.charAt(0).toUpperCase() + level.slice(1)}
-                            </button>
-                          )
+                          (level, index) => {
+                            const tooltipContent: Record<string, string> = {
+                              low: "25% chance that the user will interrupt the agent",
+                              medium:
+                                "50% chance that the user will interrupt the agent",
+                              high: "80% chance that the user will interrupt the agent",
+                            };
+                            const button = (
+                              <button
+                                key={level}
+                                type="button"
+                                onClick={() =>
+                                  setPersonaInterruptionSensitivity(level)
+                                }
+                                className={`px-4 py-2 text-sm font-medium transition-colors cursor-pointer ${
+                                  index > 0 ? "border-l border-border" : ""
+                                } ${
+                                  personaInterruptionSensitivity === level
+                                    ? "bg-foreground text-background"
+                                    : "bg-background text-muted-foreground hover:bg-muted/50"
+                                }`}
+                              >
+                                {level.charAt(0).toUpperCase() + level.slice(1)}
+                              </button>
+                            );
+                            return tooltipContent[level] ? (
+                              <Tooltip
+                                key={level}
+                                content={tooltipContent[level]}
+                                position="top"
+                              >
+                                {button}
+                              </Tooltip>
+                            ) : (
+                              button
+                            );
+                          }
                         )}
                       </div>
                     </div>
@@ -795,7 +856,7 @@ export default function PersonasPage() {
                 <button
                   onClick={editingPersonaUuid ? updatePersona : createPersona}
                   disabled={isCreating || isLoadingPersona}
-                  className="h-10 px-4 rounded-md text-base font-medium bg-white text-gray-900 hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
                   {isCreating ? (
                     <>

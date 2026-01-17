@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 import { AppLayout } from "@/components/AppLayout";
 import { Tooltip } from "@/components/Tooltip";
 
@@ -49,7 +50,7 @@ type RunData = {
   task_id: string;
   name: string;
   status: string;
-  type: "chat" | "audio" | "voice";
+  type: "text" | "voice";
   updated_at: string;
   total_simulations: number;
   metrics: {
@@ -66,6 +67,8 @@ type RunData = {
 export default function SimulationRunPage() {
   const router = useRouter();
   const params = useParams();
+  const { data: session } = useSession();
+  const backendAccessToken = (session as any)?.backendAccessToken;
   const uuid = params.uuid as string;
   const runId = params.runId as string;
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -80,6 +83,8 @@ export default function SimulationRunPage() {
   >("performance");
 
   useEffect(() => {
+    if (!backendAccessToken) return;
+
     let pollInterval: NodeJS.Timeout | null = null;
 
     const fetchRunData = async (isInitialLoad = false) => {
@@ -98,8 +103,14 @@ export default function SimulationRunPage() {
           headers: {
             accept: "application/json",
             "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${backendAccessToken}`,
           },
         });
+
+        if (response.status === 401) {
+          await signOut({ callbackUrl: "/login" });
+          return;
+        }
 
         if (!response.ok) {
           throw new Error("Failed to fetch run data");
@@ -139,10 +150,12 @@ export default function SimulationRunPage() {
         clearInterval(pollInterval);
       }
     };
-  }, [runId]);
+  }, [runId, backendAccessToken]);
 
   const formatStatus = (status: string) => {
     switch (status.toLowerCase()) {
+      case "queued":
+        return "Queued";
       case "in_progress":
         return "Running";
       case "done":
@@ -156,30 +169,29 @@ export default function SimulationRunPage() {
     switch (status.toLowerCase()) {
       case "done":
       case "completed":
-        return "bg-green-500/20 text-green-400";
+        return "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400";
       case "running":
       case "in_progress":
-        return "bg-yellow-500/20 text-yellow-400";
+        return "bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400";
       case "failed":
       case "error":
-        return "bg-red-500/20 text-red-400";
+        return "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400";
       case "pending":
       case "queued":
-        return "bg-gray-500/20 text-gray-400";
+        return "bg-gray-200 text-gray-700 dark:bg-gray-500/20 dark:text-gray-400";
       default:
-        return "bg-gray-500/20 text-gray-400";
+        return "bg-gray-200 text-gray-700 dark:bg-gray-500/20 dark:text-gray-400";
     }
   };
 
   const getTypeBadgeClass = (type: string) => {
     switch (type.toLowerCase()) {
-      case "chat":
-        return "bg-purple-500/20 text-purple-400";
-      case "audio":
+      case "text":
+        return "bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-400";
       case "voice":
-        return "bg-orange-500/20 text-orange-400";
+        return "bg-orange-100 text-orange-700 dark:bg-orange-500/20 dark:text-orange-400";
       default:
-        return "bg-gray-500/20 text-gray-400";
+        return "bg-gray-200 text-gray-700 dark:bg-gray-500/20 dark:text-gray-400";
     }
   };
 
@@ -312,7 +324,8 @@ export default function SimulationRunPage() {
         <h1 className="text-2xl font-semibold">
           {runData?.name || "Loading..."}
         </h1>
-        {runData?.status.toLowerCase() === "in_progress" && (
+        {(runData?.status.toLowerCase() === "in_progress" ||
+          runData?.status.toLowerCase() === "queued") && (
           <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
             <circle
               className="opacity-25"
@@ -421,8 +434,9 @@ export default function SimulationRunPage() {
               </span>
             </div>
 
-            {/* Overall Metrics */}
-            {runData.metrics &&
+            {/* Overall Metrics - only show when simulation is done */}
+            {runData.status.toLowerCase() === "done" &&
+              runData.metrics &&
               (() => {
                 // Separate metrics into regular and latency metrics
                 const latencyKeys = [
@@ -480,7 +494,7 @@ export default function SimulationRunPage() {
                   });
                 }
 
-                const isChatType = runData.type === "chat";
+                const isTextType = runData.type === "text";
 
                 return (
                   <div>
@@ -488,8 +502,8 @@ export default function SimulationRunPage() {
                       Overall Metrics
                     </h2>
 
-                    {/* Tab Navigation - only show for non-chat types */}
-                    {!isChatType && (
+                    {/* Tab Navigation - only show for non-text types */}
+                    {!isTextType && (
                       <div className="flex gap-2 border-b border-border mb-4">
                         <button
                           onClick={() => setActiveMetricsTab("performance")}
@@ -514,9 +528,9 @@ export default function SimulationRunPage() {
                       </div>
                     )}
 
-                    {/* Performance Tab Content - show for chat type or when performance tab is active */}
-                    {((isChatType && regularMetrics.length > 0) ||
-                      (!isChatType &&
+                    {/* Performance Tab Content - show for text type or when performance tab is active */}
+                    {((isTextType && regularMetrics.length > 0) ||
+                      (!isTextType &&
                         activeMetricsTab === "performance" &&
                         regularMetrics.length > 0)) && (
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -556,8 +570,8 @@ export default function SimulationRunPage() {
                       </div>
                     )}
 
-                    {/* Latency Tab Content - only show for non-chat types */}
-                    {!isChatType &&
+                    {/* Latency Tab Content - only show for non-text types */}
+                    {!isTextType &&
                       activeMetricsTab === "latency" &&
                       latencyMetrics.length > 0 && (
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -602,25 +616,55 @@ export default function SimulationRunPage() {
 
             {/* Simulation Results Table */}
             {runData.simulation_results &&
-              runData.simulation_results.length > 0 && (
-                <>
-                  <h2 className="text-lg font-semibold mb-4">
-                    Simulation Results
-                  </h2>
-                  <div className="border border-border rounded-xl overflow-hidden bg-muted/20">
-                    <div className="overflow-x-auto">
-                      <table className="w-full table-fixed">
-                        <thead className="bg-background border-t border-border">
-                          <tr>
-                            <th className="w-16 px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider"></th>
-                            <th className="w-32 px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                              Persona
-                            </th>
-                            <th className="w-32 px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                              Scenario
-                            </th>
-                            {runData.metrics &&
-                              Object.keys(runData.metrics).map((metricKey) => (
+              runData.simulation_results.length > 0 &&
+              (() => {
+                // Latency metrics to exclude from the table (shown in latency tab)
+                const latencyMetricKeys = [
+                  "stt/ttft",
+                  "llm/ttft",
+                  "tts/ttft",
+                  "stt/processing_time",
+                  "llm/processing_time",
+                  "tts/processing_time",
+                ];
+
+                // Get metric keys - either from runData.metrics or derive from simulation_results
+                let displayMetricKeys: string[] = [];
+                if (runData.metrics) {
+                  displayMetricKeys = Object.keys(runData.metrics).filter(
+                    (key) => !latencyMetricKeys.includes(key)
+                  );
+                } else {
+                  // Derive from simulation_results' evaluation_results
+                  const metricSet = new Set<string>();
+                  runData.simulation_results.forEach((sim) => {
+                    sim.evaluation_results.forEach((result) => {
+                      if (!latencyMetricKeys.includes(result.name)) {
+                        metricSet.add(result.name);
+                      }
+                    });
+                  });
+                  displayMetricKeys = Array.from(metricSet);
+                }
+
+                return (
+                  <>
+                    <h2 className="text-lg font-semibold mb-4">
+                      Simulation Results
+                    </h2>
+                    <div className="border border-border rounded-xl overflow-hidden bg-muted/20">
+                      <div className="overflow-x-auto">
+                        <table className="w-full table-fixed">
+                          <thead className="bg-background border-t border-border">
+                            <tr>
+                              <th className="w-10 px-2 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider"></th>
+                              <th className="w-44 px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                                Persona
+                              </th>
+                              <th className="w-44 px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                                Scenario
+                              </th>
+                              {displayMetricKeys.map((metricKey) => (
                                 <th
                                   key={metricKey}
                                   className="w-36 px-3 py-3 text-left text-xs font-medium text-muted-foreground tracking-wider"
@@ -632,87 +676,70 @@ export default function SimulationRunPage() {
                                   </div>
                                 </th>
                               ))}
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border">
-                          {runData.simulation_results.map(
-                            (simulation, index) => (
-                              <tr
-                                key={index}
-                                className="hover:bg-muted/30 transition-colors"
-                              >
-                                <td className="px-3 py-4 whitespace-nowrap">
-                                  <button
-                                    onClick={() =>
-                                      openTranscriptDialog(simulation)
-                                    }
-                                    className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted/50 transition-colors cursor-pointer"
-                                  >
-                                    <svg
-                                      className="w-5 h-5 text-foreground"
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                      stroke="currentColor"
-                                      strokeWidth={2}
-                                    >
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"
-                                      />
-                                    </svg>
-                                  </button>
-                                </td>
-                                <td className="px-3 py-4 whitespace-nowrap text-sm text-foreground">
-                                  {simulation.persona.label}
-                                </td>
-                                <td className="px-3 py-4 whitespace-nowrap text-sm text-foreground">
-                                  {simulation.scenario.name}
-                                </td>
-                                {runData.metrics &&
-                                  Object.keys(runData.metrics).map(
-                                    (metricKey) => {
-                                      const value = getEvaluationResult(
-                                        simulation,
-                                        metricKey
-                                      );
-                                      const isSttLlmJudge =
-                                        metricKey === "stt_llm_judge" ||
-                                        metricKey === "stt_llm_judge_score";
-                                      const passed = value === 1;
-                                      const reasoning = getEvaluationReasoning(
-                                        simulation,
-                                        metricKey
-                                      );
-
-                                      // For stt_llm_judge, show percentage
-                                      if (isSttLlmJudge) {
-                                        const percentage = parseFloat(
-                                          (value * 100).toFixed(2)
-                                        );
-                                        return (
-                                          <td
-                                            key={metricKey}
-                                            className="px-3 py-4 whitespace-nowrap"
-                                          >
-                                            <div className="flex justify-center">
-                                              {reasoning ? (
-                                                <Tooltip content={reasoning}>
-                                                  <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium text-foreground">
-                                                    {percentage}%
-                                                  </span>
-                                                </Tooltip>
-                                              ) : (
-                                                <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium text-foreground">
-                                                  {percentage}%
-                                                </span>
-                                              )}
-                                            </div>
-                                          </td>
-                                        );
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-border">
+                            {runData.simulation_results.map(
+                              (simulation, index) => (
+                                <tr
+                                  key={index}
+                                  className="hover:bg-muted/30 transition-colors"
+                                >
+                                  <td className="px-2 py-4 whitespace-nowrap">
+                                    <button
+                                      onClick={() =>
+                                        openTranscriptDialog(simulation)
                                       }
+                                      className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-muted/50 transition-colors cursor-pointer"
+                                    >
+                                      <svg
+                                        className="w-4 h-4 text-foreground"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        strokeWidth={2}
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"
+                                        />
+                                      </svg>
+                                    </button>
+                                  </td>
+                                  <td className="px-3 py-4 text-sm text-foreground">
+                                    <div className="overflow-x-auto max-w-full">
+                                      <div className="whitespace-nowrap">
+                                        {simulation.persona.label}
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td className="px-3 py-4 text-sm text-foreground">
+                                    <div className="overflow-x-auto max-w-full">
+                                      <div className="whitespace-nowrap">
+                                        {simulation.scenario.name}
+                                      </div>
+                                    </div>
+                                  </td>
+                                  {displayMetricKeys.map((metricKey) => {
+                                    const value = getEvaluationResult(
+                                      simulation,
+                                      metricKey
+                                    );
+                                    const isSttLlmJudge =
+                                      metricKey === "stt_llm_judge" ||
+                                      metricKey === "stt_llm_judge_score";
+                                    const passed = value === 1;
+                                    const reasoning = getEvaluationReasoning(
+                                      simulation,
+                                      metricKey
+                                    );
 
-                                      // For other metrics, show Pass/Fail
+                                    // For stt_llm_judge, show percentage
+                                    if (isSttLlmJudge) {
+                                      const percentage = parseFloat(
+                                        (value * 100).toFixed(2)
+                                      );
                                       return (
                                         <td
                                           key={metricKey}
@@ -721,17 +748,29 @@ export default function SimulationRunPage() {
                                           <div className="flex justify-center">
                                             {reasoning ? (
                                               <Tooltip content={reasoning}>
-                                                <span
-                                                  className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
-                                                    passed
-                                                      ? "bg-green-500/20 text-green-400"
-                                                      : "bg-red-500/20 text-red-400"
-                                                  }`}
-                                                >
-                                                  {passed ? "Pass" : "Fail"}
+                                                <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium text-foreground">
+                                                  {percentage}%
                                                 </span>
                                               </Tooltip>
                                             ) : (
+                                              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium text-foreground">
+                                                {percentage}%
+                                              </span>
+                                            )}
+                                          </div>
+                                        </td>
+                                      );
+                                    }
+
+                                    // For other metrics, show Pass/Fail
+                                    return (
+                                      <td
+                                        key={metricKey}
+                                        className="px-3 py-4 whitespace-nowrap"
+                                      >
+                                        <div className="flex justify-center">
+                                          {reasoning ? (
+                                            <Tooltip content={reasoning}>
                                               <span
                                                 className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
                                                   passed
@@ -741,21 +780,32 @@ export default function SimulationRunPage() {
                                               >
                                                 {passed ? "Pass" : "Fail"}
                                               </span>
-                                            )}
-                                          </div>
-                                        </td>
-                                      );
-                                    }
-                                  )}
-                              </tr>
-                            )
-                          )}
-                        </tbody>
-                      </table>
+                                            </Tooltip>
+                                          ) : (
+                                            <span
+                                              className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
+                                                passed
+                                                  ? "bg-green-500/20 text-green-400"
+                                                  : "bg-red-500/20 text-red-400"
+                                              }`}
+                                            >
+                                              {passed ? "Pass" : "Fail"}
+                                            </span>
+                                          )}
+                                        </div>
+                                      </td>
+                                    );
+                                  })}
+                                </tr>
+                              )
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
-                  </div>
-                </>
-              )}
+                  </>
+                );
+              })()}
           </div>
         ) : null}
       </div>
@@ -833,7 +883,7 @@ export default function SimulationRunPage() {
                         {/* Message Header - show for assistant messages */}
                         {entry.role === "assistant" && (
                           <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium text-white">
+                            <span className="text-sm font-medium text-foreground">
                               {entry.tool_calls ? "Agent Tool Call" : "Agent"}
                             </span>
                           </div>
@@ -859,7 +909,7 @@ export default function SimulationRunPage() {
                         {/* User Message */}
                         {entry.role === "user" && entry.content && (
                           <div className="w-1/2">
-                            <div className="px-4 py-3 rounded-xl text-sm text-white bg-[#242426] border border-[#444] whitespace-pre-wrap">
+                            <div className="px-4 py-3 rounded-xl text-sm text-foreground bg-muted border border-border whitespace-pre-wrap">
                               {entry.content}
                             </div>
                           </div>
@@ -870,7 +920,7 @@ export default function SimulationRunPage() {
                           entry.content &&
                           !entry.tool_calls && (
                             <div className="w-1/2">
-                              <div className="px-4 py-3 rounded-xl text-sm text-white bg-black border border-[#333] whitespace-pre-wrap">
+                              <div className="px-4 py-3 rounded-xl text-sm text-foreground bg-accent border border-border whitespace-pre-wrap">
                                 {entry.content}
                               </div>
                             </div>
@@ -891,11 +941,11 @@ export default function SimulationRunPage() {
                               return (
                                 <div
                                   key={toolIndex}
-                                  className="bg-[#1a1a1a] border border-[#333] rounded-2xl p-4 mb-2"
+                                  className="bg-muted border border-border rounded-2xl p-4 mb-2"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
                                     <svg
-                                      className="w-4 h-4 text-gray-400"
+                                      className="w-4 h-4 text-muted-foreground"
                                       fill="none"
                                       viewBox="0 0 24 24"
                                       stroke="currentColor"
@@ -907,7 +957,7 @@ export default function SimulationRunPage() {
                                         d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"
                                       />
                                     </svg>
-                                    <span className="text-sm font-medium text-white">
+                                    <span className="text-sm font-medium text-foreground">
                                       {toolCall.function.name}
                                     </span>
                                   </div>
@@ -916,10 +966,10 @@ export default function SimulationRunPage() {
                                       {Object.entries(parsedArgs).map(
                                         ([key, value], paramIndex) => (
                                           <div key={paramIndex}>
-                                            <label className="block text-sm font-medium text-gray-300 mb-1.5">
+                                            <label className="block text-sm font-medium text-foreground mb-1.5">
                                               {key}
                                             </label>
-                                            <div className="px-3 py-2 bg-[#0a0a0a] border border-[#222] rounded-lg text-sm text-gray-400">
+                                            <div className="px-3 py-2 bg-background border border-border rounded-lg text-sm text-muted-foreground">
                                               {String(value)}
                                             </div>
                                           </div>

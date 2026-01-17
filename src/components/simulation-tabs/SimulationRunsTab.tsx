@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 
 type Run = {
   uuid: string;
   name: string;
   status: string;
-  type: "chat" | "audio";
+  type: "text" | "audio";
   updated_at: string;
 };
 
@@ -17,12 +18,16 @@ type SimulationRunsTabProps = {
 
 export function SimulationRunsTab({ simulationUuid }: SimulationRunsTabProps) {
   const router = useRouter();
+  const { data: session } = useSession();
+  const backendAccessToken = (session as any)?.backendAccessToken;
   const [runs, setRuns] = useState<Run[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   useEffect(() => {
+    if (!backendAccessToken) return;
+
     const fetchRuns = async () => {
       try {
         setIsLoading(true);
@@ -39,9 +44,15 @@ export function SimulationRunsTab({ simulationUuid }: SimulationRunsTabProps) {
             headers: {
               accept: "application/json",
               "ngrok-skip-browser-warning": "true",
+              Authorization: `Bearer ${backendAccessToken}`,
             },
           }
         );
+
+        if (response.status === 401) {
+          await signOut({ callbackUrl: "/login" });
+          return;
+        }
 
         if (!response.ok) {
           throw new Error("Failed to fetch runs");
@@ -58,7 +69,7 @@ export function SimulationRunsTab({ simulationUuid }: SimulationRunsTabProps) {
     };
 
     fetchRuns();
-  }, [simulationUuid]);
+  }, [simulationUuid, backendAccessToken]);
 
   const formatStatus = (status: string) => {
     switch (status.toLowerCase()) {
@@ -75,30 +86,30 @@ export function SimulationRunsTab({ simulationUuid }: SimulationRunsTabProps) {
     switch (status.toLowerCase()) {
       case "done":
       case "completed":
-        return "bg-green-500/20 text-green-400";
+        return "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400";
       case "running":
       case "in_progress":
-        return "bg-yellow-500/20 text-yellow-400";
+        return "bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400";
       case "failed":
       case "error":
-        return "bg-red-500/20 text-red-400";
+        return "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400";
       case "pending":
       case "queued":
-        return "bg-gray-500/20 text-gray-400";
+        return "bg-gray-200 text-gray-700 dark:bg-gray-500/20 dark:text-gray-400";
       default:
-        return "bg-gray-500/20 text-gray-400";
+        return "bg-gray-200 text-gray-700 dark:bg-gray-500/20 dark:text-gray-400";
     }
   };
 
   const getTypeBadgeClass = (type: string) => {
     switch (type.toLowerCase()) {
-      case "chat":
-        return "bg-purple-500/20 text-purple-400";
+      case "text":
+        return "bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-400";
       case "audio":
       case "voice":
-        return "bg-orange-500/20 text-orange-400";
+        return "bg-orange-100 text-orange-700 dark:bg-orange-500/20 dark:text-orange-400";
       default:
-        return "bg-gray-500/20 text-gray-400";
+        return "bg-gray-200 text-gray-700 dark:bg-gray-500/20 dark:text-gray-400";
     }
   };
 
