@@ -31,9 +31,17 @@ type TestRun = {
 
 // Helper function to format relative time
 function formatRelativeTime(dateString: string): string {
-  // Backend returns UTC timestamps without timezone indicator
-  // Append "Z" to parse as UTC, so comparison with local time is correct
-  const date = new Date(dateString.replace(" ", "T") + "Z");
+  // Handle both formats:
+  // - Backend format: "2026-01-18 09:30:00" (UTC without timezone indicator)
+  // - ISO format: "2026-01-18T09:30:00.000Z" (from new Date().toISOString())
+  let date: Date;
+  if (dateString.endsWith("Z") || dateString.includes("+")) {
+    // Already has timezone indicator, parse directly
+    date = new Date(dateString);
+  } else {
+    // Backend format: replace space with T and append Z
+    date = new Date(dateString.replace(" ", "T") + "Z");
+  }
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 

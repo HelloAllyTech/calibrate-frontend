@@ -6318,3 +6318,260 @@ Updated `.cursor/rules/app-details.md` with:
 
 ---
 
+_**User (2026-01-17 11:49Z)**_
+
+the test runs table shows NaN years ago when a new test/benchmark is run and added to the runs table
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user is seeing "NaN years ago" in the test runs table when a new test/benchmark is added. This is likely happening in the TestsTabContent.tsx file when a new run is added with a pending status - the `updated_at` field might be empty or invalid.
+
+Let me look at the TestsTabContent.tsx to find where this issue occurs.</details></think>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "formatRelativeTime|years ago|NaN" in "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx" • 3 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `src/components/agent-tabs/TestsTabContent.tsx` | `function formatRelativeTime(dateString: string): string \{` | L33 |
+| `src/components/agent-tabs/TestsTabContent.tsx` | `return diffInYears === 1 ? "last year" : `$\{diffInYears\} years ago`;` | L72 |
+| `src/components/agent-tabs/TestsTabContent.tsx` | `\{formatRelativeTime(run.updated_at)\}` | L1063 |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I see. The `formatRelativeTime` function is being called with `run.updated_at`. When a new test/benchmark is created and added to the runs table (with status "pending"), the `updated_at` field might be empty or undefined, causing the date parsing to fail and result in NaN.
+
+Let me look at where the new test run is created to see what `updated_at` value is being set:</details></think>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "handleTestRunCreated|handleBenchmarkCreated|updated_at.*pending" in "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx" • 4 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `src/components/agent-tabs/TestsTabContent.tsx` | `const handleTestRunCreated = (taskId: string) => \{` | L371 |
+| `src/components/agent-tabs/TestsTabContent.tsx` | `const handleBenchmarkCreated = (taskId: string) => \{` | L389 |
+| `src/components/agent-tabs/TestsTabContent.tsx` | `onRunCreated=\{handleTestRunCreated\}` | L1136 |
+| `src/components/agent-tabs/TestsTabContent.tsx` | `onBenchmarkCreated=\{handleBenchmarkCreated\}` | L1146 |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I see that in `handleTestRunCreated` and `handleBenchmarkCreated`, the `updated_at` is set to `new Date().toISOString()`. This returns something like `"2026-01-18T09:30:00.000Z"`.However, the `formatRelativeTime` function expects a date string like `"2026-01-18 09:30:00"` (without the "T" and "Z"), and it does:
+```javascriptconst date = new Date(dateString.replace(" ", "T") + "Z");```This replaces space with "T" and adds "Z". But if the dateString already has "T" and ends with "Z", then:- `"2026-01-18T09:30:00.000Z".replace(" ", "T")` → `"2026-01-18T09:30:00.000Z"` (no change, there's no space)
+- Then `+ "Z"` → `"2026-01-18T09:30:00.000ZZ"` This would result in an invalid date!Let me fix the `formatRelativeTime` function to handle both formats:
+1. The backend format: `"2026-01-18 09:30:00"` (no timezone indicator)
+2. The new ISO format from `new Date().toISOString()`: `"2026-01-18T09:30:00.000Z"`</details></think>
+
+---
+
+I see the issue. When a new run is created, `updated_at` is set to `new Date().toISOString()` which produces `"2026-01-18T09:30:00.000Z"`. But the `formatRelativeTime` function expects the backend format `"2026-01-18 09:30:00"` and appends "Z" to it - causing double "Z" and an invalid date.
+
+Let me fix the `formatRelativeTime` function to handle both formats:
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I'll fix the `formatRelativeTime` function to handle both formats - the backend format and the ISO format from `new Date().toISOString()`.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+**Chunk 1**
+Lines added: 11, lines removed: 3
+
+```diff
+@@ -32,7 +32,15 @@
+  // Helper function to format relative time
+  function formatRelativeTime(dateString: string): string {
+-   // Backend returns UTC timestamps without timezone indicator
+-   // Append "Z" to parse as UTC, so comparison with local time is correct
+-   const date = new Date(dateString.replace(" ", "T") + "Z");
++   // Handle both formats:
++   // - Backend format: "2026-01-18 09:30:00" (UTC without timezone indicator)
++   // - ISO format: "2026-01-18T09:30:00.000Z" (from new Date().toISOString())
++   let date: Date;
++   if (dateString.endsWith("Z") || dateString.includes("+")) {
++     // Already has timezone indicator, parse directly
++     date = new Date(dateString);
++   } else {
++     // Backend format: replace space with T and append Z
++     date = new Date(dateString.replace(" ", "T") + "Z");
++   }
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me verify there are no lint errors:</details></think>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 1 file</summary>
+      
+Lint paths:
+
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx`
+
+Lint results
+
+Lint errors for `src/components/agent-tabs/TestsTabContent.tsx`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| 'React' is declared but its value is never read. | 3:8-3:13 | DIAGNOSTIC_SEVERITY_HINT |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+The fix is complete. Now when a new test/benchmark run is created and added to the table with `new Date().toISOString()`, the `formatRelativeTime` function will detect that the date string already has a timezone indicator (ends with "Z") and parse it directly without adding another "Z".</details></think>
+
+---
+
+Fixed! The issue was that when a new test/benchmark run is created, `updated_at` is set to `new Date().toISOString()` which produces `"2026-01-18T09:30:00.000Z"`. But the `formatRelativeTime` function was blindly appending "Z" to all date strings, resulting in `"...ZZ"` which is invalid and produces NaN.
+
+The fix now checks if the date string already has a timezone indicator (ends with "Z" or contains "+") and parses it directly, otherwise applies the backend format transformation.
+
+---
+
+_**User (2026-01-17 11:49Z)**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+I made a code change to the `formatRelativeTime` function in TestsTabContent.tsx to handle both backend UTC timestamps and ISO format timestamps. Let me update the app-details.md with this information about handling date formats.</details></think>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "UTC timestamp|formatRelativeTime|date.*format" in "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md" • 3 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `.cursor/rules/app-details.md` | `- **Date formatting**: API returns ISO dates; use `toLocaleString()` for display` | L1737 |
+| `.cursor/rules/app-details.md` | `- **UTC timestamps**: Backend returns timestamps in UTC without timezone indicator (e.g., `"2026-01-18 10:00:00"`). When parsing for relative time calculations, append `"Z"` to explicitly mark as UTC: `new Date(dateString.replace(" ", "T") + "Z")`. Without this, JavaScript interprets the timestamp as local time, causing incorrect relative times (e.g., "5 hours ago" instead of "just now" for users in IST)` | L1738 |
+| `.cursor/rules/app-details.md` | `- **Sortable tables**: Store both raw date (`updatedAtRaw`) for sorting and formatted date (`updatedAt`) for display` | L1750 |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I see there's already a section about UTC timestamps at line 1738. I need to update it to include the handling of both formats (backend format and ISO format from `new Date().toISOString()`).</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I need to update the UTC timestamps entry to include information about handling multiple date formats - both the backend format and the ISO format from `new Date().toISOString()`.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: undefined
+
+```diff
+@@ -1737,4 +1737,5 @@
+  - **Date formatting**: API returns ISO dates; use &#96;toLocaleString()&#96; for display
+  - **UTC timestamps**: Backend returns timestamps in UTC without timezone indicator (e.g., &#96;"2026-01-18 10:00:00"&#96;). When parsing for relative time calculations, append &#96;"Z"&#96; to explicitly mark as UTC: &#96;new Date(dateString.replace(" ", "T") + "Z")&#96;. Without this, JavaScript interprets the timestamp as local time, causing incorrect relative times (e.g., "5 hours ago" instead of "just now" for users in IST)
++ - **Multiple date formats**: When creating optimistic UI updates (e.g., adding a pending run to a table), use &#96;new Date().toISOString()&#96; which produces &#96;"2026-01-18T09:30:00.000Z"&#96;. The &#96;formatRelativeTime&#96; helper in &#96;TestsTabContent.tsx&#96; handles both formats - check if the string already has a timezone indicator before appending "Z" to avoid invalid dates like &#96;"...ZZ"&#96; which produce NaN
+  - **Hooks need accessToken**: &#96;useCrudResource&#96; and &#96;useFetchResource&#96; require &#96;accessToken&#96; to be passed from the component (they don't call &#96;useSession&#96; internally)
+  
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good, I've updated the documentation with information about handling multiple date formats. This captures the gotcha about not blindly appending "Z" to date strings that may already have timezone indicators.</details></think>
+
+---
+
+Updated `.cursor/rules/app-details.md` with:
+
+- **New gotcha about multiple date formats**: Added documentation explaining that when creating optimistic UI updates (like adding a pending run), `new Date().toISOString()` produces ISO format with "Z" suffix. The `formatRelativeTime` helper must check if the string already has a timezone indicator before appending "Z", otherwise it produces invalid dates like `"...ZZ"` which result in NaN.
+
+---
+
