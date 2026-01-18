@@ -282,11 +282,11 @@ export default function SimulationRunPage() {
       }
     }
 
-    // Determine audio pattern based on role
-    let audioPattern: string;
-    if (entry.role === "user") {
-      // User messages: 0_user, 1_user, 2_user, etc.
-      audioPattern = `${userCount}_user.wav`;
+  // Determine audio pattern based on role
+  let audioPattern: string;
+  if (entry.role === "user") {
+    // User messages: 1_user, 2_user, 3_user, etc. (1-indexed)
+    audioPattern = `${userCount + 1}_user.wav`;
     } else if (entry.role === "assistant") {
       // Assistant messages: 1_bot, 2_bot, 3_bot, etc. (1-indexed)
       audioPattern = `${assistantCount + 1}_bot.wav`;
