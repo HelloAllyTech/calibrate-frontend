@@ -7,11 +7,10 @@ const MAINTENANCE_MODE = process.env.MAINTENANCE_MODE === "true";
 export default auth((req) => {
   const isHomePage = req.nextUrl.pathname === "/";
   const isApiRoute = req.nextUrl.pathname.startsWith("/api/");
-  const isMaintenancePage = req.nextUrl.pathname === "/maintenance";
 
   // Maintenance mode: redirect all non-API routes to /
   if (MAINTENANCE_MODE) {
-    if (isHomePage || isApiRoute || isMaintenancePage) {
+    if (isHomePage || isApiRoute) {
       return NextResponse.next();
     }
     return NextResponse.redirect(new URL("/", req.url));
@@ -22,8 +21,8 @@ export default auth((req) => {
     req.nextUrl.pathname.startsWith("/debug") ||
     req.nextUrl.pathname.startsWith("/api/debug");
 
-  // Allow auth API routes, debug routes, and maintenance page
-  if (isAuthRoute || isDebugRoute || isMaintenancePage) {
+  // Allow auth API routes and debug routes
+  if (isAuthRoute || isDebugRoute) {
     return NextResponse.next();
   }
 

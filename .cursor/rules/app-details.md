@@ -403,7 +403,6 @@ This enables:
 │   │   ├── metrics/           # Evaluation metrics (has layout.tsx)
 │   │   ├── simulations/       # End-to-end simulation testing (has layout.tsx)
 │   │   ├── login/             # Authentication page (has layout.tsx)
-│   │   ├── maintenance/       # Public maintenance page (shown during deployments)
 │   │   └── api/auth/          # NextAuth.js route handlers
 │   ├── components/
 │   │   ├── agent-tabs/        # Agent detail tab components
@@ -1966,7 +1965,7 @@ window.history.replaceState(null, "", `?tab=${tabName}`);
 
 - **Middleware matcher**: Excludes static assets (`_next/static`, `_next/image`, `favicon.ico`, `*.svg`)
 - **Protected routes**: All routes except public routes require authentication
-- **Public routes** (no auth required): `/login`, `/api/auth/*`, `/debug*`, `/maintenance`
+- **Public routes** (no auth required): `/login`, `/api/auth/*`, `/debug*`
 - **Session access**: Use `useSession()` in client components, `auth()` in server components
 - **Token expiration**: Backend returns 401 when JWT expires; always handle this by calling `signOut({ callbackUrl: "/login" })`
 - **Import pattern**: Always import both `useSession` and `signOut` from `next-auth/react` when making API calls

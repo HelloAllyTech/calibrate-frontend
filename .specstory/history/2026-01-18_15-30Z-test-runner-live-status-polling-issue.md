@@ -4529,3 +4529,372 @@ I need to modify the middleware so that when MAINTENANCE_MODE is on, all routes 
 
 ---
 
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/middleware.ts</summary>
+
+**Chunk 1**
+Lines added: 12, lines removed: 6
+
+```diff
+@@ -7,17 +7,23 @@
+  export default auth((req) =&gt; {
+    const isHomePage = req.nextUrl.pathname === "/";
++ 
++   // Maintenance mode: redirect all routes to / (which shows maintenance page)
++   if (MAINTENANCE_MODE) {
++     if (isHomePage) {
++       return NextResponse.next();
++     }
++     return NextResponse.redirect(new URL("/", req.url));
++   }
++ 
+    const isMaintenancePage = req.nextUrl.pathname === "/maintenance";
+    const isAuthRoute = req.nextUrl.pathname.startsWith("/api/auth");
+-   const isDebugRoute = req.nextUrl.pathname.startsWith("/debug") || req.nextUrl.pathname.startsWith("/api/debug");
++   const isDebugRoute =
++     req.nextUrl.pathname.startsWith("/debug") ||
++     req.nextUrl.pathname.startsWith("/api/debug");
+  
+    // Allow auth API routes, debug routes, and maintenance page
+    if (isAuthRoute || isDebugRoute || isMaintenancePage) {
+      return NextResponse.next();
+    }
+- 
+-   // Maintenance mode: allow home page without auth (it will show maintenance content)
+-   if (MAINTENANCE_MODE &amp;&amp; isHomePage) {
+-     return NextResponse.next();
+-   }
+  
+    const isLoggedIn = !!req.auth;
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me verify there are no lint errors.</details></think>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 1 file</summary>
+      
+Lint paths:
+
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/middleware.ts`
+
+Lint results
+
+
+**No lint errors found**
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good, no lint errors. The middleware now redirects all routes to "/" when maintenance mode is on.</details></think>
+
+---
+
+Done! When `MAINTENANCE_MODE=true`:
+- `/login`, `/agents`, `/simulations/*`, etc. → all redirect to `/`
+- `/` shows the maintenance page
+
+---
+
+_**User (2026-01-17 12:52Z)**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+I made a code change to the middleware - now when MAINTENANCE_MODE is on, ALL routes redirect to "/" (not just showing maintenance at "/" while other routes still work). I need to update the documentation I added earlier to reflect this change.</details></think>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "Maintenance Mode" in "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md" • 1 match</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `.cursor/rules/app-details.md` | `### Maintenance Mode` | L1759 |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I need to update this section - the behavior changed. Now ALL routes redirect to "/" when maintenance mode is on.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 3, lines removed: 3
+
+```diff
+@@ -1759,8 +1759,8 @@
+  ### Maintenance Mode
+  
+- Set &#96;MAINTENANCE_MODE=true&#96; in &#96;.env.local&#96; to show a maintenance page at &#96;/&#96; instead of the normal app. When enabled:
++ Set &#96;MAINTENANCE_MODE=true&#96; in &#96;.env.local&#96; to show a maintenance page. When enabled:
+  
+- - &#96;/&#96; displays maintenance content (no auth required)
+- - All other routes still require authentication
++ - All routes (&#96;/login&#96;, &#96;/agents&#96;, etc.) redirect to &#96;/&#96;
++ - &#96;/&#96; displays the maintenance page (no auth required)
+  - Requires server restart after changing
+  
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Done. Updated the documentation to reflect that all routes now redirect to "/" when maintenance mode is on.</details></think>
+
+---
+
+Updated the Maintenance Mode section to reflect that all routes now redirect to `/` when enabled.
+
+---
+
+_**User (2026-01-17 12:52Z)**_
+
+Console ClientFetchError
+
+
+
+Unexpected token '<', "<!DOCTYPE "... is not valid JSON. Read more at https://errors.authjs.dev#autherror
+
+getting this error
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The error "Unexpected token '<', '<!DOCTYPE '... is not valid JSON" typically happens when an API call expects JSON but receives HTML instead (like a redirect to a login page or error page).
+
+This is likely happening because in maintenance mode, API routes (like `/api/auth/*`) are also being redirected to `/`, which returns HTML instead of JSON. The NextAuth client is trying to fetch session data from `/api/auth/session` but getting the maintenance HTML page instead.
+
+I need to exclude API routes from the maintenance mode redirect.</details></think>
+
+---
+
+The error is because API routes are being redirected to `/` in maintenance mode. NextAuth needs `/api/auth/*` routes to work. Let me fix that:
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/middleware.ts</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I see the issue. In maintenance mode, I'm redirecting ALL routes to "/" including `/api/auth/*`. I need to exclude API routes from the maintenance redirect.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/middleware.ts</summary>
+
+**Chunk 1**
+Lines added: 4, lines removed: 3
+
+```diff
+@@ -7,14 +7,15 @@
+  export default auth((req) =&gt; {
+    const isHomePage = req.nextUrl.pathname === "/";
++   const isApiRoute = req.nextUrl.pathname.startsWith("/api/");
++   const isMaintenancePage = req.nextUrl.pathname === "/maintenance";
+  
+-   // Maintenance mode: redirect all routes to / (which shows maintenance page)
++   // Maintenance mode: redirect all non-API routes to /
+    if (MAINTENANCE_MODE) {
+-     if (isHomePage) {
++     if (isHomePage || isApiRoute || isMaintenancePage) {
+        return NextResponse.next();
+      }
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+  
+-   const isMaintenancePage = req.nextUrl.pathname === "/maintenance";
+    const isAuthRoute = req.nextUrl.pathname.startsWith("/api/auth");
+    const isDebugRoute =
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me check for lint errors.</details></think>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 1 file</summary>
+      
+Lint paths:
+
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/middleware.ts`
+
+Lint results
+
+
+**No lint errors found**
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good, no lint errors. The fix excludes API routes from the maintenance mode redirect, so NextAuth's `/api/auth/*` endpoints will still work.</details></think>
+
+---
+
+Fixed. API routes (`/api/*`) are now excluded from the maintenance redirect so NextAuth can still function.
+
+---
+
+_**User (2026-01-17 12:52Z)**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+I made a code change to the middleware - I added an exclusion for API routes (`/api/*`) from the maintenance mode redirect. This is an important gotcha that should be documented.
+
+Let me update the Maintenance Mode section to mention this.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -1761,6 +1761,7 @@
+  Set &#96;MAINTENANCE_MODE=true&#96; in &#96;.env.local&#96; to show a maintenance page. When enabled:
+  
+- - All routes (&#96;/login&#96;, &#96;/agents&#96;, etc.) redirect to &#96;/&#96;
++ - All page routes (&#96;/login&#96;, &#96;/agents&#96;, etc.) redirect to &#96;/&#96;
+  - &#96;/&#96; displays the maintenance page (no auth required)
++ - API routes (&#96;/api/*&#96;) are excluded to prevent NextAuth errors
+  - Requires server restart after changing
+  
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Done - added a note that API routes are excluded from the maintenance redirect to prevent NextAuth errors.</details></think>
+
+---
+
+Updated to note that API routes (`/api/*`) are excluded from maintenance redirect to prevent NextAuth errors.
+
+---
+
+_**User (2026-01-17 12:52Z)**_
+
+remove the unnecessary duplication of separate maintenance page
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants me to remove the separate `/maintenance` page since the maintenance content is now shown at `/` when MAINTENANCE_MODE is enabled. The `/maintenance` page is no longer needed.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="delete_file">
+<details><summary>Tool use: **delete_file**</summary>
+
+Explanation: Removing the separate maintenance page since maintenance content is now shown at / when MAINTENANCE_MODE is enabled.
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to update the middleware to remove references to the maintenance page route, and update the documentation.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/middleware.ts</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
