@@ -1459,6 +1459,14 @@ GOOGLE_CLIENT_SECRET=                          # Google OAuth client secret
 - **Required fields**: Mark with red asterisk, validate on submit, highlight invalid fields
 - **Nested parameters**: Tool parameters support arbitrary nesting (object → properties, array → items)
 
+### Voice Simulation Audio
+
+- **Audio file naming convention**: Both user and bot audio files use **1-based indexing**:
+  - User files: `1_user.wav`, `2_user.wav`, `3_user.wav`, etc.
+  - Bot files: `1_bot.wav`, `2_bot.wav`, `3_bot.wav`, etc.
+- **Audio URL matching**: The `getAudioUrlForEntry` function in the simulation run page counts previous messages of the same role and adds 1 to get the correct file index
+- **Common mistake**: Don't use 0-based indexing for user audio files - they follow the same 1-indexed pattern as bot files
+
 ### Navigation
 
 - **Home redirect**: Root page (`/`) redirects to `/agents`
