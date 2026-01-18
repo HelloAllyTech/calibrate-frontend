@@ -118,28 +118,68 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
 
 ### 3. Speech-to-Text Evaluation (`/stt`)
 
-**What you can do:**
+**Page Structure:**
+
+- `/stt` - List page showing all STT evaluation jobs
+- `/stt/new` - Create a new STT evaluation
+- `/stt/[uuid]` - View evaluation details and results
+
+**List Page (`/stt`):**
+
+- **View all STT evaluations** in a sortable table (sorted by updated date)
+- **Columns**: Providers (as pills), Language, Status, Samples count, Updated At
+- **Click to view details** - opens the evaluation detail page
+- **"New STT Evaluation" button** - navigates to the create page
+
+**Create Page (`/stt/new`):**
 
 - **Upload audio files** (.wav format) with reference transcriptions
 - **Add multiple test samples** for batch evaluation
 - **Select providers to evaluate** (compare multiple simultaneously)
 - **Choose language** (English or Hindi)
-- **Run evaluation** and get results:
-  - **Leaderboard view** with comparative charts
-  - **Per-provider metrics**: WER, String Similarity, LLM Judge Score, TTFB, Processing Time
-  - **Detailed outputs** showing ground truth vs predictions
-  - **LLM Judge reasoning** explaining semantic accuracy
+- **Run evaluation** - creates evaluation and redirects to detail page
+
+**Detail Page (`/stt/[uuid]`):**
+
+- **Polls for results** while status is `queued` or `in_progress`
+- **Three tabs when done**:
+  - **Leaderboard**: Comparative table and charts
+  - **Outputs**: Per-provider results with ground truth vs predictions
+  - **About**: Metric descriptions
+- **Metrics**: WER, String Similarity, LLM Judge Score, TTFB, Processing Time
 
 ### 4. Text-to-Speech Evaluation (`/tts`)
 
-**What you can do:**
+**Page Structure:**
 
-- **Upload text samples** to convert to speech
+- `/tts` - List page showing all TTS evaluation jobs
+- `/tts/new` - Create a new TTS evaluation
+- `/tts/[uuid]` - View evaluation details and results
+
+**List Page (`/tts`):**
+
+- **View all TTS evaluations** in a sortable table (sorted by updated date)
+- **Columns**: Task ID (truncated), Status, Providers, Updated At
+- **Click to view details** - opens the evaluation detail page
+- **"New TTS Evaluation" button** - navigates to the create page
+
+**Create Page (`/tts/new`):**
+
+- **Add text samples** to convert to speech (manual input OR CSV upload)
+- **CSV upload option**: Upload a CSV file with a `text` column to bulk import samples
+- **Download sample CSV**: Button to download a template CSV with correct format
+- **Select language** (English or Hindi)
 - **Select providers to compare**
-- **Run evaluation** and compare:
-  - Audio quality
-  - Latency metrics
-  - Provider performance
+- **Run evaluation** - creates evaluation and redirects to detail page
+
+**Detail Page (`/tts/[uuid]`):**
+
+- **Polls for results** while status is `queued` or `in_progress`
+- **Three tabs when done**:
+  - **Leaderboard**: Comparative table and charts
+  - **Outputs**: Per-provider results with audio playback
+  - **About**: Metric descriptions
+- **Metrics**: LLM Judge Score, TTFB, Processing Time
 
 ### 5. Tests Management (`/tests`)
 
@@ -201,10 +241,10 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
 
 **Simulation Detail Page** (`/simulations/[uuid]`) has 2 tabs:
 
-| Tab        | Purpose                                                                                      |
-| ---------- | -------------------------------------------------------------------------------------------- |
-| **Config** | Select agent, personas, scenarios for the simulation                                         |
-| **Runs**   | View history of simulation runs (right-click or Cmd/Ctrl+click to open run in new tab)       |
+| Tab        | Purpose                                                                                |
+| ---------- | -------------------------------------------------------------------------------------- |
+| **Config** | Select agent, personas, scenarios for the simulation                                   |
+| **Runs**   | View history of simulation runs (right-click or Cmd/Ctrl+click to open run in new tab) |
 
 **Running Simulations:**
 
@@ -309,8 +349,14 @@ This enables:
 │   ├── app/                    # Next.js App Router pages
 │   │   ├── agents/            # Agent management (list + [uuid] detail)
 │   │   ├── tools/             # Tools management
-│   │   ├── stt/               # Speech-to-Text evaluation
-│   │   ├── tts/               # Text-to-Speech evaluation
+│   │   ├── stt/               # Speech-to-Text evaluation (list + new + [uuid] detail)
+│   │   │   ├── page.tsx       # List of STT evaluation jobs
+│   │   │   ├── new/           # Create new STT evaluation
+│   │   │   └── [uuid]/        # View STT evaluation results
+│   │   ├── tts/               # Text-to-Speech evaluation (list + new + [uuid] detail)
+│   │   │   ├── page.tsx       # List of TTS evaluation jobs
+│   │   │   ├── new/           # Create new TTS evaluation
+│   │   │   └── [uuid]/        # View TTS evaluation results
 │   │   ├── tests/             # Tests page
 │   │   ├── personas/          # User persona definitions
 │   │   ├── scenarios/         # Test scenario definitions
@@ -329,7 +375,7 @@ This enables:
 │   │   └── ui/                # Reusable UI components (Button, SearchInput, etc.)
 │   ├── constants/             # Static configuration data
 │   ├── hooks/                 # Custom React hooks (useCrudResource, etc.)
-│   ├── lib/                   # Utility libraries (api.ts, etc.)
+│   ├── lib/                   # Utility libraries (api.ts, status.ts, etc.)
 │   ├── auth.ts               # NextAuth.js configuration
 │   └── middleware.ts         # Route protection middleware
 ```
@@ -444,7 +490,25 @@ export default function ExamplePage() {
 
 ### Detail Page Header Pattern
 
-Detail pages (AgentDetail, SimulationDetail) place navigation and actions in the header bar using `customHeader` and `headerActions`:
+Detail pages place navigation and actions in the header bar using `customHeader` and `headerActions`:
+
+**Preferred: Use `BackHeader` component** for simple back navigation:
+
+```tsx
+import { BackHeader } from "@/components/ui";
+
+const customHeader = (
+  <BackHeader
+    label="TTS Evaluations"
+    onBack={() => router.push("/tts")}
+    title="Back to TTS Evaluations"
+  />
+);
+
+<AppLayout customHeader={customHeader}>
+```
+
+**For complex headers** (AgentDetail, SimulationDetail) with custom elements:
 
 ```tsx
 const customHeader = (
@@ -510,6 +574,56 @@ Key styling:
 - Action button: `h-8 px-4 text-sm`
 - Action wrapper: `mr-2` for spacing from profile dropdown
 
+### Evaluation Page Pattern (TTS/STT)
+
+Both TTS and STT evaluation pages follow the same list → new → detail pattern:
+
+```
+/tts                    # List all TTS evaluation jobs
+/tts/new                # Create new TTS evaluation (form + submit)
+/tts/[uuid]             # View TTS evaluation results (polling + tabs)
+
+/stt                    # List all STT evaluation jobs
+/stt/new                # Create new STT evaluation (form + submit)
+/stt/[uuid]             # View STT evaluation results (polling + tabs)
+```
+
+**List Page:**
+
+- Fetches jobs from `GET /jobs?job_type=tts` or `GET /jobs?job_type=stt`
+- Displays in sortable table with columns: Providers (as pills), Language, Status, Samples count, Updated At
+- "New [TTS/STT] Evaluation" button navigates to `/[tts|stt]/new`
+- Clicking a row navigates to `/[tts|stt]/{uuid}`
+
+**New Page:**
+
+- Contains the evaluation form component (`TextToSpeechEvaluation` or `SpeechToTextEvaluation`)
+- Both components use the same tab layout:
+  - **Settings tab**: Language selection dropdown + provider selection with toggle all
+  - **Input tab**: Sample rows + add sample button (TTS also has CSV upload with OR divider and sample download)
+- Evaluate button in header next to description, disabled when no providers selected
+- On submit: calls `POST /[tts|stt]/evaluate`, then redirects to `/[tts|stt]/{uuid}` using the returned `task_id`
+- Uses `BackHeader` component for back navigation to list page
+
+**Detail Page:**
+
+- Fetches result from `GET /[tts|stt]/evaluate/{uuid}` (NOT from `/jobs`)
+- Polls every 2 seconds while status is `queued` or `in_progress`
+- Shows loading/in-progress states during polling
+- Uses `BackHeader` component for back navigation
+- Uses `StatusBadge` component with `showSpinner` for status display
+- Results are at **top level** (`provider_results`, `leaderboard_summary`) - different from `/jobs` API!
+- Displays results in tabs (Leaderboard, Outputs, About) when done
+
+**Key differences between TTS and STT:**
+
+- **STT Input tab**: Audio file upload (.wav) + reference transcription text field
+- **TTS Input tab**: Text input field + CSV upload option with "OR" divider and sample CSV download
+- **STT metrics**: WER, String Similarity, LLM Judge Score, TTFB, Processing Time
+- **TTS metrics**: LLM Judge Score, TTFB, Processing Time
+- **STT Outputs tab**: Shows Ground Truth vs Prediction text with per-sample metrics
+- **TTS Outputs tab**: Shows text input with audio playback
+
 ### Component Patterns
 
 1. **Tab Navigation**: Used in agent detail and simulation detail pages
@@ -528,6 +642,7 @@ Key styling:
 4. **Delete Confirmation**: Reusable `DeleteConfirmationDialog` component
    - Props: `isOpen`, `onClose`, `onConfirm`, `title`, `message`, `confirmText`, `isDeleting`
    - Shows loading spinner during deletion
+   - **Skip confirmation for empty items**: When deleting empty rows (e.g., in TTS/STT evaluation input), call `deleteRow()` directly instead of showing confirmation dialog
 5. **Toast Notifications**: Bottom-right success toasts
    - Auto-dismiss after 3 seconds
    - Manual dismiss button
@@ -539,7 +654,7 @@ Key styling:
 7. **Downloadable Tables**: Reusable `DownloadableTable` component for data tables with CSV export
    - Props: `columns` (array of `{key, header, render?}`), `data`, `filename`, `title`
    - Includes "Download CSV" button in top-right corner
-   - Used in: BenchmarkResultsDialog, SpeechToTextEvaluation, TextToSpeechEvaluation leaderboards
+   - Used in: BenchmarkResultsDialog, STT/TTS detail pages (`/stt/[uuid]`, `/tts/[uuid]`)
    - Custom cell rendering via optional `render` function in column definition
 8. **Charts with PNG Export**: `LeaderboardBarChart` component includes built-in PNG download
    - Props: `title`, `data`, `height?`, `yDomain?`, `formatTooltip?`, `colorMap?`, `filename?`
@@ -590,7 +705,9 @@ useEffect(() => {
 
 // POST/PUT/DELETE
 const newItem = await apiPost<ItemData>("/items", accessToken, { name: "New" });
-const updated = await apiPut<ItemData>(`/items/${id}`, accessToken, { name: "Updated" });
+const updated = await apiPut<ItemData>(`/items/${id}`, accessToken, {
+  name: "Updated",
+});
 await apiDelete(`/items/${id}`, accessToken);
 ```
 
@@ -599,19 +716,11 @@ await apiDelete(`/items/${id}`, accessToken);
 ```tsx
 import { useCrudResource } from "@/hooks";
 
-const {
-  items,
-  isLoading,
-  isCreating,
-  error,
-  create,
-  update,
-  remove,
-  refetch,
-} = useCrudResource<ItemType>({
-  endpoint: "/items",
-  accessToken,
-});
+const { items, isLoading, isCreating, error, create, update, remove, refetch } =
+  useCrudResource<ItemType>({
+    endpoint: "/items",
+    accessToken,
+  });
 ```
 
 **Legacy: Manual fetch pattern** (still used in some files):
@@ -718,6 +827,7 @@ import { Button } from "@/components/ui";
 ```
 
 **Button variants:**
+
 - `primary`: `bg-foreground text-background hover:opacity-90`
 - `secondary`: `border border-border bg-background hover:bg-muted/50`
 - `danger`: `bg-red-800 text-white hover:bg-red-900`
@@ -729,10 +839,12 @@ import { Button } from "@/components/ui";
 
 ```tsx
 // Primary
-className = "h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer";
+className =
+  "h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer";
 
 // Secondary
-className = "h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer";
+className =
+  "h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer";
 
 // Danger/Delete icon button
 className = "text-muted-foreground hover:text-red-500 hover:bg-red-500/10";
@@ -789,7 +901,7 @@ import { SearchInput } from "@/components/ui";
   value={searchQuery}
   onChange={setSearchQuery}
   placeholder="Search..."
-/>
+/>;
 ```
 
 **Standard input classes:**
@@ -907,9 +1019,71 @@ All endpoints are relative to `NEXT_PUBLIC_BACKEND_URL`:
 | Simulation Runs | `GET /simulations/run/{runId}`, `POST /simulations/{uuid}/run`                          |
 | Tests           | `GET/POST /tests`, `GET/PUT/DELETE /tests/{uuid}`                                       |
 | Agent Tests     | `GET /agent-tests/agent/{uuid}/tests`, `POST/DELETE /agent-tests`                       |
-| STT Evaluation  | `POST /stt/evaluate`, `GET /stt/evaluate/{taskId}`                                      |
-| TTS Evaluation  | `POST /tts/evaluate`, `GET /tts/evaluate/{taskId}`                                      |
+| STT Evaluation  | `POST /stt/evaluate`, `GET /stt/evaluate/{uuid}`                                        |
+| TTS Evaluation  | `POST /tts/evaluate`, `GET /tts/evaluate/{uuid}`                                        |
+| Jobs            | `GET /jobs` (optional `job_type` query param: `stt` or `tts`)                           |
 | Presigned URLs  | `POST /presigned-url`                                                                   |
+
+### Jobs API Response Structure
+
+The `/jobs` endpoint returns evaluation jobs with the following structure:
+
+```json
+{
+  "jobs": [
+    {
+      "uuid": "1d8db518-d209-4365-a77e-45a8ec3abcee",
+      "type": "tts-eval",  // or "stt-eval"
+      "status": "done",
+      "details": {
+        "texts": ["sample text 1", "sample text 2"],  // TTS uses texts
+        "audio_paths": ["s3://..."],  // STT uses audio_paths
+        "providers": ["cartesia", "openai", "google"],
+        "language": "english"
+      },
+      "results": {
+        "provider_results": [...],
+        "leaderboard_summary": [...],
+        "error": null
+      },
+      "created_at": "2026-01-17 06:18:20",
+      "updated_at": "2026-01-17 06:18:53"
+    }
+  ]
+}
+```
+
+**Key fields:**
+
+- `uuid`: Job identifier (NOT `task_id`)
+- `type`: `"tts-eval"` or `"stt-eval"`
+- `details.texts`: Array of input texts (TTS - use `.length` to get sample count)
+- `details.audio_paths`: Array of S3 audio paths (STT)
+- `details.providers`: Array of provider names
+- `details.language`: Language setting
+- `results`: Contains `provider_results` and `leaderboard_summary` (nested, not top-level)
+
+### TTS/STT Evaluate API Response Structure (Different from Jobs API!)
+
+The `/tts/evaluate/{uuid}` and `/stt/evaluate/{uuid}` endpoints return a **different structure** than `/jobs`:
+
+```json
+{
+  "task_id": "1d8db518-d209-4365-a77e-45a8ec3abcee",
+  "status": "done",
+  "provider_results": [...],
+  "leaderboard_summary": [...],
+  "error": null
+}
+```
+
+**Key difference:** Results are at the **top level** (not nested under `results`).
+
+| Endpoint                   | ID Field  | Results Location               |
+| -------------------------- | --------- | ------------------------------ |
+| `GET /jobs`                | `uuid`    | `results.provider_results`     |
+| `GET /tts/evaluate/{uuid}` | `task_id` | `provider_results` (top-level) |
+| `GET /stt/evaluate/{uuid}` | `task_id` | `provider_results` (top-level) |
 
 ### JWT Authentication
 
@@ -948,6 +1122,35 @@ import {
 <CloseIcon className="w-5 h-5" />
 ```
 
+### Status Utilities (`@/lib/status`)
+
+Centralized status formatting and styling:
+
+```tsx
+import {
+  formatStatus,
+  getStatusBadgeClass,
+  isActiveStatus,
+} from "@/lib/status";
+
+// Format status for display
+formatStatus("in_progress"); // "Running"
+formatStatus("queued"); // "Queued"
+formatStatus("done"); // "Done"
+formatStatus("failed"); // "Failed"
+
+// Get badge CSS classes (theme-aware)
+getStatusBadgeClass("done"); // "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400"
+getStatusBadgeClass("in_progress"); // "bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400"
+getStatusBadgeClass("failed"); // "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400"
+getStatusBadgeClass("queued"); // "bg-gray-200 text-gray-700 dark:bg-gray-500/20 dark:text-gray-400"
+
+// Check if status indicates an active task (for showing spinners)
+isActiveStatus("queued"); // true
+isActiveStatus("in_progress"); // true
+isActiveStatus("done"); // false
+```
+
 ### UI Components (`@/components/ui`)
 
 Reusable UI primitives:
@@ -962,6 +1165,8 @@ import {
   ErrorState,
   EmptyState,
   ResourceState,
+  BackHeader,
+  StatusBadge,
 } from "@/components/ui";
 
 // Button variants: primary, secondary, danger, ghost
@@ -1013,6 +1218,20 @@ import {
 >
   {/* Render items when data is available */}
 </ResourceState>
+
+// BackHeader - for detail pages with back navigation
+// Used as customHeader prop of AppLayout
+<BackHeader
+  label="TTS Evaluations"
+  onBack={() => router.push("/tts")}
+  title="Back to TTS Evaluations"  // optional tooltip
+/>
+
+// StatusBadge - status badge with optional spinner for active statuses
+<StatusBadge status="in_progress" showSpinner />
+<StatusBadge status="done" />
+<StatusBadge status="failed" />
+<StatusBadge status="queued" showSpinner />
 ```
 
 ### API Client (`@/lib/api`)
@@ -1041,6 +1260,7 @@ await apiDelete(`/items/${id}`, accessToken);
 ```
 
 The API client automatically:
+
 - Adds required headers (Authorization, Content-Type, accept, ngrok-skip-browser-warning)
 - Signs out user on 401 responses
 - Throws errors on non-2xx responses
@@ -1166,11 +1386,13 @@ import { SpinnerIcon, ToolIcon } from "@/components/icons";
 
 ```tsx
 // Loading - inline
-{isLoading && (
-  <div className="flex items-center justify-center gap-3 py-8">
-    <SpinnerIcon className="w-5 h-5 animate-spin" />
-  </div>
-)}
+{
+  isLoading && (
+    <div className="flex items-center justify-center gap-3 py-8">
+      <SpinnerIcon className="w-5 h-5 animate-spin" />
+    </div>
+  );
+}
 
 // Empty - inline
 <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
@@ -1180,7 +1402,7 @@ import { SpinnerIcon, ToolIcon } from "@/components/icons";
   <h3 className="text-lg font-semibold text-foreground mb-1">No items found</h3>
   <p className="text-base text-muted-foreground mb-4">Description</p>
   <button>Add item</button>
-</div>
+</div>;
 ```
 
 ### Table Structure
@@ -1202,13 +1424,13 @@ import { SpinnerIcon, ToolIcon } from "@/components/icons";
 
 **Standard Grid Column Patterns:**
 
-| Page Type | Grid Columns | Description |
-|-----------|-------------|-------------|
-| **Agents, Simulations** | `[1fr_1fr_auto]` or `[1fr_1fr_auto_auto]` | Equal-width data columns, auto action buttons |
-| **Tools, Scenarios, Metrics** | `[200px_1fr_auto]` | Fixed 200px name column, flexible description, auto actions |
-| **Personas** | `[200px_1fr_100px_100px_120px_auto]` | Fixed name, flexible characteristics, fixed attribute columns |
-| **Simulation Runs** | `[1fr_1fr_1fr_1fr]` | Four equal columns (Name, Status, Type, Updated At) |
-| **Tests** | `[1fr_1fr_auto]` | Equal-width name and type columns |
+| Page Type                     | Grid Columns                              | Description                                                   |
+| ----------------------------- | ----------------------------------------- | ------------------------------------------------------------- |
+| **Agents, Simulations**       | `[1fr_1fr_auto]` or `[1fr_1fr_auto_auto]` | Equal-width data columns, auto action buttons                 |
+| **Tools, Scenarios, Metrics** | `[200px_1fr_auto]`                        | Fixed 200px name column, flexible description, auto actions   |
+| **Personas**                  | `[200px_1fr_100px_100px_120px_auto]`      | Fixed name, flexible characteristics, fixed attribute columns |
+| **Simulation Runs**           | `[1fr_1fr_1fr_1fr]`                       | Four equal columns (Name, Status, Type, Updated At)           |
+| **Tests**                     | `[1fr_1fr_auto]`                          | Equal-width name and type columns                             |
 
 The pattern is: use fixed widths (e.g., `200px`) for short columns like Name/Label, `1fr` for flexible content columns like Description/Characteristics, and `auto` for action buttons.
 
@@ -1243,6 +1465,7 @@ queued → in_progress → done (or failed/completed)
 ```
 
 **Status Display:**
+
 - `queued`: Gray badge, text "Queued" or "Evaluation queued...", header spinner shown
 - `in_progress`/`running`: Yellow spinner or badge, text "Running" or "Evaluating...", header spinner shown
 - `done`/`completed`: Green badge, text "Done"
@@ -1253,6 +1476,7 @@ queued → in_progress → done (or failed/completed)
 **Tracking Run Status:**
 
 For batch operations (e.g., running multiple tests), track both:
+
 - `runStatus`: Overall task status from backend (`queued` | `in_progress` | `done` | `failed`)
 - Individual item statuses: Updated based on `runStatus` and individual results
 
@@ -1272,7 +1496,11 @@ useEffect(() => {
   const fetchData = async (isInitial = false) => {
     // ... fetch
     // Continue polling for queued and in_progress
-    if (data.status === "done" || data.status === "completed" || data.status === "failed") {
+    if (
+      data.status === "done" ||
+      data.status === "completed" ||
+      data.status === "failed"
+    ) {
       if (pollInterval) clearInterval(pollInterval);
     }
   };
@@ -1323,6 +1551,7 @@ import Link from "next/link";
 ```
 
 This pattern provides:
+
 - Browser-native right-click "Open in new tab"
 - Cmd/Ctrl+click support
 - Proper accessibility (keyboard navigation, screen readers)
@@ -1446,6 +1675,15 @@ GOOGLE_CLIENT_SECRET=                          # Google OAuth client secret
 - **Sortable tables**: Store both raw date (`updatedAtRaw`) for sorting and formatted date (`updatedAt`) for display
 - **Search filtering**: Always use `.toLowerCase()` on both search query and target fields
 - **Empty state vs no results**: Differentiate between "no items exist" and "no items match search"
+- **Status badges**: Use shared utilities from `@/lib/status` and `StatusBadge` component from `@/components/ui`:
+  - Import `formatStatus`, `getStatusBadgeClass`, `isActiveStatus` from `@/lib/status`
+  - Use `<StatusBadge status="..." showSpinner />` for consistent status display
+  - `queued` → "Queued" (gray badge)
+  - `in_progress` → "Running" (yellow badge)
+  - `done` → "Done" (green badge)
+  - `failed` → "Failed" (red badge)
+  - Pass `showSpinner` prop to show spinner for active statuses (`queued`/`in_progress`)
+  - Badge classes use dark mode variants: `dark:bg-{color}-500/20 dark:text-{color}-400`
 
 ### Styling
 
