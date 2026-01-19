@@ -36,7 +36,7 @@ export function SpeechToTextEvaluation() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<string | null>(null);
   const [invalidRowIds, setInvalidRowIds] = useState<Set<string>>(new Set());
   const [selectedProviders, setSelectedProviders] = useState<Set<string>>(
-    new Set(providerLabels)
+    new Set()
   );
   const [language, setLanguage] = useState<"english" | "hindi">("english");
   const [uploadStatus, setUploadStatus] = useState<{

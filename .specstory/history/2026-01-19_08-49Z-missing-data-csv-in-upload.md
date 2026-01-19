@@ -8682,3 +8682,481 @@ I already updated the documentation in my previous response when I added the "No
 
 ---
 
+_**User (2026-01-17 22:10Z)**_
+
+don't show Loading... in run name when after fetching run details it shows 404 and the back button in that case should take to the main simulations page that one visits from the sidebar
+
+but if not 404 keep the current behaviour  
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants to:
+1. When 404 is received, don't show "Loading..." in the header - show something else or empty
+2. When 404, the back button should go to `/simulations` (main page) instead of `/simulations/${uuid}?tab=runs`
+3. If not 404, keep the current behavior
+
+Let me look at the simulation run page to understand the current header behavior.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I see the issue. There are two headers:
+1. `loadingHeader` - shown when `isLoading` is true (shows "Loading...")
+2. `customHeader` - shown when `isLoading` is false
+
+I need to add a third header for the 404 case that:
+1. Shows "Not Found" or similar instead of "Loading..."
+2. Has a back button that goes to `/simulations` instead of `/simulations/${uuid}?tab=runs`
+
+Let me add a `notFoundHeader` and update the `customHeader` prop logic.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 34, lines removed: undefined
+
+```diff
+@@ -393,4 +393,38 @@
+      &lt;/div&gt;
+    );
++ 
++   // Not found header - back goes to main simulations page
++   const notFoundHeader = (
++     &lt;div className="flex items-center gap-4"&gt;
++       &lt;button
++         onClick={() =&gt; router.push("/simulations")}
++         className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted transition-colors cursor-pointer"
++       &gt;
++         &lt;svg
++           className="w-5 h-5"
++           fill="none"
++           viewBox="0 0 24 24"
++           stroke="currentColor"
++           strokeWidth={2}
++         &gt;
++           &lt;path
++             strokeLinecap="round"
++             strokeLinejoin="round"
++             d="M15.75 19.5L8.25 12l7.5-7.5"
++           /&gt;
++         &lt;/svg&gt;
++       &lt;/button&gt;
++       &lt;div&gt;
++         &lt;h1 className="text-2xl font-semibold"&gt;Simulation Run&lt;/h1&gt;
++       &lt;/div&gt;
++     &lt;/div&gt;
++   );
++ 
++   // Determine which header to show
++   const getHeader = () =&gt; {
++     if (isLoading) return loadingHeader;
++     if (notFound) return notFoundHeader;
++     return customHeader;
++   };
+  
+    return (
+```
+
+**Chunk 2**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -400,5 +434,5 @@
+        sidebarOpen={sidebarOpen}
+        onSidebarToggle={() =&gt; setSidebarOpen(!sidebarOpen)}
+-       customHeader={isLoading ? loadingHeader : customHeader}
++       customHeader={getHeader()}
+      &gt;
+        &lt;div className="space-y-6"&gt;
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me check for lint errors.</details></think>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 1 file</summary>
+      
+Lint paths:
+
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx`
+
+Lint results
+
+Lint errors for `src/app/simulations/[uuid]/runs/[runId]/page.tsx`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| 'React' is declared but its value is never read. | 3:8-3:13 | DIAGNOSTIC_SEVERITY_HINT |
+| 'getPassFailStatus' is declared but its value is never read. | 218:9-218:26 | DIAGNOSTIC_SEVERITY_HINT |
+| 'getPassFailClass' is declared but its value is never read. | 222:9-222:25 | DIAGNOSTIC_SEVERITY_HINT |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Done. Now when 404 is received:1. The header shows "Simulation Run" instead of "Loading..."2. The back button navigates to `/simulations` (main simulations page)
+
+For non-404 cases, the behavior remains the same - shows the run name and back button goes to `/simulations/${uuid}?tab=runs`.</details></think>
+
+---
+
+Done. Now when 404 is received:
+- Header shows "Simulation Run" instead of "Loading..."
+- Back button navigates to `/simulations` (main simulations page from sidebar)
+
+For non-404 cases, the current behavior is preserved - shows the actual run name and back button goes to the simulation's runs tab.
+
+---
+
+_**User (2026-01-17 22:10Z)**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+I made code changes to the simulation run page - added a notFoundHeader that shows "Simulation Run" title and navigates to `/simulations` instead of the specific simulation's runs tab when 404 is encountered.
+
+Let me check if there's existing documentation about simulation run page headers that needs to be updated.</details></think>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "simulation.*run.*header|loadingHeader|notFoundHeader" in "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md" • 1 match</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `.cursor/rules/app-details.md` | `**Note:** For simulation runs, the header spinner is shown for both `queued` and `in_progress` statuses to indicate the task is active.` | L1626 |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+There's a mention of simulation run header. Let me find the section about 404 handling and add a note about the special behavior for simulation runs.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -1826,5 +1826,5 @@
+  - **JWT authentication required**: All API calls must include &#96;Authorization: Bearer ${backendAccessToken}&#96; header (handled automatically by API utilities)
+  - **401 error handling**: API utilities automatically call &#96;signOut({ callbackUrl: "/login" })&#96; on 401 responses. For manual fetch calls, check &#96;response.status === 401&#96;
+- - **404 error handling**: Detail pages (STT, TTS, Simulation Run) use &#96;NotFoundState&#96; component for 404 responses. Pattern: add &#96;notFound&#96; state, check &#96;response.status === 404&#96; before &#96;!response.ok&#96;, render &#96;NotFoundState&#96; with appropriate message and back button
++ - **404 error handling**: Detail pages (STT, TTS, Simulation Run) use &#96;NotFoundState&#96; component for 404 responses. Pattern: add &#96;notFound&#96; state, check &#96;response.status === 404&#96; before &#96;!response.ok&#96;, render &#96;NotFoundState&#96;. For simulation runs, a special &#96;notFoundHeader&#96; is used that shows "Simulation Run" title and navigates back to &#96;/simulations&#96; (main page) instead of the specific simulation
+  - **Wait for token**: In &#96;useEffect&#96; hooks, return early if &#96;backendAccessToken&#96; is not yet available; include it in the dependency array
+  - **ngrok header**: &#96;"ngrok-skip-browser-warning": "true"&#96; header is included automatically by API utilities
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Done. Updated the documentation to reflect the special 404 handling behavior for simulation runs.</details></think>
+
+---
+
+Done. Updated documentation to mention that simulation runs have special 404 header handling - shows "Simulation Run" title and navigates back to main `/simulations` page.
+
+---
+
+_**User (2026-01-17 22:10Z)**_
+
+for stt and tts evals, keep all the providers unselected but do not let evaluate until at least one is selected
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants to change the default behavior for STT and TTS evaluations:
+1. Start with all providers unselected (currently all are selected by default)
+2. Disable the Evaluate button until at least one provider is selected
+
+Let me find the relevant files and update them.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I can see both files initialize `selectedProviders` with all providers selected:
+- STT: `new Set(providerLabels)` on line 38-39
+- TTS: `new Set(providerLabels)` on line 32-33
+
+I need to change both to initialize with an empty Set instead. Let me also check where the isEvaluateDisabled is defined to make sure it already checks for at least one provider.</details></think>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "isEvaluateDisabled" in "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations" • 4 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `src/components/evaluations/SpeechToTextEvaluation.tsx` | `const isEvaluateDisabled = selectedProviders.size === 0;` | L572 |
+| `src/components/evaluations/SpeechToTextEvaluation.tsx` | `disabled=\{isEvaluateDisabled\}` | L608 |
+| `src/components/evaluations/TextToSpeechEvaluation.tsx` | `const isEvaluateDisabled = selectedProviders.size === 0;` | L233 |
+| `src/components/evaluations/TextToSpeechEvaluation.tsx` | `disabled=\{isEvaluateDisabled\}` | L268 |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+The `isEvaluateDisabled` is already set to `selectedProviders.size === 0`, so the button will be disabled when no providers are selected. I just need to change the initial state from `new Set(providerLabels)` to `new Set()` in both files.</details></think>
+
+---
+
+The evaluate button is already disabled when no providers are selected. I just need to change the initial state to start with no providers selected:
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -37,5 +37,5 @@
+    const [invalidRowIds, setInvalidRowIds] = useState&lt;Set&lt;string&gt;&gt;(new Set());
+    const [selectedProviders, setSelectedProviders] = useState&lt;Set&lt;string&gt;&gt;(
+-     new Set(providerLabels)
++     new Set()
+    );
+    const [language, setLanguage] = useState&lt;"english" | "hindi"&gt;("english");
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me update the TTS file as well.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -31,5 +31,5 @@
+    const [invalidRowIds, setInvalidRowIds] = useState&lt;Set&lt;string&gt;&gt;(new Set());
+    const [selectedProviders, setSelectedProviders] = useState&lt;Set&lt;string&gt;&gt;(
+-     new Set(providerLabels)
++     new Set()
+    );
+    const [language, setLanguage] = useState&lt;"english" | "hindi"&gt;("english");
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me check for lint errors.</details></think>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 2 files</summary>
+      
+Lint paths:
+
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx`
+
+Lint results
+
+
+**No lint errors found**
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Done. Both STT and TTS evaluation pages now start with no providers selected, and the Evaluate button is disabled until at least one provider is selected.</details></think>
+
+---
+
+Done. Both STT and TTS evaluation pages now:
+- Start with no providers selected (empty set)
+- Keep the Evaluate button disabled until at least one provider is selected (this was already in place)
+
+---
+
+_**User (2026-01-17 22:10Z)**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+
+
+---
+
+<think><details><summary>Thought Process</summary>
+I made code changes to both SpeechToTextEvaluation.tsx and TextToSpeechEvaluation.tsx - changed the initial state of selectedProviders from all providers selected to none selected. Let me find the relevant section in the app-details.md to update.</details></think>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "selectedProviders|provider.*select|all.*providers" in "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md" • 6 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `.cursor/rules/app-details.md` | `- **Leaderboard**: Only visible when status is `done` (needs all providers to compare)` | L184 |
+| `.cursor/rules/app-details.md` | `- First provider is selected by default` | L193 |
+| `.cursor/rules/app-details.md` | `- First provider is selected by default` | L238 |
+| `.cursor/rules/app-details.md` | `- **Settings tab**: Language selection dropdown + provider selection with toggle all` | L671 |
+| `.cursor/rules/app-details.md` | `- Evaluate button in header next to description, disabled when no providers selected` | L673 |
+| `.cursor/rules/app-details.md` | `- **Google OAuth forces account selection**: The Google provider is configured with `prompt: "select_account"` to always show the account picker, preventing auto-login with cached credentials. This ensures users consciously choose their account each login.` | L2015 |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I found the relevant section. Currently line 671 says "Settings tab: Language selection dropdown + provider selection with toggle all" and line 673 says "Evaluate button in header next to description, disabled when no providers selected". 
+
+I need to update this to mention that providers start unselected by default. Let me update this section.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: undefined
+
+```diff
+@@ -671,4 +671,5 @@
+    - **Settings tab**: Language selection dropdown + provider selection with toggle all
+    - **Input tab**: Sample rows + add sample button (TTS also has CSV upload with OR divider and sample download)
++ - **Providers start unselected by default** - user must select at least one provider before evaluating
+  - Evaluate button in header next to description, disabled when no providers selected
+  - On submit: calls &#96;POST /[tts|stt]/evaluate&#96;, then redirects to &#96;/[tts|stt]/{uuid}&#96; using the returned &#96;task_id&#96;
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Done. Updated the documentation to reflect that providers start unselected by default for both STT and TTS evaluations.</details></think>
+
+---
+
+Done. Updated documentation to note that providers start unselected by default for STT and TTS evaluations.
+
+---
+
