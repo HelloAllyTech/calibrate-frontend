@@ -185,7 +185,10 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
   - **Outputs**: Two-panel layout similar to TestRunnerDialog
   - **About**: Metric descriptions
 - **Outputs tab layout** (two-panel, similar to TestRunnerDialog):
-  - **Left panel** (w-64): Provider list with status icons - green checkmark for success, red X for failure
+  - **Left panel** (w-64): Provider list with status icons based on `success` field:
+    - Yellow pulsing dot when `success === null` (in progress)
+    - Green checkmark when `success === true` (completed successfully)
+    - Red X when `success === false` (failed)
   - **Right panel**: Selected provider's overall metrics + results table (ground truth vs predictions)
   - First provider is selected by default
   - Clicking a provider shows its details on the right

@@ -578,7 +578,11 @@ export default function STTEvaluationDetailPage() {
                                     }`}
                                   >
                                     {/* Status Icon */}
-                                    {providerResult.success ? (
+                                    {providerResult.success === null ? (
+                                      // In progress - yellow dot
+                                      <div className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse flex-shrink-0"></div>
+                                    ) : providerResult.success === true ? (
+                                      // Done, passed - green tick
                                       <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
                                         <svg
                                           className="w-3 h-3 text-green-500"
@@ -595,6 +599,7 @@ export default function STTEvaluationDetailPage() {
                                         </svg>
                                       </div>
                                     ) : (
+                                      // Done, failed - red X
                                       <div className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0">
                                         <svg
                                           className="w-3 h-3 text-red-500"
