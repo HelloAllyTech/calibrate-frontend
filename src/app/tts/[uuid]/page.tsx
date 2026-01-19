@@ -70,7 +70,7 @@ export default function TTSEvaluationDetailPage() {
     useState<EvaluationResult | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [notFound, setNotFound] = useState(false);
+  const [errorCode, setErrorCode] = useState<401 | 403 | 404 | null>(null);
   const [activeTab, setActiveTab] = useState<
     "leaderboard" | "outputs" | "about"
   >("outputs");
@@ -121,7 +121,12 @@ export default function TTSEvaluationDetailPage() {
         }
 
         if (response.status === 404) {
-          setNotFound(true);
+          setErrorCode(404);
+          return;
+        }
+
+        if (response.status === 403) {
+          setErrorCode(403);
           return;
         }
 
@@ -189,6 +194,8 @@ export default function TTSEvaluationDetailPage() {
       }
 
       if (result.status === "done") {
+        // Switch to leaderboard tab when evaluation completes
+        setActiveTab("leaderboard");
         if (pollingIntervalRef.current) {
           clearInterval(pollingIntervalRef.current);
           pollingIntervalRef.current = null;
@@ -260,10 +267,10 @@ export default function TTSEvaluationDetailPage() {
         )}
 
         {/* Not Found State */}
-        {notFound && <NotFoundState />}
+        {errorCode && <NotFoundState errorCode={errorCode} />}
 
         {/* Evaluation Results */}
-        {!isLoading && !error && !notFound && evaluationResult && (
+        {!isLoading && !error && !errorCode && evaluationResult && (
           <div className="space-y-4">
             {/* Waiting state - show status badge when no provider results yet */}
             {(!evaluationResult.provider_results ||
@@ -675,78 +682,90 @@ export default function TTSEvaluationDetailPage() {
 
                               {/* Results Table */}
                               {providerResult.results &&
-                                providerResult.results.length > 0 && (
-                                  <div className="border rounded-xl overflow-visible">
-                                    <div className="overflow-hidden rounded-xl">
-                                      <table className="w-full">
-                                        <thead className="bg-muted/50 border-b border-border">
-                                          <tr>
-                                            <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                              ID
-                                            </th>
-                                            <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground max-w-[200px]">
-                                              Text
-                                            </th>
-                                            <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                              Audio
-                                            </th>
-                                            {evaluationResult.status ===
-                                              "done" && (
-                                              <>
-                                                <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                                  LLM Judge Score
-                                                </th>
-                                                <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                                  LLM Judge Reasoning
-                                                </th>
-                                              </>
+                                providerResult.results.length > 0 &&
+                                (() => {
+                                  // Check if all rows have metrics available
+                                  const allRowsHaveMetrics =
+                                    providerResult.results.every(
+                                      (r) =>
+                                        r.llm_judge_score !== undefined &&
+                                        r.llm_judge_score !== ""
+                                    );
+                                  const showMetrics =
+                                    evaluationResult.status === "done" ||
+                                    allRowsHaveMetrics;
+
+                                  return (
+                                    <div className="border rounded-xl overflow-visible">
+                                      <div className="overflow-hidden rounded-xl">
+                                        <table className="w-full">
+                                          <thead className="bg-muted/50 border-b border-border">
+                                            <tr>
+                                              <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                ID
+                                              </th>
+                                              <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground max-w-[200px]">
+                                                Text
+                                              </th>
+                                              <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                Audio
+                                              </th>
+                                              {showMetrics && (
+                                                <>
+                                                  <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                    LLM Judge Score
+                                                  </th>
+                                                  <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                    LLM Judge Reasoning
+                                                  </th>
+                                                </>
+                                              )}
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            {providerResult.results.map(
+                                              (result, index) => (
+                                                <tr
+                                                  key={index}
+                                                  className="border-b border-border last:border-b-0"
+                                                >
+                                                  <td className="px-4 py-3 text-[13px] text-foreground">
+                                                    {index + 1}
+                                                  </td>
+                                                  <td className="px-4 py-3 text-[13px] text-foreground max-w-[200px] break-words">
+                                                    {result.text}
+                                                  </td>
+                                                  <td className="px-4 py-3 text-[13px] text-foreground">
+                                                    <audio
+                                                      controls
+                                                      className="w-full min-w-[280px]"
+                                                      src={result.audio_path}
+                                                    >
+                                                      Your browser does not
+                                                      support the audio element.
+                                                    </audio>
+                                                  </td>
+                                                  {showMetrics && (
+                                                    <>
+                                                      <td className="px-4 py-3 text-[13px] text-foreground">
+                                                        {result.llm_judge_score}
+                                                      </td>
+                                                      <td className="px-4 py-3 text-[13px] text-muted-foreground max-w-md">
+                                                        {
+                                                          result.llm_judge_reasoning
+                                                        }
+                                                      </td>
+                                                    </>
+                                                  )}
+                                                </tr>
+                                              )
                                             )}
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          {providerResult.results.map(
-                                            (result, index) => (
-                                              <tr
-                                                key={index}
-                                                className="border-b border-border last:border-b-0"
-                                              >
-                                                <td className="px-4 py-3 text-[13px] text-foreground">
-                                                  {index + 1}
-                                                </td>
-                                                <td className="px-4 py-3 text-[13px] text-foreground max-w-[200px] break-words">
-                                                  {result.text}
-                                                </td>
-                                                <td className="px-4 py-3 text-[13px] text-foreground">
-                                                  <audio
-                                                    controls
-                                                    className="w-full min-w-[280px]"
-                                                    src={result.audio_path}
-                                                  >
-                                                    Your browser does not
-                                                    support the audio element.
-                                                  </audio>
-                                                </td>
-                                                {evaluationResult.status ===
-                                                  "done" && (
-                                                  <>
-                                                    <td className="px-4 py-3 text-[13px] text-foreground">
-                                                      {result.llm_judge_score}
-                                                    </td>
-                                                    <td className="px-4 py-3 text-[13px] text-muted-foreground max-w-md">
-                                                      {
-                                                        result.llm_judge_reasoning
-                                                      }
-                                                    </td>
-                                                  </>
-                                                )}
-                                              </tr>
-                                            )
-                                          )}
-                                        </tbody>
-                                      </table>
+                                          </tbody>
+                                        </table>
+                                      </div>
                                     </div>
-                                  </div>
-                                )}
+                                  );
+                                })()}
                             </div>
                           );
                         })()}

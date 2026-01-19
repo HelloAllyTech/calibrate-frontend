@@ -15,19 +15,20 @@ import { DownloadableTable } from "./DownloadableTable";
 import { POLLING_INTERVAL_MS } from "@/constants/polling";
 
 type BenchmarkTestResult = {
-  passed: boolean;
+  name?: string;
+  passed: boolean | null; // null means still running
   output?: TestCaseOutput;
   test_case?: TestCaseData;
 };
 
 type ModelResult = {
   model: string;
-  success: boolean;
+  success: boolean | null; // null means still processing
   message: string;
-  total_tests: number;
-  passed: number;
-  failed: number;
-  test_results: BenchmarkTestResult[];
+  total_tests: number | null;
+  passed: number | null;
+  failed: number | null;
+  test_results: BenchmarkTestResult[] | null;
 };
 
 type LeaderboardSummary = {
@@ -71,16 +72,20 @@ export function BenchmarkResultsDialog({
   onBenchmarkCreated,
 }: BenchmarkResultsDialogProps) {
   const [activeTab, setActiveTab] = useState<"leaderboard" | "outputs">(
-    "leaderboard"
+    "outputs"
   );
-  const [selectedModelIndex, setSelectedModelIndex] = useState(0);
-  const [selectedTestIndex, setSelectedTestIndex] = useState<number | null>(
-    null
+  // Track which providers are expanded
+  const [expandedProviders, setExpandedProviders] = useState<Set<string>>(
+    new Set()
   );
-  const [modelDropdownOpen, setModelDropdownOpen] = useState(false);
+  // Track selected test: { model, testIndex }
+  const [selectedTest, setSelectedTest] = useState<{
+    model: string;
+    testIndex: number;
+  } | null>(null);
 
   // Loading and data state
-  const [isLoading, setIsLoading] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [taskStatus, setTaskStatus] = useState<string>("queued");
   const [modelResults, setModelResults] = useState<ModelResult[]>([]);
   const [leaderboardSummary, setLeaderboardSummary] = useState<
@@ -89,25 +94,28 @@ export function BenchmarkResultsDialog({
   const [error, setError] = useState<string | null>(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Cleanup polling interval on unmount
-  useEffect(() => {
-    return () => {
-      if (pollingIntervalRef.current) {
-        clearInterval(pollingIntervalRef.current);
-      }
-    };
-  }, []);
+  const isDone =
+    taskStatus === "completed" ||
+    taskStatus === "done" ||
+    taskStatus === "failed";
 
   // Start benchmark when dialog opens
   useEffect(() => {
     if (isOpen) {
-      setIsLoading(true);
+      // Clear any existing polling interval first
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
+      }
+
+      setIsInitialLoading(true);
       setTaskStatus("queued");
       setModelResults([]);
       setLeaderboardSummary(undefined);
       setError(null);
-      setSelectedModelIndex(0);
-      setSelectedTestIndex(null);
+      setExpandedProviders(new Set(models.length > 0 ? [models[0]] : []));
+      setSelectedTest(null);
+      setActiveTab("outputs");
 
       if (taskId) {
         // View existing benchmark - poll the task immediately
@@ -118,16 +126,30 @@ export function BenchmarkResultsDialog({
           }, POLLING_INTERVAL_MS);
           pollBenchmarkStatus(taskId, backendUrl);
         } else {
-          setIsLoading(false);
+          setIsInitialLoading(false);
           setError("BACKEND_URL environment variable is not set");
         }
       } else if (testUuids.length > 0 && models.length > 0) {
         // Start a new benchmark
-      runBenchmark();
+        runBenchmark();
       } else {
-        setIsLoading(false);
+        setIsInitialLoading(false);
+      }
+    } else {
+      // Dialog closed - clear polling
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
       }
     }
+
+    // Cleanup on unmount or when dependencies change
+    return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
+      }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, taskId]);
 
@@ -153,13 +175,35 @@ export function BenchmarkResultsDialog({
       // Update task status for display
       setTaskStatus(result.status);
 
+      // Update model results (intermediate or final)
+      if (result.model_results) {
+        setModelResults(result.model_results);
+
+        // Auto-expand the first provider that has results
+        if (result.model_results.length > 0) {
+          setExpandedProviders((prev) => {
+            if (prev.size === 0) {
+              const firstWithResults = result.model_results!.find(
+                (m) => m.test_results && m.test_results.length > 0
+              );
+              if (firstWithResults) {
+                return new Set([firstWithResults.model]);
+              }
+            }
+            return prev;
+          });
+        }
+      }
+
+      // After first response, we're no longer in initial loading
+      setIsInitialLoading(false);
+
       // Check if polling should stop
       if (
         result.status === "completed" ||
         result.status === "failed" ||
         result.status === "done"
       ) {
-        setIsLoading(false);
         if (pollingIntervalRef.current) {
           clearInterval(pollingIntervalRef.current);
           pollingIntervalRef.current = null;
@@ -168,13 +212,14 @@ export function BenchmarkResultsDialog({
         if (result.error) {
           setError(result.error);
         } else {
-          setModelResults(result.model_results || []);
           setLeaderboardSummary(result.leaderboard_summary);
+          // Switch to leaderboard tab when done
+          setActiveTab("leaderboard");
         }
       }
     } catch (err) {
       console.error("Error polling benchmark status:", err);
-      setIsLoading(false);
+      setIsInitialLoading(false);
       setError(err instanceof Error ? err.message : "Failed to poll status");
       if (pollingIntervalRef.current) {
         clearInterval(pollingIntervalRef.current);
@@ -192,7 +237,7 @@ export function BenchmarkResultsDialog({
 
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
     if (!backendUrl) {
-      setIsLoading(false);
+      setIsInitialLoading(false);
       setError("BACKEND_URL environment variable is not set");
       return;
     }
@@ -235,45 +280,106 @@ export function BenchmarkResultsDialog({
       pollBenchmarkStatus(newTaskId, backendUrl);
     } catch (err) {
       console.error("Error starting benchmark:", err);
-      setIsLoading(false);
+      setIsInitialLoading(false);
       setError(
         err instanceof Error ? err.message : "Failed to start benchmark"
       );
     }
   };
 
+  const toggleProvider = (model: string) => {
+    setExpandedProviders((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(model)) {
+        newSet.delete(model);
+      } else {
+        newSet.add(model);
+      }
+      return newSet;
+    });
+  };
+
+  const handleTestSelect = (model: string, testIndex: number) => {
+    setSelectedTest({ model, testIndex });
+  };
+
+  // Get the selected test result
+  const getSelectedTestResult = (): BenchmarkTestResult | null => {
+    if (!selectedTest) return null;
+    const modelResult = modelResults.find(
+      (m) => m.model === selectedTest.model
+    );
+    if (!modelResult?.test_results) return null;
+    return modelResult.test_results[selectedTest.testIndex] || null;
+  };
+
+  // Get providers to display (includes placeholders for models without results yet)
+  const getProvidersToDisplay = (): ModelResult[] => {
+    // When in progress and no results yet, show all models as placeholders
+    if (!isDone && modelResults.length === 0 && models.length > 0) {
+      return models.map((model) => ({
+        model,
+        success: null,
+        message: "",
+        total_tests: testNames.length,
+        passed: null,
+        failed: null,
+        test_results: null,
+      }));
+    }
+
+    // When in progress with some results, merge with missing models
+    if (!isDone && models.length > 0) {
+      const existingModels = new Set(modelResults.map((m) => m.model));
+      const missingModels = models.filter((m) => !existingModels.has(m));
+      if (missingModels.length > 0) {
+        const placeholders: ModelResult[] = missingModels.map((model) => ({
+          model,
+          success: null,
+          message: "",
+          total_tests: testNames.length,
+          passed: null,
+          failed: null,
+          test_results: null,
+        }));
+        return [...modelResults, ...placeholders];
+      }
+    }
+
+    return modelResults;
+  };
+
+  const providersToDisplay = getProvidersToDisplay();
+
   if (!isOpen) return null;
 
-  const currentModel = modelResults[selectedModelIndex];
-  const passedTests = currentModel?.test_results.filter((t) => t.passed) || [];
-  const failedTests = currentModel?.test_results.filter((t) => !t.passed) || [];
-
-  const selectedTest =
-    selectedTestIndex !== null
-      ? currentModel?.test_results[selectedTestIndex]
-      : null;
-
-  const handleModelChange = (index: number) => {
-    setSelectedModelIndex(index);
-    setSelectedTestIndex(null);
-    setModelDropdownOpen(false);
-  };
+  const selectedTestResult = getSelectedTestResult();
 
   // Get color map for charts
   const modelNames = leaderboardSummary?.map((s) => s.model) || [];
   const colorMap = getColorMap(modelNames);
+
+  // Check if we have any results to show
+  const hasAnyResults = modelResults.some(
+    (m) => m.test_results && m.test_results.length > 0
+  );
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="bg-background rounded-xl w-full max-w-5xl h-[80vh] flex flex-col shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4">
-          <h2 className="text-lg font-semibold text-foreground">
-            Benchmark for {agentName}
-          </h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-lg font-semibold text-foreground">
+              Benchmark for {agentName}
+            </h2>
+            {!isDone && !isInitialLoading && (
+              <SpinnerIcon className="w-4 h-4 animate-spin text-muted-foreground" />
+            )}
+          </div>
           <div className="flex items-center gap-2">
             {/* Rerun button - show when benchmark is complete (not loading and no error) */}
-            {!isLoading && !error && onGoBack && (
+            {isDone && !error && onGoBack && (
               <button
                 onClick={onGoBack}
                 className="flex items-center gap-2 h-8 px-3 rounded-md text-sm font-medium border border-border hover:bg-muted/50 transition-colors cursor-pointer"
@@ -303,22 +409,22 @@ export function BenchmarkResultsDialog({
           </div>
         </div>
 
-        {/* Loading State */}
-        {isLoading && (
+        {/* Initial Loading State */}
+        {isInitialLoading && (
           <div className="flex-1 flex items-center justify-center">
             <div className="flex flex-col items-center gap-4">
               <SpinnerIcon className="w-8 h-8 animate-spin text-muted-foreground" />
               <p className="text-sm text-muted-foreground">
                 {taskStatus === "queued"
-                  ? "Benchmark queued"
-                  : "Running benchmark"}
+                  ? "Benchmark queued..."
+                  : "Starting benchmark..."}
               </p>
             </div>
           </div>
         )}
 
         {/* Error State */}
-        {!isLoading && error && (
+        {!isInitialLoading && error && (
           <div className="flex-1 flex items-center justify-center p-6">
             <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-6 max-w-md">
               <div className="flex items-center gap-2 mb-2">
@@ -363,8 +469,8 @@ export function BenchmarkResultsDialog({
           </div>
         )}
 
-        {/* Tab Navigation - Only show after loading */}
-        {!isLoading && !error && (
+        {/* Tab Navigation - Only show when done */}
+        {!isInitialLoading && !error && isDone && (
           <div className="px-6 border-b border-border">
             <div className="flex gap-2">
               <button
@@ -391,12 +497,12 @@ export function BenchmarkResultsDialog({
           </div>
         )}
 
-        {/* Content - Only show after loading */}
-        {!isLoading && !error && (
-          <div className="flex-1 overflow-y-auto">
-            {/* Leaderboard Tab */}
-            {activeTab === "leaderboard" && (
-              <div className="p-6 space-y-6">
+        {/* Content - Show after initial loading */}
+        {!isInitialLoading && !error && (
+          <div className="flex-1 overflow-hidden">
+            {/* Leaderboard Tab - Only when done */}
+            {isDone && activeTab === "leaderboard" && (
+              <div className="p-6 space-y-6 overflow-y-auto h-full">
                 {/* Leaderboard Table */}
                 {leaderboardSummary && leaderboardSummary.length > 0 && (
                   <DownloadableTable
@@ -442,134 +548,29 @@ export function BenchmarkResultsDialog({
               </div>
             )}
 
-            {/* Outputs Tab */}
-            {activeTab === "outputs" && (
-              <div className="flex-1 flex overflow-hidden h-full">
-                {/* Left Panel - Test List */}
-                <div className="w-80 border-r border-border flex flex-col overflow-hidden">
-                  {/* Model Dropdown and Stats */}
-                  <div className="p-4 border-b border-border">
-                    <div className="relative">
-                      <button
-                        onClick={() => setModelDropdownOpen(!modelDropdownOpen)}
-                        className="w-full h-10 px-4 rounded-md text-sm border border-border bg-background hover:bg-muted/50 flex items-center justify-between cursor-pointer transition-colors"
-                      >
-                        <span className="text-foreground truncate">
-                          {currentModel?.model || "Select model"}
-                        </span>
-                        <svg
-                          className={`w-4 h-4 text-muted-foreground transition-transform ${
-                            modelDropdownOpen ? "rotate-180" : ""
-                          }`}
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                          />
-                        </svg>
-                      </button>
-
-                      {/* Dropdown Menu */}
-                      {modelDropdownOpen && (
-                        <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-md shadow-lg z-10 max-h-48 overflow-y-auto">
-                          {modelResults.map((model, index) => (
-                            <button
-                              key={model.model}
-                              onClick={() => handleModelChange(index)}
-                              className={`w-full px-4 py-2 text-left text-sm hover:bg-muted/50 transition-colors cursor-pointer ${
-                                index === selectedModelIndex
-                                  ? "bg-muted/50"
-                                  : ""
-                              }`}
-                            >
-                              <span className="text-foreground">
-                                {model.model}
-                              </span>
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Passed/Failed Stats */}
-                    {currentModel && (
-                      <div className="flex items-center gap-3 mt-3 text-sm">
-                        <div className="flex items-center gap-1.5">
-                          <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                          <span className="text-muted-foreground">
-                            {currentModel.passed} passed
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                          <span className="text-muted-foreground">
-                            {currentModel.failed} failed
-                          </span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Test List */}
+            {/* Outputs Tab - Show during progress and when outputs tab is active when done */}
+            {(!isDone || activeTab === "outputs") && (
+              <div className="flex h-full">
+                {/* Left Panel - Provider Toggles with Tests */}
+                <div className="w-96 border-r border-border flex flex-col overflow-hidden">
                   <div className="flex-1 overflow-y-auto">
-                    {/* Failed Tests - Always shown first */}
-                    {failedTests.length > 0 && (
-                      <div className="p-4">
-                        <h3 className="text-sm font-medium text-muted-foreground mb-2 flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                          Failed ({failedTests.length})
-                        </h3>
-                        <div className="space-y-1">
-                          {failedTests.map((result) => {
-                            const originalIndex =
-                              currentModel.test_results.indexOf(result);
-                            return (
-                              <BenchmarkTestListItem
-                                key={originalIndex}
-                                result={result}
-                                index={originalIndex}
-                                testName={testNames[originalIndex] || ""}
-                                isSelected={selectedTestIndex === originalIndex}
-                                onSelect={() =>
-                                  setSelectedTestIndex(originalIndex)
-                                }
-                              />
-                            );
-                          })}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Passed Tests */}
-                    {passedTests.length > 0 && (
-                      <div className="p-4">
-                        <h3 className="text-sm font-medium text-muted-foreground mb-2 flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                          Passed ({passedTests.length})
-                        </h3>
-                        <div className="space-y-1">
-                          {passedTests.map((result) => {
-                            const originalIndex =
-                              currentModel.test_results.indexOf(result);
-                            return (
-                              <BenchmarkTestListItem
-                                key={originalIndex}
-                                result={result}
-                                index={originalIndex}
-                                testName={testNames[originalIndex] || ""}
-                                isSelected={selectedTestIndex === originalIndex}
-                                onSelect={() =>
-                                  setSelectedTestIndex(originalIndex)
-                                }
-                              />
-                            );
-                          })}
-                        </div>
+                    {providersToDisplay.length > 0 ? (
+                      providersToDisplay.map((modelResult) => (
+                        <ProviderSection
+                          key={modelResult.model}
+                          modelResult={modelResult}
+                          isExpanded={expandedProviders.has(modelResult.model)}
+                          onToggle={() => toggleProvider(modelResult.model)}
+                          selectedTest={selectedTest}
+                          onTestSelect={(testIndex) =>
+                            handleTestSelect(modelResult.model, testIndex)
+                          }
+                          testNames={testNames}
+                        />
+                      ))
+                    ) : (
+                      <div className="p-4 text-sm text-muted-foreground">
+                        Waiting for results...
                       </div>
                     )}
                   </div>
@@ -577,12 +578,23 @@ export function BenchmarkResultsDialog({
 
                 {/* Right Panel - Test Details */}
                 <div className="flex-1 overflow-y-auto">
-                  {selectedTest ? (
-                    <TestDetailView
-                      history={selectedTest.test_case?.history || []}
-                      output={selectedTest.output}
-                      passed={selectedTest.passed}
-                    />
+                  {selectedTestResult ? (
+                    selectedTestResult.passed === null ? (
+                      <div className="flex items-center justify-center h-full">
+                        <div className="flex items-center gap-3">
+                          <SpinnerIcon className="w-5 h-5 animate-spin text-muted-foreground" />
+                          <p className="text-muted-foreground">
+                            Running test...
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <TestDetailView
+                        history={selectedTestResult.test_case?.history || []}
+                        output={selectedTestResult.output}
+                        passed={selectedTestResult.passed}
+                      />
+                    )
                   ) : (
                     <EmptyStateView message="Select a test to view details" />
                   )}
@@ -596,36 +608,138 @@ export function BenchmarkResultsDialog({
   );
 }
 
-// Benchmark Test List Item Component
-function BenchmarkTestListItem({
-  result,
-  index,
-  testName,
-  isSelected,
-  onSelect,
+// Provider Section Component with toggle and test list
+function ProviderSection({
+  modelResult,
+  isExpanded,
+  onToggle,
+  selectedTest,
+  onTestSelect,
+  testNames,
 }: {
-  result: BenchmarkTestResult;
-  index: number;
-  testName: string;
-  isSelected: boolean;
-  onSelect: () => void;
+  modelResult: ModelResult;
+  isExpanded: boolean;
+  onToggle: () => void;
+  selectedTest: { model: string; testIndex: number } | null;
+  onTestSelect: (testIndex: number) => void;
+  testNames: string[];
 }) {
-  // Use provided test name or generate a default
-  const displayName =
-    testName ||
-    (result.test_case?.evaluation?.type === "tool_call"
-      ? `Tool Call Test ${index + 1}`
-      : `Response Test ${index + 1}`);
+  const isProcessing = modelResult.success === null;
+  const hasResults =
+    modelResult.test_results && modelResult.test_results.length > 0;
+
+  // Get test status counts
+  const passedCount = modelResult.passed ?? 0;
+  const failedCount = modelResult.failed ?? 0;
+  const totalTests = modelResult.total_tests ?? testNames.length;
 
   return (
-    <div
-      onClick={onSelect}
-      className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
-        isSelected ? "bg-muted" : "hover:bg-muted/50"
-      }`}
-    >
-      <StatusIcon status={result.passed ? "passed" : "failed"} />
-      <span className="text-sm text-foreground truncate">{displayName}</span>
+    <div className="border-b border-border">
+      {/* Provider Header */}
+      <button
+        onClick={onToggle}
+        className="w-full px-4 py-3 flex items-center justify-between hover:bg-muted/50 transition-colors cursor-pointer"
+      >
+        <div className="flex items-center gap-2 min-w-0">
+          {/* Expand/Collapse Icon */}
+          <svg
+            className={`w-4 h-4 text-muted-foreground transition-transform flex-shrink-0 ${
+              isExpanded ? "rotate-90" : ""
+            }`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M8.25 4.5l7.5 7.5-7.5 7.5"
+            />
+          </svg>
+          {/* Provider Name */}
+          <span className="text-sm font-medium text-foreground truncate">
+            {modelResult.model.replace("__", "/")}
+          </span>
+          {/* Processing Spinner */}
+          {isProcessing && (
+            <SpinnerIcon className="w-3.5 h-3.5 animate-spin text-yellow-500 flex-shrink-0" />
+          )}
+        </div>
+        {/* Stats */}
+        {!isProcessing && modelResult.success !== null && (
+          <div className="flex items-center gap-2 text-xs flex-shrink-0">
+            {passedCount > 0 && (
+              <span className="text-green-500">{passedCount} passed</span>
+            )}
+            {failedCount > 0 && (
+              <span className="text-red-500">{failedCount} failed</span>
+            )}
+          </div>
+        )}
+      </button>
+
+      {/* Test List */}
+      {isExpanded && (
+        <div className="px-4 pb-3">
+          {hasResults ? (
+            <div className="space-y-1 ml-4">
+              {modelResult.test_results!.map((testResult, index) => {
+                const isSelected =
+                  selectedTest?.model === modelResult.model &&
+                  selectedTest?.testIndex === index;
+                const testName =
+                  testResult.name ||
+                  testResult.test_case?.name ||
+                  testNames[index] ||
+                  `Test ${index + 1}`;
+
+                return (
+                  <div
+                    key={index}
+                    onClick={() => onTestSelect(index)}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
+                      isSelected ? "bg-muted" : "hover:bg-muted/50"
+                    }`}
+                  >
+                    <StatusIcon
+                      status={
+                        testResult.passed === null
+                          ? "running"
+                          : testResult.passed
+                          ? "passed"
+                          : "failed"
+                      }
+                    />
+                    <span className="text-sm text-foreground truncate">
+                      {testName}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          ) : isProcessing && testNames.length > 0 ? (
+            // Show test names with yellow running dots while processing
+            <div className="space-y-1 ml-4">
+              {testNames.map((testName, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg"
+                >
+                  <StatusIcon status="running" />
+                  <span className="text-sm text-foreground truncate">
+                    {testName || `Test ${index + 1}`}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="ml-4 px-3 py-2 text-sm text-muted-foreground">
+              {isProcessing ? "Processing..." : "No test results"}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

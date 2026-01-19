@@ -29,6 +29,7 @@ export function TextToSpeechEvaluation() {
   const [rows, setRows] = useState<TextRow[]>([{ id: "1", text: "" }]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<string | null>(null);
   const [invalidRowIds, setInvalidRowIds] = useState<Set<string>>(new Set());
+  const [providersInvalid, setProvidersInvalid] = useState(false);
   const [selectedProviders, setSelectedProviders] = useState<Set<string>>(
     new Set()
   );
@@ -145,12 +146,21 @@ export function TextToSpeechEvaluation() {
         newSet.delete(provider);
       } else if (newSet.size < MAX_PROVIDERS) {
         newSet.add(provider);
+        // Clear providers invalid state when a provider is selected
+        setProvidersInvalid(false);
       }
       return newSet;
     });
   };
 
   const handleEvaluate = async () => {
+    // Validate providers first
+    if (selectedProviders.size === 0) {
+      setProvidersInvalid(true);
+      setActiveTab("settings");
+      return;
+    }
+
     // Validate all rows (same check as addRow)
     const invalidIds = new Set<string>();
     rows.forEach((row) => {
@@ -168,6 +178,7 @@ export function TextToSpeechEvaluation() {
 
     // Clear validation errors and proceed with evaluation
     setInvalidRowIds(new Set());
+    setProvidersInvalid(false);
     setIsEvaluating(true);
 
     try {
@@ -222,8 +233,6 @@ export function TextToSpeechEvaluation() {
     }
   };
 
-  const isEvaluateDisabled = selectedProviders.size === 0;
-
   return (
     <div className="space-y-6">
       {/* Header with Evaluate Button */}
@@ -257,8 +266,7 @@ export function TextToSpeechEvaluation() {
         ) : (
           <button
             onClick={handleEvaluate}
-            disabled={isEvaluateDisabled}
-            className="h-9 px-6 rounded-md text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="h-9 px-6 rounded-md text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer flex items-center gap-2"
           >
             <svg
               className="w-4 h-4"
@@ -298,7 +306,7 @@ export function TextToSpeechEvaluation() {
               : "text-muted-foreground hover:text-foreground"
           }`}
         >
-          Input
+          Dataset
         </button>
       </div>
 
@@ -342,7 +350,11 @@ export function TextToSpeechEvaluation() {
           </div>
 
           {/* Provider Selection */}
-          <div className="space-y-3">
+          <div
+            className={`space-y-3 p-4 -m-4 rounded-lg transition-colors ${
+              providersInvalid ? "bg-red-500/10 border border-red-500" : ""
+            }`}
+          >
             <div className="flex items-center gap-2">
               <h3 className="text-[13px] font-medium text-foreground">
                 Select up to 3 providers to evaluate

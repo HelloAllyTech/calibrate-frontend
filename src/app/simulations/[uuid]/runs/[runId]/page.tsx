@@ -44,7 +44,7 @@ type SimulationResult = {
   simulation_name: string;
   persona: Persona;
   scenario: Scenario;
-  evaluation_results: EvaluationResult[];
+  evaluation_results: EvaluationResult[] | null;
   transcript: TranscriptEntry[];
   audio_urls?: string[];
   conversation_wav_url?: string;
@@ -80,7 +80,7 @@ export default function SimulationRunPage() {
   const [simulationName, setSimulationName] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [notFound, setNotFound] = useState(false);
+  const [errorCode, setErrorCode] = useState<401 | 403 | 404 | null>(null);
   const [transcriptDialogOpen, setTranscriptDialogOpen] = useState(false);
   const [selectedSimulation, setSelectedSimulation] =
     useState<SimulationResult | null>(null);
@@ -160,7 +160,12 @@ export default function SimulationRunPage() {
         }
 
         if (response.status === 404) {
-          setNotFound(true);
+          setErrorCode(404);
+          return;
+        }
+
+        if (response.status === 403) {
+          setErrorCode(403);
           return;
         }
 
@@ -229,6 +234,7 @@ export default function SimulationRunPage() {
     simulation: SimulationResult,
     metricName: string
   ) => {
+    if (!simulation.evaluation_results) return null;
     // Handle mapping: stt_llm_judge metric key maps to stt_llm_judge_score evaluation result
     const evaluationName =
       metricName === "stt_llm_judge" ? "stt_llm_judge_score" : metricName;
@@ -242,6 +248,7 @@ export default function SimulationRunPage() {
     simulation: SimulationResult,
     metricName: string
   ) => {
+    if (!simulation.evaluation_results) return "";
     // Handle mapping: stt_llm_judge metric key maps to stt_llm_judge_score evaluation result
     const evaluationName =
       metricName === "stt_llm_judge" ? "stt_llm_judge_score" : metricName;
@@ -249,6 +256,16 @@ export default function SimulationRunPage() {
       (r) => r.name === evaluationName || r.name === metricName
     );
     return result?.reasoning ?? "";
+  };
+
+  // Check if a simulation row is still processing (has transcript but no evaluation results) - yellow spinner
+  const isSimulationProcessing = (simulation: SimulationResult) => {
+    return simulation.transcript.length > 0 && !simulation.evaluation_results;
+  };
+
+  // Check if a simulation row is waiting (no transcript and no evaluation results) - gray spinner
+  const isSimulationWaiting = (simulation: SimulationResult) => {
+    return simulation.transcript.length === 0 && !simulation.evaluation_results;
   };
 
   const getLatencyMetricTooltip = (metricKey: string): string => {
@@ -399,7 +416,7 @@ export default function SimulationRunPage() {
   // Determine which header to show
   const getHeader = () => {
     if (isLoading) return loadingHeader;
-    if (notFound) return notFoundHeader;
+    if (errorCode) return notFoundHeader;
     return customHeader;
   };
 
@@ -444,8 +461,8 @@ export default function SimulationRunPage() {
               Retry
             </button>
           </div>
-        ) : notFound ? (
-          <NotFoundState />
+        ) : errorCode ? (
+          <NotFoundState errorCode={errorCode} />
         ) : runData ? (
           <div className="space-y-6">
             {/* Status and Type Pills */}
@@ -499,14 +516,16 @@ export default function SimulationRunPage() {
                   });
 
                   runData.simulation_results.forEach((simulation) => {
-                    latencyKeys.forEach((key) => {
-                      const result = simulation.evaluation_results.find(
-                        (r) => r.name === key
-                      );
-                      if (result && typeof result.value === "number") {
-                        latencyValues[key].push(result.value);
-                      }
-                    });
+                    if (simulation.evaluation_results) {
+                      latencyKeys.forEach((key) => {
+                        const result = simulation.evaluation_results!.find(
+                          (r) => r.name === key
+                        );
+                        if (result && typeof result.value === "number") {
+                          latencyValues[key].push(result.value);
+                        }
+                      });
+                    }
                   });
 
                   latencyKeys.forEach((key) => {
@@ -670,11 +689,13 @@ export default function SimulationRunPage() {
                   // Derive from simulation_results' evaluation_results
                   const metricSet = new Set<string>();
                   runData.simulation_results.forEach((sim) => {
-                    sim.evaluation_results.forEach((result) => {
-                      if (!latencyMetricKeys.includes(result.name)) {
-                        metricSet.add(result.name);
-                      }
-                    });
+                    if (sim.evaluation_results) {
+                      sim.evaluation_results.forEach((result) => {
+                        if (!latencyMetricKeys.includes(result.name)) {
+                          metricSet.add(result.name);
+                        }
+                      });
+                    }
                   });
                   displayMetricKeys = Array.from(metricSet);
                 }
@@ -712,66 +733,155 @@ export default function SimulationRunPage() {
                           </thead>
                           <tbody className="divide-y divide-border">
                             {runData.simulation_results.map(
-                              (simulation, index) => (
-                                <tr
-                                  key={index}
-                                  className="hover:bg-muted/30 transition-colors"
-                                >
-                                  <td className="px-2 py-4 whitespace-nowrap">
-                                    <button
-                                      onClick={() =>
-                                        openTranscriptDialog(simulation)
-                                      }
-                                      className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-muted/50 transition-colors cursor-pointer"
-                                    >
-                                      <svg
-                                        className="w-4 h-4 text-foreground"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                        strokeWidth={2}
-                                      >
-                                        <path
-                                          strokeLinecap="round"
-                                          strokeLinejoin="round"
-                                          d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"
-                                        />
-                                      </svg>
-                                    </button>
-                                  </td>
-                                  <td className="px-3 py-4 text-sm text-foreground">
-                                    <div className="overflow-x-auto max-w-full">
-                                      <div className="whitespace-nowrap">
-                                        {simulation.persona.label}
+                              (simulation, index) => {
+                                const isProcessing =
+                                  isSimulationProcessing(simulation);
+                                const isWaiting =
+                                  isSimulationWaiting(simulation);
+                                return (
+                                  <tr
+                                    key={index}
+                                    className="hover:bg-muted/30 transition-colors"
+                                  >
+                                    <td className="px-2 py-4 whitespace-nowrap">
+                                      <div className="flex items-center gap-1">
+                                        <button
+                                          onClick={() =>
+                                            openTranscriptDialog(simulation)
+                                          }
+                                          className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-muted/50 transition-colors cursor-pointer"
+                                        >
+                                          <svg
+                                            className="w-4 h-4 text-foreground"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            strokeWidth={2}
+                                          >
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"
+                                            />
+                                          </svg>
+                                        </button>
+                                        {isProcessing && (
+                                          <svg
+                                            className="w-3.5 h-3.5 animate-spin text-yellow-500"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <circle
+                                              className="opacity-25"
+                                              cx="12"
+                                              cy="12"
+                                              r="10"
+                                              stroke="currentColor"
+                                              strokeWidth="4"
+                                            ></circle>
+                                            <path
+                                              className="opacity-75"
+                                              fill="currentColor"
+                                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                            ></path>
+                                          </svg>
+                                        )}
+                                        {isWaiting && (
+                                          <svg
+                                            className="w-3.5 h-3.5 animate-spin text-gray-500"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <circle
+                                              className="opacity-25"
+                                              cx="12"
+                                              cy="12"
+                                              r="10"
+                                              stroke="currentColor"
+                                              strokeWidth="4"
+                                            ></circle>
+                                            <path
+                                              className="opacity-75"
+                                              fill="currentColor"
+                                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                            ></path>
+                                          </svg>
+                                        )}
                                       </div>
-                                    </div>
-                                  </td>
-                                  <td className="px-3 py-4 text-sm text-foreground">
-                                    <div className="overflow-x-auto max-w-full">
-                                      <div className="whitespace-nowrap">
-                                        {simulation.scenario.name}
+                                    </td>
+                                    <td className="px-3 py-4 text-sm text-foreground">
+                                      <div className="overflow-x-auto max-w-full">
+                                        <div className="whitespace-nowrap">
+                                          {simulation.persona.label}
+                                        </div>
                                       </div>
-                                    </div>
-                                  </td>
-                                  {displayMetricKeys.map((metricKey) => {
-                                    const value = getEvaluationResult(
-                                      simulation,
-                                      metricKey
-                                    );
-                                    const isSttLlmJudge =
-                                      metricKey === "stt_llm_judge" ||
-                                      metricKey === "stt_llm_judge_score";
-                                    const passed = value === 1;
-                                    const reasoning = getEvaluationReasoning(
-                                      simulation,
-                                      metricKey
-                                    );
-
-                                    // For stt_llm_judge, show percentage
-                                    if (isSttLlmJudge) {
-                                      const percentage = parseFloat(
-                                        (value * 100).toFixed(2)
+                                    </td>
+                                    <td className="px-3 py-4 text-sm text-foreground">
+                                      <div className="overflow-x-auto max-w-full">
+                                        <div className="whitespace-nowrap">
+                                          {simulation.scenario.name}
+                                        </div>
+                                      </div>
+                                    </td>
+                                    {displayMetricKeys.map((metricKey) => {
+                                      const value = getEvaluationResult(
+                                        simulation,
+                                        metricKey
                                       );
+                                      const isSttLlmJudge =
+                                        metricKey === "stt_llm_judge" ||
+                                        metricKey === "stt_llm_judge_score";
+                                      const reasoning = getEvaluationReasoning(
+                                        simulation,
+                                        metricKey
+                                      );
+
+                                      // If evaluation_results is null, show dash
+                                      if (value === null) {
+                                        return (
+                                          <td
+                                            key={metricKey}
+                                            className="px-3 py-4 whitespace-nowrap"
+                                          >
+                                            <div className="flex justify-center">
+                                              <span className="text-muted-foreground">
+                                                —
+                                              </span>
+                                            </div>
+                                          </td>
+                                        );
+                                      }
+
+                                      const passed = value === 1;
+
+                                      // For stt_llm_judge, show percentage
+                                      if (isSttLlmJudge) {
+                                        const percentage = parseFloat(
+                                          (value * 100).toFixed(2)
+                                        );
+                                        return (
+                                          <td
+                                            key={metricKey}
+                                            className="px-3 py-4 whitespace-nowrap"
+                                          >
+                                            <div className="flex justify-center">
+                                              {reasoning ? (
+                                                <Tooltip content={reasoning}>
+                                                  <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium text-foreground">
+                                                    {percentage}%
+                                                  </span>
+                                                </Tooltip>
+                                              ) : (
+                                                <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium text-foreground">
+                                                  {percentage}%
+                                                </span>
+                                              )}
+                                            </div>
+                                          </td>
+                                        );
+                                      }
+
+                                      // For other metrics, show Pass/Fail
                                       return (
                                         <td
                                           key={metricKey}
@@ -780,29 +890,17 @@ export default function SimulationRunPage() {
                                           <div className="flex justify-center">
                                             {reasoning ? (
                                               <Tooltip content={reasoning}>
-                                                <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium text-foreground">
-                                                  {percentage}%
+                                                <span
+                                                  className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
+                                                    passed
+                                                      ? "bg-green-500/20 text-green-400"
+                                                      : "bg-red-500/20 text-red-400"
+                                                  }`}
+                                                >
+                                                  {passed ? "Pass" : "Fail"}
                                                 </span>
                                               </Tooltip>
                                             ) : (
-                                              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium text-foreground">
-                                                {percentage}%
-                                              </span>
-                                            )}
-                                          </div>
-                                        </td>
-                                      );
-                                    }
-
-                                    // For other metrics, show Pass/Fail
-                                    return (
-                                      <td
-                                        key={metricKey}
-                                        className="px-3 py-4 whitespace-nowrap"
-                                      >
-                                        <div className="flex justify-center">
-                                          {reasoning ? (
-                                            <Tooltip content={reasoning}>
                                               <span
                                                 className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
                                                   passed
@@ -812,24 +910,14 @@ export default function SimulationRunPage() {
                                               >
                                                 {passed ? "Pass" : "Fail"}
                                               </span>
-                                            </Tooltip>
-                                          ) : (
-                                            <span
-                                              className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
-                                                passed
-                                                  ? "bg-green-500/20 text-green-400"
-                                                  : "bg-red-500/20 text-red-400"
-                                              }`}
-                                            >
-                                              {passed ? "Pass" : "Fail"}
-                                            </span>
-                                          )}
-                                        </div>
-                                      </td>
-                                    );
-                                  })}
-                                </tr>
-                              )
+                                            )}
+                                          </div>
+                                        </td>
+                                      );
+                                    })}
+                                  </tr>
+                                );
+                              }
                             )}
                           </tbody>
                         </table>

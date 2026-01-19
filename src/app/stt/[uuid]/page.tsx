@@ -76,7 +76,7 @@ export default function STTEvaluationDetailPage() {
     useState<EvaluationResult | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [notFound, setNotFound] = useState(false);
+  const [errorCode, setErrorCode] = useState<401 | 403 | 404 | null>(null);
   const [activeTab, setActiveTab] = useState<
     "leaderboard" | "outputs" | "about"
   >("outputs");
@@ -127,7 +127,12 @@ export default function STTEvaluationDetailPage() {
         }
 
         if (response.status === 404) {
-          setNotFound(true);
+          setErrorCode(404);
+          return;
+        }
+
+        if (response.status === 403) {
+          setErrorCode(403);
           return;
         }
 
@@ -193,6 +198,8 @@ export default function STTEvaluationDetailPage() {
       }
 
       if (result.status === "done") {
+        // Switch to leaderboard tab when evaluation completes
+        setActiveTab("leaderboard");
         if (pollingIntervalRef.current) {
           clearInterval(pollingIntervalRef.current);
           pollingIntervalRef.current = null;
@@ -264,10 +271,10 @@ export default function STTEvaluationDetailPage() {
         )}
 
         {/* Not Found State */}
-        {notFound && <NotFoundState />}
+        {errorCode && <NotFoundState errorCode={errorCode} />}
 
         {/* Evaluation Results */}
-        {!isLoading && !error && !notFound && evaluationResult && (
+        {!isLoading && !error && !errorCode && evaluationResult && (
           <div className="space-y-4">
             {/* Status Badge - show when evaluation is not done */}
             {evaluationResult.status !== "done" && (
@@ -757,85 +764,101 @@ export default function STTEvaluationDetailPage() {
 
                               {/* Results Table */}
                               {providerResult.results &&
-                                providerResult.results.length > 0 && (
-                                  <div className="border rounded-xl overflow-visible">
-                                    <div className="overflow-hidden rounded-xl">
-                                      <table className="w-full">
-                                        <thead className="bg-muted/50 border-b border-border">
-                                          <tr>
-                                            <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                              ID
-                                            </th>
-                                            <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                              Ground Truth
-                                            </th>
-                                            <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                              Prediction
-                                            </th>
-                                            {evaluationResult.status ===
-                                              "done" && (
-                                              <>
-                                                <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                                  WER
-                                                </th>
-                                                <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                                  String Similarity
-                                                </th>
-                                                <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                                  LLM Judge Score
-                                                </th>
-                                                <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                                  LLM Judge Reasoning
-                                                </th>
-                                              </>
+                                providerResult.results.length > 0 &&
+                                (() => {
+                                  // Check if all rows have metrics available
+                                  const allRowsHaveMetrics =
+                                    providerResult.results.every(
+                                      (r) =>
+                                        r.wer !== undefined &&
+                                        r.wer !== "" &&
+                                        r.string_similarity !== undefined &&
+                                        r.string_similarity !== "" &&
+                                        r.llm_judge_score !== undefined &&
+                                        r.llm_judge_score !== ""
+                                    );
+                                  const showMetrics =
+                                    evaluationResult.status === "done" ||
+                                    allRowsHaveMetrics;
+
+                                  return (
+                                    <div className="border rounded-xl overflow-visible">
+                                      <div className="overflow-hidden rounded-xl">
+                                        <table className="w-full">
+                                          <thead className="bg-muted/50 border-b border-border">
+                                            <tr>
+                                              <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                ID
+                                              </th>
+                                              <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                Ground Truth
+                                              </th>
+                                              <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                Prediction
+                                              </th>
+                                              {showMetrics && (
+                                                <>
+                                                  <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                    WER
+                                                  </th>
+                                                  <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                    String Similarity
+                                                  </th>
+                                                  <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                    LLM Judge Score
+                                                  </th>
+                                                  <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                    LLM Judge Reasoning
+                                                  </th>
+                                                </>
+                                              )}
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            {providerResult.results.map(
+                                              (result, index) => (
+                                                <tr
+                                                  key={index}
+                                                  className="border-b border-border last:border-b-0"
+                                                >
+                                                  <td className="px-4 py-3 text-[13px] text-foreground">
+                                                    {index + 1}
+                                                  </td>
+                                                  <td className="px-4 py-3 text-[13px] text-foreground">
+                                                    {result.gt}
+                                                  </td>
+                                                  <td className="px-4 py-3 text-[13px] text-foreground">
+                                                    {result.pred}
+                                                  </td>
+                                                  {showMetrics && (
+                                                    <>
+                                                      <td className="px-4 py-3 text-[13px] text-foreground">
+                                                        {result.wer}
+                                                      </td>
+                                                      <td className="px-4 py-3 text-[13px] text-foreground">
+                                                        {parseFloat(
+                                                          result.string_similarity
+                                                        ).toFixed(5)}
+                                                      </td>
+                                                      <td className="px-4 py-3 text-[13px] text-foreground">
+                                                        {result.llm_judge_score}
+                                                      </td>
+                                                      <td className="px-4 py-3 text-[13px] text-muted-foreground max-w-md">
+                                                        {
+                                                          result.llm_judge_reasoning
+                                                        }
+                                                      </td>
+                                                    </>
+                                                  )}
+                                                </tr>
+                                              )
                                             )}
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          {providerResult.results.map(
-                                            (result, index) => (
-                                              <tr
-                                                key={index}
-                                                className="border-b border-border last:border-b-0"
-                                              >
-                                                <td className="px-4 py-3 text-[13px] text-foreground">
-                                                  {index + 1}
-                                                </td>
-                                                <td className="px-4 py-3 text-[13px] text-foreground">
-                                                  {result.gt}
-                                                </td>
-                                                <td className="px-4 py-3 text-[13px] text-foreground">
-                                                  {result.pred}
-                                                </td>
-                                                {evaluationResult.status ===
-                                                  "done" && (
-                                                  <>
-                                                    <td className="px-4 py-3 text-[13px] text-foreground">
-                                                      {result.wer}
-                                                    </td>
-                                                    <td className="px-4 py-3 text-[13px] text-foreground">
-                                                      {parseFloat(
-                                                        result.string_similarity
-                                                      ).toFixed(5)}
-                                                    </td>
-                                                    <td className="px-4 py-3 text-[13px] text-foreground">
-                                                      {result.llm_judge_score}
-                                                    </td>
-                                                    <td className="px-4 py-3 text-[13px] text-muted-foreground max-w-md">
-                                                      {
-                                                        result.llm_judge_reasoning
-                                                      }
-                                                    </td>
-                                                  </>
-                                                )}
-                                              </tr>
-                                            )
-                                          )}
-                                        </tbody>
-                                      </table>
+                                          </tbody>
+                                        </table>
+                                      </div>
                                     </div>
-                                  </div>
-                                )}
+                                  );
+                                })()}
                             </div>
                           );
                         })()}

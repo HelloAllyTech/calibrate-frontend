@@ -166,6 +166,7 @@ export function TestsTabContent({
   const viewingTestResultsRef = useRef(false);
   const viewingBenchmarkResultsRef = useRef(false);
   const selectedPastRunRef = useRef<TestRun | null>(null);
+  const pastRunsRef = useRef<TestRun[]>([]);
 
   // Keep refs in sync with state
   useEffect(() => {
@@ -179,6 +180,10 @@ export function TestsTabContent({
   useEffect(() => {
     selectedPastRunRef.current = selectedPastRun;
   }, [selectedPastRun]);
+
+  useEffect(() => {
+    pastRunsRef.current = pastRuns;
+  }, [pastRuns]);
 
   // Fetch tests attached to this agent
   useEffect(() => {
@@ -348,33 +353,35 @@ export function TestsTabContent({
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
     if (!backendUrl || !backendAccessToken) return;
 
-    // Get the ID of the run currently being viewed in the dialog
-    const viewingRunId =
-      (viewingTestResults || viewingBenchmarkResults) && selectedPastRun
-        ? selectedPastRun.uuid
-        : null;
-
-    // Find pending runs that need polling (excluding the one being viewed)
-    const pendingRuns = pastRuns.filter(
-      (run) =>
-        (run.status === "pending" ||
-          run.status === "queued" ||
-          run.status === "in_progress") &&
-        run.uuid !== viewingRunId
-    );
-
     // Clear existing polling interval
     if (pendingRunsPollingRef.current) {
       clearInterval(pendingRunsPollingRef.current);
       pendingRunsPollingRef.current = null;
     }
 
-    // If no pending runs to poll, return
-    if (pendingRuns.length === 0) return;
-
     const pollPendingRuns = async () => {
+      // Get the ID of the run currently being viewed in the dialog (use refs for current values)
+      const viewingRunId =
+        (viewingTestResultsRef.current || viewingBenchmarkResultsRef.current) &&
+        selectedPastRunRef.current
+          ? selectedPastRunRef.current.uuid
+          : null;
+
+      // Find pending runs that need polling (excluding the one being viewed)
+      // Use ref to get current pastRuns to avoid stale closure
+      const pendingRuns = pastRunsRef.current.filter(
+        (run) =>
+          (run.status === "pending" ||
+            run.status === "queued" ||
+            run.status === "in_progress") &&
+          run.uuid !== viewingRunId
+      );
+
+      // If no pending runs to poll, skip this poll cycle
+      if (pendingRuns.length === 0) return;
+
       for (const run of pendingRuns) {
-        // Skip if this run is now being viewed in dialog (use refs for current values)
+        // Double-check if this run is now being viewed in dialog
         if (
           (viewingTestResultsRef.current ||
             viewingBenchmarkResultsRef.current) &&
@@ -434,7 +441,7 @@ export function TestsTabContent({
     };
 
     // Start polling every 3 seconds
-    pollPendingRuns(); // Poll immediately
+    pollPendingRuns(); // Poll immediately on mount/dependency change
     pendingRunsPollingRef.current = setInterval(
       pollPendingRuns,
       POLLING_INTERVAL_MS
@@ -447,7 +454,6 @@ export function TestsTabContent({
       }
     };
   }, [
-    pastRuns,
     backendAccessToken,
     viewingTestResults,
     viewingBenchmarkResults,

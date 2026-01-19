@@ -119,6 +119,12 @@ export function TestRunnerDialog({
 
   // Start polling when dialog opens with a taskId (viewing existing run)
   useEffect(() => {
+    // Clear any existing polling interval first
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+    }
+
     if (!isOpen || !taskId || !backendAccessToken) {
       return;
     }

@@ -9592,3 +9592,1593 @@ Done. Updated documentation to reflect:
 
 ---
 
+_**User (2026-01-17 22:10Z)**_
+
+rename Input tab in @src/components/evaluations/SpeechToTextEvaluation.tsx and @src/components/evaluations/TextToSpeechEvaluation.tsx to Dataset
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants to rename the "Input" tab to "Dataset" in both STT and TTS evaluation components.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -639,5 +639,5 @@
+            }&#96;}
+          &gt;
+-           Input
++           Dataset
+          &lt;/button&gt;
+        &lt;/div&gt;
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now update the TTS file.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -299,5 +299,5 @@
+            }&#96;}
+          &gt;
+-           Input
++           Dataset
+          &lt;/button&gt;
+        &lt;/div&gt;
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Done. Both tabs have been renamed from "Input" to "Dataset". The internal state value stays as "input" since it's just an internal identifier.</details></think>
+
+---
+
+Done. Renamed "Input" tab to "Dataset" in both STT and TTS evaluation components.
+
+---
+
+_**User (2026-01-17 22:10Z)**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+I renamed the "Input" tab to "Dataset" in both STT and TTS evaluation components. Let me update the app-details.md to reflect this change.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -670,5 +670,5 @@
+  - Both components use the same tab layout:
+    - **Settings tab**: Language selection dropdown + provider selection (max 3 providers, shows "X/3 selected")
+-   - **Input tab**: Sample rows + add sample button (TTS also has CSV upload with OR divider and sample download)
++   - **Dataset tab**: Sample rows + add sample button (TTS also has CSV upload with OR divider and sample download)
+  - **Providers start unselected by default** - user must select 1-3 providers before evaluating
+  - Evaluate button in header next to description, disabled when no providers selected
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Done. Updated "Input tab" to "Dataset tab" in the documentation.</details></think>
+
+---
+
+Done. Updated "Input tab" to "Dataset tab" in documentation.
+
+---
+
+_**User (2026-01-17 22:10Z)**_
+
+for intermediate results of stt and tts show the metrics in the output table if the metrics are availabe for all the rows of that output
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants to show metrics in the intermediate results output table if all rows have metrics available, rather than waiting for the entire evaluation to be done. Let me look at the STT and TTS detail pages to understand the current implementation.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Looking at the current code, I can see the logic for showing metrics in the output tables:
+
+For STT (`stt/[uuid]/page.tsx`):
+- Lines 775-791: The metric columns (WER, String Similarity, LLM Judge Score, LLM Judge Reasoning) are only shown when `evaluationResult.status === "done"`
+- Lines 810-830: The metric values in rows are only shown when `evaluationResult.status === "done"`
+
+For TTS (`tts/[uuid]/page.tsx`):
+- Lines 693-703: The metric columns (LLM Judge Score, LLM Judge Reasoning) are only shown when `evaluationResult.status === "done"`
+- Lines 729-741: The metric values in rows are only shown when `evaluationResult.status === "done"`
+
+The user wants to show metrics for a provider if all rows of that provider's results have metrics available, even during intermediate results. Let me look at the result structure:
+
+For STT, each result row has:
+- wer, string_similarity, llm_judge_score, llm_judge_reasoning
+
+For TTS, each result row has:
+- llm_judge_score?, llm_judge_reasoning? (optional)
+
+So the logic should be:
+- For STT: Show metrics if all rows have non-empty wer, string_similarity, llm_judge_score values
+- For TTS: Show metrics if all rows have llm_judge_score and llm_judge_reasoning defined
+
+Let me update both files to check if all rows have metrics available for the selected provider.</details></think>
+
+---
+
+I need to update both STT and TTS detail pages to show metrics in the output table when all rows have metrics available, rather than waiting for the entire evaluation to be done.
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 95, lines removed: 79
+
+```diff
+@@ -758,83 +758,99 @@
+                                {/* Results Table */}
+                                {providerResult.results &amp;&amp;
+-                                 providerResult.results.length &gt; 0 &amp;&amp; (
+-                                   &lt;div className="border rounded-xl overflow-visible"&gt;
+-                                     &lt;div className="overflow-hidden rounded-xl"&gt;
+-                                       &lt;table className="w-full"&gt;
+-                                         &lt;thead className="bg-muted/50 border-b border-border"&gt;
+-                                           &lt;tr&gt;
+-                                             &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
+-                                               ID
+-                                             &lt;/th&gt;
+-                                             &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
+-                                               Ground Truth
+-                                             &lt;/th&gt;
+-                                             &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
+-                                               Prediction
+-                                             &lt;/th&gt;
+-                                             {evaluationResult.status ===
+-                                               "done" &amp;&amp; (
+-                                               &lt;&gt;
+-                                                 &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
+-                                                   WER
+-                                                 &lt;/th&gt;
+-                                                 &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
+-                                                   String Similarity
+-                                                 &lt;/th&gt;
+-                                                 &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
+-                                                   LLM Judge Score
+-                                                 &lt;/th&gt;
+-                                                 &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
+-                                                   LLM Judge Reasoning
+-                                                 &lt;/th&gt;
+-                                               &lt;/&gt;
+-                                             )}
+-                                           &lt;/tr&gt;
+-                                         &lt;/thead&gt;
+-                                         &lt;tbody&gt;
+-                                           {providerResult.results.map(
+-                                             (result, index) =&gt; (
+-                                               &lt;tr
+-                                                 key={index}
+-                                                 className="border-b border-border last:border-b-0"
+-                                               &gt;
+-                                                 &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
+-                                                   {index + 1}
+-                                                 &lt;/td&gt;
+-                                                 &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
+-                                                   {result.gt}
+-                                                 &lt;/td&gt;
+-                                                 &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
+-                                                   {result.pred}
+-                                                 &lt;/td&gt;
+-                                                 {evaluationResult.status ===
+-                                                   "done" &amp;&amp; (
+-                                                   &lt;&gt;
+-                                                     &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
+-                                                       {result.wer}
+-                                                     &lt;/td&gt;
+-                                                     &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
+-                                                       {parseFloat(
+-                                                         result.string_similarity
+-                                                       ).toFixed(5)}
+-                                                     &lt;/td&gt;
+-                                                     &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
+-                                                       {result.llm_judge_score}
+-                                                     &lt;/td&gt;
+-                                                     &lt;td className="px-4 py-3 text-[13px] text-muted-foreground max-w-md"&gt;
+-                                                       {
+-                                                         result.llm_judge_reasoning
+-                                                       }
+-                                                     &lt;/td&gt;
+-                                                   &lt;/&gt;
+-                                                 )}
+-                                               &lt;/tr&gt;
+-                                             )
+-                                           )}
+-                                         &lt;/tbody&gt;
+-                                       &lt;/table&gt;
+-                                     &lt;/div&gt;
+-                                   &lt;/div&gt;
+-                                 )}
++                                 providerResult.results.length &gt; 0 &amp;&amp;
++                                 (() =&gt; {
++                                   // Check if all rows have metrics available
++                                   const allRowsHaveMetrics =
++                                     providerResult.results.every(
++                                       (r) =&gt;
++                                         r.wer !== undefined &amp;&amp;
++                                         r.wer !== "" &amp;&amp;
++                                         r.string_similarity !== undefined &amp;&amp;
++                                         r.string_similarity !== "" &amp;&amp;
++                                         r.llm_judge_score !== undefined &amp;&amp;
++                                         r.llm_judge_score !== ""
++                                     );
++                                   const showMetrics =
++                                     evaluationResult.status === "done" ||
++                                     allRowsHaveMetrics;
++ 
++                                   return (
++                                     &lt;div className="border rounded-xl overflow-visible"&gt;
++                                       &lt;div className="overflow-hidden rounded-xl"&gt;
++                                         &lt;table className="w-full"&gt;
++                                           &lt;thead className="bg-muted/50 border-b border-border"&gt;
++                                             &lt;tr&gt;
++                                               &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
++                                                 ID
++                                               &lt;/th&gt;
++                                               &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
++                                                 Ground Truth
++                                               &lt;/th&gt;
++                                               &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
++                                                 Prediction
++                                               &lt;/th&gt;
++                                               {showMetrics &amp;&amp; (
++                                                 &lt;&gt;
++                                                   &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
++                                                     WER
++                                                   &lt;/th&gt;
++                                                   &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
++                                                     String Similarity
++                                                   &lt;/th&gt;
++                                                   &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
++                                                     LLM Judge Score
++                                                   &lt;/th&gt;
++                                                   &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
++                                                     LLM Judge Reasoning
++                                                   &lt;/th&gt;
++                                                 &lt;/&gt;
++                                               )}
++                                             &lt;/tr&gt;
++                                           &lt;/thead&gt;
++                                           &lt;tbody&gt;
++                                             {providerResult.results.map(
++                                               (result, index) =&gt; (
++                                                 &lt;tr
++                                                   key={index}
++                                                   className="border-b border-border last:border-b-0"
++                                                 &gt;
++                                                   &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
++                                                     {index + 1}
++                                                   &lt;/td&gt;
++                                                   &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
++                                                     {result.gt}
++                                                   &lt;/td&gt;
++                                                   &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
++                                                     {result.pred}
++                                                   &lt;/td&gt;
++                                                   {showMetrics &amp;&amp; (
++                                                     &lt;&gt;
++                                                       &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
++                                                         {result.wer}
++                                                       &lt;/td&gt;
++                                                       &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
++                                                         {parseFloat(
++                                                           result.string_similarity
++                                                         ).toFixed(5)}
++                                                       &lt;/td&gt;
++                                                       &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
++                                                         {result.llm_judge_score}
++                                                       &lt;/td&gt;
++                                                       &lt;td className="px-4 py-3 text-[13px] text-muted-foreground max-w-md"&gt;
++                                                         {
++                                                           result.llm_judge_reasoning
++                                                         }
++                                                       &lt;/td&gt;
++                                                     &lt;/&gt;
++                                                   )}
++                                                 &lt;/tr&gt;
++                                               )
++                                             )}
++                                           &lt;/tbody&gt;
++                                         &lt;/table&gt;
++                                       &lt;/div&gt;
++                                     &lt;/div&gt;
++                                   );
++                                 })()}
+                              &lt;/div&gt;
+                            );
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me update the TTS file similarly.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 84, lines removed: 72
+
+```diff
+@@ -676,76 +676,88 @@
+                                {/* Results Table */}
+                                {providerResult.results &amp;&amp;
+-                                 providerResult.results.length &gt; 0 &amp;&amp; (
+-                                   &lt;div className="border rounded-xl overflow-visible"&gt;
+-                                     &lt;div className="overflow-hidden rounded-xl"&gt;
+-                                       &lt;table className="w-full"&gt;
+-                                         &lt;thead className="bg-muted/50 border-b border-border"&gt;
+-                                           &lt;tr&gt;
+-                                             &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
+-                                               ID
+-                                             &lt;/th&gt;
+-                                             &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground max-w-[200px]"&gt;
+-                                               Text
+-                                             &lt;/th&gt;
+-                                             &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
+-                                               Audio
+-                                             &lt;/th&gt;
+-                                             {evaluationResult.status ===
+-                                               "done" &amp;&amp; (
+-                                               &lt;&gt;
+-                                                 &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
+-                                                   LLM Judge Score
+-                                                 &lt;/th&gt;
+-                                                 &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
+-                                                   LLM Judge Reasoning
+-                                                 &lt;/th&gt;
+-                                               &lt;/&gt;
+-                                             )}
+-                                           &lt;/tr&gt;
+-                                         &lt;/thead&gt;
+-                                         &lt;tbody&gt;
+-                                           {providerResult.results.map(
+-                                             (result, index) =&gt; (
+-                                               &lt;tr
+-                                                 key={index}
+-                                                 className="border-b border-border last:border-b-0"
+-                                               &gt;
+-                                                 &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
+-                                                   {index + 1}
+-                                                 &lt;/td&gt;
+-                                                 &lt;td className="px-4 py-3 text-[13px] text-foreground max-w-[200px] break-words"&gt;
+-                                                   {result.text}
+-                                                 &lt;/td&gt;
+-                                                 &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
+-                                                   &lt;audio
+-                                                     controls
+-                                                     className="w-full min-w-[280px]"
+-                                                     src={result.audio_path}
+-                                                   &gt;
+-                                                     Your browser does not
+-                                                     support the audio element.
+-                                                   &lt;/audio&gt;
+-                                                 &lt;/td&gt;
+-                                                 {evaluationResult.status ===
+-                                                   "done" &amp;&amp; (
+-                                                   &lt;&gt;
+-                                                     &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
+-                                                       {result.llm_judge_score}
+-                                                     &lt;/td&gt;
+-                                                     &lt;td className="px-4 py-3 text-[13px] text-muted-foreground max-w-md"&gt;
+-                                                       {
+-                                                         result.llm_judge_reasoning
+-                                                       }
+-                                                     &lt;/td&gt;
+-                                                   &lt;/&gt;
+-                                                 )}
+-                                               &lt;/tr&gt;
+-                                             )
+-                                           )}
+-                                         &lt;/tbody&gt;
+-                                       &lt;/table&gt;
+-                                     &lt;/div&gt;
+-                                   &lt;/div&gt;
+-                                 )}
++                                 providerResult.results.length &gt; 0 &amp;&amp;
++                                 (() =&gt; {
++                                   // Check if all rows have metrics available
++                                   const allRowsHaveMetrics =
++                                     providerResult.results.every(
++                                       (r) =&gt;
++                                         r.llm_judge_score !== undefined &amp;&amp;
++                                         r.llm_judge_score !== ""
++                                     );
++                                   const showMetrics =
++                                     evaluationResult.status === "done" ||
++                                     allRowsHaveMetrics;
++ 
++                                   return (
++                                     &lt;div className="border rounded-xl overflow-visible"&gt;
++                                       &lt;div className="overflow-hidden rounded-xl"&gt;
++                                         &lt;table className="w-full"&gt;
++                                           &lt;thead className="bg-muted/50 border-b border-border"&gt;
++                                             &lt;tr&gt;
++                                               &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
++                                                 ID
++                                               &lt;/th&gt;
++                                               &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground max-w-[200px]"&gt;
++                                                 Text
++                                               &lt;/th&gt;
++                                               &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
++                                                 Audio
++                                               &lt;/th&gt;
++                                               {showMetrics &amp;&amp; (
++                                                 &lt;&gt;
++                                                   &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
++                                                     LLM Judge Score
++                                                   &lt;/th&gt;
++                                                   &lt;th className="px-4 py-3 text-left text-[12px] font-medium text-foreground"&gt;
++                                                     LLM Judge Reasoning
++                                                   &lt;/th&gt;
++                                                 &lt;/&gt;
++                                               )}
++                                             &lt;/tr&gt;
++                                           &lt;/thead&gt;
++                                           &lt;tbody&gt;
++                                             {providerResult.results.map(
++                                               (result, index) =&gt; (
++                                                 &lt;tr
++                                                   key={index}
++                                                   className="border-b border-border last:border-b-0"
++                                                 &gt;
++                                                   &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
++                                                     {index + 1}
++                                                   &lt;/td&gt;
++                                                   &lt;td className="px-4 py-3 text-[13px] text-foreground max-w-[200px] break-words"&gt;
++                                                     {result.text}
++                                                   &lt;/td&gt;
++                                                   &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
++                                                     &lt;audio
++                                                       controls
++                                                       className="w-full min-w-[280px]"
++                                                       src={result.audio_path}
++                                                     &gt;
++                                                       Your browser does not
++                                                       support the audio element.
++                                                     &lt;/audio&gt;
++                                                   &lt;/td&gt;
++                                                   {showMetrics &amp;&amp; (
++                                                     &lt;&gt;
++                                                       &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
++                                                         {result.llm_judge_score}
++                                                       &lt;/td&gt;
++                                                       &lt;td className="px-4 py-3 text-[13px] text-muted-foreground max-w-md"&gt;
++                                                         {
++                                                           result.llm_judge_reasoning
++                                                         }
++                                                       &lt;/td&gt;
++                                                     &lt;/&gt;
++                                                   )}
++                                                 &lt;/tr&gt;
++                                               )
++                                             )}
++                                           &lt;/tbody&gt;
++                                         &lt;/table&gt;
++                                       &lt;/div&gt;
++                                     &lt;/div&gt;
++                                   );
++                                 })()}
+                              &lt;/div&gt;
+                            );
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me check for lint errors in both files.</details></think>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 2 files</summary>
+      
+Lint paths:
+
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx`
+
+Lint results
+
+Lint errors for `src/app/tts/[uuid]/page.tsx`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| 'React' is declared but its value is never read. | 3:8-3:13 | DIAGNOSTIC_SEVERITY_HINT |
+
+
+Lint errors for `src/app/stt/[uuid]/page.tsx`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| 'React' is declared but its value is never read. | 3:8-3:13 | DIAGNOSTIC_SEVERITY_HINT |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Both files have been updated successfully. Now the metrics in the output table will be shown if:
+1. The evaluation status is "done" (as before), OR
+2. All rows in the provider's results have metrics available
+
+For STT, it checks that wer, string_similarity, and llm_judge_score are all defined and non-empty for every row.
+For TTS, it checks that llm_judge_score is defined and non-empty for every row.</details></think>
+
+---
+
+Done. Updated both STT and TTS detail pages to show metrics in the output table when all rows have metrics available, even during intermediate results:
+
+- **STT**: Shows metrics if all rows have `wer`, `string_similarity`, and `llm_judge_score` values
+- **TTS**: Shows metrics if all rows have `llm_judge_score` values
+
+The logic now uses `showMetrics = evaluationResult.status === "done" || allRowsHaveMetrics` to determine whether to display metric columns.
+
+---
+
+_**User (2026-01-17 22:10Z)**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+I made code changes to both stt/[uuid]/page.tsx and tts/[uuid]/page.tsx to show metrics in the output table when all rows have metrics available, rather than waiting for status === "done". Let me update the app-details.md to reflect this change.</details></think>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "metrics.*done|conditional.*metrics|output.*table" in "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md" • 4 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `.cursor/rules/app-details.md` | `- Overall metrics only shown after run completes (status === "done")` | L321 |
+| `.cursor/rules/app-details.md` | `- **Overall Metrics** (only shown when status is "done", aggregated across all simulations):` | L323 |
+| `.cursor/rules/app-details.md` | `- **STT Outputs tab**: Shows Ground Truth vs Prediction text; metrics columns (WER, String Similarity, LLM Judge Score, LLM Judge Reasoning) only shown when status is "done"` | L695 |
+| `.cursor/rules/app-details.md` | `- **TTS Outputs tab**: Shows text input with audio playback; metrics columns (LLM Judge Score, LLM Judge Reasoning) only shown when status is "done"` | L696 |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Found the relevant lines. I need to update lines 695-696 to reflect that metrics are now shown when all rows have metrics available, not just when status is "done".</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 2
+
+```diff
+@@ -693,6 +693,6 @@
+  - **STT metrics**: WER, String Similarity, LLM Judge Score, TTFB, Processing Time
+  - **TTS metrics**: LLM Judge Score, TTFB, Processing Time
+- - **STT Outputs tab**: Shows Ground Truth vs Prediction text; metrics columns (WER, String Similarity, LLM Judge Score, LLM Judge Reasoning) only shown when status is "done"
+- - **TTS Outputs tab**: Shows text input with audio playback; metrics columns (LLM Judge Score, LLM Judge Reasoning) only shown when status is "done"
++ - **STT Outputs tab**: Shows Ground Truth vs Prediction text; metrics columns (WER, String Similarity, LLM Judge Score, LLM Judge Reasoning) shown when status is "done" OR when all rows have metrics available
++ - **TTS Outputs tab**: Shows text input with audio playback; metrics columns (LLM Judge Score, LLM Judge Reasoning) shown when status is "done" OR when all rows have metrics available
+  
+  ### Component Patterns
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Done. Updated the documentation to reflect that metrics are shown when all rows have metrics available during intermediate results, not just when status is "done".</details></think>
+
+---
+
+Done. Updated documentation to reflect that metrics in STT/TTS output tables are shown when all rows have metrics available (not just when status is "done").
+
+---
+
+_**User (2026-01-17 22:10Z)**_
+
+in both stt and tts - once polling returns done and leaderboard tab is active shift the tab to leaderboard tab from the output tab
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants to automatically switch to the "leaderboard" tab when the evaluation status becomes "done". Currently the default tab is "outputs", but when the evaluation completes, they want to shift focus to the leaderboard tab.
+
+Let me find where the polling detects "done" status in both STT and TTS detail pages and add logic to switch to the leaderboard tab.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I need to add `setActiveTab("leaderboard")` when the status becomes "done" in both files. I'll update the polling function to switch to the leaderboard tab when done.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: undefined
+
+```diff
+@@ -194,4 +194,6 @@
+  
+        if (result.status === "done") {
++         // Switch to leaderboard tab when evaluation completes
++         setActiveTab("leaderboard");
+          if (pollingIntervalRef.current) {
+            clearInterval(pollingIntervalRef.current);
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now update TTS file.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: undefined
+
+```diff
+@@ -190,4 +190,6 @@
+  
+        if (result.status === "done") {
++         // Switch to leaderboard tab when evaluation completes
++         setActiveTab("leaderboard");
+          if (pollingIntervalRef.current) {
+            clearInterval(pollingIntervalRef.current);
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me check for lint errors.</details></think>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 2 files</summary>
+      
+Lint paths:
+
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx`
+
+Lint results
+
+Lint errors for `src/app/tts/[uuid]/page.tsx`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| 'React' is declared but its value is never read. | 3:8-3:13 | DIAGNOSTIC_SEVERITY_HINT |
+
+
+Lint errors for `src/app/stt/[uuid]/page.tsx`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| 'React' is declared but its value is never read. | 3:8-3:13 | DIAGNOSTIC_SEVERITY_HINT |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Done. Both STT and TTS detail pages will now automatically switch to the "leaderboard" tab when the evaluation status becomes "done" during polling.</details></think>
+
+---
+
+Done. Both STT and TTS detail pages will now automatically switch to the "Leaderboard" tab when polling detects that the evaluation status has become "done".
+
+---
+
+_**User (2026-01-17 22:10Z)**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+I made code changes to both stt/[uuid]/page.tsx and tts/[uuid]/page.tsx to automatically switch to the "leaderboard" tab when polling detects status is "done". Let me update the app-details.md to reflect this.</details></think>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "leaderboard.*tab|default.*tab|polling.*done" in "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md" • 3 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `.cursor/rules/app-details.md` | `- **Default tab is "Outputs"** (not Leaderboard) to show results as they arrive` | L181 |
+| `.cursor/rules/app-details.md` | `- **Default active tab**: "outputs" (not "leaderboard")` | L225 |
+| `.cursor/rules/app-details.md` | `- **Leaderboard**: Only visible when status is `done` - comparative table and charts` | L229 |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Found the relevant sections. I need to update them to mention that the tab automatically switches to leaderboard when status becomes "done". Let me update both STT and TTS sections.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -179,5 +179,5 @@
+  - **Polls for results** while status is &#96;queued&#96; or &#96;in_progress&#96;
+  - **Shows intermediate results** as each provider completes (doesn't wait for all to finish)
+- - **Default tab is "Outputs"** (not Leaderboard) to show results as they arrive
++ - **Default tab is "Outputs"** (not Leaderboard) to show results as they arrive; automatically switches to "Leaderboard" when evaluation completes
+  - **Status badge**: Shows "Running" or "Queued" badge with spinner when evaluation is not done (shown even before any provider results arrive)
+  - **Tabs only appear when at least one provider result exists**:
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now update the TTS section.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -223,5 +223,5 @@
+  
+  - **Polls for results** while status is &#96;queued&#96; or &#96;in_progress&#96;
+- - **Default active tab**: "outputs" (not "leaderboard")
++ - **Default active tab**: "outputs" (not "leaderboard"); automatically switches to "leaderboard" when evaluation completes
+  - **Intermediate results**: Shows Outputs and About tabs during &#96;in_progress&#96; status
+  - **Status badge**: Shows "Running" or "Queued" badge with spinner when evaluation is not done (shown even before any provider results arrive)
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Done. Updated both STT and TTS sections to mention that the tab automatically switches to leaderboard when the evaluation completes.</details></think>
+
+---
+
+Done. Updated documentation to note that both STT and TTS detail pages automatically switch to the "Leaderboard" tab when evaluation completes.
+
+---
+
+_**User (2026-01-17 22:10Z)**_
+
+change stt and tts so that evaluate button is always enabled and if clicked but providers are not set show red border around them just as it is done for other fields
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants to:
+1. Always enable the Evaluate button (remove the `isEvaluateDisabled` check)
+2. When clicked without providers selected, show a red border around the provider selection area (similar to how invalid rows are highlighted)
+
+Let me look at the current implementation to understand how validation works for other fields.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I need to:
+
+1. Add a state for `providersInvalid` to track if providers are invalid
+2. Modify `handleEvaluate` to check for providers and set `providersInvalid` state and switch to settings tab
+3. Remove `isEvaluateDisabled` or make it always false
+4. Remove `disabled` prop from the Evaluate button
+5. Add red border styling to the provider selection area when `providersInvalid` is true
+6. Clear `providersInvalid` when a provider is selected
+
+Let me find the provider selection section to add the red border styling.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I understand the structure. I need to:
+
+1. Add `providersInvalid` state
+2. Update `handleEvaluate` to validate providers and set `providersInvalid` + switch to settings tab
+3. Update `toggleProvider` to clear `providersInvalid` when a provider is selected
+4. Remove `isEvaluateDisabled` and `disabled` prop from button
+5. Update the provider selection container to show red border when invalid
+
+Let me also find the provider selection UI to add the red border.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I have a good understanding. Let me make the changes:
+
+1. Add `providersInvalid` state after `invalidRowIds`2. Update `toggleProvider` to clear `providersInvalid`3. Update `handleEvaluate` to check providers first and set `providersInvalid` + switch to settings tab
+4. Remove `isEvaluateDisabled` line5. Remove `disabled` prop from Evaluate button
+6. Update the provider selection container div (line 685) to show red border when invalid
+
+Let me start with STT.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: undefined
+
+```diff
+@@ -36,4 +36,5 @@
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState&lt;string | null&gt;(null);
+    const [invalidRowIds, setInvalidRowIds] = useState&lt;Set&lt;string&gt;&gt;(new Set());
++   const [providersInvalid, setProvidersInvalid] = useState(false);
+    const [selectedProviders, setSelectedProviders] = useState&lt;Set&lt;string&gt;&gt;(
+      new Set()
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now update toggleProvider to clear providersInvalid.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: undefined
+
+```diff
+@@ -216,4 +216,6 @@
+        } else if (newSet.size &lt; MAX_PROVIDERS) {
+          newSet.add(provider);
++         // Clear providers invalid state when a provider is selected
++         setProvidersInvalid(false);
+        }
+        return newSet;
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now update handleEvaluate to check providers first.</details></think>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "const handleEvaluate = async" in "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx" • 1 match</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `src/components/evaluations/SpeechToTextEvaluation.tsx` | `const handleEvaluate = async () => \{` | L484 |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to update handleEvaluate to check for providers first.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: 7, lines removed: undefined
+
+```diff
+@@ -483,4 +483,11 @@
+  
+    const handleEvaluate = async () =&gt; {
++     // Validate providers first
++     if (selectedProviders.size === 0) {
++       setProvidersInvalid(true);
++       setActiveTab("settings");
++       return;
++     }
++ 
+      // Validate all rows
+      const invalidIds = new Set&lt;string&gt;();
+```
+
+**Chunk 2**
+Lines added: 1, lines removed: undefined
+
+```diff
+@@ -500,4 +507,5 @@
+      // Clear validation errors and proceed with evaluation
+      setInvalidRowIds(new Set());
++     setProvidersInvalid(false);
+      setIsEvaluating(true);
+  
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now remove isEvaluateDisabled and update the button.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: undefined, lines removed: 2
+
+```diff
+@@ -572,6 +572,4 @@
+        : file.name;
+    };
+- 
+-   const isEvaluateDisabled = selectedProviders.size === 0;
+  
+    return (
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now update the Evaluate button to remove the disabled prop.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -607,6 +607,5 @@
+            &lt;button
+              onClick={handleEvaluate}
+-             disabled={isEvaluateDisabled}
+-             className="h-9 px-6 rounded-md text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
++             className="h-9 px-6 rounded-md text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer flex items-center gap-2"
+            &gt;
+              &lt;svg
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now update the provider selection container to show red border when invalid.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: 5, lines removed: 1
+
+```diff
+@@ -691,5 +691,9 @@
+  
+            {/* Provider Selection */}
+-           &lt;div className="space-y-3"&gt;
++           &lt;div
++             className={&#96;space-y-3 p-4 -m-4 rounded-lg transition-colors ${
++               providersInvalid ? "bg-red-500/10 border border-red-500" : ""
++             }&#96;}
++           &gt;
+              &lt;div className="flex items-center gap-2"&gt;
+                &lt;h3 className="text-[13px] font-medium text-foreground"&gt;
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me do the same for TTS.</details></think>
+
+---
+
+Now let me apply the same changes to TTS:
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I'll apply the same changes to TTS.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: undefined
+
+```diff
+@@ -30,4 +30,5 @@
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState&lt;string | null&gt;(null);
+    const [invalidRowIds, setInvalidRowIds] = useState&lt;Set&lt;string&gt;&gt;(new Set());
++   const [providersInvalid, setProvidersInvalid] = useState(false);
+    const [selectedProviders, setSelectedProviders] = useState&lt;Set&lt;string&gt;&gt;(
+      new Set()
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Update toggleProvider for TTS.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: undefined
+
+```diff
+@@ -147,4 +147,6 @@
+        } else if (newSet.size &lt; MAX_PROVIDERS) {
+          newSet.add(provider);
++         // Clear providers invalid state when a provider is selected
++         setProvidersInvalid(false);
+        }
+        return newSet;
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Update handleEvaluate for TTS.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: 7, lines removed: undefined
+
+```diff
+@@ -155,4 +155,11 @@
+  
+    const handleEvaluate = async () =&gt; {
++     // Validate providers first
++     if (selectedProviders.size === 0) {
++       setProvidersInvalid(true);
++       setActiveTab("settings");
++       return;
++     }
++ 
+      // Validate all rows (same check as addRow)
+      const invalidIds = new Set&lt;string&gt;();
+```
+
+**Chunk 2**
+Lines added: 1, lines removed: undefined
+
+```diff
+@@ -172,4 +179,5 @@
+      // Clear validation errors and proceed with evaluation
+      setInvalidRowIds(new Set());
++     setProvidersInvalid(false);
+      setIsEvaluating(true);
+  
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Remove isEvaluateDisabled from TTS.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: undefined, lines removed: 2
+
+```diff
+@@ -233,6 +233,4 @@
+      }
+    };
+- 
+-   const isEvaluateDisabled = selectedProviders.size === 0;
+  
+    return (
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Update the Evaluate button for TTS.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -267,6 +267,5 @@
+            &lt;button
+              onClick={handleEvaluate}
+-             disabled={isEvaluateDisabled}
+-             className="h-9 px-6 rounded-md text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
++             className="h-9 px-6 rounded-md text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer flex items-center gap-2"
+            &gt;
+              &lt;svg
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now update the provider selection container for TTS.</details></think>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "\{/\* Provider Selection \*/\}" in "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx" • 1 match</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `src/components/evaluations/TextToSpeechEvaluation.tsx` | `\{/* Provider Selection */\}` | L352 |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now update the provider selection container for TTS.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: 5, lines removed: 1
+
+```diff
+@@ -351,5 +351,9 @@
+  
+            {/* Provider Selection */}
+-           &lt;div className="space-y-3"&gt;
++           &lt;div
++             className={&#96;space-y-3 p-4 -m-4 rounded-lg transition-colors ${
++               providersInvalid ? "bg-red-500/10 border border-red-500" : ""
++             }&#96;}
++           &gt;
+              &lt;div className="flex items-center gap-2"&gt;
+                &lt;h3 className="text-[13px] font-medium text-foreground"&gt;
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me check for lint errors.</details></think>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 2 files</summary>
+      
+Lint paths:
+
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx`
+
+Lint results
+
+
+**No lint errors found**
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Done. Both files have been updated:
+1. Evaluate button is always enabled
+2. When clicked without providers selected, shows red border around provider selection area and switches to settings tab
+3. When a provider is selected, the red border is cleared</details></think>
+
+---
+
+Done. Both STT and TTS evaluation components now:
+- Always have the Evaluate button enabled
+- When clicked without providers selected:
+  - Shows red border and background around the provider selection area
+  - Switches to the Settings tab
+- Red border clears when a provider is selected
+
+---
+
+_**User (2026-01-17 22:10Z)**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+I made code changes to both STT and TTS evaluation components to:
+1. Always enable the Evaluate button
+2. Show red border around provider selection when no providers are selected and Evaluate is clicked
+3. Switch to Settings tab when validation fails
+
+Let me update the app-details.md to reflect this change.</details></think>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "Evaluate button.*disabled|disabled when no providers" in "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md" • 1 match</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `.cursor/rules/app-details.md` | `- Evaluate button in header next to description, disabled when no providers selected` | L674 |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I need to update this line to reflect that the Evaluate button is now always enabled and shows validation error instead of being disabled.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -672,5 +672,5 @@
+    - **Dataset tab**: Sample rows + add sample button (TTS also has CSV upload with OR divider and sample download)
+  - **Providers start unselected by default** - user must select 1-3 providers before evaluating
+- - Evaluate button in header next to description, disabled when no providers selected
++ - Evaluate button always enabled; clicking without providers shows red border around provider selection and switches to Settings tab
+  - "Deselect all" button only shown when at least one provider is selected
+  - On submit: calls &#96;POST /[tts|stt]/evaluate&#96;, then redirects to &#96;/[tts|stt]/{uuid}&#96; using the returned &#96;task_id&#96;
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Done. Updated the documentation to reflect that the Evaluate button is always enabled and shows validation styling when clicked without providers.</details></think>
+
+---
+
+Done. Updated documentation to reflect that the Evaluate button is always enabled and shows red border validation on provider selection when clicked without providers.
+
+---
+

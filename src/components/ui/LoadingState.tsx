@@ -45,15 +45,27 @@ export function ErrorState({
 
 type NotFoundStateProps = {
   className?: string;
+  errorCode?: 401 | 403 | 404;
 };
 
-export function NotFoundState({ className = "" }: NotFoundStateProps) {
+const errorMessages: Record<number, string> = {
+  401: "You do not have the permission to access this page",
+  403: "You do not have the permission to access this page",
+  404: "Not found",
+};
+
+export function NotFoundState({
+  className = "",
+  errorCode = 404,
+}: NotFoundStateProps) {
+  const message = errorMessages[errorCode] || "Not found";
+
   return (
     <div
       className={`flex flex-col items-center justify-center py-20 ${className}`}
     >
-      <h1 className="text-8xl font-bold text-muted-foreground">404</h1>
-      <p className="text-lg text-muted-foreground mt-2">Not found</p>
+      <h1 className="text-8xl font-bold text-muted-foreground">{errorCode}</h1>
+      <p className="text-lg text-muted-foreground mt-2">{message}</p>
     </div>
   );
 }

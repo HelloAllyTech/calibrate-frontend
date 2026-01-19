@@ -119,7 +119,7 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
 - **Clickable rows**: Clicking a past run row opens the appropriate results dialog:
   - `llm-unit-test` → Opens `TestRunnerDialog` in view mode with `taskId`, `tests` (from `results`), and `initialRunStatus`
   - `llm-benchmark` → Opens `BenchmarkResultsDialog` in view mode (with `taskId` prop)
-  - For in-progress runs, dialog shows tests as "Running" until API returns results
+  - For in-progress runs, dialogs show intermediate results as they arrive from the API
 - **Real-time updates with coordinated polling**:
   1. A new entry is immediately added to the top of the past runs table with "pending" status
   2. Optimistic `results` array is created from `testsToRun` with test names for immediate display
@@ -178,7 +178,7 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
 
 - **Polls for results** while status is `queued` or `in_progress`
 - **Shows intermediate results** as each provider completes (doesn't wait for all to finish)
-- **Default tab is "Outputs"** (not Leaderboard) to show results as they arrive
+- **Default tab is "Outputs"** (not Leaderboard) to show results as they arrive; automatically switches to "Leaderboard" when evaluation completes
 - **Status badge**: Shows "Running" or "Queued" badge with spinner when evaluation is not done (shown even before any provider results arrive)
 - **Tabs only appear when at least one provider result exists**:
   - **Leaderboard**: Only visible when status is `done` (needs all providers to compare)
@@ -222,7 +222,7 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
 **Detail Page (`/tts/[uuid]`):**
 
 - **Polls for results** while status is `queued` or `in_progress`
-- **Default active tab**: "outputs" (not "leaderboard")
+- **Default active tab**: "outputs" (not "leaderboard"); automatically switches to "leaderboard" when evaluation completes
 - **Intermediate results**: Shows Outputs and About tabs during `in_progress` status
 - **Status badge**: Shows "Running" or "Queued" badge with spinner when evaluation is not done (shown even before any provider results arrive)
 - **Tabs**:
@@ -319,6 +319,11 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
   - Page polls API every 3 seconds while status is `in_progress`
   - Simulation results appear incrementally as each simulation completes
   - Overall metrics only shown after run completes (status === "done")
+  - Individual simulation rows can have `evaluation_results: null` while still processing
+  - **Row spinner states** (beside play button):
+    - **No spinner**: Row has `evaluation_results` (metrics complete)
+    - **Yellow spinner**: Row has transcript but no `evaluation_results` (processing - simulation ran, metrics being computed)
+    - **Gray spinner**: Row has no transcript and no `evaluation_results` (waiting - simulation hasn't started yet)
 
 - **Overall Metrics** (only shown when status is "done", aggregated across all simulations):
 
@@ -334,8 +339,9 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
   - Metric columns derived from `runData.metrics` keys, or from `simulation_results[].evaluation_results` when metrics is null
   - Latency metrics (stt/ttft, llm/ttft, etc.) are excluded from the table (shown in latency tab instead)
   - `stt_llm_judge_score` displayed as percentage, other metrics as Pass/Fail
-  - View transcript button
+  - View transcript button (available even while evaluation is pending)
   - Audio playback (for voice simulations)
+  - **Processing state**: Rows with `evaluation_results: null` show a dash (—) for metric columns and a spinner beside the play button (yellow if has transcript, gray if no transcript)
 
 - **Transcript Dialog**:
 
@@ -669,9 +675,9 @@ Both TTS and STT evaluation pages follow the same list → new → detail patter
 - Contains the evaluation form component (`TextToSpeechEvaluation` or `SpeechToTextEvaluation`)
 - Both components use the same tab layout:
   - **Settings tab**: Language selection dropdown + provider selection (max 3 providers, shows "X/3 selected")
-  - **Input tab**: Sample rows + add sample button (TTS also has CSV upload with OR divider and sample download)
+  - **Dataset tab**: Sample rows + add sample button (TTS also has CSV upload with OR divider and sample download)
 - **Providers start unselected by default** - user must select 1-3 providers before evaluating
-- Evaluate button in header next to description, disabled when no providers selected
+- Evaluate button always enabled; clicking without providers shows red border around provider selection and switches to Settings tab
 - "Deselect all" button only shown when at least one provider is selected
 - On submit: calls `POST /[tts|stt]/evaluate`, then redirects to `/[tts|stt]/{uuid}` using the returned `task_id`
 - Uses `BackHeader` component for back navigation to list page
@@ -692,8 +698,8 @@ Both TTS and STT evaluation pages follow the same list → new → detail patter
 - **TTS Input tab**: Text input field + CSV upload option with "OR" divider and sample CSV download
 - **STT metrics**: WER, String Similarity, LLM Judge Score, TTFB, Processing Time
 - **TTS metrics**: LLM Judge Score, TTFB, Processing Time
-- **STT Outputs tab**: Shows Ground Truth vs Prediction text; metrics columns (WER, String Similarity, LLM Judge Score, LLM Judge Reasoning) only shown when status is "done"
-- **TTS Outputs tab**: Shows text input with audio playback; metrics columns (LLM Judge Score, LLM Judge Reasoning) only shown when status is "done"
+- **STT Outputs tab**: Shows Ground Truth vs Prediction text; metrics columns (WER, String Similarity, LLM Judge Score, LLM Judge Reasoning) shown when status is "done" OR when all rows have metrics available
+- **TTS Outputs tab**: Shows text input with audio playback; metrics columns (LLM Judge Score, LLM Judge Reasoning) shown when status is "done" OR when all rows have metrics available
 
 ### Component Patterns
 
@@ -744,18 +750,31 @@ Both TTS and STT evaluation pages follow the same list → new → detail patter
 11. **View Mode Dialogs**: `TestRunnerDialog` and `BenchmarkResultsDialog` support dual modes:
     - **Run mode** (default): Opens dialog and starts a new run/benchmark
     - **View mode**: Pass `taskId` prop to view existing run results without starting a new run
-    - **Behavior based on `initialRunStatus`**:
+    - **TestRunnerDialog behavior based on `initialRunStatus`**:
       - **Completed runs** (`done`/`completed`): Clears test results initially, fetches fresh from API once (no polling), displays actual pass/fail status
       - **In-progress runs** (`pending`/`queued`/`in_progress`): Initializes tests as "running" (yellow), polls API at `POLLING_INTERVAL_MS` until complete
+    - **BenchmarkResultsDialog intermediate results**:
+      - **When in progress**: Shows Outputs view directly (no tabs visible), all providers displayed immediately
+      - **When done**: Shows both Leaderboard and Outputs tabs, auto-switches to Leaderboard tab
+      - Uses expandable provider toggles (not a dropdown) in the left panel
+      - Each provider section shows: provider name, processing spinner (if still running), passed/failed counts (when complete)
+      - Provider sections are expandable to show individual test results underneath
+      - **Immediate provider display**: On dialog open, creates placeholder entries for ALL models from `models` prop (doesn't wait for API results)
+      - **Processing state display**: When a provider has `success === null` and no results yet, shows all test names from `testNames` prop with yellow running indicators (similar to TestRunnerDialog)
+      - As results arrive from API, running indicators update to green checkmarks or red X marks
+      - **Auto-expand behavior**: First provider (from `models` prop) is expanded immediately when dialog opens, not waiting for results
+      - **Merged providers**: `getProvidersToDisplay()` function merges `modelResults` from API with placeholders for any models that don't have results yet
+      - Types support null values: `success: boolean | null`, `test_results: BenchmarkTestResult[] | null`, `passed: boolean | null`
+      - Header shows spinner while benchmark is in progress (not done)
     - **Props for viewing past runs**:
       - `taskId`: The run UUID to fetch results for
-      - `tests`: Array converted from `pastRun.results` to show test names while loading
-      - `initialRunStatus`: Determines initialization behavior (completed vs in-progress)
+      - `tests`: Array converted from `pastRun.results` to show test names while loading (TestRunnerDialog only)
+      - `initialRunStatus`: Determines initialization behavior (TestRunnerDialog only)
     - **Callback props for coordinated updates**:
-      - `onRunCreated`: Notifies parent when a new run is created
-      - `onStatusUpdate`: Called during polling (only when `isRunning` is true) to sync status changes back to parent
+      - `onRunCreated` / `onBenchmarkCreated`: Notifies parent when a new run/benchmark is created
+      - `onStatusUpdate`: Called during polling (only when `isRunning` is true) to sync status changes back to parent (TestRunnerDialog only)
       - Prevents duplicate polling and keeps table/dialog in sync
-    - **Re-initialization prevention** (prevents flickering while ensuring polling starts on reopen):
+    - **Re-initialization prevention** (TestRunnerDialog - prevents flickering while ensuring polling starts on reopen):
       - Uses THREE refs: `wasOpenRef`, `initializedTaskIdRef`, and `pollingIntervalRef`
       - **Skip condition**: Only skips if ALL THREE conditions are true:
         1. `wasOpenRef.current` - dialog was already open (not transitioning from closed→open)
@@ -766,7 +785,7 @@ Both TTS and STT evaluation pages follow the same list → new → detail patter
       - Always clears existing polling interval before starting new one
       - Refs and intervals are cleared when dialog closes or when starting a fresh run
       - `onStatusUpdate` only called for in-progress runs (when `isRunning` is true)
-    - **Auth token guard**: The useEffect must wait for `backendAccessToken` before starting polling:
+    - **Auth token guard** (TestRunnerDialog): The useEffect must wait for `backendAccessToken` before starting polling:
       - Returns early if `backendAccessToken` is not available
       - Includes `backendAccessToken` in useEffect dependency array
       - This ensures polling re-attempts when session loads (token becomes available)
@@ -1235,6 +1254,53 @@ The `GET /agent-tests/agent/{uuid}/runs` endpoint returns test run history:
 - `results[].test_case.name`: Test name from completed test results
 - **Note**: For test names, check `results[].name` first (in-progress), then `results[].test_case.name` (completed)
 
+### Benchmark API Response (Intermediate Results)
+
+The `GET /agent-tests/benchmark/{taskId}` endpoint returns intermediate results during `in_progress` status:
+
+```json
+{
+  "task_id": "0b69d3af-bbc1-4c0c-a842-1682ec4b7649",
+  "status": "in_progress",
+  "model_results": [
+    {
+      "model": "openai/gpt-5.1",
+      "success": true,
+      "message": "Benchmark completed successfully for openai/gpt-5.1",
+      "total_tests": 2,
+      "passed": 1,
+      "failed": 1,
+      "test_results": [
+        {
+          "name": "plans next question",
+          "passed": true,
+          "output": { "response": "", "tool_calls": [...] },
+          "test_case": { "name": "...", "history": [...], "evaluation": {...} }
+        }
+      ]
+    },
+    {
+      "model": "anthropic/claude-opus-4.5",
+      "success": null,
+      "message": "Processing...",
+      "total_tests": null,
+      "passed": null,
+      "failed": null,
+      "test_results": null
+    }
+  ],
+  "leaderboard_summary": null,
+  "error": null
+}
+```
+
+**Key fields for intermediate results:**
+
+- `model_results[].success`: `true`/`false` when provider complete, `null` when still processing
+- `model_results[].test_results`: Array of test results when complete, `null` when processing
+- `model_results[].test_results[].passed`: `true`/`false` when test complete, `null` if test still running
+- `leaderboard_summary`: Only populated when status is `done`/`completed`
+
 ### JWT Authentication
 
 All API endpoints require JWT authentication. Include the `Authorization: Bearer ${token}` header in every request.
@@ -1314,7 +1380,7 @@ import {
   LoadingState,
   ErrorState,
   EmptyState,
-  NotFoundState,
+  NotFoundState,  // Supports errorCode prop: 401, 403, 404
   ResourceState,
   BackHeader,
   StatusBadge,
@@ -1517,8 +1583,11 @@ import { SpinnerIcon, ToolIcon } from "@/components/icons";
 // Error state with optional retry
 <ErrorState message="Failed to load data" onRetry={refetch} />
 
-// Not found state (for 404 errors) - displays simple "404" with "Not found" text
-<NotFoundState />
+// Not found state (for HTTP errors) - displays error code with appropriate message
+<NotFoundState />                    // Default: "404 Not found"
+<NotFoundState errorCode={404} />    // "404 Not found"
+<NotFoundState errorCode={403} />    // "403 Forbidden"
+<NotFoundState errorCode={401} />    // "401 Unauthorized"
 
 // Combined component that handles all three states
 <ResourceState
@@ -1672,7 +1741,7 @@ useEffect(() => {
 }, [dependency]);
 ```
 
-**Files using `POLLING_INTERVAL_MS`:** TestRunnerDialog, BenchmarkResultsDialog, TestsTabContent, STT/TTS evaluation pages, simulation run page.
+**Files using `POLLING_INTERVAL_MS`:** TestRunnerDialog, BenchmarkResultsDialog (with intermediate results support), TestsTabContent, STT/TTS evaluation pages, simulation run page.
 
 ### Linkable Table Rows Pattern
 
@@ -1827,7 +1896,12 @@ Set `MAINTENANCE_MODE=true` in `.env.local` to show a maintenance page. When ena
 - **For CRUD pages**: Use `useCrudResource` hook from `@/hooks` for standardized list/create/update/delete patterns
 - **JWT authentication required**: All API calls must include `Authorization: Bearer ${backendAccessToken}` header (handled automatically by API utilities)
 - **401 error handling**: API utilities automatically call `signOut({ callbackUrl: "/login" })` on 401 responses. For manual fetch calls, check `response.status === 401`
-- **404 error handling**: Detail pages (STT, TTS, Simulation Run) use `NotFoundState` component for 404 responses. Pattern: add `notFound` state, check `response.status === 404` before `!response.ok`, render `NotFoundState`. For simulation runs, a special `notFoundHeader` is used that shows "Simulation Run" title and navigates back to `/simulations` (main page) instead of the specific simulation
+- **HTTP error handling (401, 403, 404)**: Detail pages (STT, TTS, Simulation Run) handle specific HTTP error codes with dedicated UI states:
+  - **401 Unauthorized**: Automatically redirects to login via `signOut({ callbackUrl: "/login" })`
+  - **403 Forbidden**: Shows `NotFoundState` with "403 Forbidden" message
+  - **404 Not Found**: Shows `NotFoundState` with "404 Not found" message
+  - Pattern: add `errorCode` state (`useState<401 | 403 | 404 | null>(null)`), check status codes before `!response.ok`, render `<NotFoundState errorCode={errorCode} />`
+  - For simulation runs, a special `notFoundHeader` is used that shows empty header and navigates back to `/simulations` (main page) instead of the specific simulation
 - **Wait for token**: In `useEffect` hooks, return early if `backendAccessToken` is not yet available; include it in the dependency array
 - **ngrok header**: `"ngrok-skip-browser-warning": "true"` header is included automatically by API utilities
 - **Backend URL check**: API utilities will throw an error if `NEXT_PUBLIC_BACKEND_URL` is not set
@@ -1843,9 +1917,44 @@ Set `MAINTENANCE_MODE=true` in `.env.local` to show a maintenance page. When ena
   1. Create refs to mirror the state: `const stateRef = useRef(stateValue)`
   2. Keep refs in sync with dedicated effects: `useEffect(() => { stateRef.current = stateValue }, [stateValue])`
   3. Inside the polling callback, use `stateRef.current` instead of `stateValue`
-  - Example: `TestsTabContent` uses `viewingTestResultsRef`, `viewingBenchmarkResultsRef`, and `selectedPastRunRef` to check if a run is being viewed in a dialog, ensuring the polling callback sees the current viewing state even if the user just clicked on a run
+  - Example: `TestsTabContent` uses `viewingTestResultsRef`, `viewingBenchmarkResultsRef`, `selectedPastRunRef`, and `pastRunsRef` to check current state inside polling callbacks
+- **Refs to avoid dependency-triggered re-runs**: If a useEffect sets up polling and updates state that's also in its dependencies, it creates a rapid polling loop (effect runs → polls → updates state → effect re-runs → polls again immediately). Solution:
+  1. Use a ref to track the state that gets updated by polling
+  2. Remove that state from the dependency array
+  3. Access current value via ref inside the polling callback
+  - Example: `TestsTabContent` uses `pastRunsRef` instead of having `pastRuns` in the polling useEffect dependencies
 - **Functional setState for conditional updates in polling**: When you only need to conditionally set state (not read it for logic), use functional setState: `setState((current) => current || newValue)`. This avoids stale closures because React provides the current state value. Example: `setActiveProviderTab((current) => current || result.provider_results[0].provider)`
-- **Polling cleanup**: Always clear intervals in useEffect cleanup to prevent memory leaks
+- **Polling cleanup pattern**: Clear intervals at THREE points to prevent accumulating multiple intervals:
+  1. **At the start of the effect** - before setting up a new interval, clear any existing one
+  2. **When the triggering condition becomes false** - e.g., when `isOpen` becomes false, clear in an `else` branch
+  3. **In the cleanup function** - return a cleanup that clears the interval
+  ```tsx
+  useEffect(() => {
+    if (isOpen) {
+      // 1. Clear existing interval first
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
+      }
+      // ... set up new polling ...
+      pollingIntervalRef.current = setInterval(poll, POLLING_INTERVAL_MS);
+    } else {
+      // 2. Clear when dialog closes
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
+      }
+    }
+    // 3. Cleanup on unmount or dependency change
+    return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
+      }
+    };
+  }, [isOpen, taskId]);
+  ```
+  - **Gotcha**: Without clearing at the start of the effect, re-renders or dependency changes can create multiple concurrent intervals, causing excessive API requests
 - **Dialog close prevention**: Disable dialog close while async operations (delete, save) are in progress
 - **Unsaved changes confirmation**: Form dialogs (like AddTestDialog) should show a confirmation dialog when user clicks backdrop, asking "Discard changes?" with Cancel/Discard buttons
 
