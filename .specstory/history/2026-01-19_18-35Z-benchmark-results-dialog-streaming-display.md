@@ -489,3 +489,340 @@ I've updated the `.cursor/rules/app-details.md` file to document the changes mad
 
 ---
 
+_**User (2026-01-17 22:10Z)**_
+
+similar to @src/components/TestRunnerDialog.tsx show gray spinner in @src/components/BenchmarkResultsDialog.tsx when task status is queued and show a pill beside the benchmark name saying queued similar to stt/tts eval run page
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants me to update BenchmarkResultsDialog.tsx to:
+1. Show a gray spinner when task status is "queued" (instead of the current behavior)
+2. Show a pill/badge beside the benchmark name saying "Queued" similar to STT/TTS eval pages
+
+Let me look at the current BenchmarkResultsDialog.tsx to understand the current header and spinner behavior, and also look at the STT/TTS evaluation pages to see the status badge pattern.
+
+From the attached file, I can see:
+1. Line 376-377: Currently shows a SpinnerIcon when `!isDone && !isInitialLoading` - this is yellow by default
+2. Line 380-383: Shows loading text based on taskStatus ("Benchmark queued..." or "Starting benchmark...")
+
+Looking at the STT/TTS evaluation pages, they use the `StatusBadge` component from `@/components/ui`. Let me check how that's used.
+
+The user wants:
+1. Gray spinner when queued (currently it's likely yellow)
+2. A "Queued" pill/badge beside the benchmark name
+
+Let me look at the header section more carefully:
+
+```tsx
+{/* Header */}
+<div className="flex items-center justify-between px-6 py-4">
+  <div className="flex items-center gap-3">
+    <h2 className="text-lg font-semibold text-foreground">
+      Benchmark for {agentName}
+    </h2>
+    {!isDone && !isInitialLoading && (
+      <SpinnerIcon className="w-4 h-4 animate-spin text-muted-foreground" />
+    )}
+  </div>
+  ...
+</div>
+```
+
+So currently, it shows a spinner with `text-muted-foreground` (which is gray). But the user wants different behavior:
+1. When queued: show gray spinner AND a "Queued" badge
+
+
+2. When in_progress: show spinner and maybe a "Running" badge
+
+Looking at how the STT evaluation page handles this, it uses the `StatusBadge` component with a `showSpinner` prop. This component displays the appropriate status label and spinner based on the evaluation state. I should apply the same pattern here—replace the current spinner logic with a `StatusBadge` that shows "Queued" or "Running" depending on the taskStatus, with the spinner visible when the benchmark isn't done.</details></think>
+
+---
+
+Let me check the current header implementation and the StatusBadge pattern used in STT/TTS evaluations:
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/BenchmarkResultsDialog.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/ui/StatusBadge.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I understand the pattern. The `StatusBadge` component:
+1. Shows a badge with the formatted status text (e.g., "Queued", "Running")
+2. Shows a gray spinner when `showSpinner` is true and status is active
+
+I need to:
+1. Import `StatusBadge` from `@/components/ui`
+2. Replace the current spinner with `StatusBadge` that shows proper status
+
+Let me update the BenchmarkResultsDialog to use StatusBadge instead of just the SpinnerIcon in the header.</details></think>
+
+---
+
+Now I understand the pattern. I need to:
+1. Import `StatusBadge` from `@/components/ui`
+2. Replace the current spinner with `StatusBadge` showing the appropriate status
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/BenchmarkResultsDialog.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: undefined
+
+```diff
+@@ -11,4 +11,5 @@
+    EmptyStateView,
+  } from "./test-results/shared";
++ import { StatusBadge } from "@/components/ui";
+  import { LeaderboardBarChart, getColorMap } from "./charts/LeaderboardBarChart";
+  import { DownloadableTable } from "./DownloadableTable";
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to replace the header spinner with the StatusBadge component.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/BenchmarkResultsDialog.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -376,5 +376,5 @@
+              &lt;/h2&gt;
+              {!isDone &amp;&amp; !isInitialLoading &amp;&amp; (
+-               &lt;SpinnerIcon className="w-4 h-4 animate-spin text-muted-foreground" /&gt;
++               &lt;StatusBadge status={taskStatus} showSpinner /&gt;
+              )}
+            &lt;/div&gt;
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me check for linting errors.</details></think>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 1 file</summary>
+      
+Lint paths:
+
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/components/BenchmarkResultsDialog.tsx`
+
+Lint results
+
+Lint errors for `src/components/BenchmarkResultsDialog.tsx`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| 'React' is declared but its value is never read. | 3:8-3:13 | DIAGNOSTIC_SEVERITY_HINT |
+| 'hasAnyResults' is declared but its value is never read. | 364:9-364:22 | DIAGNOSTIC_SEVERITY_HINT |
+| 'totalTests' is declared but its value is never read. | 635:9-635:19 | DIAGNOSTIC_SEVERITY_HINT |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good, no linting errors. Let me verify the changes look correct by reading the updated header section.</details></think>
+
+---
+
+Let me verify the changes:
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/BenchmarkResultsDialog.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/BenchmarkResultsDialog.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+The changes look good. Now when the task status is "queued", it will show a gray "Queued" badge with a gray spinner (from the StatusBadge component). When the status is "in_progress", it will show a yellow "Running" badge with a spinner.
+
+The StatusBadge component handles:
+- `formatStatus("queued")` → "Queued" with gray badge style
+- `formatStatus("in_progress")` → "Running" with yellow badge style
+- `showSpinner` shows a gray spinner for active statuses
+
+This matches the pattern used in STT/TTS evaluation pages.</details></think>
+
+---
+
+The changes are complete. Now the `BenchmarkResultsDialog` will:
+
+1. **When status is "queued"**: Show a gray "Queued" badge with a gray spinner beside the benchmark name
+2. **When status is "in_progress"**: Show a yellow "Running" badge with a gray spinner
+
+This uses the same `StatusBadge` component pattern as the STT/TTS evaluation pages. The `StatusBadge` component:
+- Formats the status text (e.g., "queued" → "Queued", "in_progress" → "Running")
+- Applies appropriate theme-aware badge colors (gray for queued, yellow for running)
+- Shows a gray spinner when `showSpinner` is true and the status is active
+
+---
+
+_**User (2026-01-17 22:10Z)**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+I made code changes to BenchmarkResultsDialog.tsx:
+1. Imported `StatusBadge` from `@/components/ui`
+2. Replaced the plain SpinnerIcon in the header with `StatusBadge` component that shows the task status with a spinner
+
+This means the BenchmarkResultsDialog now uses the same status badge pattern as STT/TTS evaluation pages.
+
+Let me check the app-details.md to see what needs to be updated about the BenchmarkResultsDialog behavior.</details></think>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "BenchmarkResultsDialog" in "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md" • 6 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `.cursor/rules/app-details.md` | `- `llm-benchmark` → Opens `BenchmarkResultsDialog` in view mode (with `taskId` prop)` | L121 |
+| `.cursor/rules/app-details.md` | `- Used in: BenchmarkResultsDialog, STT/TTS detail pages (`/stt/[uuid]`, `/tts/[uuid]`)` | L735 |
+| `.cursor/rules/app-details.md` | `- Used in: BenchmarkResultsDialog, SpeechToTextEvaluation, TextToSpeechEvaluation` | L741 |
+| `.cursor/rules/app-details.md` | `11. **View Mode Dialogs**: `TestRunnerDialog` and `BenchmarkResultsDialog` support dual modes:` | L750 |
+| `.cursor/rules/app-details.md` | `- **BenchmarkResultsDialog intermediate results**:` | L756 |
+| `.cursor/rules/app-details.md` | `**Files using `POLLING_INTERVAL_MS`:** TestRunnerDialog, BenchmarkResultsDialog (with intermediate results support), TestsTabContent, STT/TTS evaluation pages, simulation run page.` | L1744 |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I need to update the documentation about BenchmarkResultsDialog to mention that it now uses the StatusBadge component for showing the task status in the header, similar to STT/TTS evaluation pages.
+
+Looking at the current documentation around line 756-767 where BenchmarkResultsDialog intermediate results are documented, I should add a note about the status badge behavior.
+
+Let me also check if there's mention of the "Header shows spinner while benchmark is in progress" that I need to update.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I see line 768 says "Header shows spinner while benchmark is in progress (not done)". I need to update this to mention that it now uses the StatusBadge component which shows the status badge (e.g., "Queued" or "Running") with a spinner, similar to STT/TTS evaluation pages.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -766,5 +766,5 @@
+        - **Merged providers**: &#96;getProvidersToDisplay()&#96; function merges &#96;modelResults&#96; from API with placeholders for any models that don't have results yet
+        - Types support null values: &#96;success: boolean | null&#96;, &#96;test_results: BenchmarkTestResult[] | null&#96;, &#96;passed: boolean | null&#96;
+-       - Header shows spinner while benchmark is in progress (not done)
++       - **Header status badge**: Uses &#96;StatusBadge&#96; component (same as STT/TTS evaluation pages) to show task status ("Queued" with gray badge, "Running" with yellow badge) plus spinner while benchmark is in progress
+      - **Props for viewing past runs**:
+        - &#96;taskId&#96;: The run UUID to fetch results for
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I've updated the documentation to reflect that BenchmarkResultsDialog now uses the StatusBadge component for showing task status in the header, similar to STT/TTS evaluation pages. This provides more specific information about the behavior:
+- "Queued" shows with a gray badge- "Running" shows with a yellow badge
+- A spinner is shown alongside the badge
+
+This is more descriptive than just saying "Header shows spinner while benchmark is in progress".</details></think>
+
+---
+
+I've updated the `.cursor/rules/app-details.md` to reflect the change:
+
+**Updated**: Line 768 now documents that `BenchmarkResultsDialog` uses the `StatusBadge` component (same pattern as STT/TTS evaluation pages) to show task status in the header:
+- "Queued" displays with a gray badge
+- "Running" displays with a yellow badge  
+- A spinner is shown alongside the badge when the benchmark is in progress
+
+This replaces the previous generic "Header shows spinner while benchmark is in progress (not done)" with more specific information about the status badge behavior and its consistency with other evaluation pages.
+
+---
+

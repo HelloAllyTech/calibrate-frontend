@@ -765,7 +765,7 @@ Both TTS and STT evaluation pages follow the same list → new → detail patter
       - **Auto-expand behavior**: First provider (from `models` prop) is expanded immediately when dialog opens, not waiting for results
       - **Merged providers**: `getProvidersToDisplay()` function merges `modelResults` from API with placeholders for any models that don't have results yet
       - Types support null values: `success: boolean | null`, `test_results: BenchmarkTestResult[] | null`, `passed: boolean | null`
-      - Header shows spinner while benchmark is in progress (not done)
+      - **Header status badge**: Uses `StatusBadge` component (same as STT/TTS evaluation pages) to show task status ("Queued" with gray badge, "Running" with yellow badge) plus spinner while benchmark is in progress
     - **Props for viewing past runs**:
       - `taskId`: The run UUID to fetch results for
       - `tests`: Array converted from `pastRun.results` to show test names while loading (TestRunnerDialog only)

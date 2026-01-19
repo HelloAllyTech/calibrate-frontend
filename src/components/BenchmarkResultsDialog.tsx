@@ -10,6 +10,7 @@ import {
   TestDetailView,
   EmptyStateView,
 } from "./test-results/shared";
+import { StatusBadge } from "@/components/ui";
 import { LeaderboardBarChart, getColorMap } from "./charts/LeaderboardBarChart";
 import { DownloadableTable } from "./DownloadableTable";
 import { POLLING_INTERVAL_MS } from "@/constants/polling";
@@ -374,7 +375,7 @@ export function BenchmarkResultsDialog({
               Benchmark for {agentName}
             </h2>
             {!isDone && !isInitialLoading && (
-              <SpinnerIcon className="w-4 h-4 animate-spin text-muted-foreground" />
+              <StatusBadge status={taskStatus} showSpinner />
             )}
           </div>
           <div className="flex items-center gap-2">
@@ -416,8 +417,8 @@ export function BenchmarkResultsDialog({
               <SpinnerIcon className="w-8 h-8 animate-spin text-muted-foreground" />
               <p className="text-sm text-muted-foreground">
                 {taskStatus === "queued"
-                  ? "Benchmark queued..."
-                  : "Starting benchmark..."}
+                  ? "Benchmark queued"
+                  : "Starting benchmark"}
               </p>
             </div>
           </div>

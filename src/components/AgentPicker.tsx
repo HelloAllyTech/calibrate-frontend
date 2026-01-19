@@ -152,7 +152,7 @@ export function AgentPicker({
               <div className="max-h-60 overflow-y-auto">
                 {agentsLoading ? (
                   <div className="px-4 py-3 text-sm text-muted-foreground">
-                    Loading agents...
+                    Loading agents
                   </div>
                 ) : filteredAgents.length === 0 ? (
                   <div className="px-4 py-3 text-sm text-muted-foreground">
