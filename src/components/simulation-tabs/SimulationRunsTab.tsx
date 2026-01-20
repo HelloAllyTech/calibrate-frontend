@@ -10,7 +10,8 @@ type Run = {
   name: string;
   status: string;
   type: "text" | "audio";
-  updated_at: string;
+  created_at?: string;
+  updated_at?: string;
 };
 
 type SimulationRunsTabProps = {
@@ -149,7 +150,9 @@ export function SimulationRunsTab({ simulationUuid }: SimulationRunsTabProps) {
   }
 
   const formatDate = (dateString: string) => {
+    if (!dateString) return "-";
     const date = new Date(dateString.replace(" ", "T"));
+    if (isNaN(date.getTime())) return "-";
     return date.toLocaleString("en-US", {
       month: "short",
       day: "numeric",
@@ -165,15 +168,17 @@ export function SimulationRunsTab({ simulationUuid }: SimulationRunsTabProps) {
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
   };
 
-  // Sort runs by updated_at
+  // Sort runs by created_at (fallback to updated_at if not available)
   const sortedRuns = [...runs].sort((a, b) => {
-    const dateA = new Date(a.updated_at.replace(" ", "T")).getTime();
-    const dateB = new Date(b.updated_at.replace(" ", "T")).getTime();
+    const dateStrA = a.created_at || a.updated_at || "";
+    const dateStrB = b.created_at || b.updated_at || "";
+    const dateA = dateStrA ? new Date(dateStrA.replace(" ", "T")).getTime() : 0;
+    const dateB = dateStrB ? new Date(dateStrB.replace(" ", "T")).getTime() : 0;
     // Handle invalid dates by falling back to string comparison
     if (isNaN(dateA) || isNaN(dateB)) {
       return sortOrder === "asc"
-        ? (a.updated_at || "").localeCompare(b.updated_at || "")
-        : (b.updated_at || "").localeCompare(a.updated_at || "");
+        ? dateStrA.localeCompare(dateStrB)
+        : dateStrB.localeCompare(dateStrA);
     }
     return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
   });
@@ -190,7 +195,7 @@ export function SimulationRunsTab({ simulationUuid }: SimulationRunsTabProps) {
             onClick={toggleSort}
             className="flex items-center gap-2 hover:text-foreground transition-colors cursor-pointer"
           >
-            Updated At
+            Created At
             <svg
               className={`w-4 h-4 transition-transform ${
                 sortOrder === "asc" ? "rotate-180" : ""
@@ -240,7 +245,7 @@ export function SimulationRunsTab({ simulationUuid }: SimulationRunsTabProps) {
             </span>
           </div>
           <p className="text-sm text-muted-foreground">
-            {formatDate(run.updated_at)}
+            {formatDate(run.created_at || run.updated_at || "")}
           </p>
         </Link>
       ))}

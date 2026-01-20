@@ -1670,7 +1670,7 @@ import { SpinnerIcon, ToolIcon } from "@/components/icons";
 | **Agents, Simulations**       | `[1fr_1fr_auto]` or `[1fr_1fr_auto_auto]` | Equal-width data columns, auto action buttons                 |
 | **Tools, Scenarios, Metrics** | `[200px_1fr_auto]`                        | Fixed 200px name column, flexible description, auto actions   |
 | **Personas**                  | `[200px_1fr_100px_100px_120px_auto]`      | Fixed name, flexible characteristics, fixed attribute columns |
-| **Simulation Runs**           | `[1fr_1fr_1fr_1fr]`                       | Four equal columns (Name, Status, Type, Updated At)           |
+| **Simulation Runs**           | `[1fr_1fr_1fr_1fr]`                       | Four equal columns (Name, Status, Type, Created At)           |
 | **Tests**                     | `[1fr_1fr_auto]`                          | Equal-width name and type columns                             |
 
 The pattern is: use fixed widths (e.g., `200px`) for short columns like Name/Label, `1fr` for flexible content columns like Description/Characteristics, and `auto` for action buttons.
@@ -1926,6 +1926,7 @@ Set `MAINTENANCE_MODE=true` in `.env.local` to show a maintenance page. When ena
 - **Date formatting**: API returns ISO dates; use `toLocaleString()` for display
 - **UTC timestamps**: Backend returns timestamps in UTC without timezone indicator (e.g., `"2026-01-18 10:00:00"`). When parsing for relative time calculations, append `"Z"` to explicitly mark as UTC: `new Date(dateString.replace(" ", "T") + "Z")`. Without this, JavaScript interprets the timestamp as local time, causing incorrect relative times (e.g., "5 hours ago" instead of "just now" for users in IST)
 - **Multiple date formats**: When creating optimistic UI updates (e.g., adding a pending run to a table), use `new Date().toISOString()` which produces `"2026-01-18T09:30:00.000Z"`. The `formatRelativeTime` helper in `TestsTabContent.tsx` handles both formats - check if the string already has a timezone indicator before appending "Z" to avoid invalid dates like `"...ZZ"` which produce NaN
+- **Optional date fields with fallbacks**: Some API responses may not include all date fields. The `SimulationRunsTab` uses `created_at` for sorting/display but falls back to `updated_at` if `created_at` is undefined. Pattern: `const dateStr = item.created_at || item.updated_at || ""`; `formatDate` functions should handle empty strings gracefully (return `"-"` instead of "Invalid Date")
 - **Hooks need accessToken**: `useCrudResource` and `useFetchResource` require `accessToken` to be passed from the component (they don't call `useSession` internally)
 
 ### State Management
