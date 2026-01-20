@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { AppLayout } from "@/components/AppLayout";
 import { BackHeader, StatusBadge, NotFoundState } from "@/components/ui";
+import { Tooltip } from "@/components/Tooltip";
 import { ttsProviders } from "@/components/agent-tabs/constants/providers";
 import {
   LeaderboardBarChart,
@@ -367,19 +368,20 @@ export default function TTSEvaluationDetailPage() {
                           <tbody>
                             <tr className="border-b border-border">
                               <td className="px-4 py-3 text-[13px] font-medium text-foreground">
-                                LLM Judge Score
+                                LLM Judge
                               </td>
                               <td className="px-4 py-3 text-[13px] text-foreground">
                                 The LLM judge evaluates whether the synthesized
                                 audio accurately matches the reference text. It
                                 checks for semantic equivalence and
-                                pronunciation accuracy.
+                                pronunciation accuracy, returning Pass if the
+                                audio correctly represents the input text.
                               </td>
                               <td className="px-4 py-3 text-[13px] text-foreground">
-                                Higher is better
+                                Pass is better
                               </td>
                               <td className="px-4 py-3 text-[13px] text-foreground">
-                                0 - 1
+                                Pass / Fail
                               </td>
                             </tr>
                             <tr className="border-b border-border">
@@ -711,14 +713,9 @@ export default function TTSEvaluationDetailPage() {
                                                 Audio
                                               </th>
                                               {showMetrics && (
-                                                <>
-                                                  <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                                    LLM Judge Score
-                                                  </th>
-                                                  <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                                    LLM Judge Reasoning
-                                                  </th>
-                                                </>
+                                                <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                  LLM Judge
+                                                </th>
                                               )}
                                             </tr>
                                           </thead>
@@ -746,16 +743,40 @@ export default function TTSEvaluationDetailPage() {
                                                     </audio>
                                                   </td>
                                                   {showMetrics && (
-                                                    <>
-                                                      <td className="px-4 py-3 text-[13px] text-foreground">
-                                                        {result.llm_judge_score}
-                                                      </td>
-                                                      <td className="px-4 py-3 text-[13px] text-muted-foreground max-w-md">
-                                                        {
+                                                    <td className="px-4 py-3">
+                                                      {(() => {
+                                                        const scoreStr = String(
+                                                          result.llm_judge_score ||
+                                                            ""
+                                                        ).toLowerCase();
+                                                        const passed =
+                                                          scoreStr === "true" ||
+                                                          scoreStr === "1";
+                                                        const tooltipContent =
                                                           result.llm_judge_reasoning
-                                                        }
-                                                      </td>
-                                                    </>
+                                                            ? result.llm_judge_reasoning
+                                                            : `Score: ${result.llm_judge_score}`;
+                                                        return (
+                                                          <Tooltip
+                                                            content={
+                                                              tooltipContent
+                                                            }
+                                                          >
+                                                            <span
+                                                              className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium cursor-pointer ${
+                                                                passed
+                                                                  ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400"
+                                                                  : "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400"
+                                                              }`}
+                                                            >
+                                                              {passed
+                                                                ? "Pass"
+                                                                : "Fail"}
+                                                            </span>
+                                                          </Tooltip>
+                                                        );
+                                                      })()}
+                                                    </td>
                                                   )}
                                                 </tr>
                                               )

@@ -27,6 +27,7 @@ export function Tooltip({
     const rect = triggerRef.current.getBoundingClientRect();
     const tooltipHeight = tooltipRef.current?.offsetHeight || 0;
     const tooltipWidth = tooltipRef.current?.offsetWidth || 0;
+    const padding = 12; // Minimum distance from viewport edge
     let top = 0;
     let left = 0;
 
@@ -47,6 +48,28 @@ export function Tooltip({
         top = rect.top + rect.height / 2;
         left = rect.right + 8;
         break;
+    }
+
+    // Clamp horizontal position to keep tooltip within viewport
+    if (position === "top" || position === "bottom") {
+      const halfWidth = tooltipWidth / 2;
+      const minLeft = halfWidth + padding;
+      const maxLeft = window.innerWidth - halfWidth - padding;
+      left = Math.max(minLeft, Math.min(maxLeft, left));
+    } else {
+      // For left/right positions, ensure tooltip doesn't go off horizontally
+      if (left < padding) {
+        left = padding;
+      } else if (left + tooltipWidth > window.innerWidth - padding) {
+        left = window.innerWidth - tooltipWidth - padding;
+      }
+    }
+
+    // Clamp vertical position to keep tooltip within viewport
+    if (top < padding) {
+      top = padding;
+    } else if (top + tooltipHeight > window.innerHeight - padding) {
+      top = window.innerHeight - tooltipHeight - padding;
     }
 
     setTooltipPosition({ top, left });

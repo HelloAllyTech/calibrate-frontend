@@ -193,7 +193,7 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
   - First provider is selected by default
   - Clicking a provider shows its details on the right
 - **Provider error messages** (red ❌ with message): Only displayed when evaluation status is `done`, not during `in_progress`
-- **Metrics**: WER, String Similarity, LLM Judge Score, TTFB, Processing Time
+- **Metrics**: WER, String Similarity, LLM Judge (Pass/Fail), TTFB, Processing Time
 
 ### 4. Text-to-Speech Evaluation (`/tts`)
 
@@ -238,7 +238,7 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
   - First provider is selected by default
   - Clicking a provider shows its details on the right
 - **Provider error messages** (red ❌ with message): Only displayed when evaluation status is `done`, not during `in_progress`
-- **Metrics**: LLM Judge Score, TTFB, Processing Time
+- **Metrics**: LLM Judge (Pass/Fail), TTFB, Processing Time
 - **Intermediate results structure**: `results` array contains `id`, `text`, `audio_path`; `llm_judge_score` and `llm_judge_reasoning` are only present when complete
 
 ### 5. Tests Management (`/tests`)
@@ -714,10 +714,11 @@ Both TTS and STT evaluation pages follow the same list → new → detail patter
 
 - **STT Input tab**: Audio file upload (.wav) + reference transcription text field
 - **TTS Input tab**: Text input field + CSV upload option with "OR" divider and sample CSV download
-- **STT metrics**: WER, String Similarity, LLM Judge Score, TTFB, Processing Time
-- **TTS metrics**: LLM Judge Score, TTFB, Processing Time
-- **STT Outputs tab**: Shows Ground Truth vs Prediction text; metrics columns (WER, String Similarity, LLM Judge Score, LLM Judge Reasoning) shown when status is "done" OR when all rows have metrics available
-- **TTS Outputs tab**: Shows text input with audio playback; metrics columns (LLM Judge Score, LLM Judge Reasoning) shown when status is "done" OR when all rows have metrics available
+- **STT metrics**: WER, String Similarity, LLM Judge, TTFB, Processing Time
+- **TTS metrics**: LLM Judge, TTFB, Processing Time
+- **STT Outputs tab**: Shows Ground Truth vs Prediction text; metrics columns (WER, String Similarity, LLM Judge) shown when status is "done" OR when all rows have metrics available. Rows with empty predictions are highlighted with `bg-red-500/10` and show "_No transcript produced_" in italicized muted text
+- **TTS Outputs tab**: Shows text input with audio playback; LLM Judge column shown when status is "done" OR when all rows have metrics available
+- **LLM Judge column display**: Shows Pass/Fail badges (green/red) instead of raw scores. Backend returns `"True"`/`"False"` strings (or `"1"`/`"0"`). Parsing: convert to lowercase string, Pass when value is `"true"` or `"1"`. Tooltip shows the reasoning text on hover (falls back to "Score: X" if no reasoning). Uses `cursor-pointer`
 
 ### Component Patterns
 
@@ -1138,7 +1139,7 @@ Unit test evaluations for:
 
 - **STT**: Upload audio + transcription, compare providers
 - **TTS**: Upload text, compare provider outputs
-- Metrics: WER, String Similarity, LLM Judge Score, TTFB, Processing Time
+- Metrics: WER, String Similarity, LLM Judge (Pass/Fail with tooltip), TTFB, Processing Time
 
 ---
 
@@ -1384,6 +1385,30 @@ isActiveStatus("queued"); // true
 isActiveStatus("in_progress"); // true
 isActiveStatus("done"); // false
 ```
+
+### Tooltip Component (`@/components/Tooltip`)
+
+Custom tooltip component with viewport-aware positioning:
+
+```tsx
+import { Tooltip } from "@/components/Tooltip";
+
+// Basic usage (default position: top)
+<Tooltip content="Tooltip text here">
+  <button>Hover me</button>
+</Tooltip>
+
+// With position prop
+<Tooltip content="Detailed explanation..." position="bottom">
+  <span className="cursor-pointer">Info</span>
+</Tooltip>
+```
+
+**Positions**: `top` (default), `bottom`, `left`, `right`
+
+**Viewport clamping**: The tooltip automatically clamps its position to stay within viewport boundaries (12px padding from edges). This prevents long content (like LLM Judge reasoning) from going off-screen.
+
+**Styling**: White background, rounded corners, shadow, 256px max width (`w-64`), text wraps within the container. Arrow indicator points to trigger element.
 
 ### UI Components (`@/components/ui`)
 
@@ -1928,6 +1953,7 @@ Set `MAINTENANCE_MODE=true` in `.env.local` to show a maintenance page. When ena
 - **Multiple date formats**: When creating optimistic UI updates (e.g., adding a pending run to a table), use `new Date().toISOString()` which produces `"2026-01-18T09:30:00.000Z"`. The `formatRelativeTime` helper in `TestsTabContent.tsx` handles both formats - check if the string already has a timezone indicator before appending "Z" to avoid invalid dates like `"...ZZ"` which produce NaN
 - **Optional date fields with fallbacks**: Some API responses may not include all date fields. The `SimulationRunsTab` uses `created_at` for sorting/display but falls back to `updated_at` if `created_at` is undefined. Pattern: `const dateStr = item.created_at || item.updated_at || ""`; `formatDate` functions should handle empty strings gracefully (return `"-"` instead of "Invalid Date")
 - **Hooks need accessToken**: `useCrudResource` and `useFetchResource` require `accessToken` to be passed from the component (they don't call `useSession` internally)
+- **LLM Judge score format varies**: Backend returns `llm_judge_score` as `"True"`/`"False"` strings in individual result rows, but as `1`/`0` integers in aggregate metrics and leaderboard summaries. When parsing for Pass/Fail display, convert to lowercase string and check for both: `const passed = scoreStr === "true" || scoreStr === "1"`
 
 ### State Management
 
@@ -2021,6 +2047,7 @@ Set `MAINTENANCE_MODE=true` in `.env.local` to show a maintenance page. When ena
 
 - **Character limits**: Implement maxLength on inputs AND display character count
 - **Required fields**: Mark with red asterisk, validate on submit, highlight invalid fields
+- **Invalid/error row styling**: Use `bg-red-500/10` for row backgrounds (e.g., STT empty predictions, form validation rows). For invalid inputs use `border-red-500`. This pattern is consistent across forms and data tables
 - **Nested parameters**: Tool parameters support arbitrary nesting (object → properties, array → items)
 
 ### ZIP and CSV File Parsing (STT/TTS Evaluations)

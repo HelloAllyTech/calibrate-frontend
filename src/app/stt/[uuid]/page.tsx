@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { AppLayout } from "@/components/AppLayout";
 import { BackHeader, StatusBadge, NotFoundState } from "@/components/ui";
+import { Tooltip } from "@/components/Tooltip";
 import { sttProviders } from "@/components/agent-tabs/constants/providers";
 import {
   LeaderboardBarChart,
@@ -389,7 +390,7 @@ export default function STTEvaluationDetailPage() {
                             </tr>
                             <tr className="border-b border-border">
                               <td className="px-4 py-3 text-[13px] font-medium text-foreground">
-                                LLM Judge Score
+                                LLM Judge
                               </td>
                               <td className="px-4 py-3 text-[13px] text-foreground">
                                 This metric is used because WER and string
@@ -398,13 +399,14 @@ export default function STTEvaluationDetailPage() {
                                 model predicts "nine", both might be considered
                                 correct for the agent's specific use case. The
                                 LLM judge evaluates semantic equivalence rather
-                                than exact string matching.
+                                than exact string matching, returning Pass if
+                                the transcription is semantically correct.
                               </td>
                               <td className="px-4 py-3 text-[13px] text-foreground">
-                                Higher is better
+                                Pass is better
                               </td>
                               <td className="px-4 py-3 text-[13px] text-foreground">
-                                0 - 1
+                                Pass / Fail
                               </td>
                             </tr>
                             <tr className="border-b border-border">
@@ -805,10 +807,7 @@ export default function STTEvaluationDetailPage() {
                                                     String Similarity
                                                   </th>
                                                   <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                                    LLM Judge Score
-                                                  </th>
-                                                  <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                                    LLM Judge Reasoning
+                                                    LLM Judge
                                                   </th>
                                                 </>
                                               )}
@@ -816,42 +815,88 @@ export default function STTEvaluationDetailPage() {
                                           </thead>
                                           <tbody>
                                             {providerResult.results.map(
-                                              (result, index) => (
-                                                <tr
-                                                  key={index}
-                                                  className="border-b border-border last:border-b-0"
-                                                >
-                                                  <td className="px-4 py-3 text-[13px] text-foreground">
-                                                    {index + 1}
-                                                  </td>
-                                                  <td className="px-4 py-3 text-[13px] text-foreground">
-                                                    {result.gt}
-                                                  </td>
-                                                  <td className="px-4 py-3 text-[13px] text-foreground">
-                                                    {result.pred}
-                                                  </td>
-                                                  {showMetrics && (
-                                                    <>
-                                                      <td className="px-4 py-3 text-[13px] text-foreground">
-                                                        {result.wer}
-                                                      </td>
-                                                      <td className="px-4 py-3 text-[13px] text-foreground">
-                                                        {parseFloat(
-                                                          result.string_similarity
-                                                        ).toFixed(5)}
-                                                      </td>
-                                                      <td className="px-4 py-3 text-[13px] text-foreground">
-                                                        {result.llm_judge_score}
-                                                      </td>
-                                                      <td className="px-4 py-3 text-[13px] text-muted-foreground max-w-md">
-                                                        {
-                                                          result.llm_judge_reasoning
-                                                        }
-                                                      </td>
-                                                    </>
-                                                  )}
-                                                </tr>
-                                              )
+                                              (result, index) => {
+                                                const isEmptyPrediction =
+                                                  !result.pred ||
+                                                  result.pred.trim() === "";
+                                                return (
+                                                  <tr
+                                                    key={index}
+                                                    className={`border-b border-border last:border-b-0 ${
+                                                      isEmptyPrediction
+                                                        ? "bg-red-500/10"
+                                                        : ""
+                                                    }`}
+                                                  >
+                                                    <td className="px-4 py-3 text-[13px] text-foreground">
+                                                      {index + 1}
+                                                    </td>
+                                                    <td className="px-4 py-3 text-[13px] text-foreground">
+                                                      {result.gt}
+                                                    </td>
+                                                    <td className="px-4 py-3 text-[13px]">
+                                                      {isEmptyPrediction ? (
+                                                        <span className="text-muted-foreground">
+                                                          No transcript
+                                                          generated
+                                                        </span>
+                                                      ) : (
+                                                        <span className="text-foreground">
+                                                          {result.pred}
+                                                        </span>
+                                                      )}
+                                                    </td>
+                                                    {showMetrics && (
+                                                      <>
+                                                        <td className="px-4 py-3 text-[13px] text-foreground">
+                                                          {result.wer}
+                                                        </td>
+                                                        <td className="px-4 py-3 text-[13px] text-foreground">
+                                                          {parseFloat(
+                                                            result.string_similarity
+                                                          ).toFixed(5)}
+                                                        </td>
+                                                        <td className="px-4 py-3">
+                                                          {(() => {
+                                                            const scoreStr =
+                                                              String(
+                                                                result.llm_judge_score ||
+                                                                  ""
+                                                              ).toLowerCase();
+                                                            const passed =
+                                                              scoreStr ===
+                                                                "true" ||
+                                                              scoreStr === "1";
+                                                            const tooltipContent =
+                                                              result.llm_judge_reasoning
+                                                                ? result.llm_judge_reasoning
+                                                                : `Score: ${result.llm_judge_score}`;
+                                                            return (
+                                                              <Tooltip
+                                                                content={
+                                                                  tooltipContent
+                                                                }
+                                                              >
+                                                                <span
+                                                                  className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium cursor-pointer ${
+                                                                    passed
+                                                                      ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400"
+                                                                      : "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400"
+                                                                  }`}
+                                                                >
+                                                                  {passed
+                                                                    ? "Pass"
+                                                                    : "Fail"}
+                                                                </span>
+                                                              </Tooltip>
+                                                            );
+                                                          })()}
+                                                        </td>
+                                                      </>
+                                                    )}
+                                                  </tr>
+                                                );
+                                              }
                                             )}
                                           </tbody>
                                         </table>
