@@ -1,0 +1,114 @@
+---
+title: Introduction
+description: "Welcome to Pense - Voice Agent Simulation and Evaluation Platform"
+---
+
+# Welcome to Pense
+
+Pense is a comprehensive platform for building, testing, and evaluating **voice-based AI agents**. It enables teams to create conversational agents and rigorously test them before deployment.
+
+## What can you do with Pense?
+
+<CardGroup cols={2}>
+  <Card title="Speech-to-Text Evaluation" icon="microphone" href="/guides/stt">
+    Compare STT providers for accuracy and latency with your own audio samples.
+  </Card>
+  <Card title="Text-to-Speech Evaluation" icon="volume-high" href="/guides/tts">
+    Compare TTS providers for voice quality and latency with your own text samples.
+  </Card>
+  <Card title="LLM Testing" icon="flask" href="/guides/llm-testing">
+    Build agents, create tests, run benchmarks across models.
+  </Card>
+  <Card title="End-to-End Simulations" icon="comments" href="/guides/simulations">
+    Run full conversations with simulated users to validate agent behavior.
+  </Card>
+</CardGroup>
+
+---
+
+## Voice Agent Pipeline
+
+A voice agent processes conversations through this pipeline:
+
+```
+User Speech → [STT] → Text → [LLM] → Response Text → [TTS] → Agent Speech
+                              ↓
+                        [Tool Calls]
+                              ↓
+                       External APIs
+```
+
+Pense helps you test and benchmark each component:
+
+| Component | What Pense Does |
+|-----------|-----------------|
+| **STT** | Compare providers for transcription accuracy |
+| **LLM** | Test responses, tool calls, benchmark models |
+| **TTS** | Compare providers for voice quality |
+| **Full Pipeline** | Run end-to-end simulations |
+
+---
+
+## Guides
+
+### Unit Tests
+
+Evaluate individual components of your voice pipeline:
+
+| Guide | What You'll Learn |
+|-------|-------------------|
+| [STT Evaluation](/guides/stt) | Upload audio samples, compare providers, analyze WER and latency |
+| [TTS Evaluation](/guides/tts) | Add text samples, compare providers, listen to outputs |
+
+### LLM Testing
+
+Build and test your agent's intelligence:
+
+| Guide | What You'll Learn |
+|-------|-------------------|
+| [LLM Testing](/guides/llm-testing) | Create agents, add tools, write tests, run benchmarks |
+
+### Simulations
+
+Run comprehensive end-to-end tests:
+
+| Guide | What You'll Learn |
+|-------|-------------------|
+| [Simulations](/guides/simulations) | Create personas, scenarios, metrics; run text and voice simulations; view transcripts and latency metrics |
+
+---
+
+## Supported Providers
+
+### Speech-to-Text
+Deepgram, OpenAI, Cartesia, ElevenLabs, Whisper (Groq), Google, Sarvam
+
+### Text-to-Speech
+Cartesia, OpenAI, Orpheus (Groq), Google, ElevenLabs, Sarvam
+
+### LLM
+20+ models from OpenAI, Google, Anthropic, DeepSeek, Meta, Mistral, and more
+
+---
+
+## Recommended Workflow
+
+<Steps>
+  <Step title="Evaluate STT/TTS Providers">
+    Run [STT](/guides/stt) and [TTS](/guides/tts) evaluations to find the best providers for your language.
+  </Step>
+  <Step title="Build and Test Your Agent">
+    Follow the [LLM Testing](/guides/llm-testing) guide to create an agent, add tools, write tests, and benchmark models.
+  </Step>
+  <Step title="Run Simulations">
+    Set up [simulations](/guides/simulations) with personas and scenarios, then run text or voice tests.
+  </Step>
+</Steps>
+
+---
+
+## Get Started
+
+<Card title="STT Evaluation" icon="arrow-right" href="/guides/stt">
+  Start by evaluating Speech-to-Text providers for your use case.
+</Card>

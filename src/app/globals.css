@@ -26,6 +26,7 @@
   --color-popover: var(--popover);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-inter: var(--font-inter);
 }
 
 /* Dark theme via class - works with Tailwind dark: variant */

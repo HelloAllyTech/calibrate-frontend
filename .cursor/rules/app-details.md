@@ -178,7 +178,10 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
 
 - **Polls for results** while status is `queued` or `in_progress`
 - **Shows intermediate results** as each provider completes (doesn't wait for all to finish)
-- **Default tab is "Outputs"** (not Leaderboard) to show results as they arrive; automatically switches to "Leaderboard" when evaluation completes
+- **Default tab behavior**:
+  - When evaluation is already complete on page load: defaults to "Leaderboard"
+  - When evaluation is in progress: defaults to "Outputs" to show results as they arrive
+  - Automatically switches to "Leaderboard" when evaluation completes during polling
 - **Status badge**: Shows "Running" or "Queued" badge with spinner when evaluation is not done (shown even before any provider results arrive)
 - **Tabs only appear when at least one provider result exists**:
   - **Leaderboard**: Only visible when status is `done` (needs all providers to compare)
@@ -222,7 +225,10 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
 **Detail Page (`/tts/[uuid]`):**
 
 - **Polls for results** while status is `queued` or `in_progress`
-- **Default active tab**: "outputs" (not "leaderboard"); automatically switches to "leaderboard" when evaluation completes
+- **Default tab behavior**:
+  - When evaluation is already complete on page load: defaults to "Leaderboard"
+  - When evaluation is in progress: defaults to "Outputs" to show results as they arrive
+  - Automatically switches to "Leaderboard" when evaluation completes during polling
 - **Intermediate results**: Shows Outputs and About tabs during `in_progress` status
 - **Status badge**: Shows "Running" or "Queued" badge with spinner when evaluation is not done (shown even before any provider results arrive)
 - **Tabs**:
@@ -420,6 +426,11 @@ This enables:
 - **Framework**: Next.js 16.1.1 with App Router
 - **React**: 19.2.3
 - **Styling**: Tailwind CSS 4 with CSS variables for theming
+- **Fonts**: 
+  - **Geist** - Default app font (via `--font-geist-sans`)
+  - **Geist Mono** - Monospace font (via `--font-geist-mono`)
+  - **Inter** - Available via `--font-inter` 
+  - **DM Sans** - Used on landing page for Coval-style typography (via `--font-dm-sans`)
 - **Authentication**: NextAuth.js v5 (beta) with Google OAuth
 - **Charts**: Recharts 3.6.0
 - **TypeScript**: 5.x
@@ -431,6 +442,21 @@ This enables:
 ```
 /                           # Root directory
 ├── env.example            # Environment variables template
+├── docs/                      # Mintlify documentation
+│   ├── mint.json             # Mintlify configuration (navigation, colors, socials)
+│   ├── introduction.mdx      # Welcome page with platform overview and workflow guide
+│   ├── guides/               # Feature guides (4 pages)
+│   │   ├── stt.mdx          # STT evaluation
+│   │   ├── tts.mdx          # TTS evaluation
+│   │   ├── llm-testing.mdx  # LLM testing (agent, tools, tests, benchmarks)
+│   │   └── simulations.mdx  # End-to-end simulations (text + voice in one page)
+│   └── images/               # Documentation screenshots
+│       ├── stt_overview.png     # STT evaluations list page
+│       ├── stt_new.png          # STT new evaluation settings tab
+│       ├── stt-dataset.png      # STT dataset upload tab
+│       ├── stt_outputs.png      # STT outputs view with metrics
+│       └── stt_leaderboard.png  # STT leaderboard with charts
+│       # Note: Other guides reference placeholder images that need screenshots
 ├── src/
 │   ├── app/                    # Next.js App Router pages
 │   │   ├── layout.tsx         # Root layout with default metadata
@@ -453,7 +479,7 @@ This enables:
 │   │   ├── scenarios/         # Test scenario definitions (has layout.tsx)
 │   │   ├── metrics/           # Evaluation metrics (has layout.tsx)
 │   │   ├── simulations/       # End-to-end simulation testing (has layout.tsx)
-│   │   ├── login/             # Authentication page (has layout.tsx)
+│   │   ├── login/             # Landing page with Google OAuth (has layout.tsx)
 │   │   └── api/auth/          # NextAuth.js route handlers
 │   ├── components/
 │   │   ├── agent-tabs/        # Agent detail tab components
@@ -477,6 +503,83 @@ This enables:
 
 ## Architecture Patterns
 
+### Landing Page (`/login`)
+
+The login page serves as a marketing-style landing page with a consistent light theme throughout:
+
+**Layout (top to bottom):**
+1. **Navigation bar**: PENSE logo (left) + "Book a demo" button (right)
+2. **Hero section**: Large headline, subtitle, centered "Continue with Google" CTA
+3. **Feature Tabs section**: Tab switcher with feature previews
+4. **Integrations section**: Provider grid showing supported STT/TTS/LLM providers
+5. **Open Source section**: GitHub link and self-hosting info (`bg-gray-50`)
+6. **Community section**: Social links (X, LinkedIn)
+7. **Get Started section**: Two-column card layout with CTAs
+8. **Footer**: Three-column links (Company, Resources, Community) + copyright (`bg-gray-50`)
+
+**Feature Tabs:**
+- Tabs: "Speech to text", "Text to text", "Text to speech", "Simulations"
+- State managed via `useState` with `activeTab` (default: "stt")
+- Tab data defined as array: `{ id, label, headingBold, headingLight, description, images }` where `images` is an array of image paths
+
+**Two-Column Layout** (below tabs):
+- **Container**: Full width with `px-12` padding (no max-width constraint to maximize image space)
+- **Tabs**: Centered with `max-w-7xl mx-auto`
+- **Grid**: `grid-cols-[400px_1fr] gap-8 max-w-7xl` - text column (400px), images in constrained width
+- **Left column**: Two-tone headline (bold dark + light gray) + description text, sticky on scroll
+- **Right column**: Images stacked vertically (`flex-col gap-4`), one per row, showing full height
+- Image files in `public/`: `stt_1.png` to `stt_4.png`, `tts_1.png` to `tts_4.png`, `llm-leaderboard.png`, `llm-output.png`, `simulation-all.png`, `simulation-run.png`
+
+**Integrations Section:**
+- **Background**: White (`bg-white`) with padding (`py-24 px-12`)
+- **Headline**: "Works with any voice agent stack" - same font as hero (`leading-[1.1] tracking-[-0.02em]`)
+- **Subtitle**: About Python SDK, CLI, and provider support
+- **Link buttons**: "Integration overview" and "Request new integration" with arrow icons
+- **Provider grid**: 2×4 bordered grid (text-only, no icons) showing: Deepgram, ElevenLabs, OpenAI, Google, Cartesia, Anthropic, Groq, DeepSeek
+- **Grid styling**: `grid-cols-2 md:grid-cols-4`, `border border-gray-200 rounded-xl`, cells with `bg-gray-50 p-5`, `text-gray-900 text-sm font-medium` labels
+
+**Open Source Section:**
+- **Background**: Light gray (`bg-gray-50`) with padding (`py-24 px-12`)
+- **Headline**: "Proudly Open Source" - same font as hero
+- **Subtitle**: Links to run "locally" or "self-hosted" (underlined, `hover:text-gray-900`)
+- **GitHub button**: Dark button (`bg-gray-900`) linking to `ArtikiTech/pense` repo with GitHub logo and star icon
+
+**Community Section:**
+- **Background**: White (`bg-white`) with padding (`py-24 px-12`)
+- **Headline**: "Join the Community" - same font as hero
+- **Subtitle**: About teams using Pense
+- **Social links**: "Follow @artikiagents" (light bordered button) and "Connect on LinkedIn" (text link)
+
+**Get Started Section:**
+- **Background**: White (`bg-white`) with padding (`py-20 px-12`)
+- **Headline**: "Start testing with Pense today." with `tracking-[-0.02em]` for tight letter spacing
+- **Two-column grid**: "Evaluate your agent" (left) and "Learn more" (right)
+- **Card containers**: `bg-gray-50 rounded-2xl p-8 border border-gray-200`
+- **Link cards**: White background with subtle border, hover state adds shadow (`hover:border-gray-300 hover:shadow-sm`)
+- **Icons**: SVG icons (speaker, broadcast, checkmark for evaluation; play, book, calendar for learning)
+- **Links**: Benchmark STT/TTS Providers, Run LLM Tests, Watch Demo, Read Documentation, Book a Demo
+
+**Footer:**
+- **Background**: Light gray (`bg-gray-50`) with top border (`border-t border-gray-200`)
+- **Three columns**: Company, Resources, Community - each with left border accent
+- **Column headers**: Uppercase, letter-spaced (`tracking-[0.2em]`), muted color (`text-gray-400`)
+- **Links**: Gray text (`text-gray-500`) that darkens on hover (`hover:text-gray-900`)
+- **Copyright**: Right-aligned, muted
+
+**Styling Patterns:**
+- **Consistent light theme** throughout - alternating white (`bg-white`) and light gray (`bg-gray-50`) backgrounds
+- **DM Sans font** applied via inline style: `style={{ fontFamily: 'var(--font-dm-sans), system-ui, -apple-system, sans-serif' }}`
+- **All headlines**: `font-medium text-gray-900 leading-[1.1] tracking-[-0.02em]` for consistent typography
+- **Subtitles**: `text-xl text-gray-500`
+- **Tabs container**: `inline-flex bg-gray-100 rounded-xl p-1` with active tab having white background and shadow
+- **Image containers**: `rounded-xl overflow-hidden shadow-xl` - simple container without fixed aspect ratio
+- **Image display**: `w-full h-auto` - images show at full width with natural height (no cropping)
+- **Grid borders**: `border-gray-200` for light theme consistency
+
+**CTA Buttons:**
+- "Continue with Google" - Main action, centered in hero section, triggers `signIn("google")`
+- "Book a demo" - Header button, opens external booking link
+
 ### Authentication Flow
 
 The app uses NextAuth.js v5 with middleware-based route protection and backend sync:
@@ -489,7 +592,7 @@ The app uses NextAuth.js v5 with middleware-based route protection and backend s
 
 2. **SessionProvider** wraps the app in `layout.tsx` for client-side session access
 
-3. **Login page** (`/login`) shows Google OAuth button
+3. **Login page** (`/login`) shows landing page with Google OAuth CTA
 
 4. **Backend sync**: On successful Google login, the `jwt` callback sends the Google ID token to `POST /auth/google` on the backend to create/retrieve the user
 
@@ -894,6 +997,61 @@ useEffect(() => {
   fetchData();
 }, [backendAccessToken]);
 ```
+
+---
+
+## Documentation (Mintlify)
+
+The `/docs` folder contains Mintlify-style documentation organized into 4 main guides.
+
+### Structure
+
+```
+docs/
+├── mint.json              # Navigation, theme, and site configuration
+├── introduction.mdx       # Overview with workflow and guide links
+├── guides/
+│   ├── stt.mdx           # STT evaluation
+│   ├── tts.mdx           # TTS evaluation
+│   ├── llm-testing.mdx   # LLM testing (agent, tools, tests, benchmarks)
+│   └── simulations.mdx   # End-to-end simulations (single page)
+└── images/               # Screenshots for guides
+```
+
+### Navigation Groups (mint.json)
+
+| Group | Pages |
+|-------|-------|
+| **Get Started** | introduction |
+| **Guides** | stt, tts, llm-testing, simulations |
+
+### Guide Content
+
+| Guide | Content Covered |
+|-------|-----------------|
+| **STT** | Upload audio, select providers, view WER/latency metrics, leaderboard |
+| **TTS** | Add text samples, select providers, listen to outputs, view metrics |
+| **LLM Testing** | Complete workflow: create agent → create tool → attach tool → create Next Reply test → run test → create Tool Invocation test → run test → attach tests to agent → run all tests → run benchmark |
+| **Simulations** | Setup (agent, tool, personas, scenarios, metrics) → Text simulation section (per-row metrics, overall metrics, transcripts) → Voice simulation section (latency metrics, audio transcripts) |
+
+### Mintlify Components Used
+
+- `<Frame>` - Image containers
+- `<Card>` / `<CardGroup>` - Navigation cards
+- `<Accordion>` / `<AccordionGroup>` - Collapsible best practices
+- `<Tip>`, `<Note>`, `<Warning>`, `<Info>` - Callout boxes
+- `<Steps>` - Numbered workflow steps
+- Tables with Markdown syntax
+
+### Adding Screenshots
+
+Each guide references placeholder images in `/docs/images/`. Image naming convention:
+- `{feature}_overview.png` - List/landing page
+- `{feature}_new.png` - Create/new page
+- `{feature}_config.png` - Configuration view
+- `{feature}_results.png` - Results view
+- `sim_*.png` - Simulation-specific screenshots
+- `persona_*.png`, `scenario_*.png`, `metric_*.png` - Simulation setup screenshots
 
 ---
 
@@ -2123,7 +2281,7 @@ export default function ToolsLayout({
 | `/tts`                     | "Text to Speech \| Pense"     |
 | `/tts/[uuid]`              | "TTS Evaluation \| Pense"     |
 | `/tts/new`                 | "New TTS Evaluation \| Pense" |
-| `/login`                   | "Login \| Pense"              |
+| `/login`                   | "Pense \| Scale conversational AI agents with confidence" |
 
 **useEffect for dynamic titles:**
 
@@ -2181,7 +2339,7 @@ window.history.replaceState(null, "", `?tab=${tabName}`);
 
 ### Authentication
 
-- **Middleware matcher**: Excludes static assets (`_next/static`, `_next/image`, `favicon.ico`, `*.svg`)
+- **Middleware matcher**: Excludes static assets (`_next/static`, `_next/image`, `favicon.ico`, `*.svg`, `*.png`, `*.jpg`, `*.jpeg`, `*.gif`, `*.webp`, `*.ico`)
 - **Protected routes**: All routes except public routes require authentication
 - **Public routes** (no auth required): `/login`, `/api/auth/*`, `/debug*`
 - **Session access**: Use `useSession()` in client components, `auth()` in server components

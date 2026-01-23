@@ -145,6 +145,11 @@ export default function TTSEvaluationDetailPage() {
           );
         }
 
+        // If already done, show leaderboard tab by default
+        if (result.status === "done") {
+          setActiveTab("leaderboard");
+        }
+
         // Start polling if not done
         if (result.status !== "done" && !pollingIntervalRef.current) {
           pollingIntervalRef.current = setInterval(() => {
@@ -434,7 +439,6 @@ export default function TTSEvaluationDetailPage() {
                                   header: "Run",
                                   render: (value) => getProviderLabel(value),
                                 },
-                                { key: "count", header: "Count" },
                                 {
                                   key: "llm_judge_score",
                                   header: "LLM Judge Score",
