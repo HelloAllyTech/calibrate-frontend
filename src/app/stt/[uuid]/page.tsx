@@ -149,6 +149,11 @@ export default function STTEvaluationDetailPage() {
           setActiveProviderTab(result.provider_results[0].provider);
         }
 
+        // If already done, show leaderboard tab by default
+        if (result.status === "done") {
+          setActiveTab("leaderboard");
+        }
+
         // Start polling if not done
         if (result.status !== "done" && !pollingIntervalRef.current) {
           pollingIntervalRef.current = setInterval(() => {
@@ -459,7 +464,6 @@ export default function STTEvaluationDetailPage() {
                                   header: "Run",
                                   render: (value) => getProviderLabel(value),
                                 },
-                                { key: "count", header: "Count" },
                                 { key: "wer", header: "WER" },
                                 {
                                   key: "string_similarity",

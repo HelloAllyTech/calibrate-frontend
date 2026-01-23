@@ -2702,43 +2702,132 @@ update the llm judge score description in the about tabs of both stt and tts eva
 
 _**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
 
-
-
----
-
-
+<think><details><summary>Thought Process</summary>
+The user wants me to update the LLM Judge Score description in the "About" tabs of both STT and TTS evaluation pages. Let me find where these descriptions are defined.</details></think>
 
 ---
 
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "LLM Judge" in "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx" • 7 matches</summary>
 
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `src/app/stt/[uuid]/page.tsx` | `LLM Judge Score` | L393 |
+| `src/app/stt/[uuid]/page.tsx` | `header: "LLM Judge Score",` | L470 |
+| `src/app/stt/[uuid]/page.tsx` | `\{/* Row 2: LLM Judge Score and TTFB */\}` | L522 |
+| `src/app/stt/[uuid]/page.tsx` | `title="LLM Judge Score"` | L525 |
+| `src/app/stt/[uuid]/page.tsx` | `\{/* First Row: WER, String Similarity, LLM Judge Score */\}` | L689 |
+| `src/app/stt/[uuid]/page.tsx` | `LLM Judge Score` | L723 |
+| `src/app/stt/[uuid]/page.tsx` | `LLM Judge` | L809 |
+
+
+</details>
+</tool-use>
 
 ---
 
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "LLM Judge" in "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx" • 7 matches</summary>
 
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `src/app/tts/[uuid]/page.tsx` | `LLM Judge Score` | L371 |
+| `src/app/tts/[uuid]/page.tsx` | `header: "LLM Judge Score",` | L439 |
+| `src/app/tts/[uuid]/page.tsx` | `\{/* Row 1: LLM Judge Score and TTFB */\}` | L465 |
+| `src/app/tts/[uuid]/page.tsx` | `title="LLM Judge Score"` | L468 |
+| `src/app/tts/[uuid]/page.tsx` | `\{/* First Row: LLM Judge Score */\}` | L633 |
+| `src/app/tts/[uuid]/page.tsx` | `LLM Judge Score` | L641 |
+| `src/app/tts/[uuid]/page.tsx` | `LLM Judge` | L716 |
+
+
+</details>
+</tool-use>
 
 ---
 
-
-
----
-
-
+<think><details><summary>Thought Process</summary>
+Now let me read more context around the About tab descriptions in both files to see the full description text.</details></think>
 
 ---
 
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx</summary>
 
+</details>
+</tool-use>
 
 ---
 
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx</summary>
 
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I see the current descriptions. Now I need to update them. Since the LLM Judge now shows Pass/Fail instead of a numeric score, and the values are "True/False" (displayed as Pass/Fail), I should update the descriptions to reflect this.
+
+The user didn't specify what the new description should be, but based on the changes we made (showing Pass/Fail instead of numeric scores), I should update:
+1. The "0 - 1" range to "Pass / Fail" 
+2. "Higher is better" to something like "Pass indicates match"
+3. The description text to mention Pass/Fail
+
+Let me update both descriptions to be consistent with the Pass/Fail display.</details></think>
+
+---
+
+I see the current descriptions. Since we changed the display to show "Pass/Fail" instead of numeric scores, I'll update both descriptions to reflect this:
 
 ---
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **search_replace**</summary>
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx</summary>
 
-Status: **loading**
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -391,5 +391,5 @@
+                              &lt;tr className="border-b border-border"&gt;
+                                &lt;td className="px-4 py-3 text-[13px] font-medium text-foreground"&gt;
+-                                 LLM Judge Score
++                                 LLM Judge
+                                &lt;/td&gt;
+                                &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
+```
+
+**Chunk 2**
+Lines added: 4, lines removed: 3
+
+```diff
+@@ -400,11 +400,12 @@
+                                  correct for the agent's specific use case. The
+                                  LLM judge evaluates semantic equivalence rather
+-                                 than exact string matching.
++                                 than exact string matching, returning Pass if
++                                 the transcription is semantically correct.
+                                &lt;/td&gt;
+                                &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
+-                                 Higher is better
++                                 Pass is better
+                                &lt;/td&gt;
+                                &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
+-                                 0 - 1
++                                 Pass / Fail
+                                &lt;/td&gt;
+                              &lt;/tr&gt;
+```
 
 </details>
 
@@ -2746,11 +2835,251 @@ Status: **loading**
 
 ---
 
+<tool-use data-tool-type="write" data-tool-name="search_replace">
 
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 5, lines removed: 4
+
+```diff
+@@ -369,17 +369,18 @@
+                              &lt;tr className="border-b border-border"&gt;
+                                &lt;td className="px-4 py-3 text-[13px] font-medium text-foreground"&gt;
+-                                 LLM Judge Score
++                                 LLM Judge
+                                &lt;/td&gt;
+                                &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
+                                  The LLM judge evaluates whether the synthesized
+                                  audio accurately matches the reference text. It
+                                  checks for semantic equivalence and
+-                                 pronunciation accuracy.
++                                 pronunciation accuracy, returning Pass if the
++                                 audio correctly represents the input text.
+                                &lt;/td&gt;
+                                &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
+-                                 Higher is better
++                                 Pass is better
+                                &lt;/td&gt;
+                                &lt;td className="px-4 py-3 text-[13px] text-foreground"&gt;
+-                                 0 - 1
++                                 Pass / Fail
+                                &lt;/td&gt;
+                              &lt;/tr&gt;
+```
+
+</details>
+
+</tool-use>
 
 ---
 
+<think><details><summary>Thought Process</summary>
+Good, the changes have been made. Let me check for linting errors.</details></think>
 
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 2 files</summary>
+      
+Lint paths:
+
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx`
+- `/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx`
+
+Lint results
+
+Lint errors for `src/app/tts/[uuid]/page.tsx`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| 'React' is declared but its value is never read. | 3:8-3:13 | DIAGNOSTIC_SEVERITY_HINT |
+
+
+Lint errors for `src/app/stt/[uuid]/page.tsx`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| 'React' is declared but its value is never read. | 3:8-3:13 | DIAGNOSTIC_SEVERITY_HINT |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+The updates have been completed. Let me summarize the changes:1. Changed "LLM Judge Score" to "LLM Judge" in the About tab metric name
+2. Updated the description to mention that it returns "Pass" for correct results
+3. Changed "Higher is better" to "Pass is better"
+4. Changed the range from "0 - 1" to "Pass / Fail"</details></think>
+
+---
+
+Done! I've updated the LLM Judge description in the About tabs of both STT and TTS evaluation pages:
+
+**Changes made:**
+- Renamed "LLM Judge Score" → "LLM Judge" (consistent with table column header)
+- Updated description to mention it returns "Pass" for correct results
+- Changed "Higher is better" → "Pass is better"
+- Changed range from "0 - 1" → "Pass / Fail"
+
+---
+
+_**User (2026-01-18 02:17Z)**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+I made code changes to both the STT and TTS evaluation pages:
+1. Fixed the LLM Judge Score parsing to handle both "True"/"False" strings and "1"/"0" numeric values
+2. Updated the About tab descriptions for LLM Judge
+
+Let me read the app-details.md file to find sections that need updating.</details></think>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "llm_judge_score|LLM Judge" in "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md" • 11 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `.cursor/rules/app-details.md` | `- **Metrics**: WER, String Similarity, LLM Judge (Pass/Fail), TTFB, Processing Time` | L196 |
+| `.cursor/rules/app-details.md` | `- **Metrics**: LLM Judge (Pass/Fail), TTFB, Processing Time` | L241 |
+| `.cursor/rules/app-details.md` | `- **Intermediate results structure**: `results` array contains `id`, `text`, `audio_path`; `llm_judge_score` and `llm_judge_reasoning` are only present when complete` | L242 |
+| `.cursor/rules/app-details.md` | `- `stt_llm_judge_score` displayed as percentage, other metrics as Pass/Fail` | L343 |
+| `.cursor/rules/app-details.md` | `- **STT metrics**: WER, String Similarity, LLM Judge, TTFB, Processing Time` | L717 |
+| `.cursor/rules/app-details.md` | `- **TTS metrics**: LLM Judge, TTFB, Processing Time` | L718 |
+| `.cursor/rules/app-details.md` | `- **STT Outputs tab**: Shows Ground Truth vs Prediction text; metrics columns (WER, String Similarity, LLM Judge) shown when status is "done" OR when all rows have metrics available. Rows with empty predictions are highlighted with `bg-red-500/10` and show "_No transcript produced_" in italicized muted text` | L719 |
+| `.cursor/rules/app-details.md` | `- **TTS Outputs tab**: Shows text input with audio playback; LLM Judge column shown when status is "done" OR when all rows have metrics available` | L720 |
+| `.cursor/rules/app-details.md` | `- **LLM Judge column display**: Shows Pass/Fail badges (green/red) instead of raw scores. Score is integer (0 or 1) parsed with `parseInt`. Pass when `score === 1`, Fail when `score === 0`. Tooltip shows the reasoning text on hover (falls back to "Score: X" if no reasoning). Uses `cursor-pointer`` | L721 |
+| `.cursor/rules/app-details.md` | `- Metrics: WER, String Similarity, LLM Judge (Pass/Fail with tooltip), TTFB, Processing Time` | L1142 |
+| `.cursor/rules/app-details.md` | `**Viewport clamping**: The tooltip automatically clamps its position to stay within viewport boundaries (12px padding from edges). This prevents long content (like LLM Judge reasoning) from going off-screen.` | L1409 |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I found the relevant section. The key change I need to make is to update line 721 which says:
+```
+- **LLM Judge column display**: Shows Pass/Fail badges (green/red) instead of raw scores. Score is integer (0 or 1) parsed with `parseInt`. Pass when `score === 1`, Fail when `score === 0`. Tooltip shows the reasoning text on hover (falls back to "Score: X" if no reasoning). Uses `cursor-pointer`
+```
+
+This is now outdated because:
+1. The score is NOT parsed with `parseInt` anymore - it handles string "True"/"False" values
+2. Pass is when the lowercase value is "true" or "1", not just when `score === 1`
+
+Let me update this section.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -719,5 +719,5 @@
+  - **STT Outputs tab**: Shows Ground Truth vs Prediction text; metrics columns (WER, String Similarity, LLM Judge) shown when status is "done" OR when all rows have metrics available. Rows with empty predictions are highlighted with &#96;bg-red-500/10&#96; and show "_No transcript produced_" in italicized muted text
+  - **TTS Outputs tab**: Shows text input with audio playback; LLM Judge column shown when status is "done" OR when all rows have metrics available
+- - **LLM Judge column display**: Shows Pass/Fail badges (green/red) instead of raw scores. Score is integer (0 or 1) parsed with &#96;parseInt&#96;. Pass when &#96;score === 1&#96;, Fail when &#96;score === 0&#96;. Tooltip shows the reasoning text on hover (falls back to "Score: X" if no reasoning). Uses &#96;cursor-pointer&#96;
++ - **LLM Judge column display**: Shows Pass/Fail badges (green/red) instead of raw scores. Backend returns &#96;"True"&#96;/&#96;"False"&#96; strings (or &#96;"1"&#96;/&#96;"0"&#96;). Parsing: convert to lowercase string, Pass when value is &#96;"true"&#96; or &#96;"1"&#96;. Tooltip shows the reasoning text on hover (falls back to "Score: X" if no reasoning). Uses &#96;cursor-pointer&#96;
+  
+  ### Component Patterns
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good. I should also add a note about this in the Gotchas section since it's a common edge case - the backend returns different formats for the same field. Let me check if there's an appropriate place to add this.</details></think>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "Gotchas.*Edge Cases" in "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md" • 1 match</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `.cursor/rules/app-details.md` | `## Gotchas & Edge Cases` | L1934 |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I should add a note about the LLM Judge score format in the API Calls section since it's an important edge case to know about.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: undefined
+
+```diff
+@@ -1954,4 +1954,5 @@
+  - **Optional date fields with fallbacks**: Some API responses may not include all date fields. The &#96;SimulationRunsTab&#96; uses &#96;created_at&#96; for sorting/display but falls back to &#96;updated_at&#96; if &#96;created_at&#96; is undefined. Pattern: &#96;const dateStr = item.created_at || item.updated_at || ""&#96;; &#96;formatDate&#96; functions should handle empty strings gracefully (return &#96;"-"&#96; instead of "Invalid Date")
+  - **Hooks need accessToken**: &#96;useCrudResource&#96; and &#96;useFetchResource&#96; require &#96;accessToken&#96; to be passed from the component (they don't call &#96;useSession&#96; internally)
++ - **LLM Judge score format varies**: Backend returns &#96;llm_judge_score&#96; as &#96;"True"&#96;/&#96;"False"&#96; strings in individual result rows, but as &#96;1&#96;/&#96;0&#96; integers in aggregate metrics and leaderboard summaries. When parsing for Pass/Fail display, convert to lowercase string and check for both: &#96;const passed = scoreStr === "true" || scoreStr === "1"&#96;
+  
+  ### State Management
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good. I've updated the app-details.md with the relevant information about:1. The LLM Judge column display parsing logic (updated from parseInt to string comparison)2. Added a gotcha about the varying LLM Judge score formats from the backend</details></think>
+
+---
+
+Updated the documentation with:
+
+1. **Fixed LLM Judge column display description** - Changed from `parseInt` parsing to string comparison that handles both `"True"`/`"False"` and `"1"`/`"0"` formats
+
+2. **Added API gotcha** - Documented that `llm_judge_score` format varies between individual results (strings) and aggregate metrics (integers), with the recommended parsing pattern
 
 ---
 
