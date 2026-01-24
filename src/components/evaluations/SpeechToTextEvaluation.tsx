@@ -3,9 +3,11 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { sttProviders } from "../agent-tabs/constants/providers";
+import { toast } from "sonner";
+import { sttProviders, STTProvider } from "../agent-tabs/constants/providers";
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog";
 import JSZip from "jszip";
+import { LIMITS, CONTACT_LINK } from "@/constants/limits";
 
 type AudioTextRow = {
   id: string;
@@ -22,8 +24,60 @@ type EvaluationResult = {
 
 type TabType = "settings" | "input";
 
-// Use provider labels for display
-const providerLabels = sttProviders.map((p) => p.label);
+type LanguageOption =
+  | "english"
+  | "hindi"
+  | "kannada"
+  | "bengali"
+  | "malayalam"
+  | "marathi"
+  | "odia"
+  | "punjabi"
+  | "tamil"
+  | "telugu"
+  | "gujarati";
+
+// Map language option to the format used in supportedLanguages arrays
+const languageDisplayName: Record<LanguageOption, string> = {
+  english: "English",
+  hindi: "Hindi",
+  kannada: "Kannada",
+  bengali: "Bengali",
+  malayalam: "Malayalam",
+  marathi: "Marathi",
+  odia: "Odia",
+  punjabi: "Punjabi",
+  tamil: "Tamil",
+  telugu: "Telugu",
+  gujarati: "Gujarati",
+};
+
+// Filter providers based on selected language
+const getFilteredProviders = (language: LanguageOption): STTProvider[] => {
+  const langName = languageDisplayName[language];
+  return sttProviders.filter(
+    (provider) =>
+      !provider.supportedLanguages ||
+      provider.supportedLanguages.includes(langName)
+  );
+};
+
+// Helper function to get audio file duration
+const getAudioDuration = (file: File): Promise<number> => {
+  return new Promise((resolve, reject) => {
+    const audio = new Audio();
+    const url = URL.createObjectURL(file);
+    audio.src = url;
+    audio.onloadedmetadata = () => {
+      URL.revokeObjectURL(url);
+      resolve(audio.duration);
+    };
+    audio.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Failed to load audio file"));
+    };
+  });
+};
 
 export function SpeechToTextEvaluation() {
   const router = useRouter();
@@ -39,7 +93,27 @@ export function SpeechToTextEvaluation() {
   const [selectedProviders, setSelectedProviders] = useState<Set<string>>(
     new Set()
   );
-  const [language, setLanguage] = useState<"english" | "hindi">("english");
+  const [language, setLanguage] = useState<LanguageOption>("english");
+
+  // Get filtered providers based on selected language
+  const filteredProviders = getFilteredProviders(language);
+  const providerLabels = filteredProviders.map((p) => p.label);
+
+  // Handle language change - clear providers that don't support the new language
+  const handleLanguageChange = (newLanguage: LanguageOption) => {
+    setLanguage(newLanguage);
+    const newFilteredProviders = getFilteredProviders(newLanguage);
+    const supportedLabels = new Set(newFilteredProviders.map((p) => p.label));
+    setSelectedProviders((prev) => {
+      const newSet = new Set<string>();
+      prev.forEach((label) => {
+        if (supportedLabels.has(label)) {
+          newSet.add(label);
+        }
+      });
+      return newSet;
+    });
+  };
   const [uploadStatus, setUploadStatus] = useState<{
     [key: string]: "uploading" | "success" | "error";
   }>({});
@@ -49,6 +123,25 @@ export function SpeechToTextEvaluation() {
   const zipInputRef = useRef<HTMLInputElement>(null);
 
   const addRow = () => {
+    // Check row limit
+    if (rows.length >= LIMITS.STT_MAX_ROWS) {
+      toast.error(
+        <span>
+          You can only add up to {LIMITS.STT_MAX_ROWS} rows at a time.{" "}
+          <a
+            href={CONTACT_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            Contact us
+          </a>{" "}
+          to extend your limits.
+        </span>
+      );
+      return;
+    }
+
     // Validate existing rows
     const invalidIds = new Set<string>();
     rows.forEach((row) => {
@@ -164,6 +257,54 @@ export function SpeechToTextEvaluation() {
       return;
     }
 
+    // Check file size
+    const fileSizeMB = file.size / (1024 * 1024);
+    if (fileSizeMB > LIMITS.STT_MAX_AUDIO_FILE_SIZE_MB) {
+      toast.error(
+        <span>
+          Audio file must be less than {LIMITS.STT_MAX_AUDIO_FILE_SIZE_MB} MB.
+          This file is {fileSizeMB.toFixed(2)} MB.{" "}
+          <a
+            href={CONTACT_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            Contact us
+          </a>{" "}
+          to extend your limits.
+        </span>
+      );
+      return;
+    }
+
+    // Check audio duration
+    try {
+      const duration = await getAudioDuration(file);
+      if (duration > LIMITS.STT_MAX_AUDIO_DURATION_SECONDS) {
+        toast.error(
+          <span>
+            Audio file must be less than {LIMITS.STT_MAX_AUDIO_DURATION_SECONDS}{" "}
+            seconds. This file is {Math.round(duration)} seconds.{" "}
+            <a
+              href={CONTACT_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              Contact us
+            </a>{" "}
+            to extend your limits.
+          </span>
+        );
+        return;
+      }
+    } catch (error) {
+      console.error("Error checking audio duration:", error);
+      toast.error("Failed to read audio file. Please try a different file.");
+      return;
+    }
+
     // Set uploading status
     setUploadStatus((prev) => ({ ...prev, [id]: "uploading" }));
 
@@ -206,20 +347,23 @@ export function SpeechToTextEvaluation() {
     }
   };
 
-  const MAX_PROVIDERS = 3;
-
   const toggleProvider = (provider: string) => {
     setSelectedProviders((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(provider)) {
         newSet.delete(provider);
-      } else if (newSet.size < MAX_PROVIDERS) {
+      } else {
         newSet.add(provider);
         // Clear providers invalid state when a provider is selected
         setProvidersInvalid(false);
       }
       return newSet;
     });
+  };
+
+  const selectAllProviders = () => {
+    setSelectedProviders(new Set(providerLabels));
+    setProvidersInvalid(false);
   };
 
   const handleDownloadSampleZip = async () => {
@@ -396,6 +540,26 @@ export function SpeechToTextEvaluation() {
         return;
       }
 
+      // Check row limit
+      if (dataRows.length > LIMITS.STT_MAX_ROWS) {
+        toast.error(
+          <span>
+            You can only upload up to {LIMITS.STT_MAX_ROWS} rows at a time.{" "}
+            <a
+              href={CONTACT_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              Contact us
+            </a>{" "}
+            to extend your limits.
+          </span>
+        );
+        setIsProcessingZip(false);
+        return;
+      }
+
       // Clear existing rows (revoke URLs)
       rows.forEach((row) => {
         if (row.audioUrl) {
@@ -435,6 +599,65 @@ export function SpeechToTextEvaluation() {
         const audioFile = new File([audioBlob], audioFileName, {
           type: "audio/wav",
         });
+
+        // Check file size
+        const fileSizeMB = audioFile.size / (1024 * 1024);
+        if (fileSizeMB > LIMITS.STT_MAX_AUDIO_FILE_SIZE_MB) {
+          toast.error(
+            <span>
+              Audio file &quot;{audioFileName}&quot; exceeds{" "}
+              {LIMITS.STT_MAX_AUDIO_FILE_SIZE_MB} MB ({fileSizeMB.toFixed(2)}{" "}
+              MB). All audio files must be under{" "}
+              {LIMITS.STT_MAX_AUDIO_FILE_SIZE_MB} MB.{" "}
+              <a
+                href={CONTACT_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+              >
+                Contact us
+              </a>{" "}
+              to extend your limits.
+            </span>
+          );
+          setIsProcessingZip(false);
+          if (zipInputRef.current) {
+            zipInputRef.current.value = "";
+          }
+          return;
+        }
+
+        // Check audio duration
+        try {
+          const duration = await getAudioDuration(audioFile);
+          if (duration > LIMITS.STT_MAX_AUDIO_DURATION_SECONDS) {
+            toast.error(
+              <span>
+                Audio file &quot;{audioFileName}&quot; exceeds{" "}
+                {LIMITS.STT_MAX_AUDIO_DURATION_SECONDS} seconds (
+                {Math.round(duration)}s). All audio files must be under{" "}
+                {LIMITS.STT_MAX_AUDIO_DURATION_SECONDS} seconds.{" "}
+                <a
+                  href={CONTACT_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline"
+                >
+                  Contact us
+                </a>{" "}
+                to extend your limits.
+              </span>
+            );
+            setIsProcessingZip(false);
+            if (zipInputRef.current) {
+              zipInputRef.current.value = "";
+            }
+            return;
+          }
+        } catch (error) {
+          console.error("Error checking audio duration:", error);
+          // Continue even if we can't check duration - server will validate
+        }
 
         // Create preview URL
         const audioUrl = URL.createObjectURL(audioFile);
@@ -664,12 +887,21 @@ export function SpeechToTextEvaluation() {
               <select
                 value={language}
                 onChange={(e) =>
-                  setLanguage(e.target.value as "english" | "hindi")
+                  handleLanguageChange(e.target.value as LanguageOption)
                 }
                 className="h-10 px-4 pr-10 rounded-md text-[13px] border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent cursor-pointer appearance-none min-w-[140px]"
               >
                 <option value="english">English</option>
                 <option value="hindi">Hindi</option>
+                <option value="kannada">Kannada</option>
+                <option value="bengali">Bengali</option>
+                <option value="malayalam">Malayalam</option>
+                <option value="marathi">Marathi</option>
+                <option value="odia">Odia</option>
+                <option value="punjabi">Punjabi</option>
+                <option value="tamil">Tamil</option>
+                <option value="telugu">Telugu</option>
+                <option value="gujarati">Gujarati</option>
               </select>
               <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                 <svg
@@ -697,57 +929,117 @@ export function SpeechToTextEvaluation() {
           >
             <div className="flex items-center gap-2">
               <h3 className="text-[13px] font-medium text-foreground">
-                Select up to 3 providers to evaluate
+                Select providers to evaluate
               </h3>
               <span className="text-[12px] text-muted-foreground">
-                ({selectedProviders.size}/{MAX_PROVIDERS} selected)
+                ({selectedProviders.size} selected)
               </span>
-              {selectedProviders.size > 0 && (
-                <button
-                  onClick={() => setSelectedProviders(new Set())}
-                  className="ml-auto text-[12px] font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-                >
-                  Deselect all
-                </button>
-              )}
             </div>
-            <div className="flex flex-wrap gap-3">
-              {providerLabels.map((providerLabel) => {
-                const isSelected = selectedProviders.has(providerLabel);
-                const isDisabled =
-                  !isSelected && selectedProviders.size >= MAX_PROVIDERS;
-                return (
-                  <button
-                    key={providerLabel}
-                    onClick={() => toggleProvider(providerLabel)}
-                    disabled={isDisabled}
-                    className={`h-9 px-4 rounded-md text-[13px] font-medium border transition-colors flex items-center gap-2 ${
-                      isSelected
-                        ? "bg-foreground text-background border-foreground cursor-pointer"
-                        : isDisabled
-                        ? "bg-muted/50 text-muted-foreground/50 border-border/50 cursor-not-allowed"
-                        : "bg-background text-muted-foreground border-border hover:bg-accent/50 hover:text-foreground hover:border-border cursor-pointer"
-                    }`}
-                  >
-                    {isSelected && (
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
+            <div className="border border-border rounded-lg overflow-hidden">
+              <table className="w-full">
+                <thead className="bg-muted/50 border-b border-border">
+                  <tr>
+                    <th className="w-12 px-4 py-2 text-left">
+                      <div
+                        className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors cursor-pointer ${
+                          selectedProviders.size === providerLabels.length
+                            ? "bg-foreground border-foreground"
+                            : selectedProviders.size > 0
+                            ? "bg-foreground/50 border-foreground"
+                            : "border-border hover:border-foreground/50"
+                        }`}
+                        onClick={() => {
+                          if (selectedProviders.size === providerLabels.length) {
+                            setSelectedProviders(new Set());
+                          } else {
+                            selectAllProviders();
+                          }
+                        }}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M4.5 12.75l6 6 9-13.5"
-                        />
-                      </svg>
-                    )}
-                    {providerLabel}
-                  </button>
-                );
-              })}
+                        {selectedProviders.size === providerLabels.length ? (
+                          <svg
+                            className="w-3 h-3 text-background"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={3}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M4.5 12.75l6 6 9-13.5"
+                            />
+                          </svg>
+                        ) : selectedProviders.size > 0 ? (
+                          <svg
+                            className="w-3 h-3 text-background"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={3}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M5 12h14"
+                            />
+                          </svg>
+                        ) : null}
+                      </div>
+                    </th>
+                    <th className="px-4 py-2 text-left text-[12px] font-medium text-foreground">
+                      Label
+                    </th>
+                    <th className="px-4 py-2 text-left text-[12px] font-medium text-foreground">
+                      Model
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredProviders.map((provider) => {
+                    const isSelected = selectedProviders.has(provider.label);
+                    return (
+                      <tr
+                        key={provider.label}
+                        className="border-b border-border last:border-b-0 hover:bg-muted/30 cursor-pointer transition-colors"
+                        onClick={() => toggleProvider(provider.label)}
+                      >
+                        <td className="w-12 px-4 py-2">
+                          <div
+                            className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
+                              isSelected
+                                ? "bg-foreground border-foreground"
+                                : "border-border"
+                            }`}
+                          >
+                            {isSelected && (
+                              <svg
+                                className="w-3 h-3 text-background"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={3}
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M4.5 12.75l6 6 9-13.5"
+                                />
+                              </svg>
+                            )}
+                          </div>
+                        </td>
+                        <td className={`px-4 py-2 text-[13px] ${isSelected ? "text-foreground font-medium" : "text-muted-foreground"}`}>
+                          {provider.label}
+                        </td>
+                        <td className="px-4 py-2 text-[13px] text-muted-foreground font-mono">
+                          {provider.model}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

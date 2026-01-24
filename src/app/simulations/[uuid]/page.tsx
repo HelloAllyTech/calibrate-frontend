@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
+import { toast } from "sonner";
 import { AppLayout } from "@/components/AppLayout";
 import { Agent } from "@/components/AgentPicker";
 import { PickerItem } from "@/components/MultiSelectPicker";
@@ -10,6 +11,7 @@ import {
   SimulationConfigTab,
   SimulationRunsTab,
 } from "@/components/simulation-tabs";
+import { LIMITS, CONTACT_LINK } from "@/constants/limits";
 
 type PersonaData = {
   uuid: string;
@@ -131,6 +133,52 @@ export default function SimulationDetailPage() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Handle personas change with limit check
+  const handlePersonasChange = (items: PickerItem[]) => {
+    if (items.length > LIMITS.SIMULATION_MAX_PERSONAS) {
+      toast.error(
+        <span>
+          You can only select up to {LIMITS.SIMULATION_MAX_PERSONAS} personas at
+          a time.{" "}
+          <a
+            href={CONTACT_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            Contact us
+          </a>{" "}
+          to extend your limits.
+        </span>
+      );
+      return;
+    }
+    setSelectedPersonas(items);
+  };
+
+  // Handle scenarios change with limit check
+  const handleScenariosChange = (items: PickerItem[]) => {
+    if (items.length > LIMITS.SIMULATION_MAX_SCENARIOS) {
+      toast.error(
+        <span>
+          You can only select up to {LIMITS.SIMULATION_MAX_SCENARIOS} scenarios
+          at a time.{" "}
+          <a
+            href={CONTACT_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            Contact us
+          </a>{" "}
+          to extend your limits.
+        </span>
+      );
+      return;
+    }
+    setSelectedScenarios(items);
+  };
 
   // Set active tab from query parameter
   useEffect(() => {
@@ -695,11 +743,11 @@ export default function SimulationDetailPage() {
                 onSelectAgent={setSelectedAgent}
                 personas={personas}
                 selectedPersonas={selectedPersonas}
-                onPersonasChange={setSelectedPersonas}
+                onPersonasChange={handlePersonasChange}
                 personasLoading={personasLoading}
                 scenarios={scenarios}
                 selectedScenarios={selectedScenarios}
-                onScenariosChange={setSelectedScenarios}
+                onScenariosChange={handleScenariosChange}
                 scenariosLoading={scenariosLoading}
                 metrics={metrics}
                 selectedMetrics={selectedMetrics}

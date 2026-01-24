@@ -98,9 +98,68 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
 
 **Available Providers:**
 
-- **STT**: deepgram, openai, cartesia, elevenlabs, whisper (groq), google, sarvam
-- **TTS**: cartesia, openai, orpheus (groq), google, elevenlabs, sarvam
+- **STT**: deepgram, openai, cartesia, elevenlabs, whisper (groq), google, sarvam, smallest
+- **TTS**: cartesia, openai, orpheus (groq), google, elevenlabs, sarvam, smallest
 - **LLM**: 20+ providers including OpenAI, Google, Anthropic, DeepSeek, Meta, Mistral, Qwen, xAI, Perplexity, Cohere, Amazon, NVIDIA, Microsoft, and more
+
+**Provider Language Support** (defined in `src/components/agent-tabs/constants/providers.ts`):
+
+STT and TTS providers have typed definitions with the following fields:
+
+```typescript
+type STTProvider = {
+  label: string;           // Provider name (e.g., "Deepgram")
+  value: string;           // API identifier (e.g., "deepgram")
+  model: string;           // Model name (e.g., "nova-3")
+  supportedLanguages?: string[];
+};
+
+type TTSProvider = {
+  label: string;           // Provider name (e.g., "Cartesia")
+  value: string;           // API identifier (e.g., "cartesia")
+  model: string;           // Model name (e.g., "sonic-2")
+  voiceId: string;         // Voice identifier (e.g., "638efaaa-4d0c-442e-b701-3fae16aad012")
+  supportedLanguages?: string[];
+};
+```
+
+**STT Providers Table:**
+| Label | Model |
+|-------|-------|
+| Deepgram | nova-3 |
+| OpenAI | gpt-4o-transcribe |
+| Cartesia | ink |
+| ElevenLabs | scribe-v2 |
+| Groq | whisper-large-v3-turbo |
+| Google | chirp-3 |
+| Sarvam | saarika-v2.5 |
+| Smallest | pulse |
+
+**TTS Providers Table:**
+| Label | Model | Voice ID |
+|-------|-------|----------|
+| Cartesia | sonic-2 | 638efaaa-4d0c-442e-b701-3fae16aad012 |
+| OpenAI | gpt-4o-mini-tts | coral |
+| Groq | playai-tts | Arista-PlayAI |
+| Google | chirp-3 | Aoede |
+| ElevenLabs | eleven_multilingual_v2 | IbEzPPGLXlYUvxNGhJQp |
+| Sarvam | bulbul:v2 | meera |
+| Smallest | lightning | emily |
+
+**STT Language Arrays** (`*STTSupportedLanguages`):
+- `cartesiaSTTSupportedLanguages`: 99 languages - STT only (TTS has separate list)
+- `deepgramSTTSupportedLanguages`: 44 languages - STT only provider
+- `elevenlabsSTTSupportedLanguages`: 94 languages - STT only (TTS has separate list)
+- `googleSTTSupportedLanguages`: 71 languages - STT only (TTS has separate list)
+- `openaiSTTSupportedLanguages`: 57 languages - used for both STT and TTS, also used by whisper/groq STT
+- `sarvamSTTSupportedLanguages`: 11 Indic languages - used for both STT and TTS
+- `smallestAiSTTSupportedLanguages`: 32 languages - used for both STT and TTS
+
+**TTS Language Arrays** (`*TTSSupportedLanguages`):
+- `cartesiaTTSSupportedLanguages`: 41 languages
+- `elevenlabsTTSSupportedLanguages`: 29 languages
+- `googleTTSSupportedLanguages`: 47 languages
+- `groqTTSSupportedLanguages`: 1 language (English only) - used by orpheus/groq TTS
 
 **Tests Tab Features:**
 
@@ -131,7 +190,8 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
      - When dialog closes, parent resumes polling for that run if still pending
   4. The "Running" badge with spinner is shown until the run completes
   5. Clicking on an in-progress run opens the dialog with the correct `taskId` for real-time polling
-- **Actions**: Add test, Run all tests (header button), Run single test (row button), Compare models (benchmark)
+- **Actions**: Add test, Run all tests (header button, max 20 tests), Run single test (row button), Compare models (benchmark)
+- **Run all tests limit**: Maximum 20 tests at a time. Shows toast error with "Contact Us" link if exceeded
 - **API**: Fetches runs from `GET /agent-tests/agent/{uuid}/runs`
 - **Run types**: `llm-unit-test` (has passed/failed counts) and `llm-benchmark` (results in model_results)
 
@@ -166,13 +226,16 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
 
 **Create Page (`/stt/new`):**
 
-- **Upload audio files** (.wav format) with reference transcriptions
-- **Add multiple test samples** for batch evaluation
+- **Upload audio files** (.wav format, max 60 seconds each) with reference transcriptions
+- **Add multiple test samples** for batch evaluation (max 20 rows per evaluation)
 - **ZIP upload option**: Upload a ZIP file containing an `audios/` folder with .wav files and a `data.csv` mapping audio files to transcriptions
 - **Download sample ZIP**: Button to download a template ZIP with correct structure
 - **Select providers to evaluate** (compare multiple simultaneously)
-- **Choose language** (English or Hindi)
+- **Choose language** (11 Indic languages: English, Hindi, Kannada, Bengali, Malayalam, Marathi, Odia, Punjabi, Tamil, Telugu, Gujarati) - provider list filters based on language support
 - **Run evaluation** - creates evaluation and redirects to detail page
+- **Row limit**: Maximum 20 rows per evaluation. Shows toast error with "Contact Us" link if exceeded
+- **Audio duration limit**: Each audio file must be under 60 seconds. Validated client-side using Web Audio API before upload. Shows toast error with "Contact Us" link if exceeded
+- **Audio file size limit**: Each audio file must be under 5 MB. Validated client-side before upload. Shows toast error with "Contact Us" link if exceeded
 
 **Detail Page (`/stt/[uuid]`):**
 
@@ -182,21 +245,23 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
   - When evaluation is already complete on page load: defaults to "Leaderboard"
   - When evaluation is in progress: defaults to "Outputs" to show results as they arrive
   - Automatically switches to "Leaderboard" when evaluation completes during polling
-- **Status badge**: Shows "Running" or "Queued" badge with spinner when evaluation is not done (shown even before any provider results arrive)
+- **Language pill**: Displayed first (left side) with `bg-muted rounded-full capitalize` styling (e.g., "punjabi" → "Punjabi")
+- **Status badge**: Shows "Running" or "Queued" badge with spinner to the right of language pill when evaluation is not done
 - **Tabs only appear when at least one provider result exists**:
   - **Leaderboard**: Only visible when status is `done` (needs all providers to compare)
   - **Outputs**: Two-panel layout similar to TestRunnerDialog
   - **About**: Metric descriptions
 - **Outputs tab layout** (two-panel, similar to TestRunnerDialog):
-  - **Left panel** (w-64): Provider list with status icons based on `success` field:
+  - **Left panel** (w-64): Provider list with status icons:
     - Yellow pulsing dot when `success === null` (in progress)
-    - Green checkmark when `success === true` (completed successfully)
-    - Red X when `success === false` (failed)
+    - Green checkmark when `success === true` AND no empty predictions
+    - Red X when `success === false` OR any row has empty prediction
   - **Right panel**: Selected provider's overall metrics + results table (ground truth vs predictions)
+    - **Loading state**: Shows centered spinner when provider is in progress (`success === null`) and has no results yet
+    - **Error state**: Shows centered error banner when `success === false` with "Error running this provider" heading and error message
   - First provider is selected by default
-  - Clicking a provider shows its details on the right
-- **Provider error messages** (red ❌ with message): Only displayed when evaluation status is `done`, not during `in_progress`
-- **Metrics**: WER, String Similarity, LLM Judge (Pass/Fail), TTFB, Processing Time
+  - **Auto-scroll**: Clicking a provider with empty predictions scrolls to the first empty row
+- **Metrics**: WER, String Similarity, LLM Judge (Pass/Fail)
 
 ### 4. Text-to-Speech Evaluation (`/tts`)
 
@@ -215,12 +280,14 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
 
 **Create Page (`/tts/new`):**
 
-- **Add text samples** to convert to speech (manual input OR CSV upload)
+- **Add text samples** to convert to speech (manual input OR CSV upload, max 20 rows)
 - **CSV upload option**: Upload a CSV file with a `text` column to bulk import samples
 - **Download sample CSV**: Button to download a template CSV with correct format
-- **Select language** (English or Hindi)
+- **Select language** (11 Indic languages: English, Hindi, Kannada, Bengali, Malayalam, Marathi, Odia, Punjabi, Tamil, Telugu, Gujarati) - provider list filters based on language support
 - **Select providers to compare**
 - **Run evaluation** - creates evaluation and redirects to detail page
+- **Row limit**: Maximum 20 rows per evaluation. Shows toast error with "Contact Us" link if exceeded
+- **Text length limit**: Each text input must be 200 characters or less. Validated on CSV upload and before evaluation. Shows toast error with "Contact Us" link if exceeded
 
 **Detail Page (`/tts/[uuid]`):**
 
@@ -230,7 +297,8 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
   - When evaluation is in progress: defaults to "Outputs" to show results as they arrive
   - Automatically switches to "Leaderboard" when evaluation completes during polling
 - **Intermediate results**: Shows Outputs and About tabs during `in_progress` status
-- **Status badge**: Shows "Running" or "Queued" badge with spinner when evaluation is not done (shown even before any provider results arrive)
+- **Language pill**: Displayed first (left side) with `bg-muted rounded-full capitalize` styling
+- **Status badge**: Shows "Running" or "Queued" badge with spinner to the right of language pill when evaluation is not done
 - **Tabs**:
   - **Leaderboard**: Only visible when status is `done` - comparative table and charts
   - **Outputs**: Two-panel layout similar to STT - provider list on left, details on right
@@ -241,10 +309,11 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
     - Green checkmark when `success === true` (completed successfully)
     - Red X when `success === false` (failed)
   - **Right panel**: Selected provider's overall metrics + results table with audio playback
+    - **Loading state**: Shows centered spinner when provider is in progress (`success === null`) and has no results yet
+    - **Error state**: Shows centered error banner when `success === false` with "Error running this provider" heading and error message
   - First provider is selected by default
   - Clicking a provider shows its details on the right
-- **Provider error messages** (red ❌ with message): Only displayed when evaluation status is `done`, not during `in_progress`
-- **Metrics**: LLM Judge (Pass/Fail), TTFB, Processing Time
+- **Metrics**: LLM Judge (Pass/Fail), TTFB
 - **Intermediate results structure**: `results` array contains `id`, `text`, `audio_path`; `llm_judge_score` and `llm_judge_reasoning` are only present when complete
 
 ### 5. Tests Management (`/tests`)
@@ -309,8 +378,13 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
 
 | Tab        | Purpose                                                                                |
 | ---------- | -------------------------------------------------------------------------------------- |
-| **Config** | Select agent, personas, scenarios for the simulation                                   |
+| **Config** | Select agent, personas (max 2), scenarios (max 5) for the simulation                   |
 | **Runs**   | View history of simulation runs (right-click or Cmd/Ctrl+click to open run in new tab) |
+
+**Selection Limits:**
+
+- **Personas**: Maximum 2 personas per simulation. Shows toast error with "Contact Us" link if exceeded
+- **Scenarios**: Maximum 5 scenarios per simulation. Shows toast error with "Contact Us" link if exceeded
 
 **Running Simulations:**
 
@@ -492,6 +566,7 @@ This enables:
 │   │   └── ui/                # Reusable UI components (Button, SearchInput, etc.)
 │   ├── constants/             # Static configuration data
 │   │   ├── inbuilt-tools.ts   # Built-in tool definitions
+│   │   ├── limits.ts          # Usage limits and contact link for upgrade requests
 │   │   └── polling.ts         # POLLING_INTERVAL_MS (3000ms) - shared polling interval
 │   ├── hooks/                 # Custom React hooks (useCrudResource, etc.)
 │   ├── lib/                   # Utility libraries (api.ts, status.ts, etc.)
@@ -795,11 +870,19 @@ Both TTS and STT evaluation pages follow the same list → new → detail patter
 
 - Contains the evaluation form component (`TextToSpeechEvaluation` or `SpeechToTextEvaluation`)
 - Both components use the same tab layout:
-  - **Settings tab**: Language selection dropdown + provider selection (max 3 providers, shows "X/3 selected")
+  - **Settings tab**: Language selection dropdown + provider selection table (no limit on providers)
   - **Dataset tab**: Sample rows + add sample button (TTS also has CSV upload with OR divider and sample download)
-- **Providers start unselected by default** - user must select 1-3 providers before evaluating
+- **Provider selection UI** (table format):
+  - Table with border, rounded corners (`border border-border rounded-lg`)
+  - Header row with select-all checkbox and column titles (`bg-muted/50 border-b`)
+  - **STT columns**: Checkbox | Label | Model
+  - **TTS columns**: Checkbox | Label | Model | Voice ID
+  - Clickable rows (`hover:bg-muted/30 cursor-pointer`) - clicking anywhere on row toggles selection
+  - Select-all checkbox in header with tri-state: empty (none), minus icon (some), checkmark (all)
+  - Model and Voice ID columns use `font-mono` for technical values
+  - Shows "(X selected)" count next to the header title
+- **Providers start unselected by default** - user must select at least 1 provider before evaluating
 - Evaluate button always enabled; clicking without providers shows red border around provider selection and switches to Settings tab
-- "Deselect all" button only shown when at least one provider is selected
 - On submit: calls `POST /[tts|stt]/evaluate`, then redirects to `/[tts|stt]/{uuid}` using the returned `task_id`
 - Uses `BackHeader` component for back navigation to list page
 
@@ -817,11 +900,99 @@ Both TTS and STT evaluation pages follow the same list → new → detail patter
 
 - **STT Input tab**: Audio file upload (.wav) + reference transcription text field
 - **TTS Input tab**: Text input field + CSV upload option with "OR" divider and sample CSV download
-- **STT metrics**: WER, String Similarity, LLM Judge, TTFB, Processing Time
-- **TTS metrics**: LLM Judge, TTFB, Processing Time
+- **STT metrics**: WER, String Similarity, LLM Judge (NO latency metrics)
+- **TTS metrics**: LLM Judge, TTFB (latency metrics are objects with `mean`, `std`, `values`; Processing Time removed from UI)
+- **Null-safe metric rendering**: Numeric metrics (string_similarity, wer, llm_judge_score, ttfb.mean) can be null. Always check before formatting: `value != null ? parseFloat(value.toFixed(4)) : "-"`. Use `parseFloat()` wrapper to remove trailing zeros. Max 4 decimal places for all metrics to prevent column overflow
 - **STT Outputs tab**: Shows Ground Truth vs Prediction text; metrics columns (WER, String Similarity, LLM Judge) shown when status is "done" OR when all rows have metrics available. Rows with empty predictions are highlighted with `bg-red-500/10` and show "_No transcript produced_" in italicized muted text
+  - **Table layout**: Uses `table-fixed` with explicit column widths (ID: `w-12`, Ground Truth/Prediction: `w-[30%]` each) to prevent long text from overflowing. Text columns use `break-words` for wrapping. Container uses `overflow-x-auto` for horizontal scroll fallback
+  - **Empty prediction detection**: Helper functions `hasEmptyPredictions()` and `getFirstEmptyPredictionIndex()` check for rows without transcripts. Provider status shows red X if any empty, and clicking scrolls to first empty row via `data-row-index` attribute
 - **TTS Outputs tab**: Shows text input with audio playback; LLM Judge column shown when status is "done" OR when all rows have metrics available
 - **LLM Judge column display**: Shows Pass/Fail badges (green/red) instead of raw scores. Backend returns `"True"`/`"False"` strings (or `"1"`/`"0"`). Parsing: convert to lowercase string, Pass when value is `"true"` or `"1"`. Tooltip shows the reasoning text on hover (falls back to "Score: X" if no reasoning). Uses `cursor-pointer`
+
+**Metrics Data Structure:**
+
+The `metrics` field in `ProviderResult` is a dict (not an array):
+
+```tsx
+// STT ProviderMetrics - no latency metrics
+type ProviderMetrics = {
+  wer: number;
+  string_similarity: number;
+  llm_judge_score: number;
+};
+
+// TTS ProviderMetrics - includes latency metrics as nested objects
+type LatencyMetric = {
+  mean: number;
+  std: number;
+  values: number[];
+};
+
+type ProviderMetrics = {
+  llm_judge_score: number;
+  ttfb: LatencyMetric;
+  processing_time: LatencyMetric;
+};
+
+// STT LeaderboardSummary - no latency fields
+type LeaderboardSummary = {
+  run: string;
+  count: number;
+  wer: number;
+  string_similarity: number;
+  llm_judge_score: number;
+};
+
+// TTS LeaderboardSummary - includes latency as direct numbers
+type LeaderboardSummary = {
+  run: string;
+  count: number;
+  llm_judge_score: number;
+  ttfb: number;
+  processing_time: number;
+};
+```
+
+- Access metrics directly: `providerResult.metrics.wer`, `providerResult.metrics.ttfb?.mean`
+- STT leaderboard has no TTFB/Processing Time charts (metrics not available)
+- TTS leaderboard includes LLM Judge Score and TTFB bar charts (Processing Time removed from UI)
+
+**Language-based Provider Filtering:**
+
+Both TTS and STT evaluations filter available providers based on the selected language:
+
+```tsx
+type LanguageOption =
+  | "english" | "hindi" | "kannada" | "bengali" | "malayalam"
+  | "marathi" | "odia" | "punjabi" | "tamil" | "telugu" | "gujarati";
+
+// Map language option to the format used in supportedLanguages arrays
+const languageDisplayName: Record<LanguageOption, string> = {
+  english: "English", hindi: "Hindi", kannada: "Kannada", bengali: "Bengali",
+  malayalam: "Malayalam", marathi: "Marathi", odia: "Odia", punjabi: "Punjabi",
+  tamil: "Tamil", telugu: "Telugu", gujarati: "Gujarati",
+};
+
+// Filter providers based on selected language
+const getFilteredProviders = (language: LanguageOption) => {
+  const langName = languageDisplayName[language];
+  return providers.filter(
+    (provider) =>
+      !provider.supportedLanguages ||
+      provider.supportedLanguages.includes(langName)
+  );
+};
+```
+
+- Provider arrays (`sttProviders`, `ttsProviders`) have `label`, `value`, `model`, and optional `supportedLanguages` fields
+- TTS providers additionally have a `voiceId` field
+- **Provider display varies by context**:
+  - **New evaluation pages** (provider selection): Table format showing Label, Model (and Voice ID for TTS) in separate columns
+  - **List pages and detail pages**: Only label shown (e.g., "Deepgram" not "Deepgram (nova-3)")
+  - `getProviderLabel()` helper returns just the label: `provider.label`
+- Providers without `supportedLanguages` are shown for all languages
+- When language changes, selected providers that don't support the new language are automatically deselected
+- Language arrays are defined in `providers.ts` (e.g., `deepgramSTTSupportedLanguages`, `googleTTSSupportedLanguages`)
 
 ### Component Patterns
 
@@ -1297,7 +1468,7 @@ Unit test evaluations for:
 
 - **STT**: Upload audio + transcription, compare providers
 - **TTS**: Upload text, compare provider outputs
-- Metrics: WER, String Similarity, LLM Judge (Pass/Fail with tooltip), TTFB, Processing Time
+- Metrics: STT (WER, String Similarity, LLM Judge), TTS (LLM Judge, TTFB)
 
 ---
 
@@ -1922,14 +2093,23 @@ useEffect(() => {
   let pollInterval: NodeJS.Timeout | null = null;
 
   const fetchData = async (isInitial = false) => {
-    // ... fetch
-    // Continue polling for queued and in_progress
-    if (
-      data.status === "done" ||
-      data.status === "completed" ||
-      data.status === "failed"
-    ) {
-      if (pollInterval) clearInterval(pollInterval);
+    try {
+      // ... fetch
+      // Continue polling for queued and in_progress
+      if (
+        data.status === "done" ||
+        data.status === "completed" ||
+        data.status === "failed"
+      ) {
+        if (pollInterval) clearInterval(pollInterval);
+      }
+    } catch (error) {
+      // Set status to failed and stop polling on fetch error
+      setData((prev) => prev ? { ...prev, status: "failed" } : prev);
+      if (pollInterval) {
+        clearInterval(pollInterval);
+        pollInterval = null;
+      }
     }
   };
 
@@ -1942,7 +2122,123 @@ useEffect(() => {
 }, [dependency]);
 ```
 
+**Polling Error Handling:**
+
+When a fetch error occurs during polling (network failure, server error, etc.), the pattern is to:
+
+1. **Set status to "failed"** using functional setState to show error state in UI
+2. **Stop polling** by clearing the interval immediately
+3. Console log the error for debugging
+
+This prevents infinite polling when the backend is unreachable and gives users immediate feedback via the "Failed" status badge.
+
+**Files implementing this pattern:**
+- `src/app/stt/[uuid]/page.tsx` - STT evaluation detail page
+- `src/app/tts/[uuid]/page.tsx` - TTS evaluation detail page
+- `src/app/simulations/[uuid]/runs/[runId]/page.tsx` - Simulation run detail page
+- `src/components/agent-tabs/TestsTabContent.tsx` - Background polling for past runs
+- `src/components/TestRunnerDialog.tsx` - Test run polling
+- `src/components/BenchmarkResultsDialog.tsx` - Benchmark polling
+
+**Status Types:**
+
+The `EvaluationResult` type for STT/TTS evaluations:
+
+```tsx
+type EvaluationResult = {
+  task_id: string;
+  status: "queued" | "in_progress" | "done" | "failed";
+  language?: string;  // Displayed as a pill next to status badge
+  provider_results?: ProviderResult[];
+  leaderboard_summary?: LeaderboardSummary[];
+  error?: string | null;
+};
+```
+
+**Polling stop conditions**: Polling stops when status is `"done"` OR `"failed"` (not just on fetch errors). Initial fetch also skips starting polling if status is already terminal.
+
 **Files using `POLLING_INTERVAL_MS`:** TestRunnerDialog, BenchmarkResultsDialog (with intermediate results support), TestsTabContent, STT/TTS evaluation pages, simulation run page.
+
+### Usage Limits and Toast Notifications
+
+The app enforces usage limits on certain features. When limits are exceeded, a toast notification is shown with an inline underlined "Contact us" hyperlink.
+
+**Limits Configuration** (`@/constants/limits.ts`):
+
+```tsx
+import { LIMITS, CONTACT_LINK } from "@/constants/limits";
+
+// Current limits:
+LIMITS.TTS_MAX_ROWS       // 20 - max rows for TTS CSV upload
+LIMITS.TTS_MAX_TEXT_LENGTH  // 200 - max characters per text input
+LIMITS.STT_MAX_ROWS       // 20 - max rows for STT ZIP upload
+LIMITS.STT_MAX_AUDIO_DURATION_SECONDS  // 60 - max audio file duration in seconds
+LIMITS.STT_MAX_AUDIO_FILE_SIZE_MB  // 5 - max audio file size in MB
+LIMITS.SIMULATION_MAX_PERSONAS   // 2 - max personas per simulation
+LIMITS.SIMULATION_MAX_SCENARIOS  // 5 - max scenarios per simulation
+LIMITS.TESTS_MAX_RUN_ALL  // 20 - max tests for "Run all tests"
+
+CONTACT_LINK              // URL for contacting support to extend limits
+```
+
+**Toast Notifications** (using `sonner` library):
+
+```tsx
+import { toast } from "sonner";
+
+// Show error toast with inline hyperlink (NOT action button)
+toast.error(
+  <span>
+    You can only select up to {LIMITS.SIMULATION_MAX_PERSONAS} personas at a
+    time.{" "}
+    <a
+      href={CONTACT_LINK}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="underline"
+    >
+      Contact us
+    </a>{" "}
+    to extend your limits.
+  </span>
+);
+```
+
+**Toaster Component**: Added to root layout (`src/app/layout.tsx`) with `richColors` and `position="top-right"`.
+
+**Features using limits:**
+- TTS evaluation: CSV upload and manual row addition
+- STT evaluation: ZIP upload, manual row addition, and audio file duration (60s max)
+- Simulations: Persona and scenario selection
+- Tests tab: "Run all tests" button
+
+**Audio Duration Validation Pattern** (STT evaluation):
+
+```tsx
+// Helper function to get audio file duration using Web Audio API
+const getAudioDuration = (file: File): Promise<number> => {
+  return new Promise((resolve, reject) => {
+    const audio = new Audio();
+    const url = URL.createObjectURL(file);
+    audio.src = url;
+    audio.onloadedmetadata = () => {
+      URL.revokeObjectURL(url);
+      resolve(audio.duration);
+    };
+    audio.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Failed to load audio file"));
+    };
+  });
+};
+
+// Usage: validate before upload
+const duration = await getAudioDuration(file);
+if (duration > LIMITS.STT_MAX_AUDIO_DURATION_SECONDS) {
+  toast.error(`Audio file must be less than ${LIMITS.STT_MAX_AUDIO_DURATION_SECONDS} seconds...`);
+  return;
+}
+```
 
 ### Linkable Table Rows Pattern
 

@@ -2,11 +2,13 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useSession, signOut } from "next-auth/react";
+import { toast } from "sonner";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
 import { TestRunnerDialog } from "@/components/TestRunnerDialog";
 import { BenchmarkDialog } from "@/components/BenchmarkDialog";
 import { BenchmarkResultsDialog } from "@/components/BenchmarkResultsDialog";
 import { POLLING_INTERVAL_MS } from "@/constants/polling";
+import { LIMITS, CONTACT_LINK } from "@/constants/limits";
 
 type TestData = {
   uuid: string;
@@ -436,6 +438,14 @@ export function TestsTabContent({
           );
         } catch (err) {
           console.error(`Error polling run ${run.uuid}:`, err);
+          // Mark this specific run as failed
+          setPastRuns((prev) =>
+            prev.map((r) =>
+              r.uuid === run.uuid
+                ? { ...r, status: "failed", updated_at: new Date().toISOString() }
+                : r
+            )
+          );
         }
       }
     };
@@ -770,6 +780,24 @@ export function TestsTabContent({
             </div>
             <button
               onClick={() => {
+                if (agentTests.length > LIMITS.TESTS_MAX_RUN_ALL) {
+                  toast.error(
+                    <span>
+                      You can only run up to {LIMITS.TESTS_MAX_RUN_ALL} tests at
+                      a time.{" "}
+                      <a
+                        href={CONTACT_LINK}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline"
+                      >
+                        Contact us
+                      </a>{" "}
+                      to extend your limits.
+                    </span>
+                  );
+                  return;
+                }
                 setTestsToRun(agentTests);
                 setTestRunnerOpen(true);
               }}

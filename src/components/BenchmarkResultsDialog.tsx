@@ -221,6 +221,7 @@ export function BenchmarkResultsDialog({
     } catch (err) {
       console.error("Error polling benchmark status:", err);
       setIsInitialLoading(false);
+      setTaskStatus("failed");
       setError(err instanceof Error ? err.message : "Failed to poll status");
       if (pollingIntervalRef.current) {
         clearInterval(pollingIntervalRef.current);

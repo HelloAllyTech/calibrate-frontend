@@ -277,6 +277,15 @@ export default function SimulationRunPage() {
         console.error("Error fetching run data:", err);
         if (isInitialLoad) {
           setError(err instanceof Error ? err.message : "Failed to load run");
+        } else {
+          // Set status to failed and stop polling on fetch error during polling
+          setRunData((prev) =>
+            prev ? { ...prev, status: "failed" } : prev
+          );
+          if (pollInterval) {
+            clearInterval(pollInterval);
+            pollInterval = null;
+          }
         }
       } finally {
         if (isInitialLoad) {

@@ -14,21 +14,23 @@ import {
 import { DownloadableTable } from "@/components/DownloadableTable";
 import { POLLING_INTERVAL_MS } from "@/constants/polling";
 
-type MetricItem =
-  | { llm_judge_score: number }
-  | {
-      metric_name: string;
-      processor: string;
-      mean: number;
-      std: number;
-      values: number[];
-    };
+type LatencyMetric = {
+  mean: number;
+  std: number;
+  values: number[];
+};
+
+type ProviderMetrics = {
+  llm_judge_score: number;
+  ttfb: LatencyMetric;
+  processing_time: LatencyMetric;
+};
 
 type ProviderResult = {
   provider: string;
   success: boolean | null; // null means in progress
   message: string;
-  metrics: MetricItem[] | null;
+  metrics: ProviderMetrics | null;
   results: Array<{
     id: string;
     text: string;
@@ -48,7 +50,8 @@ type LeaderboardSummary = {
 
 type EvaluationResult = {
   task_id: string;
-  status: "queued" | "in_progress" | "done";
+  status: "queued" | "in_progress" | "done" | "failed";
+  language?: string;
   provider_results?: ProviderResult[];
   leaderboard_summary?: LeaderboardSummary[];
   error?: string | null;
@@ -150,8 +153,8 @@ export default function TTSEvaluationDetailPage() {
           setActiveTab("leaderboard");
         }
 
-        // Start polling if not done
-        if (result.status !== "done" && !pollingIntervalRef.current) {
+        // Start polling if not done or failed
+        if (result.status !== "done" && result.status !== "failed" && !pollingIntervalRef.current) {
           pollingIntervalRef.current = setInterval(() => {
             pollTaskStatus(taskId, backendUrl);
           }, POLLING_INTERVAL_MS);
@@ -199,9 +202,11 @@ export default function TTSEvaluationDetailPage() {
         );
       }
 
-      if (result.status === "done") {
-        // Switch to leaderboard tab when evaluation completes
-        setActiveTab("leaderboard");
+      if (result.status === "done" || result.status === "failed") {
+        // Switch to leaderboard tab when evaluation completes successfully
+        if (result.status === "done") {
+          setActiveTab("leaderboard");
+        }
         if (pollingIntervalRef.current) {
           clearInterval(pollingIntervalRef.current);
           pollingIntervalRef.current = null;
@@ -209,6 +214,10 @@ export default function TTSEvaluationDetailPage() {
       }
     } catch (error) {
       console.error("Error polling task status:", error);
+      // Set status to failed so the UI shows the error state
+      setEvaluationResult((prev) =>
+        prev ? { ...prev, status: "failed" } : prev
+      );
       if (pollingIntervalRef.current) {
         clearInterval(pollingIntervalRef.current);
         pollingIntervalRef.current = null;
@@ -278,28 +287,22 @@ export default function TTSEvaluationDetailPage() {
         {/* Evaluation Results */}
         {!isLoading && !error && !errorCode && evaluationResult && (
           <div className="space-y-4">
-            {/* Waiting state - show status badge when no provider results yet */}
-            {(!evaluationResult.provider_results ||
-              evaluationResult.provider_results.length === 0) &&
-              evaluationResult.status !== "done" && (
-                <div className="flex items-center gap-3">
-                  <StatusBadge status={evaluationResult.status} showSpinner />
-                </div>
+            {/* Language Pill and Status Badge */}
+            <div className="flex items-center gap-3">
+              {evaluationResult.language && (
+                <span className="px-3 py-1 text-[12px] font-medium bg-muted rounded-full text-foreground capitalize">
+                  {evaluationResult.language}
+                </span>
               )}
+              {evaluationResult.status !== "done" && (
+                <StatusBadge status={evaluationResult.status} showSpinner />
+              )}
+            </div>
 
             {/* Only show tabs and content when we have at least one provider result */}
             {evaluationResult.provider_results &&
               evaluationResult.provider_results.length > 0 && (
                 <>
-                  {/* Status Badge - show inline with tabs for in_progress */}
-                  {evaluationResult.status !== "done" && (
-                    <div className="flex items-center gap-3">
-                      <StatusBadge
-                        status={evaluationResult.status}
-                        showSpinner
-                      />
-                    </div>
-                  )}
 
                   {/* Tab Navigation */}
                   <div className="flex gap-2 border-b border-border">
@@ -405,21 +408,6 @@ export default function TTSEvaluationDetailPage() {
                                 0 - ∞
                               </td>
                             </tr>
-                            <tr className="border-b border-border last:border-b-0">
-                              <td className="px-4 py-3 text-[13px] font-medium text-foreground">
-                                Processing Time
-                              </td>
-                              <td className="px-4 py-3 text-[13px] text-foreground">
-                                Total time taken to process the text and
-                                generate the audio output.
-                              </td>
-                              <td className="px-4 py-3 text-[13px] text-foreground">
-                                Lower is better
-                              </td>
-                              <td className="px-4 py-3 text-[13px] text-foreground">
-                                0 - ∞
-                              </td>
-                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -446,12 +434,8 @@ export default function TTSEvaluationDetailPage() {
                                 {
                                   key: "ttfb",
                                   header: "TTFB (s)",
-                                  render: (value) => value.toFixed(5),
-                                },
-                                {
-                                  key: "processing_time",
-                                  header: "Processing Time (s)",
-                                  render: (value) => value.toFixed(5),
+                                  render: (value) =>
+                                    value != null ? parseFloat(value.toFixed(4)) : "-",
                                 },
                               ]}
                               data={evaluationResult.leaderboard_summary}
@@ -486,21 +470,6 @@ export default function TTSEvaluationDetailPage() {
                                         (s) => ({
                                           label: getProviderLabel(s.run),
                                           value: s.ttfb,
-                                          colorKey: s.run,
-                                        })
-                                      )}
-                                      colorMap={colorMap}
-                                    />
-                                  </div>
-
-                                  {/* Row 2: Processing Time */}
-                                  <div className="grid grid-cols-2 gap-6">
-                                    <LeaderboardBarChart
-                                      title="Processing Time (s)"
-                                      data={evaluationResult.leaderboard_summary.map(
-                                        (s) => ({
-                                          label: getProviderLabel(s.run),
-                                          value: s.processing_time,
                                           colorKey: s.run,
                                         })
                                       )}
@@ -615,17 +584,50 @@ export default function TTSEvaluationDetailPage() {
                             );
                           }
 
+                          // Show spinner if provider is in progress and has no results yet
+                          if (providerResult.success === null && (!providerResult.results || providerResult.results.length === 0)) {
+                            return (
+                              <div className="flex items-center justify-center h-full">
+                                <div className="flex items-center gap-3">
+                                  <svg
+                                    className="w-5 h-5 animate-spin text-muted-foreground"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <circle
+                                      className="opacity-25"
+                                      cx="12"
+                                      cy="12"
+                                      r="10"
+                                      stroke="currentColor"
+                                      strokeWidth="4"
+                                    ></circle>
+                                    <path
+                                      className="opacity-75"
+                                      fill="currentColor"
+                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                    ></path>
+                                  </svg>
+                                </div>
+                              </div>
+                            );
+                          }
+
+                          // Show error banner if provider failed
+                          if (providerResult.success === false) {
+                            return (
+                              <div className="flex items-center justify-center h-full">
+                                <div className="border border-red-500/50 bg-red-500/10 rounded-lg p-4 max-w-md text-center">
+                                  <div className="text-red-500 text-[14px] font-medium mb-1">
+                                  There was an error running this provider. Please contact us by posting your issue to help us help you.
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          }
+
                           return (
                             <div className="space-y-6">
-                              {/* Error Message - only show when done */}
-                              {evaluationResult.status === "done" &&
-                                providerResult.success === false &&
-                                providerResult.message && (
-                                  <div className="text-[13px] text-red-500 flex items-center gap-2">
-                                    <span>❌</span>
-                                    <span>{providerResult.message}</span>
-                                  </div>
-                                )}
 
                               {/* Overall Metrics - Only show if success */}
                               {providerResult.success &&
@@ -634,53 +636,24 @@ export default function TTSEvaluationDetailPage() {
                                     <h3 className="text-[15px] font-semibold mb-4">
                                       Overall Metrics
                                     </h3>
-                                    <div className="space-y-4">
-                                      {/* First Row: LLM Judge Score */}
-                                      <div className="grid grid-cols-3 gap-4">
-                                        {providerResult.metrics.map(
-                                          (metric, index) => {
-                                            if ("llm_judge_score" in metric) {
-                                              return (
-                                                <div key={index}>
-                                                  <div className="text-[12px] text-muted-foreground mb-1">
-                                                    LLM Judge Score
-                                                  </div>
-                                                  <div className="text-[18px] font-semibold text-foreground">
-                                                    {metric.llm_judge_score}
-                                                  </div>
-                                                </div>
-                                              );
-                                            }
-                                            return null;
-                                          }
-                                        )}
+                                    <div className="grid grid-cols-2 gap-4">
+                                      <div>
+                                        <div className="text-[12px] text-muted-foreground mb-1">
+                                          LLM Judge Score
+                                        </div>
+                                        <div className="text-[18px] font-semibold text-foreground">
+                                          {providerResult.metrics.llm_judge_score ?? "-"}
+                                        </div>
                                       </div>
-                                      {/* Second Row: TTFB, Processing Time */}
-                                      <div className="grid grid-cols-3 gap-4">
-                                        {providerResult.metrics.map(
-                                          (metric, index) => {
-                                            if ("metric_name" in metric) {
-                                              const displayName =
-                                                metric.metric_name === "ttfb"
-                                                  ? "TTFB (s)"
-                                                  : metric.metric_name ===
-                                                    "processing_time"
-                                                  ? "Processing Time (s)"
-                                                  : metric.metric_name;
-                                              return (
-                                                <div key={index}>
-                                                  <div className="text-[12px] text-muted-foreground mb-1">
-                                                    {displayName}
-                                                  </div>
-                                                  <div className="text-[18px] font-semibold text-foreground">
-                                                    {metric.mean.toFixed(5)}
-                                                  </div>
-                                                </div>
-                                              );
-                                            }
-                                            return null;
-                                          }
-                                        )}
+                                      <div>
+                                        <div className="text-[12px] text-muted-foreground mb-1">
+                                          TTFB (s)
+                                        </div>
+                                        <div className="text-[18px] font-semibold text-foreground">
+                                          {providerResult.metrics.ttfb?.mean != null
+                                            ? parseFloat(providerResult.metrics.ttfb.mean.toFixed(4))
+                                            : "-"}
+                                        </div>
                                       </div>
                                     </div>
                                   </div>

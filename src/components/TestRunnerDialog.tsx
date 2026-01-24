@@ -367,6 +367,7 @@ export function TestRunnerDialog({
       }
     } catch (error) {
       console.error("Error polling task status:", error);
+      setRunStatus("failed");
       setIsRunning(false);
       setCurrentTaskId(null);
       if (pollingIntervalRef.current) {
