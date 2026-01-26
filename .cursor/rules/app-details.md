@@ -2353,6 +2353,8 @@ GOOGLE_CLIENT_ID=                              # Google OAuth client ID
 GOOGLE_CLIENT_SECRET=                          # Google OAuth client secret
 MAINTENANCE_MODE=true                          # Show maintenance page at / (optional)
 NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX    # Google Analytics Measurement ID (optional)
+NEXT_PUBLIC_SENTRY_DSN=                        # Sentry DSN for error tracking (optional)
+NEXT_PUBLIC_SENTRY_ENVIRONMENT=development     # Sentry environment: development, staging, production (optional)
 ```
 
 ### Maintenance Mode
@@ -2657,3 +2659,17 @@ window.history.replaceState(null, "", `?tab=${tabName}`);
 - **Google Analytics**: Enabled via `@next/third-parties/google` - only loads when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set
   - Both are added in the root layout (`src/app/layout.tsx`)
   - Google Analytics component conditionally renders based on the environment variable
+
+### Error Tracking (Sentry)
+
+- **Sentry** is configured for error tracking across client, server, and edge runtimes
+- Configuration files:
+  - `src/instrumentation-client.ts` - Client-side Sentry initialization (includes Replay integration)
+  - `sentry.server.config.ts` - Server-side Sentry initialization
+  - `sentry.edge.config.ts` - Edge runtime Sentry initialization (middleware, edge routes)
+  - `src/instrumentation.ts` - Imports server config for Next.js instrumentation
+  - `src/app/global-error.tsx` - Global error boundary that reports to Sentry
+- Environment variables (both use `NEXT_PUBLIC_` prefix for client/server availability):
+  - `NEXT_PUBLIC_SENTRY_DSN` - Sentry project DSN
+  - `NEXT_PUBLIC_SENTRY_ENVIRONMENT` - Environment name (development, staging, production)
+- Features enabled: Session Replay (10% session sample, 100% on error), PII sending, logs
