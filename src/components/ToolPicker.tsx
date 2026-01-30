@@ -18,14 +18,14 @@ type ToolPickerProps = {
   onSelectInbuiltTool: (toolId: string, toolName: string) => void;
   onSelectCustomTool: (
     tool: AvailableTool,
-    params: Array<{ name: string; value: string }>
+    params: Array<{ name: string; value: string }>,
   ) => void;
   selectedToolIds?: string[];
 };
 
 // Helper function to get tool parameters
 export const getToolParams = (
-  tool: AvailableTool
+  tool: AvailableTool,
 ): Array<{ name: string; value: string }> => {
   // Check for array format first (new format)
   const params = tool.config?.parameters;
@@ -63,13 +63,13 @@ export function ToolPicker({
         ((tool.description || tool.config?.description) &&
           (tool.description || tool.config?.description)
             .toLowerCase()
-            .includes(searchQuery.toLowerCase())))
+            .includes(searchQuery.toLowerCase()))),
   );
 
   const filteredInbuiltTools = INBUILT_TOOLS.filter(
     (tool) =>
       !selectedToolIds.includes(tool.id) &&
-      tool.name.toLowerCase().includes(searchQuery.toLowerCase())
+      tool.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (

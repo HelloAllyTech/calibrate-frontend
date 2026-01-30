@@ -79,7 +79,7 @@ export default function ToolsPage() {
 
   const updateParameter = (id: string, updates: Partial<Parameter>) => {
     setParameters(
-      parameters.map((p) => (p.id === id ? { ...p, ...updates } : p))
+      parameters.map((p) => (p.id === id ? { ...p, ...updates } : p)),
     );
   };
 
@@ -88,7 +88,7 @@ export default function ToolsPage() {
   const updateParameterAtPath = (
     params: Parameter[],
     path: string[],
-    updates: Partial<Parameter>
+    updates: Partial<Parameter>,
   ): Parameter[] => {
     if (path.length === 0) return params;
     const [currentId, ...restPath] = path;
@@ -116,7 +116,7 @@ export default function ToolsPage() {
         const updatedItems = updateSingleParameterAtPath(
           currentItems,
           deeperPath,
-          updates
+          updates,
         );
         return { ...p, items: updatedItems };
       }
@@ -125,7 +125,7 @@ export default function ToolsPage() {
         properties: updateParameterAtPath(
           p.properties || [],
           restPath,
-          updates
+          updates,
         ),
       };
     });
@@ -135,7 +135,7 @@ export default function ToolsPage() {
   const updateSingleParameterAtPath = (
     param: Parameter,
     path: string[],
-    updates: Partial<Parameter>
+    updates: Partial<Parameter>,
   ): Parameter => {
     if (path.length === 0) {
       return { ...param, ...updates };
@@ -168,7 +168,7 @@ export default function ToolsPage() {
   // Helper to add a property at any depth (handles items navigation)
   const addPropertyAtPath = (
     params: Parameter[],
-    path: string[]
+    path: string[],
   ): Parameter[] => {
     if (path.length === 0) return params;
     const [currentId, ...restPath] = path;
@@ -206,7 +206,7 @@ export default function ToolsPage() {
   // Helper to add a property within a single parameter (for items)
   const addPropertyToSingleParam = (
     param: Parameter,
-    path: string[]
+    path: string[],
   ): Parameter => {
     if (path.length === 0) {
       return {
@@ -239,7 +239,7 @@ export default function ToolsPage() {
   const removePropertyAtPath = (
     params: Parameter[],
     path: string[],
-    idToRemove: string
+    idToRemove: string,
   ): Parameter[] => {
     if (path.length === 0) {
       return params.filter((p) => p.id !== idToRemove);
@@ -254,7 +254,7 @@ export default function ToolsPage() {
           items: removePropertyFromSingleParam(
             p.items,
             restPath.slice(1),
-            idToRemove
+            idToRemove,
           ),
         };
       }
@@ -262,7 +262,7 @@ export default function ToolsPage() {
         return {
           ...p,
           properties: (p.properties || []).filter(
-            (prop) => prop.id !== idToRemove
+            (prop) => prop.id !== idToRemove,
           ),
         };
       }
@@ -271,7 +271,7 @@ export default function ToolsPage() {
         properties: removePropertyAtPath(
           p.properties || [],
           restPath,
-          idToRemove
+          idToRemove,
         ),
       };
     });
@@ -281,7 +281,7 @@ export default function ToolsPage() {
   const removePropertyFromSingleParam = (
     param: Parameter,
     path: string[],
-    idToRemove: string
+    idToRemove: string,
   ): Parameter => {
     if (path.length === 0) {
       return {
@@ -295,7 +295,7 @@ export default function ToolsPage() {
         items: removePropertyFromSingleParam(
           param.items,
           path.slice(1),
-          idToRemove
+          idToRemove,
         ),
       };
     }
@@ -304,7 +304,7 @@ export default function ToolsPage() {
       properties: removePropertyAtPath(
         param.properties || [],
         path,
-        idToRemove
+        idToRemove,
       ),
     };
   };
@@ -328,7 +328,7 @@ export default function ToolsPage() {
   const setItemsAtPath = (
     params: Parameter[],
     path: string[],
-    items: Parameter | undefined
+    items: Parameter | undefined,
   ): Parameter[] => {
     if (path.length === 0) return params;
     const [currentId, ...restPath] = path;
@@ -353,7 +353,7 @@ export default function ToolsPage() {
   const setItemsOnSingleParam = (
     param: Parameter,
     path: string[],
-    items: Parameter | undefined
+    items: Parameter | undefined,
   ): Parameter => {
     if (path.length === 0) {
       return { ...param, items };
@@ -372,7 +372,7 @@ export default function ToolsPage() {
 
   const handleSetItemsAtPath = (
     path: string[],
-    items: Parameter | undefined
+    items: Parameter | undefined,
   ) => {
     setValidationAttempted(false);
     setParameters((prev) => setItemsAtPath(prev, path, items));
@@ -472,7 +472,7 @@ export default function ToolsPage() {
       } catch (err) {
         console.error("Error fetching tools:", err);
         setToolsError(
-          err instanceof Error ? err.message : "Failed to load tools"
+          err instanceof Error ? err.message : "Failed to load tools",
         );
       } finally {
         setToolsLoading(false);
@@ -601,7 +601,7 @@ export default function ToolsPage() {
 
   // Helper function to build parameters config for API (returns array format)
   const buildParametersConfig = (
-    params: Parameter[]
+    params: Parameter[],
   ): Array<Record<string, any>> => {
     return params
       .filter((param) => param.name)
@@ -684,7 +684,7 @@ export default function ToolsPage() {
     } catch (err) {
       console.error("Error creating tool:", err);
       setCreateError(
-        err instanceof Error ? err.message : "Failed to create tool"
+        err instanceof Error ? err.message : "Failed to create tool",
       );
     } finally {
       setIsCreating(false);
@@ -711,10 +711,10 @@ export default function ToolsPage() {
             parseParameterSchema(
               propName,
               propConfig,
-              requiredProps.includes(propName)
-            )
+              requiredProps.includes(propName),
+            ),
           );
-        }
+        },
       );
     }
 
@@ -730,7 +730,7 @@ export default function ToolsPage() {
   const parseParameterSchema = (
     paramName: string,
     paramConfig: any,
-    isRequired: boolean = true
+    isRequired: boolean = true,
   ): Parameter => {
     const param: Parameter = {
       id: crypto.randomUUID(),
@@ -755,10 +755,10 @@ export default function ToolsPage() {
             parseParameterSchema(
               propName,
               propConfig,
-              requiredProps.includes(propName)
-            )
+              requiredProps.includes(propName),
+            ),
           );
-        }
+        },
       );
     }
 
@@ -801,7 +801,7 @@ export default function ToolsPage() {
       // Populate form fields with tool data
       setNewToolName(toolData.name || "");
       setNewToolDescription(
-        toolData.description || toolData.config?.description || ""
+        toolData.description || toolData.config?.description || "",
       );
 
       // Convert parameters from config to Parameter array using JSON Schema parser
@@ -818,7 +818,7 @@ export default function ToolsPage() {
           Object.entries(toolData.config.parameters).forEach(
             ([paramName, paramConfig]: [string, any]) => {
               toolParams.push(parseParameterSchema(paramName, paramConfig));
-            }
+            },
           );
         }
       }
@@ -826,7 +826,7 @@ export default function ToolsPage() {
     } catch (err) {
       console.error("Error fetching tool:", err);
       setCreateError(
-        err instanceof Error ? err.message : "Failed to load tool"
+        err instanceof Error ? err.message : "Failed to load tool",
       );
     } finally {
       setIsLoadingTool(false);
@@ -899,7 +899,7 @@ export default function ToolsPage() {
     } catch (err) {
       console.error("Error updating tool:", err);
       setCreateError(
-        err instanceof Error ? err.message : "Failed to update tool"
+        err instanceof Error ? err.message : "Failed to update tool",
       );
     } finally {
       setIsCreating(false);
@@ -924,7 +924,7 @@ export default function ToolsPage() {
       ((tool.description || tool.config?.description) &&
         (tool.description || tool.config?.description)
           .toLowerCase()
-          .includes(searchQuery.toLowerCase()))
+          .includes(searchQuery.toLowerCase())),
   );
 
   return (
@@ -1187,15 +1187,35 @@ export default function ToolsPage() {
                 </div>
               ) : (
                 <>
+                  {/* Helper Callout */}
+                  <div className="flex gap-3 p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
+                    <svg
+                      className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={1.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                    <p className="text-sm text-blue-200">
+                      Tools enable agents to produce a structured output. When
+                      the agent needs to extract specific information (like a
+                      customer name or order details), it can call a tool to
+                      return data in a defined format.
+                    </p>
+                  </div>
+
                   {/* Configuration Section */}
                   <div className="border border-border rounded-xl p-5 space-y-5 bg-muted/30">
                     <div>
                       <h3 className="text-base font-medium mb-1">
                         Configuration
                       </h3>
-                      <p className="text-sm text-muted-foreground">
-                        Describe to the LLM how and when to use the tool
-                      </p>
                     </div>
 
                     {/* Name */}
@@ -1207,6 +1227,7 @@ export default function ToolsPage() {
                         type="text"
                         value={newToolName}
                         onChange={(e) => setNewToolName(e.target.value)}
+                        placeholder="Name of your tool, use an informative name that reflects the purpose of the tool"
                         className={`w-full h-10 px-4 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent ${
                           validationAttempted && !newToolName.trim()
                             ? "border-red-500"
@@ -1223,6 +1244,7 @@ export default function ToolsPage() {
                       <textarea
                         value={newToolDescription}
                         onChange={(e) => setNewToolDescription(e.target.value)}
+                        placeholder="Describe to the LLM how and when to use the tool along with what should be passed to the tool"
                         rows={3}
                         className={`w-full px-4 py-3 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none ${
                           validationAttempted && !newToolDescription.trim()
@@ -1241,12 +1263,13 @@ export default function ToolsPage() {
                           Parameters
                         </h3>
                         <p className="text-sm text-muted-foreground">
-                          Define the parameters that will be sent with the event
+                          Define the structure of the output that the agent
+                          should produce
                         </p>
                       </div>
                       <button
                         onClick={addParameter}
-                        className="h-9 px-4 rounded-md text-sm font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
+                        className="h-9 px-4 rounded-md text-sm font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer whitespace-nowrap flex-shrink-0"
                       >
                         Add param
                       </button>

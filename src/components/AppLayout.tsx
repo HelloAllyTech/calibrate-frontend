@@ -83,6 +83,15 @@ const navSections: NavSection[] = [
         ),
       },
       {
+        id: "tests",
+        label: "LLM Evaluation",
+        icon: (
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 3h6v2h-1v4.5l4.5 7.5c.5.83.5 1.5-.17 2.17-.67.67-1.34.83-2.33.83H8c-1 0-1.67-.17-2.33-.83-.67-.67-.67-1.34-.17-2.17L10 9.5V5H9V3zm3 8.5L8.5 17h7L12 11.5z" />
+          </svg>
+        ),
+      },
+      {
         id: "tts",
         label: "Text-to-Speech",
         icon: (
@@ -98,15 +107,6 @@ const navSections: NavSection[] = [
               strokeLinejoin="round"
               d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"
             />
-          </svg>
-        ),
-      },
-      {
-        id: "tests",
-        label: "Tests",
-        icon: (
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M9 3h6v2h-1v4.5l4.5 7.5c.5.83.5 1.5-.17 2.17-.67.67-1.34.83-2.33.83H8c-1 0-1.67-.17-2.33-.83-.67-.67-.67-1.34-.17-2.17L10 9.5V5H9V3zm3 8.5L8.5 17h7L12 11.5z" />
           </svg>
         ),
       },
@@ -193,6 +193,30 @@ const navSections: NavSection[] = [
       },
     ],
   },
+  {
+    title: "Resources",
+    items: [
+      {
+        id: "docs",
+        label: "Documentation",
+        icon: (
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1.5}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+            />
+          </svg>
+        ),
+      },
+    ],
+  },
 ];
 
 type AppLayoutProps = {
@@ -227,7 +251,7 @@ export function AppLayout({
     if (newTheme === "device") {
       // Follow system preference
       const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
+        "(prefers-color-scheme: dark)",
       ).matches;
       root.classList.add(prefersDark ? "dark" : "light");
     } else {
@@ -390,17 +414,42 @@ export function AppLayout({
                   <ul className="space-y-0.5">
                     {section.items.map((item) => (
                       <li key={item.id}>
-                        <Link
-                          href={`/${item.id}`}
-                          className={`w-full flex items-center gap-2.5 px-2 py-2 rounded-md text-base font-medium transition-colors cursor-pointer ${
-                            activeItem === item.id
-                              ? "bg-accent text-accent-foreground"
-                              : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
-                          }`}
-                        >
-                          {item.icon}
-                          {item.label}
-                        </Link>
+                        {item.id === "docs" ? (
+                          <a
+                            href="https://penseapp.vercel.app/docs"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full flex items-center gap-2.5 px-2 py-2 rounded-md text-base font-medium transition-colors cursor-pointer text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+                          >
+                            {item.icon}
+                            {item.label}
+                            <svg
+                              className="w-3 h-3 ml-auto text-muted-foreground"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                              />
+                            </svg>
+                          </a>
+                        ) : (
+                          <Link
+                            href={`/${item.id}`}
+                            className={`w-full flex items-center gap-2.5 px-2 py-2 rounded-md text-base font-medium transition-colors cursor-pointer ${
+                              activeItem === item.id
+                                ? "bg-accent text-accent-foreground"
+                                : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+                            }`}
+                          >
+                            {item.icon}
+                            {item.label}
+                          </Link>
+                        )}
                       </li>
                     ))}
                   </ul>

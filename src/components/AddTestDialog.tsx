@@ -79,7 +79,7 @@ export function AddTestDialog({
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
   const [activeTab, setActiveTab] = useState<"next-reply" | "tool-invocation">(
-    initialTab || "next-reply"
+    initialTab || "next-reply",
   );
 
   // Update active tab when initialTab changes (when opening an existing test)
@@ -184,13 +184,13 @@ export function AddTestDialog({
                           id: `param-${idx}-${paramIdx}`,
                           name,
                           value: String(value),
-                        })
+                        }),
                       )
                     : [];
 
                 // Check if this is an inbuilt tool by matching tool id or name
                 const inbuiltTool = INBUILT_TOOLS.find(
-                  (t) => t.id === toolCall.tool || t.name === toolCall.tool
+                  (t) => t.id === toolCall.tool || t.name === toolCall.tool,
                 );
 
                 return {
@@ -201,7 +201,7 @@ export function AddTestDialog({
                   isInbuilt: !!inbuiltTool,
                   expectedParameters: params,
                 };
-              }
+              },
             );
             setSelectedTools(tools);
           }
@@ -243,7 +243,7 @@ export function AddTestDialog({
   const addToolCallMessage = (
     toolId: string,
     toolName: string,
-    params: Array<{ name: string; value: string }>
+    params: Array<{ name: string; value: string }>,
   ) => {
     setChatMessages([
       ...chatMessages,
@@ -262,14 +262,14 @@ export function AddTestDialog({
 
   const updateChatMessage = (id: string, content: string) => {
     setChatMessages(
-      chatMessages.map((msg) => (msg.id === id ? { ...msg, content } : msg))
+      chatMessages.map((msg) => (msg.id === id ? { ...msg, content } : msg)),
     );
   };
 
   const updateToolCallParam = (
     messageId: string,
     paramName: string,
-    value: string
+    value: string,
   ) => {
     setChatMessages(
       chatMessages.map((msg) =>
@@ -277,11 +277,11 @@ export function AddTestDialog({
           ? {
               ...msg,
               toolParams: msg.toolParams.map((p) =>
-                p.name === paramName ? { ...p, value } : p
+                p.name === paramName ? { ...p, value } : p,
               ),
             }
-          : msg
-      )
+          : msg,
+      ),
     );
   };
 
@@ -409,7 +409,7 @@ export function AddTestDialog({
   // Helper function to get parameters from tool config for selected tool
   const getToolParamsForSelectedTool = (toolId: string, toolName: string) => {
     const tool = availableTools.find(
-      (t) => t.uuid === toolId || t.name === toolName
+      (t) => t.uuid === toolId || t.name === toolName,
     );
     if (!tool) return [];
 
@@ -441,7 +441,7 @@ export function AddTestDialog({
   // Update a specific tool's configuration
   const updateToolConfig = (
     toolId: string,
-    updates: Partial<SelectedToolConfig>
+    updates: Partial<SelectedToolConfig>,
   ) => {
     setSelectedTools(
       selectedTools.map((tool) => {
@@ -456,7 +456,7 @@ export function AddTestDialog({
         ) {
           updatedTool.expectedParameters = getToolParamsForSelectedTool(
             tool.id,
-            tool.name
+            tool.name,
           );
         }
 
@@ -469,12 +469,12 @@ export function AddTestDialog({
         ) {
           updatedTool.expectedParameters = getToolParamsForSelectedTool(
             tool.id,
-            tool.name
+            tool.name,
           );
         }
 
         return updatedTool;
-      })
+      }),
     );
   };
 
@@ -482,7 +482,7 @@ export function AddTestDialog({
   const updateToolParameterValue = (
     toolId: string,
     paramId: string,
-    value: string
+    value: string,
   ) => {
     setSelectedTools(
       selectedTools.map((tool) => {
@@ -490,17 +490,17 @@ export function AddTestDialog({
         return {
           ...tool,
           expectedParameters: tool.expectedParameters.map((param) =>
-            param.id === paramId ? { ...param, value } : param
+            param.id === paramId ? { ...param, value } : param,
           ),
         };
-      })
+      }),
     );
   };
 
   // Check if a tool has parameters in its original config
   const toolHasParams = (toolId: string, toolName: string) => {
     const tool = availableTools.find(
-      (t) => t.uuid === toolId || t.name === toolName
+      (t) => t.uuid === toolId || t.name === toolName,
     );
     if (!tool) return false;
 
@@ -679,7 +679,7 @@ export function AddTestDialog({
           !tool.acceptAnyParameterValues
         ) {
           const hasEmptyParams = tool.expectedParameters.some(
-            (param) => !param.value.trim()
+            (param) => !param.value.trim(),
           );
           if (hasEmptyParams) {
             return;
@@ -864,7 +864,7 @@ export function AddTestDialog({
                         >
                           {lang.charAt(0).toUpperCase() + lang.slice(1)}
                         </button>
-                      )
+                      ),
                     )}
                   </div>
                 </div>
@@ -1074,7 +1074,7 @@ export function AddTestDialog({
                                           updateToolParameterValue(
                                             tool.id,
                                             param.id,
-                                            e.target.value
+                                            e.target.value,
                                           )
                                         }
                                         placeholder="Expected value"
@@ -1321,13 +1321,29 @@ export function AddTestDialog({
                     {/* Message Bubble - for agent and user messages */}
                     {(message.role === "agent" || message.role === "user") && (
                       <div className="w-1/2">
-                        <input
-                          type="text"
+                        <textarea
                           value={message.content}
-                          onChange={(e) =>
-                            updateChatMessage(message.id, e.target.value)
-                          }
-                          className={`w-full px-4 py-2 rounded-xl text-sm text-foreground border focus:outline-none focus:ring-1 focus:ring-accent ${
+                          onChange={(e) => {
+                            updateChatMessage(message.id, e.target.value);
+                            // Auto-resize textarea
+                            e.target.style.height = "auto";
+                            e.target.style.height = `${e.target.scrollHeight}px`;
+                          }}
+                          onInput={(e) => {
+                            // Auto-resize on initial render and paste
+                            const target = e.target as HTMLTextAreaElement;
+                            target.style.height = "auto";
+                            target.style.height = `${target.scrollHeight}px`;
+                          }}
+                          ref={(el) => {
+                            // Auto-resize on mount
+                            if (el) {
+                              el.style.height = "auto";
+                              el.style.height = `${el.scrollHeight}px`;
+                            }
+                          }}
+                          rows={1}
+                          className={`w-full px-4 py-2 rounded-xl text-sm text-foreground border focus:outline-none focus:ring-1 focus:ring-accent resize-none overflow-hidden ${
                             message.role === "agent"
                               ? "bg-background border-border"
                               : "bg-accent border-border"
@@ -1373,7 +1389,7 @@ export function AddTestDialog({
                                         updateToolCallParam(
                                           message.id,
                                           param.name,
-                                          e.target.value
+                                          e.target.value,
                                         )
                                       }
                                       placeholder={`Enter ${param.name}`}
@@ -1415,7 +1431,7 @@ export function AddTestDialog({
                             <button
                               onClick={() =>
                                 setAddMessageDropdownOpen(
-                                  !addMessageDropdownOpen
+                                  !addMessageDropdownOpen,
                                 )
                               }
                               className="w-8 h-8 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-muted-foreground transition-colors cursor-pointer"
@@ -1452,8 +1468,8 @@ export function AddTestDialog({
                                         ? "right-0 top-10"
                                         : "right-0 bottom-full mb-2"
                                       : chatMessages.length <= 2
-                                      ? "left-0 top-10"
-                                      : "left-0 bottom-full mb-2"
+                                        ? "left-0 top-10"
+                                        : "left-0 bottom-full mb-2"
                                   }`}
                                 >
                                   <button
@@ -1549,8 +1565,8 @@ export function AddTestDialog({
                                         ? "right-0 top-10"
                                         : "right-0 bottom-full mb-2"
                                       : chatMessages.length <= 2
-                                      ? "left-0 top-10"
-                                      : "left-0 bottom-full mb-2"
+                                        ? "left-0 top-10"
+                                        : "left-0 bottom-full mb-2"
                                   }`}
                                 >
                                   {!pendingToolCall ? (
@@ -1559,12 +1575,12 @@ export function AddTestDialog({
                                       isLoading={availableToolsLoading}
                                       onSelectInbuiltTool={(
                                         toolId,
-                                        toolName
+                                        toolName,
                                       ) => {
                                         addToolCallMessage(
                                           toolId,
                                           toolName,
-                                          []
+                                          [],
                                         );
                                       }}
                                       onSelectCustomTool={(tool, params) => {
@@ -1575,7 +1591,7 @@ export function AddTestDialog({
                                           params.map((p) => ({
                                             name: p.name,
                                             value: "",
-                                          }))
+                                          })),
                                         );
                                       }}
                                     />
@@ -1634,7 +1650,7 @@ export function AddTestDialog({
                                                 className="w-full h-9 px-3 rounded-lg text-sm bg-background text-foreground placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-1 focus:ring-accent"
                                               />
                                             </div>
-                                          )
+                                          ),
                                         )}
                                       </div>
                                       <button
@@ -1642,7 +1658,7 @@ export function AddTestDialog({
                                           addToolCallMessage(
                                             pendingToolCall.toolId,
                                             pendingToolCall.toolName,
-                                            pendingToolCall.params
+                                            pendingToolCall.params,
                                           )
                                         }
                                         className="w-full mt-4 h-9 px-4 rounded-lg text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"

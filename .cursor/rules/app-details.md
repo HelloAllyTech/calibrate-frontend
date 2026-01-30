@@ -108,22 +108,22 @@ STT and TTS providers have typed definitions with the following fields:
 
 ```typescript
 type STTProvider = {
-  label: string;           // Provider name (e.g., "Deepgram")
-  value: string;           // API identifier (e.g., "deepgram")
-  model: string;           // Model name (e.g., "nova-3")
-  website: string;         // Provider website URL (e.g., "https://deepgram.com")
+  label: string; // Provider name (e.g., "Deepgram")
+  value: string; // API identifier (e.g., "deepgram")
+  model: string; // Model name (e.g., "nova-3")
+  website: string; // Provider website URL (e.g., "https://deepgram.com")
   supportedLanguages?: string[];
-  modelOverrides?: Record<string, string>;  // Language-specific model overrides
+  modelOverrides?: Record<string, string>; // Language-specific model overrides
 };
 
 type TTSProvider = {
-  label: string;           // Provider name (e.g., "Cartesia")
-  value: string;           // API identifier (e.g., "cartesia")
-  model: string;           // Model name (e.g., "sonic-3")
-  voiceId: string;         // Voice identifier (e.g., "Riya")
-  website: string;         // Provider website URL (e.g., "https://cartesia.ai")
+  label: string; // Provider name (e.g., "Cartesia")
+  value: string; // API identifier (e.g., "cartesia")
+  model: string; // Model name (e.g., "sonic-3")
+  voiceId: string; // Voice identifier (e.g., "Riya")
+  website: string; // Provider website URL (e.g., "https://cartesia.ai")
   supportedLanguages?: string[];
-  modelOverrides?: Record<string, string>;  // Language-specific model overrides
+  modelOverrides?: Record<string, string>; // Language-specific model overrides
 };
 ```
 
@@ -155,6 +155,7 @@ type TTSProvider = {
 Provider website links (external link icons) are shown only on the new evaluation pages (`/stt/new` and `/tts/new`) where providers are selected, not on the list pages. The `getProviderWebsite()` helper function retrieves the website URL from the provider definitions.
 
 **STT Language Arrays** (`*STTSupportedLanguages`):
+
 - `cartesiaSTTSupportedLanguages`: 99 languages - STT only (TTS has separate list)
 - `deepgramSTTSupportedLanguages`: 44 languages - STT only provider
 - `elevenlabsSTTSupportedLanguages`: 94 languages - STT only (TTS has separate list)
@@ -164,6 +165,7 @@ Provider website links (external link icons) are shown only on the new evaluatio
 - `smallestAiSTTSupportedLanguages`: 32 languages - used for both STT and TTS
 
 **TTS Language Arrays** (`*TTSSupportedLanguages`):
+
 - `cartesiaTTSSupportedLanguages`: 41 languages
 - `elevenlabsTTSSupportedLanguages`: 29 languages
 - `googleTTSSupportedLanguages`: 47 languages
@@ -326,7 +328,9 @@ Provider website links (external link icons) are shown only on the new evaluatio
 - **Metrics**: LLM Judge (Pass/Fail), TTFB
 - **Intermediate results structure**: `results` array contains `id`, `text`, `audio_path`; `llm_judge_score` and `llm_judge_reasoning` are only present when complete
 
-### 5. Tests Management (`/tests`)
+### 5. LLM Tests (`/tests`)
+
+**Page heading:** "LLM tests"
 
 **What you can do:**
 
@@ -405,7 +409,6 @@ Provider website links (external link icons) are shown only on the new evaluatio
 **Simulation Run Results** (`/simulations/[uuid]/runs/[runId]`):
 
 - **Polling & Intermediate Results**:
-
   - Page polls API every 3 seconds while status is `in_progress`
   - Simulation results appear incrementally as each simulation completes
   - Overall metrics only shown after run completes (status === "done")
@@ -419,14 +422,12 @@ Provider website links (external link icons) are shown only on the new evaluatio
     - **Metric column spinners**: Each metric cell shows `w-5 h-5 flex-shrink-0` spinner when `evaluation_results` is null; yellow when processing, gray when waiting
 
 - **Overall Metrics** (only shown when status is "done", aggregated across all simulations):
-
   - Tool calls accuracy (mean ± std)
   - Answer completeness
   - Assistant behavior
   - Question completeness
 
 - **Per-Simulation Results Table** (shows intermediate results as each simulation completes):
-
   - Persona + Scenario combination
   - Individual metric scores (Pass/Fail with tooltips showing reasoning)
   - Metric columns derived from `runData.metrics` keys, or from `simulation_results[].evaluation_results` when metrics is null
@@ -441,7 +442,6 @@ Provider website links (external link icons) are shown only on the new evaluatio
     3. Waiting rows (no transcript - gray spinner) - at the bottom
 
 - **Transcript Dialog**:
-
   - **Live updates with freeze-on-complete**: Dialog stays in sync with polling while simulation is in progress, then freezes:
     - Stores `selectedSimulationKey` using `simulation_name` (unique identifier)
     - Uses `frozenSimulationRef` to store a stable copy once simulation has `evaluation_results`
@@ -511,10 +511,10 @@ This enables:
 - **Framework**: Next.js 16.1.1 with App Router
 - **React**: 19.2.3
 - **Styling**: Tailwind CSS 4 with CSS variables for theming
-- **Fonts**: 
+- **Fonts**:
   - **Geist** - Default app font (via `--font-geist-sans`)
   - **Geist Mono** - Monospace font (via `--font-geist-mono`)
-  - **Inter** - Available via `--font-inter` 
+  - **Inter** - Available via `--font-inter`
   - **DM Sans** - Used on landing page for Coval-style typography (via `--font-dm-sans`)
 - **Authentication**: NextAuth.js v5 (beta) with Google OAuth
 - **Charts**: Recharts 3.6.0
@@ -594,6 +594,7 @@ This enables:
 The login page serves as a marketing-style landing page with a consistent light theme throughout:
 
 **Layout (top to bottom):**
+
 1. **Navigation bar**: PENSE logo (left) + "Join Discord" button (outlined) + "Book a demo" button (filled, right)
 2. **Hero section**: Large headline, subtitle, centered "Continue with Google" CTA
 3. **Feature Tabs section**: Tab switcher with feature previews
@@ -605,11 +606,13 @@ The login page serves as a marketing-style landing page with a consistent light 
 9. **Footer**: Three-column links (Company, Resources, Community) + copyright (`bg-gray-50`)
 
 **Feature Tabs:**
+
 - Tabs: "Speech to text", "Text to text", "Text to speech", "Simulations"
 - State managed via `useState` with `activeTab` (default: "stt")
 - Tab data defined as array: `{ id, label, headingBold, headingLight, description, images }` where `images` is an array of image paths
 
 **Two-Column Layout** (below tabs):
+
 - **Container**: Full width with `px-12` padding (no max-width constraint to maximize image space)
 - **Tabs**: Centered with `max-w-7xl mx-auto`
 - **Grid**: `grid-cols-[400px_1fr] gap-8 max-w-7xl` - text column (400px), images in constrained width
@@ -618,6 +621,7 @@ The login page serves as a marketing-style landing page with a consistent light 
 - Image files in `public/`: `stt_1.png` to `stt_4.png`, `tts_1.png` to `tts_4.png`, `llm-leaderboard.png`, `llm-output.png`, `simulation-all.png`, `simulation-run.png`
 
 **Integrations Section:**
+
 - **Background**: White (`bg-white`) with padding (`py-24 px-12`)
 - **Headline**: "Works with any voice agent stack" - same font as hero (`leading-[1.1] tracking-[-0.02em]`)
 - **Subtitle**: About Python SDK, CLI, and provider support
@@ -633,18 +637,21 @@ The login page serves as a marketing-style landing page with a consistent light 
 - **Grid styling**: `grid-cols-2 md:grid-cols-4`, `border border-gray-200 rounded-xl`, cells with `bg-gray-50 p-5`, `text-gray-900 text-sm font-medium` labels
 
 **Open Source Section:**
+
 - **Background**: Light gray (`bg-gray-50`) with padding (`py-24 px-12`)
 - **Headline**: "Proudly open source" - same font as hero (sentence case)
 - **Subtitle**: Links to run "locally" or "self-hosted" (underlined, `hover:text-gray-900`)
 - **GitHub button**: Dark button (`bg-gray-900`) linking to `ArtikiTech/pense` repo with GitHub logo and star icon
 
 **Community Section:**
+
 - **Background**: White (`bg-white`) with padding (`py-24 px-12`)
 - **Headline**: "Join the Community" - same font as hero
 - **Subtitle**: About teams using Pense
 - **Social links**: "Follow @artikiagents" (light bordered button) and "Connect on LinkedIn" (text link)
 
 **Get Started Section:**
+
 - **Background**: Light gray (`bg-gray-50`) with padding (`py-20 px-12`) - alternates with Community section above
 - **Headline**: "Start testing with Pense today." with `tracking-[-0.02em]` for tight letter spacing
 - **Two-column grid**: "Evaluate your agent" (left) and "Learn more" (right)
@@ -660,12 +667,14 @@ The login page serves as a marketing-style landing page with a consistent light 
   - Learn more: Watch the demo, Read documentation, Book a demo (`https://cal.com/amandalmia/30min`), Guide to voice agents (`https://voiceaiandvoiceagents.com`)
 
 **Final CTA Section:**
+
 - **Background**: Dark (`bg-gray-900`) with padding (`py-24 px-12`)
 - **Headline**: "Ready to get started?" - white text, same font style as other headlines
 - **Subtitle**: "Join teams building better AI agents with Pense" - gray-400 text
 - **CTA button**: "Continue with Google" - white background, triggers `handleGoogleSignIn`
 
 **Footer:**
+
 - **Background**: Light gray (`bg-gray-50`) with top border (`border-t border-gray-200`)
 - **Two columns**: Resources and Community - each with left border accent (`md:grid-cols-2`)
 - **Column headers**: Uppercase, letter-spaced (`tracking-[0.2em]`), muted color (`text-gray-400`)
@@ -675,6 +684,7 @@ The login page serves as a marketing-style landing page with a consistent light 
 - **Copyright**: Right-aligned, muted
 
 **Styling Patterns:**
+
 - **Consistent light theme** throughout - alternating white (`bg-white`) and light gray (`bg-gray-50`) backgrounds
 - **DM Sans font** applied via inline style: `style={{ fontFamily: 'var(--font-dm-sans), system-ui, -apple-system, sans-serif' }}`
 - **All headlines**: `font-medium text-gray-900 leading-[1.1] tracking-[-0.02em]` for consistent typography
@@ -686,6 +696,7 @@ The login page serves as a marketing-style landing page with a consistent light 
 - **Grid borders**: `border-gray-200` for light theme consistency
 
 **CTA Buttons:**
+
 - "Continue with Google" - Main action in hero section and final CTA section, triggers `signIn("google")`
 - "Join Discord" - Header button (outlined style), opens `https://discord.gg/pense` in new tab
 - "Book a demo" - Header button (filled style), opens `https://cal.com/amandalmia/30min` via `handleBookDemo`
@@ -695,7 +706,6 @@ The login page serves as a marketing-style landing page with a consistent light 
 The app uses NextAuth.js v5 with middleware-based route protection and backend sync:
 
 1. **Middleware** (`src/middleware.ts`) protects all routes:
-
    - Unauthenticated users → redirected to `/login`
    - Authenticated users on `/login` → redirected to `/agents`
    - Auth API routes (`/api/auth/*`) are always accessible
@@ -999,14 +1009,31 @@ Both TTS and STT evaluations filter available providers based on the selected la
 
 ```tsx
 type LanguageOption =
-  | "english" | "hindi" | "kannada" | "bengali" | "malayalam"
-  | "marathi" | "odia" | "punjabi" | "tamil" | "telugu" | "gujarati";
+  | "english"
+  | "hindi"
+  | "kannada"
+  | "bengali"
+  | "malayalam"
+  | "marathi"
+  | "odia"
+  | "punjabi"
+  | "tamil"
+  | "telugu"
+  | "gujarati";
 
 // Map language option to the format used in supportedLanguages arrays
 const languageDisplayName: Record<LanguageOption, string> = {
-  english: "English", hindi: "Hindi", kannada: "Kannada", bengali: "Bengali",
-  malayalam: "Malayalam", marathi: "Marathi", odia: "Odia", punjabi: "Punjabi",
-  tamil: "Tamil", telugu: "Telugu", gujarati: "Gujarati",
+  english: "English",
+  hindi: "Hindi",
+  kannada: "Kannada",
+  bengali: "Bengali",
+  malayalam: "Malayalam",
+  marathi: "Marathi",
+  odia: "Odia",
+  punjabi: "Punjabi",
+  tamil: "Tamil",
+  telugu: "Telugu",
+  gujarati: "Gujarati",
 };
 
 // Filter providers based on selected language
@@ -1015,7 +1042,7 @@ const getFilteredProviders = (language: LanguageOption) => {
   return providers.filter(
     (provider) =>
       !provider.supportedLanguages ||
-      provider.supportedLanguages.includes(langName)
+      provider.supportedLanguages.includes(langName),
   );
 };
 ```
@@ -1054,10 +1081,10 @@ const getFilteredProviders = (language: LanguageOption) => {
    - Auto-dismiss after 3 seconds
    - Manual dismiss button
    - Used after successful save operations
-6. **User Profile Dropdown**: Top-right avatar button in `AppLayout` header
-   - Shows user avatar (Google image) or placeholder (first letter of first name on purple background)
-   - Dropdown contains: user info, theme switcher, logout button
-   - Click outside closes dropdown (uses `useRef` + `mousedown` event)
+6. **Header Actions (AppLayout)**: Top-right section of header contains:
+   - **User Profile Dropdown**: Avatar button showing Google image or placeholder (first letter on purple background)
+     - Dropdown contains: user info, theme switcher, logout button
+     - Click outside closes dropdown (uses `useRef` + `mousedown` event)
 7. **Downloadable Tables**: Reusable `DownloadableTable` component for data tables with CSV export
    - Props: `columns` (array of `{key, header, render?}`), `data`, `filename`, `title`
    - Includes "Download CSV" button in top-right corner
@@ -1209,7 +1236,7 @@ useEffect(() => {
 
 ## Documentation (Mintlify)
 
-The `/docs` folder contains Mintlify-style documentation organized into 4 main guides.
+The `/docs` folder contains Mintlify-style documentation organized into 9 guides across 2 groups.
 
 ### Structure
 
@@ -1218,6 +1245,11 @@ docs/
 ├── mint.json              # Navigation, theme, and site configuration
 ├── introduction.mdx       # Overview with workflow and guide links
 ├── guides/
+│   ├── agents.mdx        # Agent creation, configuration, and management
+│   ├── tools.mdx         # Tool CRUD with all parameter types
+│   ├── personas.mdx      # Persona CRUD for simulations
+│   ├── scenarios.mdx     # Scenario CRUD for simulations
+│   ├── metrics.mdx       # Metric CRUD for evaluation
 │   ├── stt.mdx           # STT evaluation
 │   ├── tts.mdx           # TTS evaluation
 │   ├── llm-testing.mdx   # LLM testing (agent, tools, tests, benchmarks)
@@ -1227,19 +1259,25 @@ docs/
 
 ### Navigation Groups (mint.json)
 
-| Group | Pages |
-|-------|-------|
-| **Get Started** | introduction |
-| **Guides** | stt, tts, llm-testing, simulations |
+| Group             | Pages                                       |
+| ----------------- | ------------------------------------------- |
+| **Get Started**   | introduction                                |
+| **Core Concepts** | agents, tools, personas, scenarios, metrics |
+| **Guides**        | stt, tts, llm-testing, simulations          |
 
 ### Guide Content
 
-| Guide | Content Covered |
-|-------|-----------------|
-| **STT** | Upload audio, select providers, view WER/latency metrics, leaderboard |
-| **TTS** | Add text samples, select providers, listen to outputs, view metrics |
+| Guide           | Content Covered                                                                                                                                                                                  |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Agents**      | Create, configure (system prompt, STT/TTS/LLM), update, duplicate, delete agents. Covers all tabs: Agent, Tools, Data Extraction, Tests, Settings                                                |
+| **Tools**       | Create tools with all parameter types (string, number, boolean, array, object), nested properties, update, delete. Attach tools to agents                                                        |
+| **Personas**    | Create/update/delete personas with label, characteristics, gender, language, interruption sensitivity settings                                                                                   |
+| **Scenarios**   | Create/update/delete scenarios with label and description fields                                                                                                                                 |
+| **Metrics**     | Create/update/delete/duplicate metrics with evaluation instructions                                                                                                                              |
+| **STT**         | Upload audio, select providers, view WER/latency metrics, leaderboard                                                                                                                            |
+| **TTS**         | Add text samples, select providers, listen to outputs, view metrics                                                                                                                              |
 | **LLM Testing** | Complete workflow: create agent → create tool → attach tool → create Next Reply test → run test → create Tool Invocation test → run test → attach tests to agent → run all tests → run benchmark |
-| **Simulations** | Setup (agent, tool, personas, scenarios, metrics) → Text simulation section (per-row metrics, overall metrics, transcripts) → Voice simulation section (latency metrics, audio transcripts) |
+| **Simulations** | Setup (agent, tool, personas, scenarios, metrics) → Text simulation section (per-row metrics, overall metrics, transcripts) → Voice simulation section (latency metrics, audio transcripts)      |
 
 ### Mintlify Components Used
 
@@ -1253,6 +1291,7 @@ docs/
 ### Adding Screenshots
 
 Each guide references placeholder images in `/docs/images/`. Image naming convention:
+
 - `{feature}_overview.png` - List/landing page
 - `{feature}_new.png` - Create/new page
 - `{feature}_config.png` - Configuration view
@@ -2141,7 +2180,7 @@ useEffect(() => {
       }
     } catch (error) {
       // Set status to failed and stop polling on fetch error
-      setData((prev) => prev ? { ...prev, status: "failed" } : prev);
+      setData((prev) => (prev ? { ...prev, status: "failed" } : prev));
       if (pollInterval) {
         clearInterval(pollInterval);
         pollInterval = null;
@@ -2169,6 +2208,7 @@ When a fetch error occurs during polling (network failure, server error, etc.), 
 This prevents infinite polling when the backend is unreachable and gives users immediate feedback via the "Failed" status badge.
 
 **Files implementing this pattern:**
+
 - `src/app/stt/[uuid]/page.tsx` - STT evaluation detail page
 - `src/app/tts/[uuid]/page.tsx` - TTS evaluation detail page
 - `src/app/simulations/[uuid]/runs/[runId]/page.tsx` - Simulation run detail page
@@ -2184,7 +2224,7 @@ The `EvaluationResult` type for STT/TTS evaluations:
 type EvaluationResult = {
   task_id: string;
   status: "queued" | "in_progress" | "done" | "failed";
-  language?: string;  // Displayed as a pill next to status badge
+  language?: string; // Displayed as a pill next to status badge
   provider_results?: ProviderResult[];
   leaderboard_summary?: LeaderboardSummary[];
   error?: string | null;
@@ -2205,16 +2245,16 @@ The app enforces usage limits on certain features. When limits are exceeded, a t
 import { LIMITS, CONTACT_LINK } from "@/constants/limits";
 
 // Current limits:
-LIMITS.TTS_MAX_ROWS       // 20 - max rows for TTS CSV upload
-LIMITS.TTS_MAX_TEXT_LENGTH  // 200 - max characters per text input
-LIMITS.STT_MAX_ROWS       // 20 - max rows for STT ZIP upload
-LIMITS.STT_MAX_AUDIO_DURATION_SECONDS  // 60 - max audio file duration in seconds
-LIMITS.STT_MAX_AUDIO_FILE_SIZE_MB  // 5 - max audio file size in MB
-LIMITS.SIMULATION_MAX_PERSONAS   // 2 - max personas per simulation
-LIMITS.SIMULATION_MAX_SCENARIOS  // 5 - max scenarios per simulation
-LIMITS.TESTS_MAX_RUN_ALL  // 20 - max tests for "Run all tests"
+LIMITS.TTS_MAX_ROWS; // 20 - max rows for TTS CSV upload
+LIMITS.TTS_MAX_TEXT_LENGTH; // 200 - max characters per text input
+LIMITS.STT_MAX_ROWS; // 20 - max rows for STT ZIP upload
+LIMITS.STT_MAX_AUDIO_DURATION_SECONDS; // 60 - max audio file duration in seconds
+LIMITS.STT_MAX_AUDIO_FILE_SIZE_MB; // 5 - max audio file size in MB
+LIMITS.SIMULATION_MAX_PERSONAS; // 2 - max personas per simulation
+LIMITS.SIMULATION_MAX_SCENARIOS; // 5 - max scenarios per simulation
+LIMITS.TESTS_MAX_RUN_ALL; // 20 - max tests for "Run all tests"
 
-CONTACT_LINK              // URL for contacting support to extend limits
+CONTACT_LINK; // URL for contacting support to extend limits
 ```
 
 **Toast Notifications** (using `sonner` library):
@@ -2236,13 +2276,14 @@ toast.error(
       Contact us
     </a>{" "}
     to extend your limits.
-  </span>
+  </span>,
 );
 ```
 
 **Toaster Component**: Added to root layout (`src/app/layout.tsx`) with `richColors` and `position="top-right"`.
 
 **Features using limits:**
+
 - TTS evaluation: CSV upload and manual row addition
 - STT evaluation: ZIP upload, manual row addition, and audio file duration (60s max)
 - Simulations: Persona and scenario selection
@@ -2271,7 +2312,9 @@ const getAudioDuration = (file: File): Promise<number> => {
 // Usage: validate before upload
 const duration = await getAudioDuration(file);
 if (duration > LIMITS.STT_MAX_AUDIO_DURATION_SECONDS) {
-  toast.error(`Audio file must be less than ${LIMITS.STT_MAX_AUDIO_DURATION_SECONDS} seconds...`);
+  toast.error(
+    `Audio file must be less than ${LIMITS.STT_MAX_AUDIO_DURATION_SECONDS} seconds...`,
+  );
   return;
 }
 ```
@@ -2355,6 +2398,37 @@ Key patterns:
 - Main content uses `flex-1 overflow-hidden` to fill remaining vertical space
 - If using multi-column layout, wrap columns in the Main Content Area div
 
+**Auto-resizing textareas** (used in AddTestDialog conversation history):
+
+```tsx
+<textarea
+  value={content}
+  onChange={(e) => {
+    updateContent(e.target.value);
+    // Auto-resize textarea
+    e.target.style.height = "auto";
+    e.target.style.height = `${e.target.scrollHeight}px`;
+  }}
+  onInput={(e) => {
+    // Auto-resize on paste
+    const target = e.target as HTMLTextAreaElement;
+    target.style.height = "auto";
+    target.style.height = `${target.scrollHeight}px`;
+  }}
+  ref={(el) => {
+    // Auto-resize on mount (for editing existing content)
+    if (el) {
+      el.style.height = "auto";
+      el.style.height = `${el.scrollHeight}px`;
+    }
+  }}
+  rows={1}
+  className="resize-none overflow-hidden"
+/>
+```
+
+This pattern ensures textareas grow with content on: typing, pasting, and initial render when editing.
+
 ---
 
 ## Navigation Structure
@@ -2362,21 +2436,26 @@ Key patterns:
 ### Sidebar Sections
 
 1. **Main**
-
    - Agents
    - Tools
 
 2. **Unit Tests**
-
    - Speech-to-Text (STT)
+   - Text to Text (route: `/tests`)
    - Text-to-Speech (TTS)
-   - Tests
 
 3. **End-to-End Tests**
    - Personas
    - Scenarios
    - Metrics
    - Simulations
+
+4. **Resources**
+   - Documentation (external link to `https://docs.pense.ai`, opens in new tab with external link icon indicator)
+
+### External Links in Sidebar
+
+The sidebar navigation handles external links differently from internal routes. In `AppLayout.tsx`, items with `id === "docs"` render as `<a>` tags with `target="_blank"` instead of Next.js `<Link>` components. External links include a small arrow icon (↗) to indicate they open in a new tab.
 
 ---
 
@@ -2466,6 +2545,7 @@ Set `MAINTENANCE_MODE=true` in `.env.local` to show a maintenance page. When ena
   1. **At the start of the effect** - before setting up a new interval, clear any existing one
   2. **When the triggering condition becomes false** - e.g., when `isOpen` becomes false, clear in an `else` branch
   3. **In the cleanup function** - return a cleanup that clears the interval
+
   ```tsx
   useEffect(() => {
     if (isOpen) {
@@ -2492,7 +2572,9 @@ Set `MAINTENANCE_MODE=true` in `.env.local` to show a maintenance page. When ena
     };
   }, [isOpen, taskId]);
   ```
+
   - **Gotcha**: Without clearing at the start of the effect, re-renders or dependency changes can create multiple concurrent intervals, causing excessive API requests
+
 - **Dialog close prevention**: Disable dialog close while async operations (delete, save) are in progress
 - **Unsaved changes confirmation**: Form dialogs (like AddTestDialog) should show a confirmation dialog when user clicks backdrop, asking "Discard changes?" with Cancel/Discard buttons
 - **Key-based lookup with freeze-on-complete for live-updating dialogs**: When a dialog shows data that can complete (e.g., transcript with audio):
@@ -2616,24 +2698,24 @@ export default function ToolsLayout({
 
 **Route layout hierarchy:**
 
-| Route                      | Layout Title                  |
-| -------------------------- | ----------------------------- |
-| `/agents`                  | "Agents \| Pense"             |
-| `/agents/[uuid]`           | "Agent \| Pense"              |
-| `/tools`                   | "Tools \| Pense"              |
-| `/tests`                   | "Tests \| Pense"              |
-| `/personas`                | "Personas \| Pense"           |
-| `/scenarios`               | "Scenarios \| Pense"          |
-| `/metrics`                 | "Metrics \| Pense"            |
-| `/simulations`             | "Simulations \| Pense"        |
-| `/simulations/[uuid]`      | "Simulation \| Pense"         |
-| `/simulations/[uuid]/runs` | "Simulation Run \| Pense"     |
-| `/stt`                     | "Speech to Text \| Pense"     |
-| `/stt/[uuid]`              | "STT Evaluation \| Pense"     |
-| `/stt/new`                 | "New STT Evaluation \| Pense" |
-| `/tts`                     | "Text to Speech \| Pense"     |
-| `/tts/[uuid]`              | "TTS Evaluation \| Pense"     |
-| `/tts/new`                 | "New TTS Evaluation \| Pense" |
+| Route                      | Layout Title                                              |
+| -------------------------- | --------------------------------------------------------- |
+| `/agents`                  | "Agents \| Pense"                                         |
+| `/agents/[uuid]`           | "Agent \| Pense"                                          |
+| `/tools`                   | "Tools \| Pense"                                          |
+| `/tests`                   | "Tests \| Pense"                                          |
+| `/personas`                | "Personas \| Pense"                                       |
+| `/scenarios`               | "Scenarios \| Pense"                                      |
+| `/metrics`                 | "Metrics \| Pense"                                        |
+| `/simulations`             | "Simulations \| Pense"                                    |
+| `/simulations/[uuid]`      | "Simulation \| Pense"                                     |
+| `/simulations/[uuid]/runs` | "Simulation Run \| Pense"                                 |
+| `/stt`                     | "Speech to Text \| Pense"                                 |
+| `/stt/[uuid]`              | "STT Evaluation \| Pense"                                 |
+| `/stt/new`                 | "New STT Evaluation \| Pense"                             |
+| `/tts`                     | "Text to Speech \| Pense"                                 |
+| `/tts/[uuid]`              | "TTS Evaluation \| Pense"                                 |
+| `/tts/new`                 | "New TTS Evaluation \| Pense"                             |
 | `/login`                   | "Pense \| Scale conversational AI agents with confidence" |
 
 **useEffect for dynamic titles:**

@@ -57,7 +57,7 @@ export default function LLMPage() {
     "next-reply" | "tool-invocation" | undefined
   >(undefined);
   const [initialConfig, setInitialConfig] = useState<TestConfig | undefined>(
-    undefined
+    undefined,
   );
 
   // Delete confirmation state
@@ -110,7 +110,7 @@ export default function LLMPage() {
       } catch (err) {
         console.error("Error fetching tests:", err);
         setTestsError(
-          err instanceof Error ? err.message : "Failed to load tests"
+          err instanceof Error ? err.message : "Failed to load tests",
         );
       } finally {
         setTestsLoading(false);
@@ -183,7 +183,7 @@ export default function LLMPage() {
   const handleRunTest = async (
     agentUuid: string,
     agentName: string,
-    attachToAgent: boolean
+    attachToAgent: boolean,
   ) => {
     if (!testToRun) return;
 
@@ -294,7 +294,7 @@ export default function LLMPage() {
     } catch (err) {
       console.error("Error creating test:", err);
       setCreateError(
-        err instanceof Error ? err.message : "Failed to create test"
+        err instanceof Error ? err.message : "Failed to create test",
       );
     } finally {
       setIsCreating(false);
@@ -337,11 +337,11 @@ export default function LLMPage() {
       // Populate form fields with test data
       setNewTestName(testData.name || "");
       setNewTestDescription(
-        testData.config?.description || testData.description || ""
+        testData.config?.description || testData.description || "",
       );
       // Set initial tab based on test type
       setInitialTab(
-        testData.type === "tool_call" ? "tool-invocation" : "next-reply"
+        testData.type === "tool_call" ? "tool-invocation" : "next-reply",
       );
       // Set initial config to populate dialog fields
       if (testData.config) {
@@ -350,7 +350,7 @@ export default function LLMPage() {
     } catch (err) {
       console.error("Error fetching test:", err);
       setCreateError(
-        err instanceof Error ? err.message : "Failed to load test"
+        err instanceof Error ? err.message : "Failed to load test",
       );
     } finally {
       setIsLoadingTest(false);
@@ -415,7 +415,7 @@ export default function LLMPage() {
     } catch (err) {
       console.error("Error updating test:", err);
       setCreateError(
-        err instanceof Error ? err.message : "Failed to update test"
+        err instanceof Error ? err.message : "Failed to update test",
       );
     } finally {
       setIsCreating(false);
@@ -443,7 +443,7 @@ export default function LLMPage() {
       (test.config?.description &&
         test.config.description
           .toLowerCase()
-          .includes(searchQuery.toLowerCase()))
+          .includes(searchQuery.toLowerCase())),
   );
 
   return (
@@ -457,9 +457,9 @@ export default function LLMPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold">Tests</h1>
+            <h1 className="text-2xl font-semibold">LLM Evaluation</h1>
             <p className="text-muted-foreground text-base leading-relaxed mt-1">
-              Create and manage tests to evaluate your language models.
+              Create and manage tests to evaluate your LLM
             </p>
           </div>
           <button
@@ -589,8 +589,8 @@ export default function LLMPage() {
                   {test.type === "response"
                     ? "Next Reply"
                     : test.type === "tool_call"
-                    ? "Tool Call"
-                    : "—"}
+                      ? "Tool Call"
+                      : "—"}
                 </p>
                 <div className="flex items-center gap-1">
                   {/* Play Button */}

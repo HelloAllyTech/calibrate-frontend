@@ -15,7 +15,9 @@ export function InbuiltToolsPanel({
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-base font-medium text-foreground">In-built tools</h3>
+        <h3 className="text-base font-medium text-foreground">
+          In-built tools
+        </h3>
         <p className="text-base text-muted-foreground mt-0.5">
           Allow the agent to perform built-in actions.
         </p>
@@ -55,6 +57,7 @@ export function InbuiltToolsPanel({
             </div>
             {/* Toggle Switch */}
             <button
+              hidden
               onClick={() => {
                 if (tool.id === "end_call") {
                   setEndConversationEnabled(!endConversationEnabled);

@@ -48,7 +48,7 @@ export function ToolsTabContent({
       ((tool.description || tool.config?.description) &&
         (tool.description || tool.config?.description)
           .toLowerCase()
-          .includes(toolsSearchQuery.toLowerCase()))
+          .includes(toolsSearchQuery.toLowerCase())),
   );
 
   return (

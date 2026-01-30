@@ -15,7 +15,7 @@ const tabs = [
   },
   {
     id: "llm",
-    label: "Text to text",
+    label: "LLM Evaluation",
     headingBold: "Choose the best LLM",
     headingLight: "by evaluating multi-turn conversations",
     description:
@@ -500,7 +500,9 @@ export default function LoginPage() {
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <div className="font-medium text-gray-900">Text to Text</div>
+                  <div className="font-medium text-gray-900">
+                    LLM Evaluation
+                  </div>
                   <div className="text-sm text-gray-500">
                     Test tool calling and response quality across models
                   </div>
