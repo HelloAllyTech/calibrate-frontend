@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "STT Evaluation | Pense",
+  title: "STT Evaluation | Calibrate",
 };
 
 export default function STTDetailLayout({

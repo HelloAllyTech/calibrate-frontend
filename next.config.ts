@@ -11,7 +11,7 @@ export default withSentryConfig(nextConfig, {
 
   org: "artpark-sahai",
 
-  project: "pense-frontend",
+  project: "calibrate-frontend",
 
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,

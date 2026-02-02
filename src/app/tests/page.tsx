@@ -40,7 +40,7 @@ export default function LLMPage() {
 
   // Set page title
   useEffect(() => {
-    document.title = "Tests | Pense";
+    document.title = "Tests | Calibrate";
   }, []);
   const [addTestSidebarOpen, setAddTestSidebarOpen] = useState(false);
   const [newTestName, setNewTestName] = useState("");

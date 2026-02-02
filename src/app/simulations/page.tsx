@@ -26,7 +26,7 @@ export default function SimulationsPage() {
 
   // Set page title
   useEffect(() => {
-    document.title = "Simulations | Pense";
+    document.title = "Simulations | Calibrate";
   }, []);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [dialogOpen, setDialogOpen] = useState(false);

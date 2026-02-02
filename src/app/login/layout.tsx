@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Login | Pense",
+  title: "Login | Calibrate",
 };
 
 export default function LoginLayout({

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "New STT Evaluation | Pense",
+  title: "New STT Evaluation | Calibrate",
 };
 
 export default function NewSTTLayout({

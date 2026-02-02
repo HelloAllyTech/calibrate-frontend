@@ -27,9 +27,9 @@ export default function AgentDetailPage() {
   useEffect(() => {
     if (headerState?.agentName && headerState.agentName !== "Loading...") {
       const tabName = tabDisplayNames[headerState.activeTab] || "Agent";
-      document.title = `${headerState.agentName} - ${tabName} | Pense`;
+      document.title = `${headerState.agentName} - ${tabName} | Calibrate`;
     } else {
-      document.title = "Agent | Pense";
+      document.title = "Agent | Calibrate";
     }
   }, [headerState?.agentName, headerState?.activeTab]);
 

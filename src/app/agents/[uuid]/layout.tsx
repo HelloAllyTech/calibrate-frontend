@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Agent | Pense",
+  title: "Agent | Calibrate",
 };
 
 export default function AgentDetailLayout({

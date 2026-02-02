@@ -3,15 +3,15 @@ description: "Description of the project"
 alwaysApply: true
 ---
 
-# Pense Frontend
+# Calibrate Frontend
 
 **Voice Agent Simulation and Evaluation Platform**
 
 ---
 
-## What is Pense?
+## What is Calibrate?
 
-Pense is a comprehensive platform for building, configuring, testing, and evaluating **voice-based AI agents**. It enables teams to create conversational agents that can handle voice interactions (phone calls, voice assistants) and rigorously test them before deployment.
+Calibrate is a comprehensive platform for building, configuring, testing, and evaluating **voice-based AI agents**. It enables teams to create conversational agents that can handle voice interactions (phone calls, voice assistants) and rigorously test them before deployment.
 
 The platform addresses the challenge of quality assurance for voice agents by providing:
 
@@ -19,13 +19,15 @@ The platform addresses the challenge of quality assurance for voice agents by pr
 - **End-to-end simulation testing** (full conversations with simulated users)
 - **Benchmarking** across different AI providers to find the best configuration
 
+> **Note on naming**: The app is branded as "Calibrate" in all user-facing UI, page titles, and documentation. However, external URLs and infrastructure still reference "pense" (e.g., Discord: `https://discord.gg/xCJ55Ban`). Documentation links use `process.env.NEXT_PUBLIC_APP_URL` (e.g., `${process.env.NEXT_PUBLIC_APP_URL}/docs`). The npm package name is `calibrate-frontend`.
+
 ---
 
 ## Overall Context & Use Cases
 
 ### Primary Use Case
 
-Organizations building voice agents (customer support bots, IVR systems, voice assistants) use Pense to:
+Organizations building voice agents (customer support bots, IVR systems, voice assistants) use Calibrate to:
 
 1. Configure their agent's voice pipeline (which STT, TTS, and LLM to use)
 2. Test individual components to select the best providers
@@ -36,7 +38,7 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                           PENSE WORKFLOW                                │
+│                           CALIBRATE WORKFLOW                            │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                         │
 │   1. CREATE AGENT                                                       │
@@ -482,7 +484,7 @@ User Speech → [STT] → Text → [LLM] → Response Text → [TTS] → Agent S
                        External APIs
 ```
 
-Pense allows testing and benchmarking each component:
+Calibrate allows testing and benchmarking each component:
 
 - **STT (Speech-to-Text)**: Converts user's voice to text
 - **LLM (Large Language Model)**: Generates intelligent responses
@@ -491,7 +493,7 @@ Pense allows testing and benchmarking each component:
 
 ### Simulation Testing Approach
 
-Instead of manual testing, Pense uses AI-powered simulation:
+Instead of manual testing, Calibrate uses AI-powered simulation:
 
 1. **Personas** act as synthetic users with defined characteristics
 2. **Scenarios** give these personas specific tasks to accomplish
@@ -551,12 +553,12 @@ This enables:
 │   │   │   └── [uuid]/layout.tsx  # Detail page metadata
 │   │   ├── tools/             # Tools management (each route has layout.tsx)
 │   │   ├── stt/               # Speech-to-Text evaluation (list + new + [uuid] detail)
-│   │   │   ├── layout.tsx     # "Speech to Text | Pense"
+│   │   │   ├── layout.tsx     # "Speech to Text | Calibrate"
 │   │   │   ├── page.tsx       # List of STT evaluation jobs
 │   │   │   ├── new/           # Create new STT evaluation (has layout.tsx)
 │   │   │   └── [uuid]/        # View STT evaluation results (has layout.tsx)
 │   │   ├── tts/               # Text-to-Speech evaluation (list + new + [uuid] detail)
-│   │   │   ├── layout.tsx     # "Text to Speech | Pense"
+│   │   │   ├── layout.tsx     # "Text to Speech | Calibrate"
 │   │   │   ├── page.tsx       # List of TTS evaluation jobs
 │   │   │   ├── new/           # Create new TTS evaluation (has layout.tsx)
 │   │   │   └── [uuid]/        # View TTS evaluation results (has layout.tsx)
@@ -596,21 +598,26 @@ The login page serves as a marketing-style landing page with a consistent light 
 
 **Layout (top to bottom):**
 
-1. **Navigation bar**: PENSE logo (left) + "Join Discord" button (outlined) + "Book a demo" button (filled, right)
+1. **Navigation bar**: CALIBRATE logo (`/logo.svg`, 32x32px) + "Join" anchor link (outlined, scrolls to `#join-community`) + "Book a demo" button (filled, right)
 2. **Hero section**: Large headline, subtitle, centered "Continue with Google" CTA
 3. **Feature Tabs section**: Tab switcher with feature previews
 4. **Integrations section**: Provider grid showing supported STT/TTS/LLM providers
 5. **Open Source section**: GitHub link and self-hosting info (`bg-gray-50`)
-6. **Community section**: Social links (X, LinkedIn)
+6. **Community section**: WhatsApp/Discord join buttons + social links (X, LinkedIn), has `id="join-community"` for anchor linking
 7. **Get Started section**: Two-column card layout with CTAs
 8. **Final CTA section**: Dark background (`bg-gray-900`) with "Ready to get started?" headline and "Continue with Google" button
-9. **Footer**: Three-column links (Company, Resources, Community) + copyright (`bg-gray-50`)
+9. **Footer**: Three-column links (Company, Resources, Community) in `md:grid-cols-3` + copyright (`bg-gray-50`)
 
 **Feature Tabs:**
 
 - Tabs: "Speech to text", "LLM Evaluation", "Text to speech", "Simulations"
 - State managed via `useState` with `activeTab` (default: "stt")
 - Tab data defined as array: `{ id, label, headingBold, headingLight, description, images }` where `images` is an array of image paths
+
+**Constants:**
+
+- `WHATSAPP_INVITE_URL` - WhatsApp community invite link, used in both the Community section and footer
+- `GITHUB_REPO_URL` - GitHub repo link (`https://github.com/artpark-sahai-org/agentloop`), used in Open Source section
 
 **Two-Column Layout** (below tabs):
 
@@ -619,7 +626,7 @@ The login page serves as a marketing-style landing page with a consistent light 
 - **Grid**: `grid-cols-[400px_1fr] gap-8 max-w-7xl` - text column (400px), images in constrained width
 - **Left column**: Two-tone headline (bold dark + light gray) + description text, sticky on scroll
 - **Right column**: Images stacked vertically (`flex-col gap-4`), one per row, showing full height
-- Image files in `public/`: `stt_1.png` to `stt_4.png`, `tts_1.png` to `tts_4.png`, `llm-leaderboard.png`, `llm-output.png`, `simulation-all.png`, `simulation-run.png`
+- Static files in `public/`: `logo.svg` (app logo, uses `currentColor`), `logo-dark.svg` (white stroke for dark backgrounds), `stt_1.png` to `stt_4.png`, `tts_1.png` to `tts_4.png`, `llm-leaderboard.png`, `llm-output.png`, `simulation-all.png`, `simulation-run.png`
 
 **Integrations Section:**
 
@@ -633,7 +640,7 @@ The login page serves as a marketing-style landing page with a consistent light 
   - Row 1: Deepgram, ElevenLabs, OpenAI, Google
   - Row 2: Cartesia, Anthropic, Groq, DeepSeek
   - Row 3: Smallest AI, Claude, Gemini, Qwen
-  - Row 4: Meta, Mistral, Cohere, Moonshot AI
+  - Row 4: Meta, Mistral, Cohere, Sarvam
   - Row 5: AI21, Baidu, NVIDIA, Amazon
 - **Grid styling**: `grid-cols-2 md:grid-cols-4`, `border border-gray-200 rounded-xl`, cells with `bg-gray-50 p-5`, `text-gray-900 text-sm font-medium` labels
 
@@ -642,19 +649,23 @@ The login page serves as a marketing-style landing page with a consistent light 
 - **Background**: Light gray (`bg-gray-50`) with padding (`py-24 px-12`)
 - **Headline**: "Proudly open source" - same font as hero (sentence case)
 - **Subtitle**: Links to run "locally" or "self-hosted" (underlined, `hover:text-gray-900`)
-- **GitHub button**: Dark button (`bg-gray-900`) linking to `ArtikiTech/pense` repo with GitHub logo and star icon
+- **GitHub button**: Dark button (`bg-gray-900`) using `GITHUB_REPO_URL` constant, with GitHub logo and star icon
 
 **Community Section:**
 
+- **ID**: `id="join-community"` with `scroll-mt-20` for nav offset when scrolling
 - **Background**: White (`bg-white`) with padding (`py-24 px-12`)
-- **Headline**: "Join the Community" - same font as hero
-- **Subtitle**: About teams using Pense
-- **Social links**: "Follow @artikiagents" (light bordered button) and "Connect on LinkedIn" (text link)
+- **Headline**: "Join the community" - same font as hero
+- **Subtitle**: About talking to the team and shaping the roadmap
+- **Join buttons** (row 1, bordered style with icons):
+  - "Join WhatsApp" - uses `WHATSAPP_INVITE_URL` constant (green WhatsApp icon)
+  - "Join Discord" - opens `https://discord.gg/xCJ55Ban` (indigo Discord icon)
+- **Social links** (row 2, text links): "Follow @artikiagents" and "Connect on LinkedIn"
 
 **Get Started Section:**
 
 - **Background**: Light gray (`bg-gray-50`) with padding (`py-20 px-12`) - alternates with Community section above
-- **Headline**: "Start testing with Pense today." with `tracking-[-0.02em]` for tight letter spacing
+- **Headline**: "Start testing with Calibrate today." with `tracking-[-0.02em]` for tight letter spacing
 - **Two-column grid**: "Evaluate your agent" (left) and "Learn more" (right)
 - **Card containers**: `bg-gray-50 rounded-2xl p-8 border border-gray-200`
 - **Link cards**: White background with subtle border, hover state adds shadow (`hover:border-gray-300 hover:shadow-sm`)
@@ -671,16 +682,17 @@ The login page serves as a marketing-style landing page with a consistent light 
 
 - **Background**: Dark (`bg-gray-900`) with padding (`py-24 px-12`)
 - **Headline**: "Ready to get started?" - white text, same font style as other headlines
-- **Subtitle**: "Join teams building better AI agents with Pense" - gray-400 text
+- **Subtitle**: "Join teams building better AI agents with Calibrate" - gray-400 text
 - **CTA button**: "Continue with Google" - white background, triggers `handleGoogleSignIn`
 
 **Footer:**
 
 - **Background**: Light gray (`bg-gray-50`) with top border (`border-t border-gray-200`)
-- **Two columns**: Resources and Community - each with left border accent (`md:grid-cols-2`)
+- **Three columns**: Company, Resources, and Community - each with left border accent (`md:grid-cols-3`)
 - **Column headers**: Uppercase, letter-spaced (`tracking-[0.2em]`), muted color (`text-gray-400`)
-- **Resources column links**: Documentation, Python SDK, CLI, Terms of Service, Privacy Policy
-- **Community column links**: Discord (`https://discord.gg/pense`) and LinkedIn (`https://linkedin.com/company/artpark`)
+- **Company column**: Uses `flex flex-col` to enable bottom-aligned content. Links: About Us (`/about`), Privacy Policy. Tagline "Supported by ARTPARK @IISc" at bottom (`mt-auto pt-8 text-xs text-gray-400`, ARTPARK links to `https://artpark.in`)
+- **Resources column links**: Documentation, Python SDK, CLI, Terms of Service
+- **Community column links**: WhatsApp (uses `WHATSAPP_INVITE_URL` constant), Discord (`https://discord.gg/xCJ55Ban`), and LinkedIn (`https://linkedin.com/company/artpark`)
 - **Links**: Gray text (`text-gray-500`) that darkens on hover (`hover:text-gray-900`)
 - **Copyright**: Right-aligned, muted
 
@@ -689,7 +701,7 @@ The login page serves as a marketing-style landing page with a consistent light 
 - **Consistent light theme** throughout - alternating white (`bg-white`) and light gray (`bg-gray-50`) backgrounds
 - **DM Sans font** applied via inline style: `style={{ fontFamily: 'var(--font-dm-sans), system-ui, -apple-system, sans-serif' }}`
 - **All headlines**: `font-medium text-gray-900 leading-[1.1] tracking-[-0.02em]` for consistent typography
-- **Headline casing**: Sentence case - first letter of first word capitalized, rest lowercase except proper nouns (AI, LLM, STT, TTS, Pense, etc.)
+- **Headline casing**: Sentence case - first letter of first word capitalized, rest lowercase except proper nouns (AI, LLM, STT, TTS, Calibrate, etc.)
 - **Subtitles**: `text-xl text-gray-500`
 - **Tabs container**: `inline-flex bg-gray-100 rounded-xl p-1` with active tab having white background and shadow
 - **Image containers**: `rounded-xl overflow-hidden shadow-xl` - simple container without fixed aspect ratio
@@ -699,8 +711,22 @@ The login page serves as a marketing-style landing page with a consistent light 
 **CTA Buttons:**
 
 - "Continue with Google" - Main action in hero section and final CTA section, triggers `signIn("google")`
-- "Join Discord" - Header button (outlined style), opens `https://discord.gg/pense` in new tab
+- "Join" - Header anchor link (outlined style), scrolls to `#join-community` section
 - "Book a demo" - Header button (filled style), opens `https://cal.com/amandalmia/30min` via `handleBookDemo`
+
+### About Page (`/about`)
+
+Public page (no auth required) with information about Calibrate and ARTPARK.
+
+**Structure:**
+- Same header as landing page: Logo (links to `/login`), "Join" button (links to `/login#join-community`), "Book a demo" button
+- Same footer as landing page: 3-column layout (Company, Resources, Community) + copyright
+- Has its own `WHATSAPP_INVITE_URL` constant (duplicated from login page for independence)
+
+**Content sections:**
+- Hero: "About Calibrate" headline + intro paragraph
+- Our Mission: Voice AI challenges and Calibrate's solution
+- Our Team: ARTPARK intro + 2-column grid (`max-w-xl`, left-aligned) with clickable team member cards linking to LinkedIn (Aman Dalmia - Principal ML Engineer, Jigar Doshi). Profile images at `/team/aman-dalmia.jpg` and `/team/jigar-doshi.jpg` with `bg-gray-200` fallback
 
 ### Authentication Flow
 
@@ -709,7 +735,7 @@ The app uses NextAuth.js v5 with middleware-based route protection and backend s
 1. **Middleware** (`src/middleware.ts`) protects all routes:
    - Unauthenticated users → redirected to `/login`
    - Authenticated users on `/login` → redirected to `/agents`
-   - Auth API routes (`/api/auth/*`) are always accessible
+   - Auth API routes (`/api/auth/*`), debug routes (`/debug*`), and docs routes (`/docs*`) are always accessible
 
 2. **SessionProvider** wraps the app in `layout.tsx` for client-side session access
 
@@ -2464,6 +2490,7 @@ The sidebar navigation handles external links differently from internal routes. 
 
 ```bash
 NEXT_PUBLIC_BACKEND_URL=http://localhost:8000  # Backend API URL
+NEXT_PUBLIC_APP_URL=https://penseapp.vercel.app  # App URL for docs links (required)
 AUTH_SECRET=                                    # NextAuth secret
 GOOGLE_CLIENT_ID=                              # Google OAuth client ID
 GOOGLE_CLIENT_SECRET=                          # Google OAuth client secret
@@ -2685,7 +2712,7 @@ Each route has a `layout.tsx` file that exports metadata for server-side renderi
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Tools | Pense",
+  title: "Tools | Calibrate",
 };
 
 export default function ToolsLayout({
@@ -2701,23 +2728,23 @@ export default function ToolsLayout({
 
 | Route                      | Layout Title                                              |
 | -------------------------- | --------------------------------------------------------- |
-| `/agents`                  | "Agents \| Pense"                                         |
-| `/agents/[uuid]`           | "Agent \| Pense"                                          |
-| `/tools`                   | "Tools \| Pense"                                          |
-| `/tests`                   | "Tests \| Pense"                                          |
-| `/personas`                | "Personas \| Pense"                                       |
-| `/scenarios`               | "Scenarios \| Pense"                                      |
-| `/metrics`                 | "Metrics \| Pense"                                        |
-| `/simulations`             | "Simulations \| Pense"                                    |
-| `/simulations/[uuid]`      | "Simulation \| Pense"                                     |
-| `/simulations/[uuid]/runs` | "Simulation Run \| Pense"                                 |
-| `/stt`                     | "Speech to Text \| Pense"                                 |
-| `/stt/[uuid]`              | "STT Evaluation \| Pense"                                 |
-| `/stt/new`                 | "New STT Evaluation \| Pense"                             |
-| `/tts`                     | "Text to Speech \| Pense"                                 |
-| `/tts/[uuid]`              | "TTS Evaluation \| Pense"                                 |
-| `/tts/new`                 | "New TTS Evaluation \| Pense"                             |
-| `/login`                   | "Pense \| Scale conversational AI agents with confidence" |
+| `/agents`                  | "Agents \| Calibrate"                                         |
+| `/agents/[uuid]`           | "Agent \| Calibrate"                                          |
+| `/tools`                   | "Tools \| Calibrate"                                          |
+| `/tests`                   | "Tests \| Calibrate"                                          |
+| `/personas`                | "Personas \| Calibrate"                                       |
+| `/scenarios`               | "Scenarios \| Calibrate"                                      |
+| `/metrics`                 | "Metrics \| Calibrate"                                        |
+| `/simulations`             | "Simulations \| Calibrate"                                    |
+| `/simulations/[uuid]`      | "Simulation \| Calibrate"                                     |
+| `/simulations/[uuid]/runs` | "Simulation Run \| Calibrate"                                 |
+| `/stt`                     | "Speech to Text \| Calibrate"                                 |
+| `/stt/[uuid]`              | "STT Evaluation \| Calibrate"                                 |
+| `/stt/new`                 | "New STT Evaluation \| Calibrate"                             |
+| `/tts`                     | "Text to Speech \| Calibrate"                                 |
+| `/tts/[uuid]`              | "TTS Evaluation \| Calibrate"                                 |
+| `/tts/new`                 | "New TTS Evaluation \| Calibrate"                             |
+| `/login`                   | "Calibrate \| Scale conversational AI agents with confidence" |
 
 **useEffect for dynamic titles:**
 
@@ -2726,7 +2753,7 @@ Detail pages use `useEffect` to update titles with actual data names after loadi
 ```tsx
 useEffect(() => {
   if (data?.name) {
-    document.title = `${data.name} | Pense`;
+    document.title = `${data.name} | Calibrate`;
   }
 }, [data?.name]);
 ```
@@ -2737,9 +2764,9 @@ Pages with tabs (agent detail, simulation detail) include the active tab name in
 
 | Page                               | Title Format                                                                 |
 | ---------------------------------- | ---------------------------------------------------------------------------- |
-| `/agents/[uuid]`                   | `<Agent Name> - <Tab Name> \| Pense` (e.g., "My Agent - Tests \| Pense")     |
-| `/simulations/[uuid]`              | `<Simulation Name> - <Tab Name> \| Pense` (e.g., "My Sim - Config \| Pense") |
-| `/simulations/[uuid]/runs/[runId]` | `<Run Name> \| <Simulation Name> \| Pense`                                   |
+| `/agents/[uuid]`                   | `<Agent Name> - <Tab Name> \| Calibrate` (e.g., "My Agent - Tests \| Calibrate")     |
+| `/simulations/[uuid]`              | `<Simulation Name> - <Tab Name> \| Calibrate` (e.g., "My Sim - Config \| Calibrate") |
+| `/simulations/[uuid]/runs/[runId]` | `<Run Name> \| <Simulation Name> \| Calibrate`                                   |
 
 **Simulation run page fetches parent simulation name:**
 
@@ -2777,7 +2804,7 @@ window.history.replaceState(null, "", `?tab=${tabName}`);
 
 - **Middleware matcher**: Excludes static assets (`_next/static`, `_next/image`, `favicon.ico`, `*.svg`, `*.png`, `*.jpg`, `*.jpeg`, `*.gif`, `*.webp`, `*.ico`)
 - **Protected routes**: All routes except public routes require authentication
-- **Public routes** (no auth required): `/login`, `/api/auth/*`, `/debug*`
+- **Public routes** (no auth required): `/login`, `/about`, `/api/auth/*`, `/debug*`, `/docs*` (proxied to Mintlify via Vercel rewrite)
 - **Session access**: Use `useSession()` in client components, `auth()` in server components
 - **Token expiration**: Backend returns 401 when JWT expires; always handle this by calling `signOut({ callbackUrl: "/login" })`
 - **Import pattern**: Always import both `useSession` and `signOut` from `next-auth/react` when making API calls

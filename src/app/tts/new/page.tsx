@@ -12,7 +12,7 @@ export default function NewTTSEvaluationPage() {
 
   // Set page title
   useEffect(() => {
-    document.title = "New TTS Evaluation | Pense";
+    document.title = "New TTS Evaluation | Calibrate";
   }, []);
 
   const customHeader = (

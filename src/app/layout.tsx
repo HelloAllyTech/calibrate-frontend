@@ -29,7 +29,7 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "Pense",
+    default: "Calibrate",
     template: "%s",
   },
   description: "Evaluate and test voice agent components",

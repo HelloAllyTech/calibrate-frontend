@@ -43,12 +43,15 @@ const tabs = [
   },
 ];
 
+const WHATSAPP_INVITE_URL = "https://chat.whatsapp.com/JygDNcZ943a3VmZDXYMg5Z?mode=gi_t";
+const GITHUB_REPO_URL = "https://github.com/artpark-sahai-org/calibrate";
+
 export default function LoginPage() {
   const [activeTab, setActiveTab] = useState("stt");
 
   // Set page title
   useEffect(() => {
-    document.title = "Pense | Evaluation and testing framework for AI agents";
+    document.title = "Calibrate | Evaluation and testing framework for AI agents";
   }, []);
 
   const handleGoogleSignIn = () => {
@@ -69,32 +72,18 @@ export default function LoginPage() {
       {/* Navigation */}
       <nav className="flex items-center justify-between px-8 py-4 border-b border-gray-100">
         <div className="flex items-center gap-2">
-          <svg
-            className="w-8 h-8 text-black"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"
-            />
-          </svg>
+          <img src="/logo.svg" alt="Calibrate Logo" className="w-8 h-8" />
           <span className="text-xl font-bold tracking-tight text-black">
-            PENSE
+            Calibrate
           </span>
         </div>
 
         <div className="flex items-center gap-4">
           <a
-            href="https://discord.gg/pense"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-5 py-2.5 border border-gray-300 text-gray-900 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+            href="#join-community"
+            className="px-5 py-2.5 border border-gray-300 text-gray-900 font-medium rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
           >
-            Join Discord
+            Join
           </a>
           <button
             onClick={handleBookDemo}
@@ -246,7 +235,7 @@ export default function LoginPage() {
           </p>
           <div className="flex items-center justify-center gap-8 mb-16">
             <a
-              href="https://penseapp.vercel.app/docs/integrations"
+              href={`${process.env.NEXT_PUBLIC_APP_URL}/docs/integrations`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-gray-900 hover:text-gray-600 transition-colors"
@@ -329,9 +318,7 @@ export default function LoginPage() {
               <span className="text-gray-900 text-sm font-medium">Cohere</span>
             </div>
             <div className="flex items-center justify-center p-5 border-b border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">
-                Moonshot AI
-              </span>
+              <span className="text-gray-900 text-sm font-medium">Sarvam</span>
             </div>
             {/* Row 5 */}
             <div className="flex items-center justify-center p-5 border-r border-gray-200 bg-gray-50">
@@ -357,10 +344,10 @@ export default function LoginPage() {
             Proudly open source
           </h2>
           <p className="text-xl text-gray-500 mb-10">
-            Pense is committed to open source. <br />
+            Calibrate is committed to open source. <br />
             You can either use the hosted version or run it{" "}
             <a
-              href="https://github.com/artpark-sahai-org/agentloop"
+              href={GITHUB_REPO_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="underline hover:text-gray-900 transition-colors"
@@ -369,7 +356,7 @@ export default function LoginPage() {
             </a>
           </p>
           <a
-            href="https://github.com/artpark-sahai-org/agentloop"
+            href={GITHUB_REPO_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-3 px-6 py-4 bg-gray-900 border border-gray-900 rounded-xl hover:bg-gray-800 transition-colors"
@@ -386,7 +373,7 @@ export default function LoginPage() {
               />
             </svg>
             <span className="text-white font-medium">
-              artpark-sahai-org/agentloop
+              artpark-sahai-org/calibrate
             </span>
             <span className="text-gray-400">★</span>
           </a>
@@ -394,34 +381,40 @@ export default function LoginPage() {
       </div>
 
       {/* Join the Community Section */}
-      <div className="bg-white py-24 px-12">
+      <div id="join-community" className="bg-white py-24 px-12 scroll-mt-20">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-medium text-gray-900 mb-6 leading-[1.1] tracking-[-0.02em]">
             Join the community
           </h2>
           <p className="text-xl text-gray-500 mb-10">
-            Talk to the team building Pense to get your questions answered and
+            Talk to the team building Calibrate to get your questions answered and
             shape our roadmap
           </p>
-          <div className="flex items-center justify-center gap-6">
-            <a
-              href="https://x.com/artikiagents"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-lg text-gray-900 hover:bg-gray-50 transition-colors"
-            >
-              Follow @artikiagents
-              <span>→</span>
-            </a>
-            <a
-              href="https://linkedin.com/company/artpark"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors"
-            >
-              Connect on LinkedIn
-              <span>→</span>
-            </a>
+          <div className="flex flex-col items-center gap-6">
+            <div className="flex items-center justify-center gap-4">
+              <a
+                href={WHATSAPP_INVITE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-lg text-gray-900 hover:bg-gray-50 transition-colors"
+              >
+                <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                Join WhatsApp
+              </a>
+              <a
+                href="https://discord.gg/xCJ55Ban"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-lg text-gray-900 hover:bg-gray-50 transition-colors"
+              >
+                <svg className="w-5 h-5 text-indigo-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z"/>
+                </svg>
+                Join Discord
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -430,7 +423,7 @@ export default function LoginPage() {
       <div className="bg-gray-50 py-20 px-12">
         <div className="max-w-6xl mx-auto text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-medium text-gray-900 mb-4 tracking-[-0.02em]">
-            Start testing with Pense today
+            Start testing with Calibrate today
           </h2>
           <p className="text-xl text-gray-500">
             Choose your path to start building better AI agents
@@ -445,7 +438,7 @@ export default function LoginPage() {
             </h3>
             <div className="space-y-4">
               <a
-                href="https://penseapp.vercel.app/docs/quickstart/speech-to-text"
+                href={`${process.env.NEXT_PUBLIC_APP_URL}/docs/quickstart/speech-to-text`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-start gap-4 p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
@@ -479,7 +472,7 @@ export default function LoginPage() {
               </a>
 
               <a
-                href="https://penseapp.vercel.app/docs/quickstart/text-to-text"
+                href={`${process.env.NEXT_PUBLIC_APP_URL}/docs/quickstart/text-to-text`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-start gap-4 p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
@@ -513,7 +506,7 @@ export default function LoginPage() {
               </a>
 
               <a
-                href="https://penseapp.vercel.app/docs/quickstart/text-to-speech"
+                href={`${process.env.NEXT_PUBLIC_APP_URL}/docs/quickstart/text-to-speech`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-start gap-4 p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
@@ -547,7 +540,7 @@ export default function LoginPage() {
               </a>
 
               <a
-                href="https://penseapp.vercel.app/docs/quickstart/simulations"
+                href={`${process.env.NEXT_PUBLIC_APP_URL}/docs/quickstart/simulations`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-start gap-4 p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
@@ -617,7 +610,7 @@ export default function LoginPage() {
                     Watch the demo
                   </div>
                   <div className="text-sm text-gray-500">
-                    See Pense in action with a guided walkthrough
+                    See Calibrate in action with a guided walkthrough
                   </div>
                 </div>
                 <div className="text-gray-400 group-hover:text-gray-900 transition-colors">
@@ -626,7 +619,7 @@ export default function LoginPage() {
               </a>
 
               <a
-                href="https://penseapp.vercel.app/docs/core-concepts"
+                href={`${process.env.NEXT_PUBLIC_APP_URL}/docs/core-concepts`}
                 className="flex items-start gap-4 p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
               >
                 <div className="text-gray-400 mt-1">
@@ -649,7 +642,7 @@ export default function LoginPage() {
                     Read documentation
                   </div>
                   <div className="text-sm text-gray-500">
-                    Understand the core concepts underpinning Pense
+                    Understand the core concepts underpinning Calibrate
                   </div>
                 </div>
                 <div className="text-gray-400 group-hover:text-gray-900 transition-colors">
@@ -766,7 +759,46 @@ export default function LoginPage() {
       {/* Footer */}
       <footer className="bg-gray-50 text-gray-500 py-16 px-12 border-t border-gray-200">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            {/* Company Column */}
+            <div className="border-l border-gray-300 pl-8 flex flex-col">
+              <h3 className="text-gray-400 text-sm tracking-[0.2em] uppercase mb-6">
+                Company
+              </h3>
+              <ul className="space-y-4">
+                <li>
+                  <a
+                    href="/about"
+                    className="hover:text-gray-900 transition-colors"
+                  >
+                    About Us
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://docs.google.com/document/d/e/2PACX-1vRk2LZDD3ZtMHBocQVl5Qh14PtThP2nB1DFUsC0_9w028yx6LrDKHE77IgOxY-PojVgtyGp-hClts8l/pub"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-gray-900 transition-colors"
+                  >
+                    Privacy Policy
+                  </a>
+                </li>
+              </ul>
+              <p className="mt-auto pt-8 text-xs text-gray-400">
+                Supported by{" "}
+                <a
+                  href="https://artpark.in"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-gray-600 transition-colors"
+                >
+                  ARTPARK
+                </a>{" "}
+                @IISc
+              </p>
+            </div>
+
             {/* Resources Column */}
             <div className="border-l border-gray-300 pl-8">
               <h3 className="text-gray-400 text-sm tracking-[0.2em] uppercase mb-6">
@@ -775,7 +807,7 @@ export default function LoginPage() {
               <ul className="space-y-4">
                 <li>
                   <a
-                    href="https://penseapp.vercel.app/docs"
+                    href={`${process.env.NEXT_PUBLIC_APP_URL}/docs`}
                     className="hover:text-gray-900 transition-colors"
                   >
                     Documentation
@@ -783,7 +815,7 @@ export default function LoginPage() {
                 </li>
                 <li>
                   <a
-                    href="https://penseapp.vercel.app/docs/python-sdk/overview"
+                    href={`${process.env.NEXT_PUBLIC_APP_URL}/docs/python-sdk/overview`}
                     className="hover:text-gray-900 transition-colors"
                   >
                     Python SDK
@@ -791,7 +823,7 @@ export default function LoginPage() {
                 </li>
                 <li>
                   <a
-                    href="https://penseapp.vercel.app/docs/cli/overview"
+                    href={`${process.env.NEXT_PUBLIC_APP_URL}/docs/cli/overview`}
                     className="hover:text-gray-900 transition-colors"
                   >
                     CLI
@@ -806,15 +838,6 @@ export default function LoginPage() {
                     Terms of Service
                   </a>
                 </li>
-                <li>
-                  <a
-                    href="https://docs.google.com/document/d/e/2PACX-1vRk2LZDD3ZtMHBocQVl5Qh14PtThP2nB1DFUsC0_9w028yx6LrDKHE77IgOxY-PojVgtyGp-hClts8l/pub"
-                    target="_blank"
-                    className="hover:text-gray-900 transition-colors"
-                  >
-                    Privacy Policy
-                  </a>
-                </li>
               </ul>
             </div>
 
@@ -826,7 +849,17 @@ export default function LoginPage() {
               <ul className="space-y-4">
                 <li>
                   <a
-                    href="https://discord.gg/pense"
+                    href={WHATSAPP_INVITE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-gray-900 transition-colors"
+                  >
+                    WhatsApp
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://discord.gg/xCJ55Ban"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-gray-900 transition-colors"

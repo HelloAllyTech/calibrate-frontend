@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "TTS Evaluation | Pense",
+  title: "TTS Evaluation | Calibrate",
 };
 
 export default function TTSDetailLayout({

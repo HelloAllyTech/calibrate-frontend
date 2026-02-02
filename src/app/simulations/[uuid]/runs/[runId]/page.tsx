@@ -213,11 +213,11 @@ export default function SimulationRunPage() {
   // Set page title when run data and simulation name are loaded
   useEffect(() => {
     if (runData?.name && simulationName) {
-      document.title = `${runData.name} | ${simulationName} | Pense`;
+      document.title = `${runData.name} | ${simulationName} | Calibrate`;
     } else if (runData?.name) {
-      document.title = `${runData.name} | Pense`;
+      document.title = `${runData.name} | Calibrate`;
     } else {
-      document.title = "Simulation Run | Pense";
+      document.title = "Simulation Run | Calibrate";
     }
   }, [runData?.name, simulationName]);
 

@@ -39,7 +39,7 @@ export default function TTSPage() {
 
   // Set page title
   useEffect(() => {
-    document.title = "Text to Speech | Pense";
+    document.title = "Text to Speech | Calibrate";
   }, []);
 
   // Fetch TTS jobs

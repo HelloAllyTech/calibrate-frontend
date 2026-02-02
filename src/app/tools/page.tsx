@@ -25,7 +25,7 @@ export default function ToolsPage() {
 
   // Set page title
   useEffect(() => {
-    document.title = "Tools | Pense";
+    document.title = "Tools | Calibrate";
   }, []);
   const [addToolSidebarOpen, setAddToolSidebarOpen] = useState(false);
   const [newToolName, setNewToolName] = useState("");

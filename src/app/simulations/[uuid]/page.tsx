@@ -104,9 +104,9 @@ export default function SimulationDetailPage() {
   useEffect(() => {
     if (simulation?.name) {
       const tabName = tabDisplayNames[activeTab];
-      document.title = `${simulation.name} - ${tabName} | Pense`;
+      document.title = `${simulation.name} - ${tabName} | Calibrate`;
     } else {
-      document.title = "Simulation | Pense";
+      document.title = "Simulation | Calibrate";
     }
   }, [simulation?.name, activeTab]);
 

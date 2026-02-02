@@ -26,7 +26,7 @@ export default function MetricsPage() {
 
   // Set page title
   useEffect(() => {
-    document.title = "Metrics | Pense";
+    document.title = "Metrics | Calibrate";
   }, []);
   const [metricsError, setMetricsError] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);

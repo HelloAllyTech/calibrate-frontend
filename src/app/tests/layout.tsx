@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Tests | Pense",
+  title: "Tests | Calibrate",
 };
 
 export default function TestsLayout({

@@ -85,7 +85,7 @@ export default function TTSEvaluationDetailPage() {
 
   // Set page title
   useEffect(() => {
-    document.title = "TTS Evaluation | Pense";
+    document.title = "TTS Evaluation | Calibrate";
   }, []);
 
   // Cleanup polling interval on unmount

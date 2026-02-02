@@ -25,7 +25,7 @@ const DEFAULT_CHARACTERISTICS = `You are Rajesh, a 45-year-old farmer from rural
 export default function PersonasPage() {
   // Set page title
   useEffect(() => {
-    document.title = "Personas | Pense";
+    document.title = "Personas | Calibrate";
   }, []);
   const router = useRouter();
   const { data: session } = useSession();

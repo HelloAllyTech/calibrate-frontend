@@ -12,7 +12,7 @@ export default function NewSTTEvaluationPage() {
 
   // Set page title
   useEffect(() => {
-    document.title = "New STT Evaluation | Pense";
+    document.title = "New STT Evaluation | Calibrate";
   }, []);
 
   const customHeader = (

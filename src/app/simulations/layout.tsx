@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Simulations | Pense",
+  title: "Simulations | Calibrate",
 };
 
 export default function SimulationsLayout({

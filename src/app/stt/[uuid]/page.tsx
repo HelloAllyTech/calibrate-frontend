@@ -96,7 +96,7 @@ export default function STTEvaluationDetailPage() {
 
   // Set page title
   useEffect(() => {
-    document.title = "STT Evaluation | Pense";
+    document.title = "STT Evaluation | Calibrate";
   }, []);
 
   // Cleanup polling interval on unmount

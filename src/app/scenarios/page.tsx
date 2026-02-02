@@ -26,7 +26,7 @@ export default function ScenariosPage() {
 
   // Set page title
   useEffect(() => {
-    document.title = "Scenarios | Pense";
+    document.title = "Scenarios | Calibrate";
   }, []);
   const [scenarios, setScenarios] = useState<ScenarioData[]>([]);
   const [scenariosLoading, setScenariosLoading] = useState(true);

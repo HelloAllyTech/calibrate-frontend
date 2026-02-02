@@ -8,7 +8,7 @@ import { Agents } from "@/components/Agents";
 export default function AgentsPage() {
   // Set page title
   useEffect(() => {
-    document.title = "Agents | Pense";
+    document.title = "Agents | Calibrate";
   }, []);
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(true);

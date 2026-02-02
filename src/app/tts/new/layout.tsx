@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "New TTS Evaluation | Pense",
+  title: "New TTS Evaluation | Calibrate",
 };
 
 export default function NewTTSLayout({

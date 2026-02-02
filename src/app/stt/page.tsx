@@ -40,7 +40,7 @@ export default function STTPage() {
 
   // Set page title
   useEffect(() => {
-    document.title = "Speech to Text | Pense";
+    document.title = "Speech to Text | Calibrate";
   }, []);
 
   // Fetch STT jobs

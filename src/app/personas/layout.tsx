@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Personas | Pense",
+  title: "Personas | Calibrate",
 };
 
 export default function PersonasLayout({

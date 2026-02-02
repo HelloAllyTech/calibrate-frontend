@@ -1,5 +1,5 @@
 // Usage limits for various features
-// Contact the Pense team to extend these limits
+// Contact the Calibrate team to extend these limits
 
 export const LIMITS = {
   // TTS and STT row upload limits
