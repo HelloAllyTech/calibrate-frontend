@@ -1,5 +1,7 @@
 "use client";
 
+import { signIn } from "next-auth/react";
+
 type LandingHeaderProps = {
   /** Whether the logo should link to /login (for non-login pages) */
   showLogoLink?: boolean;
@@ -11,6 +13,10 @@ export function LandingHeader({
   showLogoLink = false,
   talkToUsHref = "#join-community",
 }: LandingHeaderProps) {
+  const handleGoogleSignIn = () => {
+    signIn("google");
+  };
+
   const LogoContent = (
     <>
       <img src="/logo.svg" alt="Calibrate Logo" className="w-8 h-8" />
@@ -35,16 +41,22 @@ export function LandingHeader({
           href={process.env.NEXT_PUBLIC_DOCS_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-5 py-2.5 border border-gray-300 text-gray-900 font-medium rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+          className="text-gray-600 font-medium hover:text-gray-900 transition-colors cursor-pointer"
         >
-          Read Documentation
+          Documentation
         </a>
         <a
           href={talkToUsHref}
-          className="px-5 py-2.5 bg-black text-white font-medium rounded-lg hover:bg-gray-800 transition-colors cursor-pointer"
+          className="px-5 py-2.5 border border-gray-300 text-gray-900 font-medium rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
         >
           Talk to us
         </a>
+        <button
+          onClick={handleGoogleSignIn}
+          className="px-5 py-2.5 bg-black text-white font-medium rounded-lg hover:bg-gray-800 transition-colors cursor-pointer"
+        >
+          Login
+        </button>
       </div>
     </nav>
   );

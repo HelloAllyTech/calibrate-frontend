@@ -462,6 +462,7 @@ export default function TTSEvaluationDetailPage() {
                                         })
                                       )}
                                       colorMap={colorMap}
+                                      yDomain={[0, 1]}
                                     />
                                     <LeaderboardBarChart
                                       title="TTFB (s)"

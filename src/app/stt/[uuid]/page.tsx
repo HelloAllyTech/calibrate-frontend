@@ -532,6 +532,7 @@ export default function STTEvaluationDetailPage() {
                                         })
                                       )}
                                       colorMap={colorMap}
+                                      yDomain={[0, 1]}
                                     />
                                   </div>
 
@@ -547,6 +548,7 @@ export default function STTEvaluationDetailPage() {
                                         })
                                       )}
                                       colorMap={colorMap}
+                                      yDomain={[0, 1]}
                                     />
                                   </div>
                                 </div>

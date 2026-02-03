@@ -598,7 +598,8 @@ Both the login page and about page use shared header/footer components to avoid 
 
 **`LandingHeader`** (`src/components/LandingHeader.tsx`):
 - Props: `showLogoLink` (boolean, whether logo links to /login), `talkToUsHref` (string, defaults to `#join-community`)
-- Contains: Logo, "Read Documentation" button (outlined, links to docs), "Talk to us" button (filled, links to community section)
+- Contains: Logo, "Documentation" text link (tertiary), "Talk to us" button (outlined/secondary), "Get started" button (filled/primary)
+- Uses `signIn` from `next-auth/react` for Google authentication
 
 **`LandingFooter`** (`src/components/LandingFooter.tsx`):
 - No props - self-contained with all links and constants
@@ -611,8 +612,8 @@ The login page serves as a marketing-style landing page with a consistent light 
 
 **Layout (top to bottom):**
 
-1. **Navigation bar**: Uses `<LandingHeader />` component
-2. **Hero section**: Large headline, subtitle, centered "Continue with Google" CTA
+1. **Navigation bar**: Uses `<LandingHeader />` component with "Continue with Google" as primary CTA
+2. **Hero section**: Large headline and subtitle (no CTA button - moved to header)
 3. **Feature Tabs section**: Tab switcher with feature previews
 4. **Integrations section**: Provider grid showing supported STT/TTS/LLM providers
 5. **Open Source section**: GitHub link and self-hosting info (`bg-gray-50`)
@@ -717,9 +718,10 @@ Uses `<LandingFooter />` component. See "Shared Landing Components" section abov
 
 **CTA Buttons:**
 
-- "Continue with Google" - Main action in hero section and final CTA section, triggers `signIn("google")`
-- "Read Documentation" - Header button (outlined style), opens `process.env.NEXT_PUBLIC_DOCS_URL` in new tab
-- "Talk to us" - Header button (filled style), scrolls to `#join-community` section
+- "Get started" - Primary action in header (filled/black style), triggers `signIn("google")`
+- "Continue with Google" - Primary action in final CTA section (white style on dark background), triggers `signIn("google")`
+- "Documentation" - Header text link (tertiary style, gray text), opens `process.env.NEXT_PUBLIC_DOCS_URL` in new tab
+- "Talk to us" - Header button (outlined/secondary style), scrolls to `#join-community` section
 
 ### About Page (`/about`)
 
