@@ -279,7 +279,7 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
     - **Method**: Dropdown for HTTP method (GET, POST, PUT, PATCH, DELETE) - default: POST
     - **URL**: Text input for webhook endpoint (required, validated as valid HTTP/HTTPS URL)
     - **Response timeout**: Range slider (1-120 seconds, default: 20) with hover tooltip showing current value
-  - **Headers section**: Add custom HTTP headers with Name and Value fields (vertically stacked in each card). Delete button uses red styling (`text-red-500 bg-red-500/10`) matching ParameterCard
+  - **Headers section**: Add custom HTTP headers with Name and Value fields (vertically stacked in each card). Both fields are required when a header is added - shows red asterisk in labels and red border on validation failure. Delete button uses red styling (`text-red-500 bg-red-500/10`) matching ParameterCard
   - **Query parameters section**: Uses the same `ParameterCard` component as structured output Parameters section - identical fields and behavior (data type, name, required, description, nested object/array support)
   - **Body parameters section** (only for POST, PUT, PATCH methods):
     - Outer container (`bg-muted/50`) with section header and description
@@ -314,7 +314,10 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
 
 - **Features**:
   - Loads existing tool data when `editingToolUuid` is provided (including webhook config, headers, query parameters, body parameters if present)
-  - Validates form fields and nested parameters recursively
+  - **Validation by tool type**:
+    - **Structured output tools**: Validates `parameters` array via `hasInvalidParameters` helper
+    - **Webhook tools**: Validates URL, headers (via `hasInvalidHeaders`), `queryParameters`, and for POST/PUT/PATCH: `bodyDescription` and `bodyParameters`
+  - All string values are trimmed before submission (name, description, URL, header names/values)
   - Creates/updates tools via API with config structure:
     ```javascript
     config: {

@@ -850,13 +850,23 @@ export function AddToolDialog({
   const createTool = async () => {
     setValidationAttempted(true);
     if (!toolName.trim() || !toolDescription.trim()) return;
-    // Validate webhook URL if webhook type
-    if (toolType === "webhook" && !isValidUrl(webhookUrl)) return;
-    // Validate headers - if any header exists, both name and value are required
-    if (toolType === "webhook" && webhookHeaders.length > 0 && hasInvalidHeaders(webhookHeaders)) return;
-    // Validate body description for POST/PUT/PATCH methods
-    if (toolType === "webhook" && ["POST", "PUT", "PATCH"].includes(webhookMethod) && !bodyDescription.trim()) return;
-    if (hasInvalidParameters(parameters)) return;
+    
+    if (toolType === "webhook") {
+      // Validate webhook URL
+      if (!isValidUrl(webhookUrl)) return;
+      // Validate headers - if any header exists, both name and value are required
+      if (webhookHeaders.length > 0 && hasInvalidHeaders(webhookHeaders)) return;
+      // Validate query parameters
+      if (queryParameters.length > 0 && hasInvalidParameters(queryParameters)) return;
+      // Validate body description and parameters for POST/PUT/PATCH methods
+      if (["POST", "PUT", "PATCH"].includes(webhookMethod)) {
+        if (!bodyDescription.trim()) return;
+        if (bodyParameters.length > 0 && hasInvalidParameters(bodyParameters)) return;
+      }
+    } else {
+      // Validate structured output parameters
+      if (hasInvalidParameters(parameters)) return;
+    }
 
     try {
       setIsCreating(true);
@@ -883,7 +893,7 @@ export function AddToolDialog({
             .filter((h) => h.name.trim())
             .map((h) => ({
               name: h.name.trim(),
-              value: h.value,
+              value: h.value.trim(),
             })),
           queryParameters: buildParametersConfig(queryParameters),
           // Only include body for methods that support it
@@ -936,13 +946,23 @@ export function AddToolDialog({
   const updateTool = async () => {
     setValidationAttempted(true);
     if (!toolName.trim() || !toolDescription.trim() || !editingToolUuid) return;
-    // Validate webhook URL if webhook type
-    if (toolType === "webhook" && !isValidUrl(webhookUrl)) return;
-    // Validate headers - if any header exists, both name and value are required
-    if (toolType === "webhook" && webhookHeaders.length > 0 && hasInvalidHeaders(webhookHeaders)) return;
-    // Validate body description for POST/PUT/PATCH methods
-    if (toolType === "webhook" && ["POST", "PUT", "PATCH"].includes(webhookMethod) && !bodyDescription.trim()) return;
-    if (hasInvalidParameters(parameters)) return;
+    
+    if (toolType === "webhook") {
+      // Validate webhook URL
+      if (!isValidUrl(webhookUrl)) return;
+      // Validate headers - if any header exists, both name and value are required
+      if (webhookHeaders.length > 0 && hasInvalidHeaders(webhookHeaders)) return;
+      // Validate query parameters
+      if (queryParameters.length > 0 && hasInvalidParameters(queryParameters)) return;
+      // Validate body description and parameters for POST/PUT/PATCH methods
+      if (["POST", "PUT", "PATCH"].includes(webhookMethod)) {
+        if (!bodyDescription.trim()) return;
+        if (bodyParameters.length > 0 && hasInvalidParameters(bodyParameters)) return;
+      }
+    } else {
+      // Validate structured output parameters
+      if (hasInvalidParameters(parameters)) return;
+    }
 
     try {
       setIsCreating(true);
@@ -969,7 +989,7 @@ export function AddToolDialog({
             .filter((h) => h.name.trim())
             .map((h) => ({
               name: h.name.trim(),
-              value: h.value,
+              value: h.value.trim(),
             })),
           queryParameters: buildParametersConfig(queryParameters),
           // Only include body for methods that support it
