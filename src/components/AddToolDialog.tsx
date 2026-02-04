@@ -580,6 +580,13 @@ export function AddToolDialog({
     return false;
   };
 
+  const hasInvalidHeaders = (headers: WebhookHeader[]): boolean => {
+    for (const header of headers) {
+      if (!header.name.trim() || !header.value.trim()) return true;
+    }
+    return false;
+  };
+
   // JSON Schema helpers
   const parameterToJsonSchema = (param: Parameter): Record<string, any> => {
     const schema: Record<string, any> = {
@@ -845,6 +852,8 @@ export function AddToolDialog({
     if (!toolName.trim() || !toolDescription.trim()) return;
     // Validate webhook URL if webhook type
     if (toolType === "webhook" && !isValidUrl(webhookUrl)) return;
+    // Validate headers - if any header exists, both name and value are required
+    if (toolType === "webhook" && webhookHeaders.length > 0 && hasInvalidHeaders(webhookHeaders)) return;
     // Validate body description for POST/PUT/PATCH methods
     if (toolType === "webhook" && ["POST", "PUT", "PATCH"].includes(webhookMethod) && !bodyDescription.trim()) return;
     if (hasInvalidParameters(parameters)) return;
@@ -929,6 +938,8 @@ export function AddToolDialog({
     if (!toolName.trim() || !toolDescription.trim() || !editingToolUuid) return;
     // Validate webhook URL if webhook type
     if (toolType === "webhook" && !isValidUrl(webhookUrl)) return;
+    // Validate headers - if any header exists, both name and value are required
+    if (toolType === "webhook" && webhookHeaders.length > 0 && hasInvalidHeaders(webhookHeaders)) return;
     // Validate body description for POST/PUT/PATCH methods
     if (toolType === "webhook" && ["POST", "PUT", "PATCH"].includes(webhookMethod) && !bodyDescription.trim()) return;
     if (hasInvalidParameters(parameters)) return;
@@ -1317,7 +1328,7 @@ export function AddToolDialog({
                       {/* Name */}
                       <div>
                         <label className="block text-sm font-medium mb-2">
-                          Name
+                          Name <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
@@ -1331,15 +1342,19 @@ export function AddToolDialog({
                               )
                             );
                           }}
-                          placeholder="e.g., Authorization"
-                          className="w-full h-10 px-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                          placeholder="e.g. Authorization"
+                          className={`w-full h-10 px-4 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent ${
+                            validationAttempted && !header.name.trim()
+                              ? "border-red-500"
+                              : "border-border"
+                          }`}
                         />
                       </div>
 
                       {/* Value */}
                       <div>
                         <label className="block text-sm font-medium mb-2">
-                          Value
+                          Value <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
@@ -1354,7 +1369,11 @@ export function AddToolDialog({
                             );
                           }}
                           placeholder="Header value"
-                          className="w-full h-10 px-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                          className={`w-full h-10 px-4 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent ${
+                            validationAttempted && !header.value.trim()
+                              ? "border-red-500"
+                              : "border-border"
+                          }`}
                         />
                       </div>
 
