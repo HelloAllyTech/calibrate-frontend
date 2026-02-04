@@ -10286,11 +10286,18 @@ Status: **completed**
 ---
 
 <think><details><summary>Thought Process</summary>
-Good, no linter errors. The changes are complete. The tool response now:1. Checks if `response.status === "error"`2. If error: shows a warning</details></think>
+Good, no linter errors. The changes are complete. The tool response now:1. Checks if `response.status === "error"`2. If error: shows a warning icon, red "Tool Response Error" label, red border, and red text for the JSON3. If not error: shows normal styling with "Agent Tool Response" label</details></think>
 
 ---
 
+Done. The simulation transcript now checks if the webhook tool response has `status: "error"`. When an error is detected:
 
+- Shows a warning icon (triangle with exclamation)
+- Displays "Tool Response Error" label in red
+- Red border around the response container (`border-red-500`)
+- JSON content displayed in red text (`text-red-400`)
+
+Normal responses continue to show as before with the standard styling.
 
 ---
 
@@ -10313,7 +10320,8 @@ Keep the file organized and don't remove existing relevant context.
 
 _**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
 
-
+<think><details><summary>Thought Process</summary>
+I made code changes to the simulation transcript to show error styling for webhook tool responses with `status: "error"`. Let me search for relevant sections in app-details.md to update.</details></think>
 
 ---
 
@@ -10321,7 +10329,102 @@ _**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
 <details>
 <summary>Tool use: **ripgrep_raw_search**</summary>
 
-Status: **loading**
+
+Parameters:
+
+```json
+{
+  "pattern": "Tool response display|webhook_response|Agent Tool Response",
+  "path": "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md",
+  "contextBefore": 2,
+  "contextAfter": 3,
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "Tool response display|webhook_response|Agent Tool Response",
+    "path": "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md",
+    "outputMode": "content",
+    "workspaceResults": {
+      "/Users/aman/Documents/repos/artpark/pense-frontend": {
+        "content": {
+          "matches": [
+            {
+              "file": ".cursor/rules/app-details.md",
+              "matches": [
+                {
+                  "lineNumber": 590,
+                  "content": "  - **Processing indicator**: Shows a yellow spinner at the bottom of transcript while metrics are being fetched (when &#96;evaluation_results&#96; is null but transcript has content)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 591,
+                  "content": "  - **Graceful null handling**: All transcript accesses use optional chaining (&#96;transcript?.length ?? 0&#96;, &#96;transcript ?? []&#96;) since transcript can be undefined during intermediate results",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 592,
+                  "content": "  - **Transcript filtering**: Entries are filtered before display - &#96;role: \"end_reason\"&#96; is always filtered out, and &#96;role: \"tool\"&#96; messages are only included if they have valid JSON content with &#96;type: \"webhook_response\"&#96; (other tool messages like \"COMPLETED\" are hidden)"
+                },
+                {
+                  "lineNumber": 593,
+                  "content": "  - **End reason handling**: When the last entry in the full transcript has &#96;role: \"end_reason\"&#96; and &#96;content: \"max_turns\"&#96;, a yellow informational banner is shown at the bottom: \"Conversation ended: Maximum number of agent turns reached\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 594,
+                  "content": "  - **Stable audio keys**: All audio elements use &#96;key={audioUrl}&#96; to prevent React from remounting them during polling re-renders (avoids audio restart/reload)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 595,
+                  "content": "  - **Presigned URL refresh on error**: Audio elements include &#96;onError={refreshRunData}&#96; handler to automatically fetch fresh presigned URLs when they expire. The &#96;refreshRunData&#96; callback clears &#96;frozenSimulationRef&#96; before updating state so new URLs are used instead of stale frozen data",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 598,
+                  "content": "  - Role-based message styling",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 599,
+                  "content": "  - **Tool call details as form fields**: Arguments are displayed as labeled form fields (matching AddTestDialog style). Each arg key (body, query) is shown as a field label, with its value displayed as pretty-printed JSON. Headers are filtered out and not shown",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 600,
+                  "content": "  - **Tool response display** (for webhook calls): Only shows &#96;role: \"tool\"&#96; messages where content is valid JSON with &#96;type: \"webhook_response\"&#96;. Displays the &#96;response&#96; object as **pretty-printed JSON** in a monospace &#96;&lt;pre&gt;&#96; block with \"Agent Tool Response\" header (intentionally different from tool call form fields to distinguish input vs output)"
+                },
+                {
+                  "lineNumber": 601,
+                  "content": "  - Per-message audio players for voice simulations (matching &#96;audio_urls&#96;)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 602,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 603,
+                  "content": "- **Latency Metrics** (for voice simulations, in Performance/Latency tabs):",
+                  "isContextLine": true
+                }
+              ]
+            }
+          ],
+          "totalLines": 12,
+          "totalMatchedLines": 2
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
 
 
 </details>
@@ -10329,7 +10432,8 @@ Status: **loading**
 
 ---
 
-
+<think><details><summary>Thought Process</summary>
+Found the relevant section. I need to update the "Tool response display" bullet point to include information about error status handling.</details></think>
 
 ---
 
@@ -10337,19 +10441,7904 @@ Status: **loading**
 
 <details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
 
-Status: **loading**
-
 </details>
 
 </tool-use>
 
 ---
 
-
+<think><details><summary>Thought Process</summary>
+Good, the documentation has been updated to describe the new error handling behavior for webhook tool responses in the simulation transcript.</details></think>
 
 ---
 
+Updated the documentation to describe the new error handling for webhook tool responses - when `response.status === "error"`, displays with warning icon, red "Tool Response Error" label, red border, and red JSON text.
 
+---
+
+_**User**_
+
+git diff main...
+
+Run this and summarise the actual code changes ignoring documentation changes
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants me to run `git diff main...` to see the changes from the main branch and summarize the actual code changes, ignoring documentation changes.</details></think>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2">
+<details><summary>Tool use: **run_terminal_command_v2** • Run command: git diff main... --stat</summary>
+
+```bash
+git diff main... --stat
+```
+
+```
+ .cursor/rules/app-details.md                       |   273 +-
+ ...2-04_01-03Z-main-page-add-x-button-placement.md | 26972 +++++++++++++++++++
+ ...13Z-run-test-button-visibility-in-light-mode.md |  9773 +++++++
+ ...04_07-29Z-tool-call-parameter-display-format.md | 10355 +++++++
+ src/app/metrics/page.tsx                           |    30 +-
+ src/app/personas/page.tsx                          |    32 +-
+ src/app/scenarios/page.tsx                         |    32 +-
+ src/app/simulations/[uuid]/runs/[runId]/page.tsx   |   190 +-
+ src/app/simulations/page.tsx                       |    24 +-
+ src/app/stt/page.tsx                               |    28 +-
+ src/app/tests/page.tsx                             |    32 +-
+ src/app/tools/page.tsx                             |  1127 +-
+ src/app/tts/page.tsx                               |    28 +-
+ src/components/AddTestDialog.tsx                   |   473 +-
+ src/components/AddToolDialog.tsx                   |  1588 ++
+ src/components/Agents.tsx                          |    14 +-
+ src/components/DataFieldPropertyCard.tsx           |   200 +-
+ src/components/ParameterCard.tsx                   |    52 +-
+ src/components/RunTestDialog.tsx                   |    28 +-
+ src/components/ToolPicker.tsx                      |     8 +-
+ .../agent-tabs/DataExtractionTabContent.tsx        |    47 +-
+ src/components/agent-tabs/TestsTabContent.tsx      |     4 +
+ src/components/agent-tabs/ToolsTabContent.tsx      |    13 +-
+ src/components/test-results/shared.tsx             |    67 +-
+ src/components/ui/NestedContainer.tsx              |    41 +
+ src/components/ui/index.ts                         |     3 +-
+ 26 files changed, 49886 insertions(+), 1548 deletions(-)
+
+```
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me get the actual code diff excluding the documentation and .specstory files.</details></think>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2">
+<details><summary>Tool use: **run_terminal_command_v2** • Run command: git diff main... -- ':!.cursor/rules/' ':!.specstory/' --no-color | head -2000</summary>
+
+```bash
+git diff main... -- ':!.cursor/rules/' ':!.specstory/' --no-color | head -2000
+```
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+The command produced no output. Let me try a different approach.</details></think>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2">
+<details><summary>Tool use: **run_terminal_command_v2** • Run command: git diff main... --name-only | grep -v '.cursor/rules' | grep -v '.specstory' | head -30</summary>
+
+```bash
+git diff main... --name-only | grep -v '.cursor/rules' | grep -v '.specstory' | head -30
+```
+
+```
+src/app/metrics/page.tsx
+src/app/personas/page.tsx
+src/app/scenarios/page.tsx
+src/app/simulations/[uuid]/runs/[runId]/page.tsx
+src/app/simulations/page.tsx
+src/app/stt/page.tsx
+src/app/tests/page.tsx
+src/app/tools/page.tsx
+src/app/tts/page.tsx
+src/components/AddTestDialog.tsx
+src/components/AddToolDialog.tsx
+src/components/Agents.tsx
+src/components/DataFieldPropertyCard.tsx
+src/components/ParameterCard.tsx
+src/components/RunTestDialog.tsx
+src/components/ToolPicker.tsx
+src/components/agent-tabs/DataExtractionTabContent.tsx
+src/components/agent-tabs/TestsTabContent.tsx
+src/components/agent-tabs/ToolsTabContent.tsx
+src/components/test-results/shared.tsx
+src/components/ui/NestedContainer.tsx
+src/components/ui/index.ts
+
+```
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good, now let me get a summary diff for the key files.</details></think>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2">
+<details><summary>Tool use: **run_terminal_command_v2** • Run command: git diff main... -- src/components/AddTestDialog.tsx src/components/AddToolDialog.tsx src/components/test-results/shared.tsx src/app/simulations/[uuid]/runs/[runId]/page.tsx src/components/ui/NestedContainer.tsx --stat</summary>
+
+```bash
+git diff main... -- src/components/AddTestDialog.tsx src/components/AddToolDialog.tsx src/components/test-results/shared.tsx src/app/simulations/[uuid]/runs/[runId]/page.tsx src/components/ui/NestedContainer.tsx --stat
+```
+
+```
+(eval):1: no matches found: src/app/simulations/[uuid]/runs/[runId]/page.tsx
+
+```
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I need to escape the brackets. Let me try a different approach - just read the diff summary.</details></think>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2">
+<details><summary>Tool use: **run_terminal_command_v2** • Run command: git diff main... -- src/components/AddTestDialog.tsx --stat && git diff main... -- src/components/AddToolDialog.tsx --stat && git diff main... -- src/components/test-results/shared.tsx --stat && git diff main... -- src/components/ui/NestedContainer.tsx --stat</summary>
+
+```bash
+git diff main... -- src/components/AddTestDialog.tsx --stat && git diff main... -- src/components/AddToolDialog.tsx --stat && git diff main... -- src/components/test-results/shared.tsx --stat && git diff main... -- src/components/ui/NestedContainer.tsx --stat
+```
+
+```
+diff --git a/src/components/AddTestDialog.tsx b/src/components/AddTestDialog.tsx
+index 08a518e..b791aff 100644
+--- a/src/components/AddTestDialog.tsx
++++ b/src/components/AddTestDialog.tsx
+@@ -96,13 +96,32 @@ export function AddTestDialog({
+       if (initialConfig.history &amp;&amp; initialConfig.history.length &gt; 0) {
+         const messages: Array&lt;{
+           id: string;
+-          role: "agent" | "user" | "tool_call";
++          role: "agent" | "user" | "tool_call" | "tool_response";
+           content: string;
+           toolName?: string;
+           toolId?: string;
+-          toolParams?: Array&lt;{ name: string; value: string }&gt;;
++          toolParams?: Array&lt;{ name: string; value: string; group?: string }&gt;;
++          isWebhook?: boolean;
++          linkedToolCallId?: string;
+         }&gt; = [];
+ 
++        // Helper to format value - stringify objects/arrays for display
++        const formatValue = (val: any): string =&gt; {
++          if (val === null) return "null";
++          if (val === undefined) return "";
++          if (typeof val === "object") {
++            try {
++              return JSON.stringify(val, null, 2);
++            } catch {
++              return String(val);
++            }
++          }
++          return String(val);
++        };
++
++        // Track tool call IDs for linking tool responses
++        const toolCallIds: string[] = [];
++
+         initialConfig.history.forEach((historyItem, index) =&gt; {
+           if (historyItem.role === "assistant") {
+             if (historyItem.tool_calls &amp;&amp; historyItem.tool_calls.length &gt; 0) {
+@@ -114,16 +133,46 @@ export function AddTestDialog({
+               } catch {
+                 parsedArgs = {};
+               }
++              
++              const toolCallId = toolCall.id || &#96;tool-${index}&#96;;
++              toolCallIds.push(toolCallId);
++              
++              // Check if this is a webhook-style tool call (has body/query keys)
++              const webhookKeys = ["body", "query"];
++              const hasWebhookStructure = Object.keys(parsedArgs).some(k =&gt; webhookKeys.includes(k));
++              
++              let toolParams: Array&lt;{ name: string; value: string; group?: string }&gt; = [];
++              
++              if (hasWebhookStructure) {
++                // Extract params from body, query with their group (headers are not shown in UI)
++                webhookKeys.forEach(groupKey =&gt; {
++                  const groupValue = parsedArgs[groupKey];
++                  if (groupValue &amp;&amp; typeof groupValue === "object" &amp;&amp; !Array.isArray(groupValue)) {
++                    Object.entries(groupValue).forEach(([paramName, paramValue]) =&gt; {
++                      toolParams.push({
++                        name: paramName,
++                        value: formatValue(paramValue),
++                        group: groupKey,
++                      });
++                    });
++                  }
++                });
++              } else {
++                // Regular tool params (non-webhook)
++                toolParams = Object.entries(parsedArgs).map(([name, value]) =&gt; ({
++                  name,
++                  value: formatValue(value),
++                }));
++              }
++              
+               messages.push({
+-                id: toolCall.id || &#96;tool-${index}&#96;,
++                id: toolCallId,
+                 role: "tool_call",
+                 content: "",
+                 toolId: toolCall.id,
+                 toolName: toolCall.function.name,
+-                toolParams: Object.entries(parsedArgs).map(([name, value]) =&gt; ({
+-                  name,
+-                  value: String(value),
+-                })),
++                toolParams,
++                isWebhook: hasWebhookStructure,
+               });
+             } else {
+               // Regular assistant message
+@@ -139,8 +188,21 @@ export function AddTestDialog({
+               role: "user",
+               content: historyItem.content || "",
+             });
++          } else if (historyItem.role === "tool" &amp;&amp; historyItem.content) {
++            // Tool response message - link to the tool call
++            const linkedToolCallId = historyItem.tool_call_id || toolCallIds[toolCallIds.length - 1] || "";
++            // Find the linked tool call to get its name
++            const linkedToolCall = messages.find(
++              (m) =&gt; m.role === "tool_call" &amp;&amp; (m.toolId === linkedToolCallId || m.id === linkedToolCallId)
++            );
++            messages.push({
++              id: &#96;tool-response-${index}&#96;,
++              role: "tool_response",
++              content: historyItem.content,
++              linkedToolCallId,
++              toolName: linkedToolCall?.toolName || "",
++            });
+           }
+-          // Skip "tool" role messages as they are tool responses
+         });
+ 
+         if (messages.length &gt; 0) {
+@@ -223,11 +285,13 @@ export function AddTestDialog({
+   const [chatMessages, setChatMessages] = useState&lt;
+     Array&lt;{
+       id: string;
+-      role: "agent" | "user" | "tool_call";
++      role: "agent" | "user" | "tool_call" | "tool_response";
+       content: string;
+       toolName?: string;
+       toolId?: string;
+-      toolParams?: Array&lt;{ name: string; value: string }&gt;;
++      toolParams?: Array&lt;{ name: string; value: string; group?: string }&gt;;
++      isWebhook?: boolean;
++      linkedToolCallId?: string; // For tool_response to link back to tool_call
+     }&gt;
+   &gt;([{ id: "1", role: "agent", content: "Hello, how can I help you today?" }]);
+ 
+@@ -243,19 +307,35 @@ export function AddTestDialog({
+   const addToolCallMessage = (
+     toolId: string,
+     toolName: string,
+-    params: Array&lt;{ name: string; value: string }&gt;,
++    params: Array&lt;{ name: string; value: string; group?: string }&gt;,
++    isWebhook: boolean = false,
+   ) =&gt; {
+-    setChatMessages([
++    const toolCallId = Date.now().toString();
++    const newMessages: typeof chatMessages = [
+       ...chatMessages,
+       {
+-        id: Date.now().toString(),
++        id: toolCallId,
+         role: "tool_call",
+         content: "",
+         toolId,
+         toolName,
+         toolParams: params,
++        isWebhook,
+       },
+-    ]);
++    ];
++
++    // If it's a webhook tool, automatically add a tool response message after it
++    if (isWebhook) {
++      newMessages.push({
++        id: (Date.now() + 1).toString(),
++        role: "tool_response",
++        content: '{\n  "status": "success",\n  "response": {}\n}',
++        linkedToolCallId: toolCallId,
++        toolName,
++      });
++    }
++
++    setChatMessages(newMessages);
+     setToolCallDropdownOpen(false);
+     setPendingToolCall(null);
+   };
+@@ -286,7 +366,18 @@ export function AddTestDialog({
+   };
+ 
+   const removeChatMessage = (id: string) =&gt; {
+-    setChatMessages(chatMessages.filter((msg) =&gt; msg.id !== id));
++    const messageToRemove = chatMessages.find((msg) =&gt; msg.id === id);
++    
++    // If removing a tool_call that's a webhook, also remove its linked tool_response
++    if (messageToRemove?.role === "tool_call" &amp;&amp; messageToRemove?.isWebhook) {
++      setChatMessages(
++        chatMessages.filter(
++          (msg) =&gt; msg.id !== id &amp;&amp; msg.linkedToolCallId !== id
++        )
++      );
++    } else {
++      setChatMessages(chatMessages.filter((msg) =&gt; msg.id !== id));
++    }
+   };
+ 
+   const [addMessageDropdownOpen, setAddMessageDropdownOpen] = useState(false);
+@@ -350,6 +441,9 @@ export function AddTestDialog({
+   }, [isOpen, backendAccessToken]);
+ 
+   const addToolFromSelection = (tool: AvailableTool) =&gt; {
++    // Check if tool is a webhook type - default to accept any arguments for webhooks
++    const isWebhook = tool.config?.type === "webhook";
++
+     // Extract parameters from tool config - handle both array (new) and object (legacy) formats
+     let paramList: Array&lt;{ id: string; name: string; value: string }&gt; = [];
+     const params = tool.config?.parameters;
+@@ -380,7 +474,7 @@ export function AddTestDialog({
+       id: tool.uuid,
+       name: tool.name,
+       expectation: "should-call",
+-      acceptAnyParameterValues: false,
++      acceptAnyParameterValues: isWebhook, // Default to true for webhook tools
+       isInbuilt: false,
+       expectedParameters: paramList,
+     };
+@@ -551,10 +645,22 @@ export function AddTestDialog({
+         const toolCallId = generateUUID();
+ 
+         // Build the arguments object from tool params
+-        const argsObj: Record&lt;string, string&gt; = {};
++        const argsObj: Record&lt;string, any&gt; = {};
+         if (message.toolParams) {
+           for (const param of message.toolParams) {
+-            argsObj[param.name] = param.value;
++            // For webhook tools, group params by their group (query, body)
++            // Note: Headers are not shown in conversation history UI
++            if (message.isWebhook &amp;&amp; param.group) {
++              if (param.group === "body") {
++                if (!argsObj.body) argsObj.body = {};
++                argsObj.body[param.name] = param.value;
++              } else if (param.group === "query") {
++                if (!argsObj.query) argsObj.query = {};
++                argsObj.query[param.name] = param.value;
++              }
++            } else {
++              argsObj[param.name] = param.value;
++            }
+           }
+         }
+ 
+@@ -573,13 +679,22 @@ export function AddTestDialog({
+           ],
+         });
+ 
+-        // Add the tool response message
+-        history.push({
+-          role: "tool",
+-          content: '{"status": "received"}',
+-          tool_call_id: toolCallId,
+-        });
++        // For webhook tools, find the linked tool_response message and add it to history
++        // For non-webhook tools, don't add any tool response
++        if (message.isWebhook) {
++          const linkedResponse = chatMessages.find(
++            (m) =&gt; m.role === "tool_response" &amp;&amp; m.linkedToolCallId === message.id
++          );
++          if (linkedResponse &amp;&amp; linkedResponse.content) {
++            history.push({
++              role: "tool",
++              content: linkedResponse.content,
++              tool_call_id: toolCallId,
++            });
++          }
++        }
+       }
++      // Skip tool_response messages as they're handled with their linked tool_call
+     }
+ 
+     // Build the evaluation object based on the active tab
+@@ -652,6 +767,18 @@ export function AddTestDialog({
+     return { history, settings, evaluation };
+   };
+ 
++  // Helper to check if tool call messages have empty params
++  const hasEmptyToolCallParams = () =&gt; {
++    const toolCallMessages = chatMessages.filter((m) =&gt; m.role === "tool_call");
++    for (const msg of toolCallMessages) {
++      if (msg.toolParams &amp;&amp; msg.toolParams.length &gt; 0) {
++        const hasEmpty = msg.toolParams.some((p) =&gt; !p.value.trim());
++        if (hasEmpty) return true;
++      }
++    }
++    return false;
++  };
++
+   // Handle form submission
+   const handleSubmit = () =&gt; {
+     setLocalValidationAttempted(true);
+@@ -661,11 +788,25 @@ export function AddTestDialog({
+       setLocalValidationAttempted(false);
+     }, 3000);
+ 
++    // Validate tool call params in conversation history (for both test types)
++    if (hasEmptyToolCallParams()) {
++      return; // Don't submit if any tool call has empty params
++    }
++
+     // Validate required fields based on test type
+     if (activeTab === "next-reply") {
+       if (!testName.trim() || !expectedMessage.trim()) {
+         return; // Don't submit if validation fails
+       }
++      // Validate that all tool_response messages have valid JSON
++      const toolResponses = chatMessages.filter((m) =&gt; m.role === "tool_response");
++      for (const response of toolResponses) {
++        try {
++          JSON.parse(response.content);
++        } catch {
++          return; // Don't submit if any tool response has invalid JSON
++        }
++      }
+     } else {
+       // tool-invocation - name and at least one tool are required
+       if (!testName.trim() || selectedTools.length === 0) {
+@@ -686,6 +827,15 @@ export function AddTestDialog({
+           }
+         }
+       }
++      // Validate that all tool_response messages have valid JSON
++      const toolResponses = chatMessages.filter((m) =&gt; m.role === "tool_response");
++      for (const response of toolResponses) {
++        try {
++          JSON.parse(response.content);
++        } catch {
++          return; // Don't submit if any tool response has invalid JSON
++        }
++      }
+     }
+ 
+     const config = buildConfig();
+@@ -1373,40 +1523,213 @@ export function AddTestDialog({
+                             &lt;span className="text-sm font-medium text-foreground"&gt;
+                               {message.toolName}
+                             &lt;/span&gt;
++                            {message.isWebhook &amp;&amp; (
++                              &lt;span className="text-xs text-muted-foreground bg-background px-2 py-0.5 rounded"&gt;
++                                Webhook
++                              &lt;/span&gt;
++                            )}
+                           &lt;/div&gt;
+                           {message.toolParams &amp;&amp;
+                             message.toolParams.length &gt; 0 &amp;&amp; (
+                               &lt;div className="space-y-3 mt-3"&gt;
+-                                {message.toolParams.map((param, idx) =&gt; (
+-                                  &lt;div key={idx}&gt;
+-                                    &lt;label className="block text-sm font-medium text-muted-foreground mb-1.5"&gt;
+-                                      {param.name}
+-                                    &lt;/label&gt;
+-                                    &lt;input
+-                                      type="text"
+-                                      value={param.value}
+-                                      onChange={(e) =&gt;
+-                                        updateToolCallParam(
+-                                          message.id,
+-                                          param.name,
+-                                          e.target.value,
+-                                        )
+-                                      }
+-                                      placeholder={&#96;Enter ${param.name}&#96;}
+-                                      className="w-full h-10 px-4 rounded-lg text-sm bg-background text-foreground placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-accent"
+-                                    /&gt;
++                                {/* Group parameters by type for webhook tools */}
++                                {message.isWebhook ? (
++                                  &lt;&gt;
++                                    {/* Query Parameters */}
++                                    {message.toolParams.filter(p =&gt; p.group === "query").length &gt; 0 &amp;&amp; (
++                                      &lt;div className="bg-background border border-border rounded-xl p-3"&gt;
++                                        &lt;h5 className="text-xs font-medium text-muted-foreground mb-3 uppercase tracking-wide"&gt;
++                                          Query
++                                        &lt;/h5&gt;
++                                        &lt;div className="space-y-3"&gt;
++                                          {message.toolParams
++                                            .filter(p =&gt; p.group === "query")
++                                            .map((param, idx) =&gt; {
++                                              const isEmpty = !param.value.trim();
++                                              const showError = localValidationAttempted &amp;&amp; isEmpty;
++                                              return (
++                                                &lt;div key={idx}&gt;
++                                                  &lt;label className="block text-sm font-medium text-foreground mb-1.5"&gt;
++                                                    {param.name}
++                                                  &lt;/label&gt;
++                                                  &lt;input
++                                                    type="text"
++                                                    value={param.value}
++                                                    onChange={(e) =&gt;
++                                                      updateToolCallParam(
++                                                        message.id,
++                                                        param.name,
++                                                        e.target.value,
++                                                      )
++                                                    }
++                                                    placeholder={&#96;Enter ${param.name}&#96;}
++                                                    className={&#96;w-full h-10 px-3 rounded-lg text-sm bg-muted text-foreground placeholder:text-muted-foreground border focus:outline-none focus:ring-2 focus:ring-accent ${
++                                                      showError ? "border-red-500" : "border-border"
++                                                    }&#96;}
++                                                  /&gt;
++                                                  {showError &amp;&amp; (
++                                                    &lt;p className="text-xs text-red-500 mt-1"&gt;This field cannot be empty&lt;/p&gt;
++                                                  )}
++                                                &lt;/div&gt;
++                                              );
++                                            })}
++                                        &lt;/div&gt;
++                                      &lt;/div&gt;
++                                    )}
++                                    {/* Body Parameters */}
++                                    {message.toolParams.filter(p =&gt; p.group === "body").length &gt; 0 &amp;&amp; (
++                                      &lt;div className="bg-background border border-border rounded-xl p-3"&gt;
++                                        &lt;h5 className="text-xs font-medium text-muted-foreground mb-3 uppercase tracking-wide"&gt;
++                                          Body
++                                        &lt;/h5&gt;
++                                        &lt;div className="space-y-3"&gt;
++                                          {message.toolParams
++                                            .filter(p =&gt; p.group === "body")
++                                            .map((param, idx) =&gt; {
++                                              const isEmpty = !param.value.trim();
++                                              const showError = localValidationAttempted &amp;&amp; isEmpty;
++                                              return (
++                                                &lt;div key={idx}&gt;
++                                                  &lt;label className="block text-sm font-medium text-foreground mb-1.5"&gt;
++                                                    {param.name}
++                                                  &lt;/label&gt;
++                                                  &lt;input
++                                                    type="text"
++                                                    value={param.value}
++                                                    onChange={(e) =&gt;
++                                                      updateToolCallParam(
++                                                        message.id,
++                                                        param.name,
++                                                        e.target.value,
++                                                      )
++                                                    }
++                                                    placeholder={&#96;Enter ${param.name}&#96;}
++                                                    className={&#96;w-full h-10 px-3 rounded-lg text-sm bg-muted text-foreground placeholder:text-muted-foreground border focus:outline-none focus:ring-2 focus:ring-accent ${
++                                                      showError ? "border-red-500" : "border-border"
++                                                    }&#96;}
++                                                  /&gt;
++                                                  {showError &amp;&amp; (
++                                                    &lt;p className="text-xs text-red-500 mt-1"&gt;This field cannot be empty&lt;/p&gt;
++                                                  )}
++                                                &lt;/div&gt;
++                                              );
++                                            })}
++                                        &lt;/div&gt;
++                                      &lt;/div&gt;
++                                    )}
++                                  &lt;/&gt;
++                                ) : (
++                                  /* Regular tool parameters */
++                                  &lt;div className="space-y-3"&gt;
++                                    {message.toolParams.map((param, idx) =&gt; {
++                                      const isEmpty = !param.value.trim();
++                                      const showError = localValidationAttempted &amp;&amp; isEmpty;
++                                      return (
++                                        &lt;div key={idx}&gt;
++                                          &lt;label className="block text-sm font-medium text-foreground mb-1.5"&gt;
++                                            {param.name}
++                                          &lt;/label&gt;
++                                          &lt;input
++                                            type="text"
++                                            value={param.value}
++                                            onChange={(e) =&gt;
++                                              updateToolCallParam(
++                                                message.id,
++                                                param.name,
++                                                e.target.value,
++                                              )
++                                            }
++                                            placeholder={&#96;Enter ${param.name}&#96;}
++                                            className={&#96;w-full h-10 px-4 rounded-lg text-sm bg-background text-foreground placeholder:text-muted-foreground border focus:outline-none focus:ring-2 focus:ring-accent ${
++                                              showError ? "border-red-500" : "border-border"
++                                            }&#96;}
++                                          /&gt;
++                                          {showError &amp;&amp; (
++                                            &lt;p className="text-xs text-red-500 mt-1"&gt;This field cannot be empty&lt;/p&gt;
++                                          )}
++                                        &lt;/div&gt;
++                                      );
++                                    })}
+                                   &lt;/div&gt;
+-                                ))}
++                                )}
+                               &lt;/div&gt;
+                             )}
+                         &lt;/div&gt;
+                       &lt;/div&gt;
+                     )}
+ 
++                    {/* Tool Response Display (for webhook tools) */}
++                    {message.role === "tool_response" &amp;&amp; (
++                      &lt;div className="w-1/2"&gt;
++                        &lt;div className="bg-muted border border-border rounded-2xl p-4"&gt;
++                          &lt;div className="flex items-center gap-2 mb-2"&gt;
++                            &lt;svg
++                              className="w-4 h-4 text-muted-foreground"
++                              fill="none"
++                              viewBox="0 0 24 24"
++                              stroke="currentColor"
++                              strokeWidth={1.5}
++                            &gt;
++                              &lt;path
++                                strokeLinecap="round"
++                                strokeLinejoin="round"
++                                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
++                              /&gt;
++                            &lt;/svg&gt;
++                            &lt;span className="text-sm font-medium text-foreground"&gt;
++                              Tool Response
++                            &lt;/span&gt;
++                            &lt;span className="text-xs text-muted-foreground"&gt;
++                              ({message.toolName})
++                            &lt;/span&gt;
++                          &lt;/div&gt;
++                          &lt;div className="mt-2"&gt;
++                            &lt;label className="block text-xs font-medium text-muted-foreground mb-1.5"&gt;
++                              JSON Response &lt;span className="text-red-500"&gt;*&lt;/span&gt;
++                            &lt;/label&gt;
++                            &lt;textarea
++                              value={message.content}
++                              onChange={(e) =&gt;
++                                updateChatMessage(message.id, e.target.value)
++                              }
++                              placeholder='{"status": "success", "response": {}}'
++                              rows={5}
++                              className={&#96;w-full px-3 py-2 rounded-lg text-sm font-mono bg-background text-foreground placeholder:text-muted-foreground border focus:outline-none focus:ring-2 focus:ring-accent ${
++                                (() =&gt; {
++                                  try {
++                                    JSON.parse(message.content);
++                                    return "border-border";
++                                  } catch {
++                                    return message.content.trim()
++                                      ? "border-red-500"
++                                      : "border-border";
++                                  }
++                                })()
++                              }&#96;}
++                            /&gt;
++                            {(() =&gt; {
++                              try {
++                                JSON.parse(message.content);
++                                return null;
++                              } catch {
++                                return message.content.trim() ? (
++                                  &lt;p className="text-xs text-red-500 mt-1"&gt;
++                                    Invalid JSON format
++                                  &lt;/p&gt;
++                                ) : null;
++                              }
++                            })()}
++                          &lt;/div&gt;
++                        &lt;/div&gt;
++                      &lt;/div&gt;
++                    )}
++
+                     {/* Message Actions - Delete button for all messages, Add button only for last */}
+                     &lt;div className="flex items-center gap-2 relative"&gt;
+-                      {/* Delete and Add Message Buttons - only for last message */}
+-                      {index === chatMessages.length - 1 &amp;&amp; (
++                      {/* Delete and Add Message Buttons - only for last non-tool-response message */}
++                      {/* Tool response messages are linked to their tool call and shouldn't have independent actions */}
++                      {message.role !== "tool_response" &amp;&amp;
++                        index === chatMessages.length - 1 - (chatMessages[chatMessages.length - 1]?.role === "tool_response" ? 1 : 0) &amp;&amp; (
+                         &lt;&gt;
+                           &lt;button
+                             onClick={() =&gt; removeChatMessage(message.id)}
+@@ -1583,15 +1906,63 @@ export function AddTestDialog({
+                                           [],
+                                         );
+                                       }}
+-                                      onSelectCustomTool={(tool, params) =&gt; {
+-                                        // Always add tool call directly with params (empty values if has params)
++                                      onSelectCustomTool={(tool) =&gt; {
++                                        const isWebhook = tool.config?.type === "webhook";
++                                        let allParams: Array&lt;{ name: string; value: string; group?: string }&gt; = [];
++
++                                        if (isWebhook &amp;&amp; tool.config?.webhook) {
++                                          // Extract webhook-specific parameters
++                                          const webhook = tool.config.webhook;
++                                          
++                                          // Query parameters (for GET requests)
++                                          if (webhook.queryParameters &amp;&amp; Array.isArray(webhook.queryParameters)) {
++                                            webhook.queryParameters.forEach((p: any) =&gt; {
++                                              allParams.push({
++                                                name: p.id || p.name || "",
++                                                value: "",
++                                                group: "query",
++                                              });
++                                            });
++                                          }
++                                          
++                                          // Body parameters (for POST requests)
++                                          if (webhook.body?.parameters &amp;&amp; Array.isArray(webhook.body.parameters)) {
++                                            webhook.body.parameters.forEach((p: any) =&gt; {
++                                              allParams.push({
++                                                name: p.id || p.name || "",
++                                                value: "",
++                                                group: "body",
++                                              });
++                                            });
++                                          }
++                                          // Note: Headers are not shown in conversation history UI
++                                        } else {
++                                          // Structured output tool - use regular parameters
++                                          const params = tool.config?.parameters;
++                                          if (Array.isArray(params)) {
++                                            allParams = params.map((p: any) =&gt; ({
++                                              name: p.id || p.name || "",
++                                              value: "",
++                                            }));
++                                          } else {
++                                            const propsObj =
++                                              tool.config?.parameters?.properties ||
++                                              tool.config?.function?.parameters?.properties ||
++                                              tool.config?.properties ||
++                                              tool.config?.parameters ||
++                                              {};
++                                            allParams = Object.keys(propsObj).map((name) =&gt; ({
++                                              name,
++                                              value: "",
++                                            }));
++                                          }
++                                        }
++
+                                         addToolCallMessage(
+                                           tool.uuid,
+                                           tool.name,
+-                                          params.map((p) =&gt; ({
+-                                            name: p.name,
+-                                            value: "",
+-                                          })),
++                                          allParams,
++                                          isWebhook,
+                                         );
+                                       }}
+                                     /&gt;
+diff --git a/src/components/AddToolDialog.tsx b/src/components/AddToolDialog.tsx
+new file mode 100644
+index 0000000..0353bba
+--- /dev/null
++++ b/src/components/AddToolDialog.tsx
+@@ -0,0 +1,1588 @@
++"use client";
++
++import { useState, useEffect, useRef } from "react";
++import { signOut } from "next-auth/react";
++import { ParameterCard, Parameter } from "@/components/ParameterCard";
++import { NestedContainer } from "@/components/ui/NestedContainer";
++
++type ToolData = {
++  uuid: string;
++  name: string;
++  description?: string;
++  config: Record&lt;string, any&gt;;
++  created_at: string;
++  updated_at: string;
++};
++
++type ToolType = "structured_output" | "webhook";
++
++type AddToolDialogProps = {
++  isOpen: boolean;
++  onClose: () =&gt; void;
++  toolType: ToolType;
++  editingToolUuid: string | null;
++  backendAccessToken: string | undefined;
++  onToolsUpdated: (tools: ToolData[]) =&gt; void;
++};
++
++const TOOL_TYPE_CONFIG: Record&lt;
++  ToolType,
++  { addTitle: string; editTitle: string; description: string }
++&gt; = {
++  structured_output: {
++    addTitle: "Add structured output tool",
++    editTitle: "Edit structured output tool",
++    description:
++      "Structured output tools enable agents to extract information from a conversation in a defined format. Example: the user's name or order details.",
++  },
++  webhook: {
++    addTitle: "Add webhook tool",
++    editTitle: "Edit webhook tool",
++    description:
++      "Webhook tools allow agents to call external APIs or services to perform actions. Example: sending a notification or querying a database.",
++  },
++};
++
++export function AddToolDialog({
++  isOpen,
++  onClose,
++  toolType,
++  editingToolUuid,
++  backendAccessToken,
++  onToolsUpdated,
++}: AddToolDialogProps) {
++  const [toolName, setToolName] = useState("");
++  const [toolDescription, setToolDescription] = useState("");
++  const [parameters, setParameters] = useState&lt;Parameter[]&gt;([]);
++  const [isCreating, setIsCreating] = useState(false);
++  const [createError, setCreateError] = useState&lt;string | null&gt;(null);
++  const [isLoadingTool, setIsLoadingTool] = useState(false);
++  const [validationAttempted, setValidationAttempted] = useState(false);
++  const sidebarContentRef = useRef&lt;HTMLDivElement&gt;(null);
++
++  // Webhook-specific state
++  const [webhookMethod, setWebhookMethod] = useState&lt;"GET" | "POST" | "PUT" | "PATCH" | "DELETE"&gt;("POST");
++  const [webhookUrl, setWebhookUrl] = useState("");
++  const [responseTimeout, setResponseTimeout] = useState(20);
++  const [showTimeoutTooltip, setShowTimeoutTooltip] = useState(false);
++  
++  // Headers state
++  type WebhookHeader = {
++    id: string;
++    name: string;
++    value: string;
++  };
++  const [webhookHeaders, setWebhookHeaders] = useState&lt;WebhookHeader[]&gt;([]);
++
++  // Query parameters state (for webhook tools) - uses same Parameter type
++  const [queryParameters, setQueryParameters] = useState&lt;Parameter[]&gt;([]);
++  const [newlyAddedQueryParamId, setNewlyAddedQueryParamId] = useState&lt;string | null&gt;(null);
++  const queryParamRefs = useRef&lt;Map&lt;string, HTMLDivElement&gt;&gt;(new Map());
++
++  // Body parameters state (for webhook tools with POST, PUT, PATCH methods)
++  const [bodyDescription, setBodyDescription] = useState("");
++  const [bodyParameters, setBodyParameters] = useState&lt;Parameter[]&gt;([]);
++
++  // Reset form when dialog opens/closes or editingToolUuid changes
++  useEffect(() =&gt; {
++    if (isOpen) {
++      if (editingToolUuid) {
++        // Load existing tool data
++        loadToolData(editingToolUuid);
++      } else {
++        // Reset for new tool
++        resetForm();
++        // Add one default parameter for structured output tools
++        if (toolType === "structured_output") {
++          setParameters([
++            {
++              id: crypto.randomUUID(),
++              dataType: "string",
++              name: "",
++              required: true,
++              description: "",
++            },
++          ]);
++        }
++      }
++    }
++  }, [isOpen, editingToolUuid, toolType]);
++
++  const resetForm = () =&gt; {
++    setToolName("");
++    setToolDescription("");
++    setParameters([]);
++    setCreateError(null);
++    setValidationAttempted(false);
++    // Reset webhook-specific fields
++    setWebhookMethod("POST");
++    setWebhookUrl("");
++    setResponseTimeout(20);
++    setWebhookHeaders([]);
++    setQueryParameters([]);
++    setBodyDescription("");
++    setBodyParameters([]);
++  };
++
++  const handleClose = () =&gt; {
++    resetForm();
++    onClose();
++  };
++
++  // Scroll to newly added query parameter
++  useEffect(() =&gt; {
++    if (newlyAddedQueryParamId) {
++      setTimeout(() =&gt; {
++        const element = queryParamRefs.current.get(newlyAddedQueryParamId);
++        if (element) {
++          element.scrollIntoView({ behavior: "smooth", block: "center" });
++        }
++        setNewlyAddedQueryParamId(null);
++      }, 50);
++    }
++  }, [newlyAddedQueryParamId]);
++
++  // Scroll to bottom when parameters change (new parameter added)
++  const scrollToBottom = () =&gt; {
++    if (sidebarContentRef.current) {
++      setTimeout(() =&gt; {
++        sidebarContentRef.current?.scrollTo({
++          top: sidebarContentRef.current.scrollHeight,
++          behavior: "smooth",
++        });
++      }, 50);
++    }
++  };
++
++  const addParameter = () =&gt; {
++    setValidationAttempted(false);
++    setParameters([
++      ...parameters,
++      {
++        id: crypto.randomUUID(),
++        dataType: "string",
++        name: "",
++        required: true,
++        description: "",
++      },
++    ]);
++    scrollToBottom();
++  };
++
++  // Helper to update a parameter at any depth using a path of IDs
++  const updateParameterAtPath = (
++    params: Parameter[],
++    path: string[],
++    updates: Partial&lt;Parameter&gt;
++  ): Parameter[] =&gt; {
++    if (path.length === 0) return params;
++    const [currentId, ...restPath] = path;
++    return params.map((p) =&gt; {
++      if (p.id !== currentId) return p;
++      if (restPath.length === 0) {
++        return { ...p, ...updates };
++      }
++      if (restPath[0] === "__items__") {
++        const currentItems = p.items || {
++          id: crypto.randomUUID(),
++          dataType: "string",
++          name: "",
++          required: true,
++          description: "",
++        };
++        if (restPath.length === 1) {
++          return { ...p, items: { ...currentItems, ...updates } };
++        }
++        const [, ...deeperPath] = restPath;
++        const updatedItems = updateSingleParameterAtPath(
++          currentItems,
++          deeperPath,
++          updates
++        );
++        return { ...p, items: updatedItems };
++      }
++      return {
++        ...p,
++        properties: updateParameterAtPath(
++          p.properties || [],
++          restPath,
++          updates
++        ),
++      };
++    });
++  };
++
++  const updateSingleParameterAtPath = (
++    param: Parameter,
++    path: string[],
++    updates: Partial&lt;Parameter&gt;
++  ): Parameter =&gt; {
++    if (path.length === 0) {
++      return { ...param, ...updates };
++    }
++    const [currentSegment, ...restPath] = path;
++    if (currentSegment === "__items__") {
++      const currentItems = param.items || {
++        id: crypto.randomUUID(),
++        dataType: "string",
++        name: "",
++        required: true,
++        description: "",
++      };
++      if (restPath.length === 0) {
++        return { ...param, items: { ...currentItems, ...updates } };
++      }
++      return {
++        ...param,
++        items: updateSingleParameterAtPath(currentItems, restPath, updates),
++      };
++    }
++    return {
++      ...param,
++      properties: updateParameterAtPath(param.properties || [], path, updates),
++    };
++  };
++
++  const addPropertyAtPath = (
++    params: Parameter[],
++    path: string[]
++  ): Parameter[] =&gt; {
++    if (path.length === 0) return params;
++    const [currentId, ...restPath] = path;
++    return params.map((p) =&gt; {
++      if (p.id !== currentId) return p;
++      if (restPath.length === 0) {
++        return {
++          ...p,
++          properties: [
++            ...(p.properties || []),
++            {
++              id: crypto.randomUUID(),
++              dataType: "string",
++              name: "",
++              required: true,
++              description: "",
++            },
++          ],
++        };
++      }
++      if (restPath[0] === "__items__" &amp;&amp; p.items) {
++        return {
++          ...p,
++          items: addPropertyToSingleParam(p.items, restPath.slice(1)),
++        };
++      }
++      return {
++        ...p,
++        properties: addPropertyAtPath(p.properties || [], restPath),
++      };
++    });
++  };
++
++  const addPropertyToSingleParam = (
++    param: Parameter,
++    path: string[]
++  ): Parameter =&gt; {
++    if (path.length === 0) {
++      return {
++        ...param,
++        properties: [
++          ...(param.properties || []),
++          {
++            id: crypto.randomUUID(),
++            dataType: "string",
++            name: "",
++            required: true,
++            description: "",
++          },
++        ],
++      };
++    }
++    if (path[0] === "__items__" &amp;&amp; param.items) {
++      return {
++        ...param,
++        items: addPropertyToSingleParam(param.items, path.slice(1)),
++      };
++    }
++    return {
++      ...param,
++      properties: addPropertyAtPath(param.properties || [], path),
++    };
++  };
++
++  const removePropertyAtPath = (
++    params: Parameter[],
++    path: string[],
++    idToRemove: string
++  ): Parameter[] =&gt; {
++    if (path.length === 0) {
++      return params.filter((p) =&gt; p.id !== idToRemove);
++    }
++    const [currentId, ...restPath] = path;
++    return params.map((p) =&gt; {
++      if (p.id !== currentId) return p;
++      if (restPath[0] === "__items__" &amp;&amp; p.items) {
++        return {
++          ...p,
++          items: removePropertyFromSingleParam(
++            p.items,
++            restPath.slice(1),
++            idToRemove
++          ),
++        };
++      }
++      if (restPath.length === 0) {
++        return {
++          ...p,
++          properties: (p.properties || []).filter(
++            (prop) =&gt; prop.id !== idToRemove
++          ),
++        };
++      }
++      return {
++        ...p,
++        properties: removePropertyAtPath(
++          p.properties || [],
++          restPath,
++          idToRemove
++        ),
++      };
++    });
++  };
++
++  const removePropertyFromSingleParam = (
++    param: Parameter,
++    path: string[],
++    idToRemove: string
++  ): Parameter =&gt; {
++    if (path.length === 0) {
++      return {
++        ...param,
++        properties: (param.properties || []).filter((p) =&gt; p.id !== idToRemove),
++      };
++    }
++    if (path[0] === "__items__" &amp;&amp; param.items) {
++      return {
++        ...param,
++        items: removePropertyFromSingleParam(
++          param.items,
++          path.slice(1),
++          idToRemove
++        ),
++      };
++    }
++    return {
++      ...param,
++      properties: removePropertyAtPath(
++        param.properties || [],
++        path,
++        idToRemove
++      ),
++    };
++  };
++
++  const setItemsAtPath = (
++    params: Parameter[],
++    path: string[],
++    items: Parameter | undefined
++  ): Parameter[] =&gt; {
++    if (path.length === 0) return params;
++    const [currentId, ...restPath] = path;
++    return params.map((p) =&gt; {
++      if (p.id !== currentId) return p;
++      if (restPath.length === 0) {
++        return { ...p, items };
++      }
++      if (restPath[0] === "__items__" &amp;&amp; p.items) {
++        return {
++          ...p,
++          items: setItemsOnSingleParam(p.items, restPath.slice(1), items),
++        };
++      }
++      return {
++        ...p,
++        properties: setItemsAtPath(p.properties || [], restPath, items),
++      };
++    });
++  };
++
++  const setItemsOnSingleParam = (
++    param: Parameter,
++    path: string[],
++    items: Parameter | undefined
++  ): Parameter =&gt; {
++    if (path.length === 0) {
++      return { ...param, items };
++    }
++    if (path[0] === "__items__" &amp;&amp; param.items) {
++      return {
++        ...param,
++        items: setItemsOnSingleParam(param.items, path.slice(1), items),
++      };
++    }
++    return {
++      ...param,
++      properties: setItemsAtPath(param.properties || [], path, items),
++    };
++  };
++
++  // Handlers
++  const handleUpdateAtPath = (path: string[], updates: Partial&lt;Parameter&gt;) =&gt; {
++    setParameters((prev) =&gt; updateParameterAtPath(prev, path, updates));
++  };
++
++  const handleAddPropertyAtPath = (path: string[]) =&gt; {
++    setValidationAttempted(false);
++    setParameters((prev) =&gt; addPropertyAtPath(prev, path));
++    scrollToBottom();
++  };
++
++  const handleRemoveAtPath = (parentPath: string[], id: string) =&gt; {
++    setParameters((prev) =&gt; removePropertyAtPath(prev, parentPath, id));
++  };
++
++  const handleSetItemsAtPath = (
++    path: string[],
++    items: Parameter | undefined
++  ) =&gt; {
++    setValidationAttempted(false);
++    setParameters((prev) =&gt; setItemsAtPath(prev, path, items));
++  };
++
++  // Query parameter handlers (same logic, different state)
++  const handleQueryUpdateAtPath = (path: string[], updates: Partial&lt;Parameter&gt;) =&gt; {
++    setQueryParameters((prev) =&gt; updateParameterAtPath(prev, path, updates));
++  };
++
++  const handleQueryAddPropertyAtPath = (path: string[]) =&gt; {
++    setValidationAttempted(false);
++    setQueryParameters((prev) =&gt; addPropertyAtPath(prev, path));
++    scrollToBottom();
++  };
++
++  const handleQueryRemoveAtPath = (parentPath: string[], id: string) =&gt; {
++    setQueryParameters((prev) =&gt; removePropertyAtPath(prev, parentPath, id));
++  };
++
++  const handleQuerySetItemsAtPath = (
++    path: string[],
++    items: Parameter | undefined
++  ) =&gt; {
++    setValidationAttempted(false);
++    setQueryParameters((prev) =&gt; setItemsAtPath(prev, path, items));
++  };
++
++  const addQueryParameter = () =&gt; {
++    setValidationAttempted(false);
++    const newId = crypto.randomUUID();
++    setQueryParameters([
++      ...queryParameters,
++      {
++        id: newId,
++        dataType: "string",
++        name: "",
++        required: true,
++        description: "",
++      },
++    ]);
++    setNewlyAddedQueryParamId(newId);
++  };
++
++  // Body parameter handlers (same logic, different state)
++  const handleBodyUpdateAtPath = (path: string[], updates: Partial&lt;Parameter&gt;) =&gt; {
++    setBodyParameters((prev) =&gt; updateParameterAtPath(prev, path, updates));
++  };
++
++  const handleBodyAddPropertyAtPath = (path: string[]) =&gt; {
++    setValidationAttempted(false);
++    setBodyParameters((prev) =&gt; addPropertyAtPath(prev, path));
++    scrollToBottom();
++  };
++
++  const handleBodyRemoveAtPath = (parentPath: string[], id: string) =&gt; {
++    setBodyParameters((prev) =&gt; removePropertyAtPath(prev, parentPath, id));
++  };
++
++  const handleBodySetItemsAtPath = (
++    path: string[],
++    items: Parameter | undefined
++  ) =&gt; {
++    setValidationAttempted(false);
++    setBodyParameters((prev) =&gt; setItemsAtPath(prev, path, items));
++  };
++
++  const addBodyParameter = () =&gt; {
++    setValidationAttempted(false);
++    setBodyParameters([
++      ...bodyParameters,
++      {
++        id: crypto.randomUUID(),
++        dataType: "string",
++        name: "",
++        required: true,
++        description: "",
++      },
++    ]);
++    scrollToBottom();
++  };
++
++  // Validation helpers
++  const isValidUrl = (url: string): boolean =&gt; {
++    if (!url.trim()) return false;
++    try {
++      const urlObj = new URL(url.trim());
++      // Must be http or https
++      if (urlObj.protocol !== "http:" &amp;&amp; urlObj.protocol !== "https:") {
++        return false;
++      }
++      // Hostname must have a dot (domain.tld) or be localhost
++      const hostname = urlObj.hostname;
++      if (hostname !== "localhost" &amp;&amp; !hostname.includes(".")) {
++        return false;
++      }
++      return true;
++    } catch {
++      return false;
++    }
++  };
++
++  const hasDuplicateNames = (params: Parameter[]): boolean =&gt; {
++    const names = params
++      .map((p) =&gt; p.name.trim().toLowerCase())
++      .filter(Boolean);
++    return new Set(names).size !== names.length;
++  };
++
++  const hasInvalidParameters = (params: Parameter[]): boolean =&gt; {
++    if (hasDuplicateNames(params)) return true;
++    for (const p of params) {
++      if (!p.name.trim() || !p.description.trim()) return true;
++      if (p.dataType === "object") {
++        if (!p.properties || p.properties.length === 0) return true;
++        if (hasInvalidParameters(p.properties)) return true;
++      }
++      if (p.dataType === "array" &amp;&amp; p.items) {
++        if (hasInvalidSingleParameter(p.items)) return true;
++      }
++    }
++    return false;
++  };
++
++  const hasInvalidSingleParameter = (param: Parameter): boolean =&gt; {
++    if (!param.description.trim()) return true;
++    if (param.dataType === "object") {
++      if (!param.properties || param.properties.length === 0) return true;
++      if (hasInvalidParameters(param.properties)) return true;
++    }
++    if (param.dataType === "array" &amp;&amp; param.items) {
++      if (hasInvalidSingleParameter(param.items)) return true;
++    }
++    return false;
++  };
++
++  // JSON Schema helpers
++  const parameterToJsonSchema = (param: Parameter): Record&lt;string, any&gt; =&gt; {
++    const schema: Record&lt;string, any&gt; = {
++      type: param.dataType,
++      description: param.description,
++    };
++
++    if (param.dataType === "array" &amp;&amp; param.items) {
++      schema.items = {
++        type: param.items.dataType,
++        description: param.items.description,
++      };
++      if (
++        param.items.dataType === "object" &amp;&amp;
++        param.items.properties &amp;&amp;
++        param.items.properties.length &gt; 0
++      ) {
++        schema.items.properties = {};
++        const requiredProps: string[] = [];
++        param.items.properties.forEach((prop) =&gt; {
++          schema.items.properties[prop.name] = parameterToJsonSchema(prop);
++          if (prop.required) requiredProps.push(prop.name);
++        });
++        if (requiredProps.length &gt; 0) schema.items.required = requiredProps;
++      }
++      if (param.items.dataType === "array" &amp;&amp; param.items.items) {
++        schema.items.items = parameterToJsonSchema({
++          ...param.items.items,
++          name: "",
++          required: true,
++        });
++        delete schema.items.items.required;
++      }
++    }
++
++    if (
++      param.dataType === "object" &amp;&amp;
++      param.properties &amp;&amp;
++      param.properties.length &gt; 0
++    ) {
++      schema.properties = {};
++      const requiredProps: string[] = [];
++      param.properties.forEach((prop) =&gt; {
++        schema.properties[prop.name] = parameterToJsonSchema(prop);
++        if (prop.required) requiredProps.push(prop.name);
++      });
++      if (requiredProps.length &gt; 0) schema.required = requiredProps;
++    }
++
++    return schema;
++  };
++
++  const buildParametersConfig = (
++    params: Parameter[]
++  ): Array&lt;Record&lt;string, any&gt;&gt; =&gt; {
++    return params
++      .filter((param) =&gt; param.name)
++      .map((param) =&gt; {
++        const schema = parameterToJsonSchema(param);
++        return {
++          id: param.name,
++          ...schema,
++          required: param.required,
++        };
++      });
++  };
++
++  const parseItemsSchema = (itemsConfig: any): Parameter =&gt; {
++    const itemParam: Parameter = {
++      id: crypto.randomUUID(),
++      name: "",
++      dataType: itemsConfig.type || "string",
++      required: true,
++      description: itemsConfig.description || "",
++    };
++
++    if (itemsConfig.type === "object" &amp;&amp; itemsConfig.properties) {
++      itemParam.properties = [];
++      const requiredProps = itemsConfig.required || [];
++      Object.entries(itemsConfig.properties).forEach(
++        ([propName, propConfig]: [string, any]) =&gt; {
++          itemParam.properties!.push(
++            parseParameterSchema(
++              propName,
++              propConfig,
++              requiredProps.includes(propName)
++            )
++          );
++        }
++      );
++    }
++
++    if (itemsConfig.type === "array" &amp;&amp; itemsConfig.items) {
++      itemParam.items = parseItemsSchema(itemsConfig.items);
++    }
++
++    return itemParam;
++  };
++
++  const parseParameterSchema = (
++    paramName: string,
++    paramConfig: any,
++    isRequired: boolean = true
++  ): Parameter =&gt; {
++    const param: Parameter = {
++      id: crypto.randomUUID(),
++      name: paramName,
++      dataType: paramConfig.type || "string",
++      required: paramConfig.required ?? isRequired,
++      description: paramConfig.description || "",
++    };
++
++    if (paramConfig.type === "array" &amp;&amp; paramConfig.items) {
++      param.items = parseItemsSchema(paramConfig.items);
++    }
++
++    if (paramConfig.type === "object" &amp;&amp; paramConfig.properties) {
++      param.properties = [];
++      const requiredProps = paramConfig.required || [];
++      Object.entries(paramConfig.properties).forEach(
++        ([propName, propConfig]: [string, any]) =&gt; {
++          param.properties!.push(
++            parseParameterSchema(
++              propName,
++              propConfig,
++              requiredProps.includes(propName)
++            )
++          );
++        }
++      );
++    }
++
++    return param;
++  };
++
++  // Load tool data for editing
++  const loadToolData = async (uuid: string) =&gt; {
++    try {
++      setIsLoadingTool(true);
++      setCreateError(null);
++
++      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
++      if (!backendUrl) {
++        throw new Error("BACKEND_URL environment variable is not set");
++      }
++
++      const response = await fetch(&#96;${backendUrl}/tools/${uuid}&#96;, {
++        method: "GET",
++        headers: {
++          accept: "application/json",
++          "ngrok-skip-browser-warning": "true",
++          Authorization: &#96;Bearer ${backendAccessToken}&#96;,
++        },
++      });
++
++      if (response.status === 401) {
++        await signOut({ callbackUrl: "/login" });
++        return;
++      }
++
++      if (!response.ok) {
++        throw new Error("Failed to fetch tool details");
++      }
++
++      const toolData: ToolData = await response.json();
++
++      setToolName(toolData.name || "");
++      setToolDescription(
++        toolData.description || toolData.config?.description || ""
++      );
++
++      const toolParams: Parameter[] = [];
++      if (toolData.config?.parameters) {
++        if (Array.isArray(toolData.config.parameters)) {
++          toolData.config.parameters.forEach((paramConfig: any) =&gt; {
++            const paramName = paramConfig.id || paramConfig.name || "";
++            toolParams.push(parseParameterSchema(paramName, paramConfig));
++          });
++        } else {
++          Object.entries(toolData.config.parameters).forEach(
++            ([paramName, paramConfig]: [string, any]) =&gt; {
++              toolParams.push(parseParameterSchema(paramName, paramConfig));
++            }
++          );
++        }
++      }
++      setParameters(toolParams);
++
++      // Load webhook-specific fields if present
++      if (toolData.config?.webhook) {
++        setWebhookMethod(toolData.config.webhook.method || "POST");
++        setWebhookUrl(toolData.config.webhook.url || "");
++        setResponseTimeout(toolData.config.webhook.timeout || 20);
++        // Load headers
++        if (toolData.config.webhook.headers) {
++          setWebhookHeaders(
++            toolData.config.webhook.headers.map((h: any) =&gt; ({
++              id: crypto.randomUUID(),
++              name: h.name || "",
++              value: h.value || "",
++            }))
++          );
++        }
++        // Load query parameters (same format as parameters)
++        if (toolData.config.webhook.queryParameters) {
++          const queryParams: Parameter[] = [];
++          if (Array.isArray(toolData.config.webhook.queryParameters)) {
++            toolData.config.webhook.queryParameters.forEach((paramConfig: any) =&gt; {
++              const paramName = paramConfig.id || paramConfig.name || "";
++              queryParams.push(parseParameterSchema(paramName, paramConfig));
++            });
++          }
++          setQueryParameters(queryParams);
++        }
++        // Load body parameters (same format as parameters)
++        if (toolData.config.webhook.body) {
++          setBodyDescription(toolData.config.webhook.body.description || "");
++          if (toolData.config.webhook.body.parameters) {
++            const bodyParams: Parameter[] = [];
++            if (Array.isArray(toolData.config.webhook.body.parameters)) {
++              toolData.config.webhook.body.parameters.forEach((paramConfig: any) =&gt; {
++                const paramName = paramConfig.id || paramConfig.name || "";
++                bodyParams.push(parseParameterSchema(paramName, paramConfig));
++              });
++            }
++            setBodyParameters(bodyParams);
++          }
++        }
++      }
++    } catch (err) {
++      console.error("Error fetching tool:", err);
++      setCreateError(
++        err instanceof Error ? err.message : "Failed to load tool"
++      );
++    } finally {
++      setIsLoadingTool(false);
++    }
++  };
++
++  // Refetch tools list
++  const refetchTools = async () =&gt; {
++    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
++    if (!backendUrl) return;
++
++    const toolsResponse = await fetch(&#96;${backendUrl}/tools&#96;, {
++      method: "GET",
++      headers: {
++        accept: "application/json",
++        "ngrok-skip-browser-warning": "true",
++        Authorization: &#96;Bearer ${backendAccessToken}&#96;,
++      },
++    });
++
++    if (toolsResponse.ok) {
++      const updatedTools: ToolData[] = await toolsResponse.json();
++      onToolsUpdated(updatedTools);
++    }
++  };
++
++  // Create tool
++  const createTool = async () =&gt; {
++    setValidationAttempted(true);
++    if (!toolName.trim() || !toolDescription.trim()) return;
++    // Validate webhook URL if webhook type
++    if (toolType === "webhook" &amp;&amp; !isValidUrl(webhookUrl)) return;
++    // Validate body description for POST/PUT/PATCH methods
++    if (toolType === "webhook" &amp;&amp; ["POST", "PUT", "PATCH"].includes(webhookMethod) &amp;&amp; !bodyDescription.trim()) return;
++    if (hasInvalidParameters(parameters)) return;
++
++    try {
++      setIsCreating(true);
++      setCreateError(null);
++      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
++      if (!backendUrl) {
++        throw new Error("BACKEND_URL environment variable is not set");
++      }
++
++      const parametersConfig = buildParametersConfig(parameters);
++
++      // Build config based on tool type
++      const config: Record&lt;string, any&gt; = {
++        type: toolType, // Store tool type in config
++        parameters: parametersConfig,
++      };
++
++      if (toolType === "webhook") {
++        config.webhook = {
++          method: webhookMethod,
++          url: webhookUrl.trim(),
++          timeout: responseTimeout,
++          headers: webhookHeaders
++            .filter((h) =&gt; h.name.trim())
++            .map((h) =&gt; ({
++              name: h.name.trim(),
++              value: h.value,
++            })),
++          queryParameters: buildParametersConfig(queryParameters),
++          // Only include body for methods that support it
++          ...(["POST", "PUT", "PATCH"].includes(webhookMethod) &amp;&amp; {
++            body: {
++              description: bodyDescription.trim(),
++              parameters: buildParametersConfig(bodyParameters),
++            },
++          }),
++        };
++      }
++
++      const response = await fetch(&#96;${backendUrl}/tools&#96;, {
++        method: "POST",
++        headers: {
++          accept: "application/json",
++          "Content-Type": "application/json",
++          "ngrok-skip-browser-warning": "true",
++          Authorization: &#96;Bearer ${backendAccessToken}&#96;,
++        },
++        body: JSON.stringify({
++          name: toolName.trim(),
++          description: toolDescription.trim(),
++          config,
++        }),
++      });
++
++      if (response.status === 401) {
++        await signOut({ callbackUrl: "/login" });
++        return;
++      }
++
++      if (!response.ok) {
++        throw new Error("Failed to create tool");
++      }
++
++      await refetchTools();
++      handleClose();
++    } catch (err) {
++      console.error("Error creating tool:", err);
++      setCreateError(
++        err instanceof Error ? err.message : "Failed to create tool"
++      );
++    } finally {
++      setIsCreating(false);
++    }
++  };
++
++  // Update tool
++  const updateTool = async () =&gt; {
++    setValidationAttempted(true);
++    if (!toolName.trim() || !toolDescription.trim() || !editingToolUuid) return;
++    // Validate webhook URL if webhook type
++    if (toolType === "webhook" &amp;&amp; !isValidUrl(webhookUrl)) return;
++    // Validate body description for POST/PUT/PATCH methods
++    if (toolType === "webhook" &amp;&amp; ["POST", "PUT", "PATCH"].includes(webhookMethod) &amp;&amp; !bodyDescription.trim()) return;
++    if (hasInvalidParameters(parameters)) return;
++
++    try {
++      setIsCreating(true);
++      setCreateError(null);
++      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
++      if (!backendUrl) {
++        throw new Error("BACKEND_URL environment variable is not set");
++      }
++
++      const parametersConfig = buildParametersConfig(parameters);
++
++      // Build config based on tool type
++      const config: Record&lt;string, any&gt; = {
++        type: toolType, // Store tool type in config
++        parameters: parametersConfig,
++      };
++
++      if (toolType === "webhook") {
++        config.webhook = {
++          method: webhookMethod,
++          url: webhookUrl.trim(),
++          timeout: responseTimeout,
++          headers: webhookHeaders
++            .filter((h) =&gt; h.name.trim())
++            .map((h) =&gt; ({
++              name: h.name.trim(),
++              value: h.value,
++            })),
++          queryParameters: buildParametersConfig(queryParameters),
++          // Only include body for methods that support it
++          ...(["POST", "PUT", "PATCH"].includes(webhookMethod) &amp;&amp; {
++            body: {
++              description: bodyDescription.trim(),
++              parameters: buildParametersConfig(bodyParameters),
++            },
++          }),
++        };
++      }
++
++      const response = await fetch(&#96;${backendUrl}/tools/${editingToolUuid}&#96;, {
++        method: "PUT",
++        headers: {
++          accept: "application/json",
++          "Content-Type": "application/json",
++          "ngrok-skip-browser-warning": "true",
++          Authorization: &#96;Bearer ${backendAccessToken}&#96;,
++        },
++        body: JSON.stringify({
++          name: toolName.trim(),
++          description: toolDescription.trim(),
++          config,
++        }),
++      });
++
++      if (response.status === 401) {
++        await signOut({ callbackUrl: "/login" });
++        return;
++      }
++
++      if (!response.ok) {
++        throw new Error("Failed to update tool");
++      }
++
++      await refetchTools();
++      handleClose();
++    } catch (err) {
++      console.error("Error updating tool:", err);
++      setCreateError(
++        err instanceof Error ? err.message : "Failed to update tool"
++      );
++    } finally {
++      setIsCreating(false);
++    }
++  };
++
++  if (!isOpen) return null;
++
++  return (
++    &lt;div className="fixed inset-0 z-50 flex justify-end"&gt;
++      {/* Backdrop */}
++      &lt;div
++        className="absolute inset-0 bg-black/50"
++        onClick={handleClose}
++      /&gt;
++      {/* Sidebar */}
++      &lt;div className="relative w-[40%] min-w-[500px] bg-background border-l border-border flex flex-col h-full shadow-2xl"&gt;
++        {/* Header */}
++        &lt;div className="flex items-center justify-between px-6 py-4 border-b border-border"&gt;
++          &lt;div className="flex items-center gap-3"&gt;
++            &lt;svg
++              className="w-5 h-5 text-muted-foreground"
++              fill="none"
++              viewBox="0 0 24 24"
++              stroke="currentColor"
++              strokeWidth={1.5}
++            &gt;
++              &lt;path
++                strokeLinecap="round"
++                strokeLinejoin="round"
++                d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"
++              /&gt;
++            &lt;/svg&gt;
++            &lt;h2 className="text-lg font-semibold"&gt;
++              {editingToolUuid
++                ? TOOL_TYPE_CONFIG[toolType].editTitle
++                : TOOL_TYPE_CONFIG[toolType].addTitle}
++            &lt;/h2&gt;
++          &lt;/div&gt;
++          &lt;button
++            onClick={handleClose}
++            className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted transition-colors cursor-pointer"
++          &gt;
++            &lt;svg
++              className="w-5 h-5"
++              fill="none"
++              viewBox="0 0 24 24"
++              stroke="currentColor"
++              strokeWidth={2}
++            &gt;
++              &lt;path
++                strokeLinecap="round"
++                strokeLinejoin="round"
++                d="M6 18L18 6M6 6l12 12"
++              /&gt;
++            &lt;/svg&gt;
++          &lt;/button&gt;
++        &lt;/div&gt;
++
++        {/* Content */}
++        &lt;div
++          ref={sidebarContentRef}
++          className="flex-1 overflow-y-auto p-6 space-y-6"
++        &gt;
++          {isLoadingTool ? (
++            &lt;div className="flex items-center justify-center py-12"&gt;
++              &lt;svg
++                className="w-6 h-6 animate-spin"
++                fill="none"
++                viewBox="0 0 24 24"
++              &gt;
++                &lt;circle
++                  className="opacity-25"
++                  cx="12"
++                  cy="12"
++                  r="10"
++                  stroke="currentColor"
++                  strokeWidth="4"
++                &gt;&lt;/circle&gt;
++                &lt;path
++                  className="opacity-75"
++                  fill="currentColor"
++                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
++                &gt;&lt;/path&gt;
++              &lt;/svg&gt;
++            &lt;/div&gt;
++          ) : (
++            &lt;&gt;
++              {/* Helper Callout */}
++              &lt;div className="flex gap-3 p-4 rounded-xl bg-blue-500/10 border border-blue-500/20"&gt;
++                &lt;svg
++                  className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5"
++                  fill="none"
++                  viewBox="0 0 24 24"
++                  stroke="currentColor"
++                  strokeWidth={1.5}
++                &gt;
++                  &lt;path
++                    strokeLinecap="round"
++                    strokeLinejoin="round"
++                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
++                  /&gt;
++                &lt;/svg&gt;
++                &lt;p className="text-sm text-blue-700 dark:text-blue-200"&gt;
++                  {TOOL_TYPE_CONFIG[toolType].description}
++                &lt;/p&gt;
++              &lt;/div&gt;
++
++              {/* Configuration Section */}
++              &lt;div className="border border-border rounded-xl p-5 space-y-5 bg-muted/100"&gt;
++                &lt;div&gt;
++                  &lt;h3 className="text-base font-medium mb-1"&gt;
++                    Configuration
++                  &lt;/h3&gt;
++                &lt;/div&gt;
++
++                {/* Name */}
++                &lt;div&gt;
++                  &lt;label className="block text-sm font-medium mb-2"&gt;
++                    Name &lt;span className="text-red-500"&gt;*&lt;/span&gt;
++                  &lt;/label&gt;
++                  &lt;input
++                    type="text"
++                    value={toolName}
++                    onChange={(e) =&gt; setToolName(e.target.value)}
++                    placeholder="An informative name for the tool that reflects its purpose"
++                    className={&#96;w-full h-10 px-4 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent ${
++                      validationAttempted &amp;&amp; !toolName.trim()
++                        ? "border-red-500"
++                        : "border-border"
++                    }&#96;}
++                  /&gt;
++                &lt;/div&gt;
++
++                {/* Description */}
++                &lt;div&gt;
++                  &lt;label className="block text-sm font-medium mb-2"&gt;
++                    Description &lt;span className="text-red-500"&gt;*&lt;/span&gt;
++                  &lt;/label&gt;
++                  &lt;textarea
++                    value={toolDescription}
++                    onChange={(e) =&gt; setToolDescription(e.target.value)}
++                    placeholder="Describe to the LLM how and when to use the tool along with what should be passed to the tool"
++                    rows={3}
++                    className={&#96;w-full px-4 py-3 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none ${
++                      validationAttempted &amp;&amp; !toolDescription.trim()
++                        ? "border-red-500"
++                        : "border-border"
++                    }&#96;}
++                  /&gt;
++                &lt;/div&gt;
++
++                {/* Webhook-specific fields */}
++                {toolType === "webhook" &amp;&amp; (
++                  &lt;&gt;
++                    {/* Method and URL */}
++                    &lt;div className="flex gap-4"&gt;
++                      &lt;div className="w-36"&gt;
++                        &lt;label className="block text-sm font-medium mb-2"&gt;
++                          Method
++                        &lt;/label&gt;
++                        &lt;div className="relative"&gt;
++                          &lt;select
++                            value={webhookMethod}
++                            onChange={(e) =&gt;
++                              setWebhookMethod(
++                                e.target.value as "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
++                              )
++                            }
++                            className="w-full h-10 px-4 pr-10 rounded-md text-base border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent appearance-none cursor-pointer"
++                          &gt;
++                            &lt;option value="GET"&gt;GET&lt;/option&gt;
++                            &lt;option value="POST"&gt;POST&lt;/option&gt;
++                            &lt;option value="PUT"&gt;PUT&lt;/option&gt;
++                            &lt;option value="PATCH"&gt;PATCH&lt;/option&gt;
++                            &lt;option value="DELETE"&gt;DELETE&lt;/option&gt;
++                          &lt;/select&gt;
++                          &lt;svg
++                            className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none"
++                            fill="none"
++                            viewBox="0 0 24 24"
++                            stroke="currentColor"
++                            strokeWidth={2}
++                          &gt;
++                            &lt;path
++                              strokeLinecap="round"
++                              strokeLinejoin="round"
++                              d="M19 9l-7 7-7-7"
++                            /&gt;
++                          &lt;/svg&gt;
++                        &lt;/div&gt;
++                      &lt;/div&gt;
++                      &lt;div className="flex-1"&gt;
++                        &lt;label className="block text-sm font-medium mb-2"&gt;
++                          URL &lt;span className="text-red-500"&gt;*&lt;/span&gt;
++                        &lt;/label&gt;
++                        &lt;input
++                          type="text"
++                          value={webhookUrl}
++                          onChange={(e) =&gt; setWebhookUrl(e.target.value)}
++                          placeholder="https://example.com/{hi}/webhook"
++                          className={&#96;w-full h-10 px-4 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent ${
++                            validationAttempted &amp;&amp;
++                            toolType === "webhook" &amp;&amp;
++                            !isValidUrl(webhookUrl)
++                              ? "border-red-500"
++                              : "border-border"
++                          }&#96;}
++                        /&gt;
++                        {validationAttempted &amp;&amp;
++                          toolType === "webhook" &amp;&amp;
++                          !isValidUrl(webhookUrl) &amp;&amp; (
++                            &lt;p className="text-xs text-red-500 mt-1"&gt;
++                              {webhookUrl.trim()
++                                ? "Please enter a valid URL"
++                                : "URL is required"}
++                            &lt;/p&gt;
++                          )}
++                      &lt;/div&gt;
++                    &lt;/div&gt;
++
++                    {/* Response Timeout */}
++                    &lt;div&gt;
++                      &lt;label className="block text-sm font-medium mb-1"&gt;
++                        Response timeout (seconds)
++                      &lt;/label&gt;
++                      &lt;p className="text-sm text-muted-foreground mb-3"&gt;
++                        How long to wait for the webhook tool to respond before
++                        timing out. Default is 20 seconds.
++                      &lt;/p&gt;
++                      &lt;div className="relative pt-6"&gt;
++                        {/* Tooltip */}
++                        {showTimeoutTooltip &amp;&amp; (
++                          &lt;div
++                            className="absolute -top-1 transform -translate-x-1/2 pointer-events-none z-10"
++                            style={{
++                              left: &#96;calc(${((responseTimeout - 1) / 119) * 100}% + ${8 - ((responseTimeout - 1) / 119) * 16}px)&#96;,
++                            }}
++                          &gt;
++                            &lt;div className="bg-foreground text-background text-xs font-medium px-2 py-1 rounded-md whitespace-nowrap"&gt;
++                              {responseTimeout} secs
++                            &lt;/div&gt;
++                            &lt;div
++                              className="w-2 h-2 bg-foreground transform rotate-45 absolute left-1/2 -translate-x-1/2 -bottom-1"
++                            /&gt;
++                          &lt;/div&gt;
++                        )}
++                        {/* Track background */}
++                        &lt;div className="relative h-2"&gt;
++                          {/* Unfilled track */}
++                          &lt;div className="absolute inset-0 bg-muted rounded-full" /&gt;
++                          {/* Filled track */}
++                          &lt;div
++                            className="absolute top-0 left-0 h-full bg-foreground rounded-full"
++                            style={{
++                              width: &#96;${((responseTimeout - 1) / 119) * 100}%&#96;,
++                            }}
++                          /&gt;
++                          {/* Input */}
++                          &lt;input
++                            type="range"
++                            min={1}
++                            max={120}
++                            value={responseTimeout}
++                            onChange={(e) =&gt;
++                              setResponseTimeout(parseInt(e.target.value, 10))
++                            }
++                            onMouseEnter={() =&gt; setShowTimeoutTooltip(true)}
++                            onMouseLeave={() =&gt; setShowTimeoutTooltip(false)}
++                            onFocus={() =&gt; setShowTimeoutTooltip(true)}
++                            onBlur={() =&gt; setShowTimeoutTooltip(false)}
++                            className="absolute inset-0 w-full h-full appearance-none bg-transparent cursor-pointer [&amp;::-webkit-slider-thumb]:appearance-none [&amp;::-webkit-slider-thumb]:w-4 [&amp;::-webkit-slider-thumb]:h-4 [&amp;::-webkit-slider-thumb]:rounded-full [&amp;::-webkit-slider-thumb]:bg-foreground [&amp;::-webkit-slider-thumb]:cursor-pointer [&amp;::-webkit-slider-thumb]:shadow-md [&amp;::-moz-range-thumb]:w-4 [&amp;::-moz-range-thumb]:h-4 [&amp;::-moz-range-thumb]:rounded-full [&amp;::-moz-range-thumb]:bg-foreground [&amp;::-moz-range-thumb]:border-0 [&amp;::-moz-range-thumb]:cursor-pointer [&amp;::-moz-range-thumb]:shadow-md"
++                          /&gt;
++                        &lt;/div&gt;
++                      &lt;/div&gt;
++                    &lt;/div&gt;
++                  &lt;/&gt;
++                )}
++              &lt;/div&gt;
++
++              {/* Headers Section - Webhook only */}
++              {toolType === "webhook" &amp;&amp; (
++                &lt;div className="border border-border rounded-xl p-5 space-y-5 bg-muted/100"&gt;
++                  &lt;div className="flex items-start justify-between"&gt;
++                    &lt;div&gt;
++                      &lt;h3 className="text-base font-medium mb-1"&gt;Headers&lt;/h3&gt;
++                      &lt;p className="text-sm text-muted-foreground"&gt;
++                        Define headers that will be sent with the request
++                      &lt;/p&gt;
++                    &lt;/div&gt;
++                    &lt;button
++                      onClick={() =&gt; {
++                        setWebhookHeaders([
++                          ...webhookHeaders,
++                          {
++                            id: crypto.randomUUID(),
++                            name: "",
++                            value: "",
++                          },
++                        ]);
++                      }}
++                      className="h-9 px-4 rounded-md text-sm font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer whitespace-nowrap flex-shrink-0"
++                    &gt;
++                      Add header
++                    &lt;/button&gt;
++                  &lt;/div&gt;
++
++                  {/* Header Cards */}
++                  {webhookHeaders.map((header) =&gt; (
++                    &lt;div
++                      key={header.id}
++                      className="border border-border rounded-xl p-4 space-y-4 bg-background"
++                    &gt;
++                      {/* Name */}
++                      &lt;div&gt;
++                        &lt;label className="block text-sm font-medium mb-2"&gt;
++                          Name
++                        &lt;/label&gt;
++                        &lt;input
++                          type="text"
++                          value={header.name}
++                          onChange={(e) =&gt; {
++                            setWebhookHeaders(
++                              webhookHeaders.map((h) =&gt;
++                                h.id === header.id
++                                  ? { ...h, name: e.target.value }
++                                  : h
++                              )
++                            );
++                          }}
++                          placeholder="e.g., Authorization"
++                          className="w-full h-10 px-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
++                        /&gt;
++                      &lt;/div&gt;
++
++                      {/* Value */}
++                      &lt;div&gt;
++                        &lt;label className="block text-sm font-medium mb-2"&gt;
++                          Value
++                        &lt;/label&gt;
++                        &lt;input
++                          type="text"
++                          value={header.value}
++                          onChange={(e) =&gt; {
++                            setWebhookHeaders(
++                              webhookHeaders.map((h) =&gt;
++                                h.id === header.id
++                                  ? { ...h, value: e.target.value }
++                                  : h
++                              )
++                            );
++                          }}
++                          placeholder="Header value"
++                          className="w-full h-10 px-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
++                        /&gt;
++                      &lt;/div&gt;
++
++                      {/* Delete button */}
++                      &lt;div className="flex justify-end"&gt;
++                        &lt;button
++                          onClick={() =&gt; {
++                            setWebhookHeaders(
++                              webhookHeaders.filter((h) =&gt; h.id !== header.id)
++                            );
++                          }}
++                          className="h-9 px-4 rounded-md text-sm font-medium text-red-500 bg-red-500/10 hover:text-red-600 hover:bg-red-500/20 transition-colors cursor-pointer"
++                        &gt;
++                          Delete
++                        &lt;/button&gt;
++                      &lt;/div&gt;
++                    &lt;/div&gt;
++                  ))}
++                &lt;/div&gt;
++              )}
++
++              {/* Parameters Section - Structured Output Tools Only */}
++              {toolType === "structured_output" &amp;&amp; (
++                &lt;div className="border border-border rounded-xl p-5 space-y-5 bg-muted/100"&gt;
++                  &lt;div className="flex items-start justify-between"&gt;
++                    &lt;div&gt;
++                      &lt;h3 className="text-base font-medium mb-1"&gt;
++                        Parameters
++                      &lt;/h3&gt;
++                      &lt;p className="text-sm text-muted-foreground"&gt;
++                        Define the structure of the output that the agent
++                        should produce
++                      &lt;/p&gt;
++                    &lt;/div&gt;
++                    &lt;button
++                      onClick={addParameter}
++                      className="h-9 px-4 rounded-md text-sm font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer whitespace-nowrap flex-shrink-0"
++                    &gt;
++                      Add param
++                    &lt;/button&gt;
++                  &lt;/div&gt;
++
++                  {/* Parameter Cards */}
++                  {parameters.map((param) =&gt; (
++                    &lt;ParameterCard
++                      key={param.id}
++                      param={param}
++                      path={[]}
++                      onUpdate={handleUpdateAtPath}
++                      onRemove={handleRemoveAtPath}
++                      onAddProperty={handleAddPropertyAtPath}
++                      onSetItems={handleSetItemsAtPath}
++                      validationAttempted={validationAttempted}
++                      siblingNames={parameters
++                        .filter((p) =&gt; p.id !== param.id)
++                        .map((p) =&gt; p.name)}
++                      hideDelete={parameters.length === 1}
++                    /&gt;
++                  ))}
++                &lt;/div&gt;
++              )}
++
++              {/* Query Parameters Section - Webhook Tools Only */}
++              {toolType === "webhook" &amp;&amp; (
++                &lt;div className="border border-border rounded-xl p-5 space-y-5 bg-muted/100"&gt;
++                  &lt;div className="flex items-start justify-between"&gt;
++                    &lt;div&gt;
++                      &lt;h3 className="text-base font-medium mb-1"&gt;
++                        Query parameters
++                      &lt;/h3&gt;
++                      &lt;p className="text-sm text-muted-foreground"&gt;
++                        Define parameters that will be collected by the LLM and
++                        sent as the query of the request.
++                      &lt;/p&gt;
++                    &lt;/div&gt;
++                    &lt;button
++                      onClick={addQueryParameter}
++                      className="h-9 px-4 rounded-md text-sm font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer whitespace-nowrap flex-shrink-0"
++                    &gt;
++                      Add param
++                    &lt;/button&gt;
++                  &lt;/div&gt;
++
++                  {/* Query Parameter Cards */}
++                  {queryParameters.map((param) =&gt; (
++                    &lt;div
++                      key={param.id}
++                      ref={(el) =&gt; {
++                        if (el) {
++                          queryParamRefs.current.set(param.id, el);
++                        } else {
++                          queryParamRefs.current.delete(param.id);
++                        }
++                      }}
++                    &gt;
++                      &lt;ParameterCard
++                        param={param}
++                        path={[]}
++                        onUpdate={handleQueryUpdateAtPath}
++                        onRemove={handleQueryRemoveAtPath}
++                        onAddProperty={handleQueryAddPropertyAtPath}
++                        onSetItems={handleQuerySetItemsAtPath}
++                        validationAttempted={validationAttempted}
++                        siblingNames={queryParameters
++                          .filter((p) =&gt; p.id !== param.id)
++                          .map((p) =&gt; p.name)}
++                      /&gt;
++                    &lt;/div&gt;
++                  ))}
++                &lt;/div&gt;
++              )}
++
++              {/* Body Parameters Section - Webhook Tools with POST, PUT, PATCH Only */}
++              {toolType === "webhook" &amp;&amp; ["POST", "PUT", "PATCH"].includes(webhookMethod) &amp;&amp; (
++                &lt;div className="border border-border rounded-xl p-5 space-y-5 bg-muted/50"&gt;
++                  &lt;div&gt;
++                    &lt;h3 className="text-base font-medium mb-1"&gt;Body parameters&lt;/h3&gt;
++                    &lt;p className="text-sm text-muted-foreground"&gt;
++                      Define parameters that will be collected by the LLM and
++                      sent as the body of the request.
++                    &lt;/p&gt;
++                  &lt;/div&gt;
++
++                  {/* Inner container for body content */}
++                  &lt;div className="border border-border rounded-xl p-4 space-y-4 bg-background"&gt;
++                    {/* Body Description */}
++                    &lt;div&gt;
++                      &lt;label className="block text-sm font-medium mb-2"&gt;
++                        Description &lt;span className="text-red-500"&gt;*&lt;/span&gt;
++                      &lt;/label&gt;
++                      &lt;textarea
++                        value={bodyDescription}
++                        onChange={(e) =&gt; setBodyDescription(e.target.value)}
++                        placeholder="Describe the body structure"
++                        rows={3}
++                        className={&#96;w-full px-4 py-3 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none ${
++                          validationAttempted &amp;&amp; !bodyDescription.trim()
++                            ? "border-red-500"
++                            : "border-border"
++                        }&#96;}
++                      /&gt;
++                    &lt;/div&gt;
++
++                    {/* Properties - same UI as object type properties */}
++                    &lt;div&gt;
++                      &lt;label className="block text-sm font-medium mb-2"&gt;
++                        Properties
++                      &lt;/label&gt;
++                      &lt;NestedContainer onAddProperty={addBodyParameter}&gt;
++                        {/* Body Parameter Cards */}
++                        {bodyParameters.length &gt; 0 &amp;&amp; (
++                          &lt;div className="space-y-4"&gt;
++                            {bodyParameters.map((param) =&gt; (
++                              &lt;ParameterCard
++                                key={param.id}
++                                param={param}
++                                path={[]}
++                                onUpdate={handleBodyUpdateAtPath}
++                                onRemove={handleBodyRemoveAtPath}
++                                onAddProperty={handleBodyAddPropertyAtPath}
++                                onSetItems={handleBodySetItemsAtPath}
++                                validationAttempted={validationAttempted}
++                                siblingNames={bodyParameters
++                                  .filter((p) =&gt; p.id !== param.id)
++                                  .map((p) =&gt; p.name)}
++                              /&gt;
++                            ))}
++                          &lt;/div&gt;
++                        )}
++                      &lt;/NestedContainer&gt;
++                    &lt;/div&gt;
++                  &lt;/div&gt;
++                &lt;/div&gt;
++              )}
++            &lt;/&gt;
++          )}
++        &lt;/div&gt;
++
++        {/* Footer */}
++        &lt;div className="px-6 py-4 border-t border-border space-y-3"&gt;
++          {createError &amp;&amp; (
++            &lt;p className="text-sm text-red-500"&gt;{createError}&lt;/p&gt;
++          )}
++          &lt;div className="flex items-center justify-end gap-3"&gt;
++            &lt;button
++              onClick={handleClose}
++              disabled={isCreating || isLoadingTool}
++              className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
++            &gt;
++              Cancel
++            &lt;/button&gt;
++            &lt;button
++              onClick={editingToolUuid ? updateTool : createTool}
++              disabled={isCreating || isLoadingTool}
++              className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
++            &gt;
++              {isCreating ? (
++                &lt;&gt;
++                  &lt;svg
++                    className="w-4 h-4 animate-spin"
++                    fill="none"
++                    viewBox="0 0 24 24"
++                  &gt;
++                    &lt;circle
++                      className="opacity-25"
++                      cx="12"
++                      cy="12"
++                      r="10"
++                      stroke="currentColor"
++                      strokeWidth="4"
++                    &gt;&lt;/circle&gt;
++                    &lt;path
++                      className="opacity-75"
++                      fill="currentColor"
++                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
++                    &gt;&lt;/path&gt;
++                  &lt;/svg&gt;
++                  {editingToolUuid ? "Saving..." : "Creating..."}
++                &lt;/&gt;
++              ) : editingToolUuid ? (
++                "Save"
++              ) : (
++                "Add tool"
++              )}
++            &lt;/button&gt;
++          &lt;/div&gt;
++        &lt;/div&gt;
++      &lt;/div&gt;
++    &lt;/div&gt;
++  );
++}
+diff --git a/src/components/test-results/shared.tsx b/src/components/test-results/shared.tsx
+index 1462d4f..d79fc74 100644
+--- a/src/components/test-results/shared.tsx
++++ b/src/components/test-results/shared.tsx
+@@ -105,6 +105,20 @@ export function SmallStatusBadge({ passed }: { passed: boolean }) {
+   );
+ }
+ 
++// Helper to format parameter value for display
++function formatParamValue(value: any): string {
++  if (value === null) return "null";
++  if (value === undefined) return "undefined";
++  if (typeof value === "object") {
++    try {
++      return JSON.stringify(value, null, 2);
++    } catch {
++      return String(value);
++    }
++  }
++  return String(value);
++}
++
+ // Shared Tool Call Card Component
+ export function ToolCallCard({
+   toolName,
+@@ -113,26 +127,35 @@ export function ToolCallCard({
+   toolName: string;
+   args: Record&lt;string, any&gt;;
+ }) {
++
+   return (
+-    &lt;div className="bg-muted/20 border border-border rounded-2xl p-4"&gt;
++    &lt;div className="bg-muted border border-border rounded-2xl p-4"&gt;
+       &lt;div className="flex items-center gap-2 mb-2"&gt;
+         &lt;ToolIcon className="w-4 h-4 text-muted-foreground" /&gt;
+         &lt;span className="text-sm font-medium text-foreground"&gt;{toolName}&lt;/span&gt;
+       &lt;/div&gt;
+-      {Object.keys(args).length &gt; 0 &amp;&amp; (
+-        &lt;div className="space-y-2 mt-3"&gt;
+-          {Object.entries(args).map(([paramName, paramValue]) =&gt; (
+-            &lt;div key={paramName}&gt;
+-              &lt;label className="block text-xs font-medium text-muted-foreground mb-1"&gt;
+-                {paramName}
+-              &lt;/label&gt;
+-              &lt;div className="px-3 py-2 rounded-lg text-sm bg-background border border-border text-foreground"&gt;
+-                {typeof paramValue === "object"
+-                  ? JSON.stringify(paramValue)
+-                  : String(paramValue)}
++      {Object.keys(args).filter(k =&gt; k !== "headers").length &gt; 0 &amp;&amp; (
++        &lt;div className="space-y-3 mt-3"&gt;
++          {Object.entries(args)
++            .filter(([paramName]) =&gt; paramName !== "headers")
++            .map(([paramName, paramValue]) =&gt; {
++            const displayValue = formatParamValue(paramValue);
++            const isMultiLine = displayValue.includes("\n");
++            return (
++              &lt;div key={paramName}&gt;
++                &lt;label className="block text-sm font-medium text-muted-foreground mb-1.5"&gt;
++                  {paramName}
++                &lt;/label&gt;
++                &lt;div
++                  className={&#96;px-3 py-2 rounded-lg text-sm bg-background border border-border text-foreground whitespace-pre-wrap break-all ${
++                    isMultiLine ? "font-mono text-xs" : ""
++                  }&#96;}
++                &gt;
++                  {displayValue}
++                &lt;/div&gt;
+               &lt;/div&gt;
+-            &lt;/div&gt;
+-          ))}
++            );
++          })}
+         &lt;/div&gt;
+       )}
+     &lt;/div&gt;
+@@ -164,8 +187,8 @@ export function TestDetailView({
+               &gt;
+                 {/* User Message */}
+                 {message.role === "user" &amp;&amp; (
+-                  &lt;div className="max-w-[80%]"&gt;
+-                    &lt;div className="px-4 py-3 rounded-2xl bg-[#242426] border border-[#444]"&gt;
++                  &lt;div className="w-1/2"&gt;
++                    &lt;div className="px-4 py-3 rounded-xl bg-muted border border-border"&gt;
+                       &lt;p className="text-sm text-foreground whitespace-pre-wrap"&gt;
+                         {message.content}
+                       &lt;/p&gt;
+@@ -181,8 +204,8 @@ export function TestDetailView({
+                         Agent
+                       &lt;/span&gt;
+                     &lt;/div&gt;
+-                    &lt;div className="max-w-[80%]"&gt;
+-                      &lt;div className="px-4 py-3 rounded-2xl bg-muted/30 border border-border"&gt;
++                    &lt;div className="w-1/2"&gt;
++                      &lt;div className="px-4 py-3 rounded-xl bg-background border border-border"&gt;
+                         &lt;p className="text-sm text-foreground whitespace-pre-wrap"&gt;
+                           {message.content}
+                         &lt;/p&gt;
+@@ -201,7 +224,7 @@ export function TestDetailView({
+                           Agent Tool Call
+                         &lt;/span&gt;
+                       &lt;/div&gt;
+-                      &lt;div className="max-w-[80%]"&gt;
++                      &lt;div className="w-1/2"&gt;
+                         {message.tool_calls.map((toolCall, tcIndex) =&gt; {
+                           let parsedArgs: Record&lt;string, any&gt; = {};
+                           try {
+@@ -246,8 +269,8 @@ export function TestDetailView({
+                 &lt;/span&gt;
+                 &lt;SmallStatusBadge passed={passed} /&gt;
+               &lt;/div&gt;
+-              &lt;div className="max-w-[80%]"&gt;
+-                &lt;div className="px-4 py-3 rounded-2xl bg-muted/30 border border-border"&gt;
++              &lt;div className="w-1/2"&gt;
++                &lt;div className="px-4 py-3 rounded-xl bg-background border border-border"&gt;
+                   &lt;p className="text-sm text-foreground whitespace-pre-wrap"&gt;
+                     {output.response}
+                   &lt;/p&gt;
+@@ -273,7 +296,7 @@ export function TestDetailView({
+               &lt;/div&gt;
+               &lt;div className="space-y-3"&gt;
+                 {output.tool_calls.map((toolCall, index) =&gt; (
+-                  &lt;div key={index} className="max-w-[80%]"&gt;
++                  &lt;div key={index} className="w-1/2"&gt;
+                     &lt;ToolCallCard
+                       toolName={toolCall.tool}
+                       args={toolCall.arguments}
+diff --git a/src/components/ui/NestedContainer.tsx b/src/components/ui/NestedContainer.tsx
+new file mode 100644
+index 0000000..aa65731
+--- /dev/null
++++ b/src/components/ui/NestedContainer.tsx
+@@ -0,0 +1,41 @@
++import React from "react";
++
++type NestedContainerProps = {
++  children: React.ReactNode;
++  onAddProperty?: () =&gt; void;
++  addButtonText?: string;
++  showAddButton?: boolean;
++  showValidationError?: boolean;
++};
++
++/**
++ * A theme-aware nested container for properties/items sections.
++ * Used in ParameterCard, AddToolDialog, DataExtractionTabContent, etc.
++ * Provides consistent styling for nested object properties and array items.
++ */
++export const NestedContainer = ({
++  children,
++  onAddProperty,
++  addButtonText = "Add property",
++  showAddButton = true,
++  showValidationError = false,
++}: NestedContainerProps) =&gt; {
++  return (
++    &lt;div className="border border-border rounded-xl bg-muted p-4 space-y-4"&gt;
++      {children}
++      {showAddButton &amp;&amp; onAddProperty &amp;&amp; (
++        &lt;div className="flex justify-center"&gt;
++          &lt;button
++            type="button"
++            onClick={onAddProperty}
++            className={&#96;h-10 px-6 rounded-md text-sm font-medium border bg-background hover:bg-muted/50 transition-colors cursor-pointer ${
++              showValidationError ? "border-red-500" : "border-border"
++            }&#96;}
++          &gt;
++            {addButtonText}
++          &lt;/button&gt;
++        &lt;/div&gt;
++      )}
++    &lt;/div&gt;
++  );
++};
+
+```
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me read what the key changes are.</details></think>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2">
+<details><summary>Tool use: **run_terminal_command_v2** • Run command: git log main..HEAD --oneline 2>/dev/null || echo "No commits ahead of main"</summary>
+
+```bash
+git log main..HEAD --oneline 2>/dev/null || echo "No commits ahead of main"
+```
+
+```
+42a47c9 added ui for tool response error
+fe6c2ef incorporated fixes
+284873d added support for webhook tool
+
+```
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me get a more detailed summary of what changed in each file by looking at the diff directly.</details></think>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2">
+<details><summary>Tool use: **run_terminal_command_v2** • Run command: git diff main... -- src/ --stat | grep -v '.specstory'</summary>
+
+```bash
+git diff main... -- src/ --stat | grep -v '.specstory'
+```
+
+```
+diff --git a/src/app/metrics/page.tsx b/src/app/metrics/page.tsx
+index 4012977..5fa3bce 100644
+--- a/src/app/metrics/page.tsx
++++ b/src/app/metrics/page.tsx
+@@ -414,23 +414,21 @@ export default function MetricsPage() {
+     &gt;
+       &lt;div className="space-y-6"&gt;
+         {/* Header */}
+-        &lt;div className="flex items-center justify-between"&gt;
+-          &lt;div&gt;
+-            &lt;h1 className="text-2xl font-semibold"&gt;Metrics&lt;/h1&gt;
+-            &lt;p className="text-muted-foreground text-base leading-relaxed mt-1"&gt;
+-              Understand and analyze the performance of your agents
+-            &lt;/p&gt;
+-          &lt;/div&gt;
+-          &lt;button
+-            onClick={() =&gt; {
+-              resetForm();
+-              setAddMetricSidebarOpen(true);
+-            }}
+-            className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
+-          &gt;
+-            Add metric
+-          &lt;/button&gt;
++        &lt;div&gt;
++          &lt;h1 className="text-2xl font-semibold"&gt;Metrics&lt;/h1&gt;
++          &lt;p className="text-muted-foreground text-base leading-relaxed mt-1"&gt;
++            Understand and analyze the performance of your agents
++          &lt;/p&gt;
+         &lt;/div&gt;
++        &lt;button
++          onClick={() =&gt; {
++            resetForm();
++            setAddMetricSidebarOpen(true);
++          }}
++          className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
++        &gt;
++          Add metric
++        &lt;/button&gt;
+ 
+         {/* Search Input */}
+         &lt;div className="relative max-w-md"&gt;
+diff --git a/src/app/personas/page.tsx b/src/app/personas/page.tsx
+index d29226b..3b24b5f 100644
+--- a/src/app/personas/page.tsx
++++ b/src/app/personas/page.tsx
+@@ -409,24 +409,22 @@ export default function PersonasPage() {
+     &gt;
+       &lt;div className="space-y-6"&gt;
+         {/* Header */}
+-        &lt;div className="flex items-center justify-between"&gt;
+-          &lt;div&gt;
+-            &lt;h1 className="text-2xl font-semibold"&gt;Personas&lt;/h1&gt;
+-            &lt;p className="text-muted-foreground text-base leading-relaxed mt-1"&gt;
+-              Personas define the characteristics of the simulated user
+-              interacting with your agent
+-            &lt;/p&gt;
+-          &lt;/div&gt;
+-          &lt;button
+-            onClick={() =&gt; {
+-              resetForm();
+-              setAddPersonaSidebarOpen(true);
+-            }}
+-            className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
+-          &gt;
+-            Add persona
+-          &lt;/button&gt;
++        &lt;div&gt;
++          &lt;h1 className="text-2xl font-semibold"&gt;Personas&lt;/h1&gt;
++          &lt;p className="text-muted-foreground text-base leading-relaxed mt-1"&gt;
++            Personas define the characteristics of the simulated user
++            interacting with your agent
++          &lt;/p&gt;
+         &lt;/div&gt;
++        &lt;button
++          onClick={() =&gt; {
++            resetForm();
++            setAddPersonaSidebarOpen(true);
++          }}
++          className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
++        &gt;
++          Add persona
++        &lt;/button&gt;
+ 
+         {/* Search Input */}
+         &lt;div className="relative max-w-md"&gt;
+diff --git a/src/app/scenarios/page.tsx b/src/app/scenarios/page.tsx
+index 83b1691..c5d9d87 100644
+--- a/src/app/scenarios/page.tsx
++++ b/src/app/scenarios/page.tsx
+@@ -364,24 +364,22 @@ export default function ScenariosPage() {
+     &gt;
+       &lt;div className="space-y-6"&gt;
+         {/* Header */}
+-        &lt;div className="flex items-center justify-between"&gt;
+-          &lt;div&gt;
+-            &lt;h1 className="text-2xl font-semibold"&gt;Scenarios&lt;/h1&gt;
+-            &lt;p className="text-muted-foreground text-base leading-relaxed mt-1"&gt;
+-              Scenarios define the specific task or conversation goal for the
+-              simulation
+-            &lt;/p&gt;
+-          &lt;/div&gt;
+-          &lt;button
+-            onClick={() =&gt; {
+-              resetForm();
+-              setAddScenarioSidebarOpen(true);
+-            }}
+-            className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
+-          &gt;
+-            Add scenario
+-          &lt;/button&gt;
++        &lt;div&gt;
++          &lt;h1 className="text-2xl font-semibold"&gt;Scenarios&lt;/h1&gt;
++          &lt;p className="text-muted-foreground text-base leading-relaxed mt-1"&gt;
++            Scenarios define the specific task or conversation goal for the
++            simulation
++          &lt;/p&gt;
+         &lt;/div&gt;
++        &lt;button
++          onClick={() =&gt; {
++            resetForm();
++            setAddScenarioSidebarOpen(true);
++          }}
++          className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
++        &gt;
++          Add scenario
++        &lt;/button&gt;
+ 
+         {/* Search Input */}
+         &lt;div className="relative max-w-md"&gt;
+diff --git a/src/app/simulations/[uuid]/runs/[runId]/page.tsx b/src/app/simulations/[uuid]/runs/[runId]/page.tsx
+index 3b0a0d8..cc8f488 100644
+--- a/src/app/simulations/[uuid]/runs/[runId]/page.tsx
++++ b/src/app/simulations/[uuid]/runs/[runId]/page.tsx
+@@ -1186,10 +1186,20 @@ export default function SimulationRunPage() {
+               &lt;div className="space-y-4"&gt;
+                 {(() =&gt; {
+                   const fullTranscript = selectedSimulation.transcript ?? [];
+-                  const filteredTranscript = fullTranscript.filter(
+-                    (entry) =&gt;
+-                      entry.role !== "tool" &amp;&amp; entry.role !== "end_reason",
+-                  );
++                  // Filter out end_reason, but keep tool messages that are webhook_response
++                  const filteredTranscript = fullTranscript.filter((entry) =&gt; {
++                    if (entry.role === "end_reason") return false;
++                    if (entry.role === "tool") {
++                      // Only include tool messages that are webhook_response
++                      try {
++                        const parsed = JSON.parse(entry.content || "");
++                        return parsed?.type === "webhook_response";
++                      } catch {
++                        return false;
++                      }
++                    }
++                    return true;
++                  });
+                   // Check if conversation ended due to max turns
+                   const lastEntry = fullTranscript[fullTranscript.length - 1];
+                   const endedDueToMaxTurns =
+@@ -1279,50 +1289,142 @@ export default function SimulationRunPage() {
+                               } catch {
+                                 parsedArgs = {};
+                               }
+-                              return (
+-                                &lt;div
+-                                  key={toolIndex}
+-                                  className="bg-muted border border-border rounded-2xl p-4 mb-2"
+-                                &gt;
+-                                  &lt;div className="flex items-center gap-2 mb-2"&gt;
+-                                    &lt;svg
+-                                      className="w-4 h-4 text-muted-foreground"
+-                                      fill="none"
+-                                      viewBox="0 0 24 24"
+-                                      stroke="currentColor"
+-                                      strokeWidth={1.5}
+-                                    &gt;
+-                                      &lt;path
+-                                        strokeLinecap="round"
+-                                        strokeLinejoin="round"
+-                                        d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"
+-                                      /&gt;
+-                                    &lt;/svg&gt;
++
++                              // Helper to format parameter value
++                              const formatValue = (val: any): string =&gt; {
++                                if (val === null) return "null";
++                                if (val === undefined) return "undefined";
++                                if (typeof val === "object") {
++                                  try {
++                                    return JSON.stringify(val, null, 2);
++                                  } catch {
++                                    return String(val);
++                                  }
++                                }
++                                return String(val);
++                              };
++
++                                              return (
++                                                &lt;div
++                                                  key={toolIndex}
++                                                  className="bg-muted border border-border rounded-2xl p-4 mb-2"
++                                                &gt;
++                                                  &lt;div className="flex items-center gap-2 mb-2"&gt;
++                                                    &lt;svg
++                                                      className="w-4 h-4 text-muted-foreground"
++                                                      fill="none"
++                                                      viewBox="0 0 24 24"
++                                                      stroke="currentColor"
++                                                      strokeWidth={1.5}
++                                                    &gt;
++                                                      &lt;path
++                                                        strokeLinecap="round"
++                                                        strokeLinejoin="round"
++                                                        d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"
++                                                      /&gt;
++                                                    &lt;/svg&gt;
++                                                    &lt;span className="text-sm font-medium text-foreground"&gt;
++                                                      {toolCall.function.name}
++                                                    &lt;/span&gt;
++                                                  &lt;/div&gt;
++                                                  {Object.keys(parsedArgs).filter(k =&gt; k !== "headers").length &gt; 0 &amp;&amp; (
++                                                    &lt;div className="space-y-3 mt-3"&gt;
++                                                      {Object.entries(parsedArgs)
++                                                        .filter(([key]) =&gt; key !== "headers")
++                                                        .map(
++                                                        ([key, value], paramIndex) =&gt; {
++                                                          const displayValue = formatValue(value);
++                                                          const isMultiLine = displayValue.includes("\n");
++                                                          return (
++                                                            &lt;div key={paramIndex}&gt;
++                                                              &lt;label className="block text-sm font-medium text-foreground mb-1.5"&gt;
++                                                                {key}
++                                                              &lt;/label&gt;
++                                                              &lt;div
++                                                                className={&#96;px-3 py-2 bg-background border border-border rounded-lg text-sm text-muted-foreground whitespace-pre-wrap break-all ${
++                                                                  isMultiLine ? "font-mono text-xs" : ""
++                                                                }&#96;}
++                                                              &gt;
++                                                                {displayValue}
++                                                              &lt;/div&gt;
++                                                            &lt;/div&gt;
++                                                          );
++                                                        },
++                                                      )}
++                                                    &lt;/div&gt;
++                                                  )}
++                                                &lt;/div&gt;
++                                              );
++                            })}
++                          &lt;/div&gt;
++                        )}
++
++                        {/* Tool Response Display (webhook_response) */}
++                        {entry.role === "tool" &amp;&amp;
++                          entry.content &amp;&amp;
++                          (() =&gt; {
++                            // Try to parse content as JSON
++                            let parsed: any = null;
++                            try {
++                              parsed = JSON.parse(entry.content);
++                            } catch {
++                              return null; // Not valid JSON, don't render
++                            }
++
++                            // Check if it's a webhook_response
++                            if (parsed?.type !== "webhook_response") {
++                              return null;
++                            }
++
++                            const response = parsed.response;
++                            if (!response || typeof response !== "object") {
++                              return null;
++                            }
++
++                            // Check if response has error status
++                            const isError = parsed.status === "error";
++
++                            console.log(response)
++
++                            // Format response as pretty JSON
++                            const jsonString = JSON.stringify(response, null, 2);
++
++                            return (
++                              &lt;div className="w-1/2"&gt;
++                                &lt;div className="flex items-center gap-2 mb-2"&gt;
++                                  {isError ? (
++                                    &lt;&gt;
++                                      &lt;svg
++                                        className="w-4 h-4 text-red-500"
++                                        fill="none"
++                                        viewBox="0 0 24 24"
++                                        stroke="currentColor"
++                                        strokeWidth={2}
++                                      &gt;
++                                        &lt;path
++                                          strokeLinecap="round"
++                                          strokeLinejoin="round"
++                                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
++                                        /&gt;
++                                      &lt;/svg&gt;
++                                      &lt;span className="text-sm font-medium text-red-500"&gt;
++                                        Tool Response Error
++                                      &lt;/span&gt;
++                                    &lt;/&gt;
++                                  ) : (
+                                     &lt;span className="text-sm font-medium text-foreground"&gt;
+-                                      {toolCall.function.name}
++                                      Agent Tool Response
+                                     &lt;/span&gt;
+-                                  &lt;/div&gt;
+-                                  {Object.keys(parsedArgs).length &gt; 0 &amp;&amp; (
+-                                    &lt;div className="space-y-3 mt-3"&gt;
+-                                      {Object.entries(parsedArgs).map(
+-                                        ([key, value], paramIndex) =&gt; (
+-                                          &lt;div key={paramIndex}&gt;
+-                                            &lt;label className="block text-sm font-medium text-foreground mb-1.5"&gt;
+-                                              {key}
+-                                            &lt;/label&gt;
+-                                            &lt;div className="px-3 py-2 bg-background border border-border rounded-lg text-sm text-muted-foreground"&gt;
+-                                              {String(value)}
+-                                            &lt;/div&gt;
+-                                          &lt;/div&gt;
+-                                        ),
+-                                      )}
+-                                    &lt;/div&gt;
+                                   )}
+                                 &lt;/div&gt;
+-                              );
+-                            })}
+-                          &lt;/div&gt;
+-                        )}
++                                &lt;div className={&#96;bg-muted rounded-2xl p-4 border ${isError ? "border-red-500" : "border-border"}&#96;}&gt;
++                                  &lt;pre className={&#96;text-sm font-mono whitespace-pre-wrap break-all ${isError ? "text-red-400" : "text-foreground"}&#96;}&gt;
++                                    {jsonString}
++                                  &lt;/pre&gt;
++                                &lt;/div&gt;
++                              &lt;/div&gt;
++                            );
++                          })()}
+                       &lt;/div&gt;
+                     );
+                   });
+diff --git a/src/app/simulations/page.tsx b/src/app/simulations/page.tsx
+index 55896f4..86fd654 100644
+--- a/src/app/simulations/page.tsx
++++ b/src/app/simulations/page.tsx
+@@ -202,20 +202,18 @@ export default function SimulationsPage() {
+     &gt;
+       &lt;div className="space-y-6"&gt;
+         {/* Header */}
+-        &lt;div className="flex items-center justify-between"&gt;
+-          &lt;div&gt;
+-            &lt;h1 className="text-2xl font-semibold"&gt;Simulations&lt;/h1&gt;
+-            &lt;p className="text-muted-foreground text-base leading-relaxed mt-1"&gt;
+-              Simulate agent-user conversations and evaluate the results
+-            &lt;/p&gt;
+-          &lt;/div&gt;
+-          &lt;button
+-            onClick={() =&gt; setDialogOpen(true)}
+-            className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
+-          &gt;
+-            Add simulation
+-          &lt;/button&gt;
++        &lt;div&gt;
++          &lt;h1 className="text-2xl font-semibold"&gt;Simulations&lt;/h1&gt;
++          &lt;p className="text-muted-foreground text-base leading-relaxed mt-1"&gt;
++            Simulate agent-user conversations and evaluate the results
++          &lt;/p&gt;
+         &lt;/div&gt;
++        &lt;button
++          onClick={() =&gt; setDialogOpen(true)}
++          className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
++        &gt;
++          Add simulation
++        &lt;/button&gt;
+ 
+         {/* Search Input */}
+         &lt;div className="relative max-w-md"&gt;
+diff --git a/src/app/stt/page.tsx b/src/app/stt/page.tsx
+index 8111509..02b1152 100644
+--- a/src/app/stt/page.tsx
++++ b/src/app/stt/page.tsx
+@@ -139,22 +139,20 @@ export default function STTPage() {
+     &gt;
+       &lt;div className="space-y-6"&gt;
+         {/* Header */}
+-        &lt;div className="flex items-center justify-between"&gt;
+-          &lt;div&gt;
+-            &lt;h1 className="text-2xl font-semibold"&gt;
+-              Speech-to-Text Evaluation
+-            &lt;/h1&gt;
+-            &lt;p className="text-muted-foreground text-base leading-relaxed mt-1"&gt;
+-              Evaluate STT quality across multiple providers
+-            &lt;/p&gt;
+-          &lt;/div&gt;
+-          &lt;button
+-            onClick={() =&gt; router.push("/stt/new")}
+-            className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
+-          &gt;
+-            New STT evaluation
+-          &lt;/button&gt;
++        &lt;div&gt;
++          &lt;h1 className="text-2xl font-semibold"&gt;
++            Speech-to-Text Evaluation
++          &lt;/h1&gt;
++          &lt;p className="text-muted-foreground text-base leading-relaxed mt-1"&gt;
++            Evaluate STT quality across multiple providers
++          &lt;/p&gt;
+         &lt;/div&gt;
++        &lt;button
++          onClick={() =&gt; router.push("/stt/new")}
++          className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
++        &gt;
++          New STT evaluation
++        &lt;/button&gt;
+ 
+         {/* Jobs List / Loading / Error / Empty State */}
+         {isLoading ? (
+diff --git a/src/app/tests/page.tsx b/src/app/tests/page.tsx
+index e0fff76..a30e53e 100644
+--- a/src/app/tests/page.tsx
++++ b/src/app/tests/page.tsx
+@@ -455,23 +455,21 @@ export default function LLMPage() {
+     &gt;
+       &lt;div className="space-y-6"&gt;
+         {/* Header */}
+-        &lt;div className="flex items-center justify-between"&gt;
+-          &lt;div&gt;
+-            &lt;h1 className="text-2xl font-semibold"&gt;LLM Evaluation&lt;/h1&gt;
+-            &lt;p className="text-muted-foreground text-base leading-relaxed mt-1"&gt;
+-              Create and manage tests to evaluate your LLM
+-            &lt;/p&gt;
+-          &lt;/div&gt;
+-          &lt;button
+-            onClick={() =&gt; {
+-              resetForm();
+-              setAddTestSidebarOpen(true);
+-            }}
+-            className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
+-          &gt;
+-            Add test
+-          &lt;/button&gt;
++        &lt;div&gt;
++          &lt;h1 className="text-2xl font-semibold"&gt;LLM Evaluation&lt;/h1&gt;
++          &lt;p className="text-muted-foreground text-base leading-relaxed mt-1"&gt;
++            Create and manage tests to evaluate your LLM
++          &lt;/p&gt;
+         &lt;/div&gt;
++        &lt;button
++          onClick={() =&gt; {
++            resetForm();
++            setAddTestSidebarOpen(true);
++          }}
++          className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
++        &gt;
++          Add test
++        &lt;/button&gt;
+ 
+         {/* Search Input */}
+         &lt;div className="relative max-w-md"&gt;
+@@ -599,7 +597,7 @@ export default function LLMPage() {
+                       e.stopPropagation();
+                       openRunTestDialog(test);
+                     }}
+-                    className="group relative w-8 h-8 flex items-center justify-center rounded-lg bg-transparent text-white hover:bg-[#444] transition-colors cursor-pointer"
++                    className="group relative w-8 h-8 flex items-center justify-center rounded-lg bg-foreground/90 text-background hover:bg-foreground transition-colors cursor-pointer"
+                   &gt;
+                     &lt;svg
+                       className="w-3.5 h-3.5"
+diff --git a/src/app/tools/page.tsx b/src/app/tools/page.tsx
+index ecfcfdd..d1253ce 100644
+--- a/src/app/tools/page.tsx
++++ b/src/app/tools/page.tsx
+@@ -1,10 +1,10 @@
+ "use client";
+ 
+-import { useState, useEffect, useRef } from "react";
++import { useState, useEffect } from "react";
+ import { useRouter } from "next/navigation";
+ import { useSession, signOut } from "next-auth/react";
+ import { AppLayout } from "@/components/AppLayout";
+-import { ParameterCard, Parameter } from "@/components/ParameterCard";
++import { AddToolDialog } from "@/components/AddToolDialog";
+ import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
+ 
+ type ToolData = {
+@@ -27,415 +27,19 @@ export default function ToolsPage() {
+   useEffect(() =&gt; {
+     document.title = "Tools | Calibrate";
+   }, []);
+-  const [addToolSidebarOpen, setAddToolSidebarOpen] = useState(false);
+-  const [newToolName, setNewToolName] = useState("");
+-  const [newToolDescription, setNewToolDescription] = useState("");
+-  const [parameters, setParameters] = useState&lt;Parameter[]&gt;([]);
++
++  const [addToolDialogOpen, setAddToolDialogOpen] = useState(false);
++  const [editingToolUuid, setEditingToolUuid] = useState&lt;string | null&gt;(null);
++  const [toolType, setToolType] = useState&lt;"structured_output" | "webhook"&gt;("structured_output");
+   const [tools, setTools] = useState&lt;ToolData[]&gt;([]);
+   const [toolsLoading, setToolsLoading] = useState(true);
+   const [toolsError, setToolsError] = useState&lt;string | null&gt;(null);
+-  const [isCreating, setIsCreating] = useState(false);
+-  const [createError, setCreateError] = useState&lt;string | null&gt;(null);
+-  const [editingToolUuid, setEditingToolUuid] = useState&lt;string | null&gt;(null);
+-  const [isLoadingTool, setIsLoadingTool] = useState(false);
+-  const [validationAttempted, setValidationAttempted] = useState(false);
+-  const sidebarContentRef = useRef&lt;HTMLDivElement&gt;(null);
+ 
+   // Delete confirmation state
+   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+   const [toolToDelete, setToolToDelete] = useState&lt;ToolData | null&gt;(null);
+   const [isToolDeleting, setIsToolDeleting] = useState(false);
+ 
+-  // Scroll to bottom when parameters change (new parameter added)
+-  const scrollToBottom = () =&gt; {
+-    if (sidebarContentRef.current) {
+-      setTimeout(() =&gt; {
+-        sidebarContentRef.current?.scrollTo({
+-          top: sidebarContentRef.current.scrollHeight,
+-          behavior: "smooth",
+-        });
+-      }, 50);
+-    }
+-  };
+-
+-  const addParameter = () =&gt; {
+-    setValidationAttempted(false);
+-    setParameters([
+-      ...parameters,
+-      {
+-        id: crypto.randomUUID(),
+-        dataType: "string",
+-        name: "",
+-        required: true,
+-        description: "",
+-      },
+-    ]);
+-    scrollToBottom();
+-  };
+-
+-  const removeParameter = (id: string) =&gt; {
+-    setParameters(parameters.filter((p) =&gt; p.id !== id));
+-  };
+-
+-  const updateParameter = (id: string, updates: Partial&lt;Parameter&gt;) =&gt; {
+-    setParameters(
+-      parameters.map((p) =&gt; (p.id === id ? { ...p, ...updates } : p)),
+-    );
+-  };
+-
+-  // Helper to update a parameter at any depth using a path of IDs
+-  // Special marker "__items__" is used to navigate into array items
+-  const updateParameterAtPath = (
+-    params: Parameter[],
+-    path: string[],
+-    updates: Partial&lt;Parameter&gt;,
+-  ): Parameter[] =&gt; {
+-    if (path.length === 0) return params;
+-    const [currentId, ...restPath] = path;
+-    return params.map((p) =&gt; {
+-      if (p.id !== currentId) return p;
+-      if (restPath.length === 0) {
+-        return { ...p, ...updates };
+-      }
+-      // Check if we're navigating into items (for array types)
+-      if (restPath[0] === "__items__") {
+-        // Create default items if they don't exist
+-        const currentItems = p.items || {
+-          id: crypto.randomUUID(),
+-          dataType: "string",
+-          name: "",
+-          required: true,
+-          description: "",
+-        };
+-        if (restPath.length === 1) {
+-          // Update the items directly
+-          return { ...p, items: { ...currentItems, ...updates } };
+-        }
+-        // Navigate deeper into items
+-        const [, ...deeperPath] = restPath;
+-        const updatedItems = updateSingleParameterAtPath(
+-          currentItems,
+-          deeperPath,
+-          updates,
+-        );
+-        return { ...p, items: updatedItems };
+-      }
+-      return {
+-        ...p,
+-        properties: updateParameterAtPath(
+-          p.properties || [],
+-          restPath,
+-          updates,
+-        ),
+-      };
+-    });
+-  };
+-
+-  // Helper to update within a single parameter (for items navigation)
+-  const updateSingleParameterAtPath = (
+-    param: Parameter,
+-    path: string[],
+-    updates: Partial&lt;Parameter&gt;,
+-  ): Parameter =&gt; {
+-    if (path.length === 0) {
+-      return { ...param, ...updates };
+-    }
+-    const [currentSegment, ...restPath] = path;
+-    if (currentSegment === "__items__") {
+-      // Create default items if they don't exist
+-      const currentItems = param.items || {
+-        id: crypto.randomUUID(),
+-        dataType: "string",
+-        name: "",
+-        required: true,
+-        description: "",
+-      };
+-      if (restPath.length === 0) {
+-        return { ...param, items: { ...currentItems, ...updates } };
+-      }
+-      return {
+-        ...param,
+-        items: updateSingleParameterAtPath(currentItems, restPath, updates),
+-      };
+-    }
+-    // Navigate into properties
+-    return {
+-      ...param,
+-      properties: updateParameterAtPath(param.properties || [], path, updates),
+-    };
+-  };
+-
+-  // Helper to add a property at any depth (handles items navigation)
+-  const addPropertyAtPath = (
+-    params: Parameter[],
+-    path: string[],
+-  ): Parameter[] =&gt; {
+-    if (path.length === 0) return params;
+-    const [currentId, ...restPath] = path;
+-    return params.map((p) =&gt; {
+-      if (p.id !== currentId) return p;
+-      if (restPath.length === 0) {
+-        return {
+-          ...p,
+-          properties: [
+-            ...(p.properties || []),
+-            {
+-              id: crypto.randomUUID(),
+-              dataType: "string",
+-              name: "",
+-              required: true,
+-              description: "",
+-            },
+-          ],
+-        };
+-      }
+-      // Handle items navigation for arrays
+-      if (restPath[0] === "__items__" &amp;&amp; p.items) {
+-        return {
+-          ...p,
+-          items: addPropertyToSingleParam(p.items, restPath.slice(1)),
+-        };
+-      }
+-      return {
+-        ...p,
+-        properties: addPropertyAtPath(p.properties || [], restPath),
+-      };
+-    });
+-  };
+-
+-  // Helper to add a property within a single parameter (for items)
+-  const addPropertyToSingleParam = (
+-    param: Parameter,
+-    path: string[],
+-  ): Parameter =&gt; {
+-    if (path.length === 0) {
+-      return {
+-        ...param,
+-        properties: [
+-          ...(param.properties || []),
+-          {
+-            id: crypto.randomUUID(),
+-            dataType: "string",
+-            name: "",
+-            required: true,
+-            description: "",
+-          },
+-        ],
+-      };
+-    }
+-    if (path[0] === "__items__" &amp;&amp; param.items) {
+-      return {
+-        ...param,
+-        items: addPropertyToSingleParam(param.items, path.slice(1)),
+-      };
+-    }
+-    return {
+-      ...param,
+-      properties: addPropertyAtPath(param.properties || [], path),
+-    };
+-  };
+-
+-  // Helper to remove a property at any depth (handles items navigation)
+-  const removePropertyAtPath = (
+-    params: Parameter[],
+-    path: string[],
+-    idToRemove: string,
+-  ): Parameter[] =&gt; {
+-    if (path.length === 0) {
+-      return params.filter((p) =&gt; p.id !== idToRemove);
+-    }
+-    const [currentId, ...restPath] = path;
+-    return params.map((p) =&gt; {
+-      if (p.id !== currentId) return p;
+-      // Handle items navigation
+-      if (restPath[0] === "__items__" &amp;&amp; p.items) {
+-        return {
+-          ...p,
+-          items: removePropertyFromSingleParam(
+-            p.items,
+-            restPath.slice(1),
+-            idToRemove,
+-          ),
+-        };
+-      }
+-      if (restPath.length === 0) {
+-        return {
+-          ...p,
+-          properties: (p.properties || []).filter(
+-            (prop) =&gt; prop.id !== idToRemove,
+-          ),
+-        };
+-      }
+-      return {
+-        ...p,
+-        properties: removePropertyAtPath(
+-          p.properties || [],
+-          restPath,
+-          idToRemove,
+-        ),
+-      };
+-    });
+-  };
+-
+-  // Helper to remove a property within a single parameter (for items)
+-  const removePropertyFromSingleParam = (
+-    param: Parameter,
+-    path: string[],
+-    idToRemove: string,
+-  ): Parameter =&gt; {
+-    if (path.length === 0) {
+-      return {
+-        ...param,
+-        properties: (param.properties || []).filter((p) =&gt; p.id !== idToRemove),
+-      };
+-    }
+-    if (path[0] === "__items__" &amp;&amp; param.items) {
+-      return {
+-        ...param,
+-        items: removePropertyFromSingleParam(
+-          param.items,
+-          path.slice(1),
+-          idToRemove,
+-        ),
+-      };
+-    }
+-    return {
+-      ...param,
+-      properties: removePropertyAtPath(
+-        param.properties || [],
+-        path,
+-        idToRemove,
+-      ),
+-    };
+-  };
+-
+-  // Handlers that use the path-based helpers
+-  const handleUpdateAtPath = (path: string[], updates: Partial&lt;Parameter&gt;) =&gt; {
+-    setParameters((prev) =&gt; updateParameterAtPath(prev, path, updates));
+-  };
+-
+-  const handleAddPropertyAtPath = (path: string[]) =&gt; {
+-    setValidationAttempted(false);
+-    setParameters((prev) =&gt; addPropertyAtPath(prev, path));
+-    scrollToBottom();
+-  };
+-
+-  const handleRemoveAtPath = (parentPath: string[], id: string) =&gt; {
+-    setParameters((prev) =&gt; removePropertyAtPath(prev, parentPath, id));
+-  };
+-
+-  // Helper to set items for an array type parameter at any path
+-  const setItemsAtPath = (
+-    params: Parameter[],
+-    path: string[],
+-    items: Parameter | undefined,
+-  ): Parameter[] =&gt; {
+-    if (path.length === 0) return params;
+-    const [currentId, ...restPath] = path;
+-    return params.map((p) =&gt; {
+-      if (p.id !== currentId) return p;
+-      if (restPath.length === 0) {
+-        return { ...p, items };
+-      }
+-      if (restPath[0] === "__items__" &amp;&amp; p.items) {
+-        return {
+-          ...p,
+-          items: setItemsOnSingleParam(p.items, restPath.slice(1), items),
+-        };
+-      }
+-      return {
+-        ...p,
+-        properties: setItemsAtPath(p.properties || [], restPath, items),
+-      };
+-    });
+-  };
+-
+-  const setItemsOnSingleParam = (
+-    param: Parameter,
+-    path: string[],
+-    items: Parameter | undefined,
+-  ): Parameter =&gt; {
+-    if (path.length === 0) {
+-      return { ...param, items };
+-    }
+-    if (path[0] === "__items__" &amp;&amp; param.items) {
+-      return {
+-        ...param,
+-        items: setItemsOnSingleParam(param.items, path.slice(1), items),
+-      };
+-    }
+-    return {
+-      ...param,
+-      properties: setItemsAtPath(param.properties || [], path, items),
+-    };
+-  };
+-
+-  const handleSetItemsAtPath = (
+-    path: string[],
+-    items: Parameter | undefined,
+-  ) =&gt; {
+-    setValidationAttempted(false);
+-    setParameters((prev) =&gt; setItemsAtPath(prev, path, items));
+-  };
+-
+-  // Check for duplicate parameter names at the same level
+-  const hasDuplicateNames = (params: Parameter[]): boolean =&gt; {
+-    const names = params
+-      .map((p) =&gt; p.name.trim().toLowerCase())
+-      .filter(Boolean);
+-    return new Set(names).size !== names.length;
+-  };
+-
+-  // Recursive validation helper for parameters, nested properties, and array items
+-  const hasInvalidParameters = (params: Parameter[]): boolean =&gt; {
+-    // Check for duplicate names at this level
+-    if (hasDuplicateNames(params)) {
+-      return true;
+-    }
+-    for (const p of params) {
+-      if (!p.name.trim() || !p.description.trim()) {
+-        return true;
+-      }
+-      // Object type must have at least one property
+-      if (p.dataType === "object") {
+-        if (!p.properties || p.properties.length === 0) {
+-          return true;
+-        }
+-        if (hasInvalidParameters(p.properties)) {
+-          return true;
+-        }
+-      }
+-      if (p.dataType === "array" &amp;&amp; p.items) {
+-        if (hasInvalidSingleParameter(p.items)) {
+-          return true;
+-        }
+-      }
+-    }
+-    return false;
+-  };
+-
+-  // Validation helper for a single parameter (used for array items)
+-  const hasInvalidSingleParameter = (param: Parameter): boolean =&gt; {
+-    if (!param.description.trim()) {
+-      return true;
+-    }
+-    // Object type must have at least one property
+-    if (param.dataType === "object") {
+-      if (!param.properties || param.properties.length === 0) {
+-        return true;
+-      }
+-      if (hasInvalidParameters(param.properties)) {
+-        return true;
+-      }
+-    }
+-    if (param.dataType === "array" &amp;&amp; param.items) {
+-      if (hasInvalidSingleParameter(param.items)) {
+-        return true;
+-      }
+-    }
+-    return false;
+-  };
+-
+   // Fetch tools from backend
+   useEffect(() =&gt; {
+     const fetchTools = async () =&gt; {
+@@ -472,7 +76,7 @@ export default function ToolsPage() {
+       } catch (err) {
+         console.error("Error fetching tools:", err);
+         setToolsError(
+-          err instanceof Error ? err.message : "Failed to load tools",
++          err instanceof Error ? err.message : "Failed to load tools"
+         );
+       } finally {
+         setToolsLoading(false);
+@@ -482,7 +86,6 @@ export default function ToolsPage() {
+     fetchTools();
+   }, [backendAccessToken]);
+ 
+-  // Delete tool from backend
+   // Open delete confirmation dialog
+   const openDeleteDialog = (tool: ToolData) =&gt; {
+     setToolToDelete(tool);
+@@ -497,6 +100,7 @@ export default function ToolsPage() {
+     }
+   };
+ 
++  // Delete tool from backend
+   const deleteTool = async () =&gt; {
+     if (!toolToDelete) return;
+ 
+@@ -535,385 +139,27 @@ export default function ToolsPage() {
+     }
+   };
+ 
+-  // Helper function to convert Parameter to JSON Schema format for LLM function calling
+-  const parameterToJsonSchema = (param: Parameter): Record&lt;string, any&gt; =&gt; {
+-    const schema: Record&lt;string, any&gt; = {
+-      type: param.dataType,
+-      description: param.description,
+-    };
+-
+-    // Handle array type - add items schema
+-    if (param.dataType === "array" &amp;&amp; param.items) {
+-      schema.items = {
+-        type: param.items.dataType,
+-        description: param.items.description,
+-      };
+-      // If array items are objects, add their properties
+-      if (
+-        param.items.dataType === "object" &amp;&amp;
+-        param.items.properties &amp;&amp;
+-        param.items.properties.length &gt; 0
+-      ) {
+-        schema.items.properties = {};
+-        const requiredProps: string[] = [];
+-        param.items.properties.forEach((prop) =&gt; {
+-          schema.items.properties[prop.name] = parameterToJsonSchema(prop);
+-          if (prop.required) {
+-            requiredProps.push(prop.name);
+-          }
+-        });
+-        if (requiredProps.length &gt; 0) {
+-          schema.items.required = requiredProps;
+-        }
+-      }
+-      // If array items are arrays, recursively add their items
+-      if (param.items.dataType === "array" &amp;&amp; param.items.items) {
+-        schema.items.items = parameterToJsonSchema({
+-          ...param.items.items,
+-          name: "",
+-          required: true,
+-        });
+-        delete schema.items.items.required;
+-      }
+-    }
+-
+-    // Handle object type - add properties schema
+-    if (
+-      param.dataType === "object" &amp;&amp;
+-      param.properties &amp;&amp;
+-      param.properties.length &gt; 0
+-    ) {
+-      schema.properties = {};
+-      const requiredProps: string[] = [];
+-      param.properties.forEach((prop) =&gt; {
+-        schema.properties[prop.name] = parameterToJsonSchema(prop);
+-        if (prop.required) {
+-          requiredProps.push(prop.name);
+-        }
+-      });
+-      if (requiredProps.length &gt; 0) {
+-        schema.required = requiredProps;
+-      }
+-    }
+-
+-    return schema;
+-  };
+-
+-  // Helper function to build parameters config for API (returns array format)
+-  const buildParametersConfig = (
+-    params: Parameter[],
+-  ): Array&lt;Record&lt;string, any&gt;&gt; =&gt; {
+-    return params
+-      .filter((param) =&gt; param.name)
+-      .map((param) =&gt; {
+-        const schema = parameterToJsonSchema(param);
+-        return {
+-          id: param.name,
+-          ...schema,
+-          required: param.required,
+-        };
+-      });
+-  };
+-
+-  // Create tool via POST API
+-  const createTool = async () =&gt; {
+-    setValidationAttempted(true);
+-    if (!newToolName.trim() || !newToolDescription.trim()) return;
+-    // Validate parameters recursively: name and description are required for all
+-    if (hasInvalidParameters(parameters)) return;
+-
+-    try {
+-      setIsCreating(true);
+-      setCreateError(null);
+-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+-      if (!backendUrl) {
+-        throw new Error("BACKEND_URL environment variable is not set");
+-      }
+-
+-      // Build parameters object for the API using JSON Schema format
+-      const parametersConfig = buildParametersConfig(parameters);
+-
+-      const response = await fetch(&#96;${backendUrl}/tools&#96;, {
+-        method: "POST",
+-        headers: {
+-          accept: "application/json",
+-          "Content-Type": "application/json",
+-          "ngrok-skip-browser-warning": "true",
+-          Authorization: &#96;Bearer ${backendAccessToken}&#96;,
+-        },
+-        body: JSON.stringify({
+-          name: newToolName.trim(),
+-          description: newToolDescription.trim(),
+-          config: {
+-            parameters: parametersConfig,
+-          },
+-        }),
+-      });
+-
+-      if (response.status === 401) {
+-        await signOut({ callbackUrl: "/login" });
+-        return;
+-      }
+-
+-      if (!response.ok) {
+-        throw new Error("Failed to create tool");
+-      }
+-
+-      // Refetch the tools list to get the updated data
+-      const toolsResponse = await fetch(&#96;${backendUrl}/tools&#96;, {
+-        method: "GET",
+-        headers: {
+-          accept: "application/json",
+-          "ngrok-skip-browser-warning": "true",
+-          Authorization: &#96;Bearer ${backendAccessToken}&#96;,
+-        },
+-      });
+-
+-      if (toolsResponse.ok) {
+-        const updatedTools: ToolData[] = await toolsResponse.json();
+-        setTools(updatedTools);
+-      }
+-
+-      // Reset form fields
+-      setNewToolName("");
+-      setNewToolDescription("");
+-      setParameters([]);
+-
+-      // Close the sidebar
+-      setAddToolSidebarOpen(false);
+-    } catch (err) {
+-      console.error("Error creating tool:", err);
+-      setCreateError(
+-        err instanceof Error ? err.message : "Failed to create tool",
+-      );
+-    } finally {
+-      setIsCreating(false);
+-    }
+-  };
+-
+-  // Helper function to parse JSON Schema items into Parameter (for arrays)
+-  const parseItemsSchema = (itemsConfig: any): Parameter =&gt; {
+-    const itemParam: Parameter = {
+-      id: crypto.randomUUID(),
+-      name: "",
+-      dataType: itemsConfig.type || "string",
+-      required: true,
+-      description: itemsConfig.description || "",
+-    };
+-
+-    // Parse nested properties for object items
+-    if (itemsConfig.type === "object" &amp;&amp; itemsConfig.properties) {
+-      itemParam.properties = [];
+-      const requiredProps = itemsConfig.required || [];
+-      Object.entries(itemsConfig.properties).forEach(
+-        ([propName, propConfig]: [string, any]) =&gt; {
+-          itemParam.properties!.push(
+-            parseParameterSchema(
+-              propName,
+-              propConfig,
+-              requiredProps.includes(propName),
+-            ),
+-          );
+-        },
+-      );
+-    }
+-
+-    // Parse nested items for array items
+-    if (itemsConfig.type === "array" &amp;&amp; itemsConfig.items) {
+-      itemParam.items = parseItemsSchema(itemsConfig.items);
+-    }
+-
+-    return itemParam;
+-  };
+-
+-  // Helper function to parse JSON Schema parameter into Parameter
+-  const parseParameterSchema = (
+-    paramName: string,
+-    paramConfig: any,
+-    isRequired: boolean = true,
+-  ): Parameter =&gt; {
+-    const param: Parameter = {
+-      id: crypto.randomUUID(),
+-      name: paramName,
+-      dataType: paramConfig.type || "string",
+-      required: paramConfig.required ?? isRequired,
+-      description: paramConfig.description || "",
+-    };
+-
+-    // Parse items for array type
+-    if (paramConfig.type === "array" &amp;&amp; paramConfig.items) {
+-      param.items = parseItemsSchema(paramConfig.items);
+-    }
+-
+-    // Parse properties for object type
+-    if (paramConfig.type === "object" &amp;&amp; paramConfig.properties) {
+-      param.properties = [];
+-      const requiredProps = paramConfig.required || [];
+-      Object.entries(paramConfig.properties).forEach(
+-        ([propName, propConfig]: [string, any]) =&gt; {
+-          param.properties!.push(
+-            parseParameterSchema(
+-              propName,
+-              propConfig,
+-              requiredProps.includes(propName),
+-            ),
+-          );
+-        },
+-      );
+-    }
+-
+-    return param;
+-  };
+-
+-  // Fetch tool details by UUID and open edit sidebar
+-  const openEditTool = async (uuid: string) =&gt; {
+-    try {
+-      setIsLoadingTool(true);
+-      setEditingToolUuid(uuid);
+-      setAddToolSidebarOpen(true);
+-      setCreateError(null);
+-
+-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+-      if (!backendUrl) {
+-        throw new Error("BACKEND_URL environment variable is not set");
+-      }
+-
+-      const response = await fetch(&#96;${backendUrl}/tools/${uuid}&#96;, {
+-        method: "GET",
+-        headers: {
+-          accept: "application/json",
+-          "ngrok-skip-browser-warning": "true",
+-          Authorization: &#96;Bearer ${backendAccessToken}&#96;,
+-        },
+-      });
+-
+-      if (response.status === 401) {
+-        await signOut({ callbackUrl: "/login" });
+-        return;
+-      }
+-
+-      if (!response.ok) {
+-        throw new Error("Failed to fetch tool details");
+-      }
+-
+-      const toolData: ToolData = await response.json();
+-
+-      // Populate form fields with tool data
+-      setNewToolName(toolData.name || "");
+-      setNewToolDescription(
+-        toolData.description || toolData.config?.description || "",
+-      );
+-
+-      // Convert parameters from config to Parameter array using JSON Schema parser
+-      const toolParams: Parameter[] = [];
+-      if (toolData.config?.parameters) {
+-        // Handle both array format (new) and object format (legacy)
+-        if (Array.isArray(toolData.config.parameters)) {
+-          toolData.config.parameters.forEach((paramConfig: any) =&gt; {
+-            const paramName = paramConfig.id || paramConfig.name || "";
+-            toolParams.push(parseParameterSchema(paramName, paramConfig));
+-          });
+-        } else {
+-          // Legacy object format
+-          Object.entries(toolData.config.parameters).forEach(
+-            ([paramName, paramConfig]: [string, any]) =&gt; {
+-              toolParams.push(parseParameterSchema(paramName, paramConfig));
+-            },
+-          );
+-        }
+-      }
+-      setParameters(toolParams);
+-    } catch (err) {
+-      console.error("Error fetching tool:", err);
+-      setCreateError(
+-        err instanceof Error ? err.message : "Failed to load tool",
+-      );
+-    } finally {
+-      setIsLoadingTool(false);
+-    }
++  // Open add tool dialog
++  const openAddToolDialog = (type: "structured_output" | "webhook") =&gt; {
++    setEditingToolUuid(null);
++    setToolType(type);
++    setAddToolDialogOpen(true);
+   };
+ 
+-  // Update existing tool via PUT API
+-  const updateTool = async () =&gt; {
+-    setValidationAttempted(true);
+-    if (!newToolName.trim() || !newToolDescription.trim() || !editingToolUuid)
+-      return;
+-    // Validate parameters recursively: name and description are required for all
+-    if (hasInvalidParameters(parameters)) return;
+-
+-    try {
+-      setIsCreating(true);
+-      setCreateError(null);
+-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+-      if (!backendUrl) {
+-        throw new Error("BACKEND_URL environment variable is not set");
+-      }
+-
+-      // Build parameters object for the API using JSON Schema format
+-      const parametersConfig = buildParametersConfig(parameters);
+-
+-      const response = await fetch(&#96;${backendUrl}/tools/${editingToolUuid}&#96;, {
+-        method: "PUT",
+-        headers: {
+-          accept: "application/json",
+-          "Content-Type": "application/json",
+-          "ngrok-skip-browser-warning": "true",
+-          Authorization: &#96;Bearer ${backendAccessToken}&#96;,
+-        },
+-        body: JSON.stringify({
+-          name: newToolName.trim(),
+-          description: newToolDescription.trim(),
+-          config: {
+-            parameters: parametersConfig,
+-          },
+-        }),
+-      });
+-
+-      if (response.status === 401) {
+-        await signOut({ callbackUrl: "/login" });
+-        return;
+-      }
+-
+-      if (!response.ok) {
+-        throw new Error("Failed to update tool");
+-      }
+-
+-      // Refetch the tools list to get the updated data
+-      const toolsResponse = await fetch(&#96;${backendUrl}/tools&#96;, {
+-        method: "GET",
+-        headers: {
+-          accept: "application/json",
+-          "ngrok-skip-browser-warning": "true",
+-          Authorization: &#96;Bearer ${backendAccessToken}&#96;,
+-        },
+-      });
+-
+-      if (toolsResponse.ok) {
+-        const updatedTools: ToolData[] = await toolsResponse.json();
+-        setTools(updatedTools);
+-      }
+-
+-      // Reset and close
+-      resetForm();
+-      setAddToolSidebarOpen(false);
+-    } catch (err) {
+-      console.error("Error updating tool:", err);
+-      setCreateError(
+-        err instanceof Error ? err.message : "Failed to update tool",
+-      );
+-    } finally {
+-      setIsCreating(false);
+-    }
++  // Open edit tool dialog
++  const openEditToolDialog = (uuid: string) =&gt; {
++    setEditingToolUuid(uuid);
++    // Get tool type from config, default to "structured_output" if not present
++    const tool = tools.find((t) =&gt; t.uuid === uuid);
++    const type = tool?.config?.type === "webhook" ? "webhook" : "structured_output";
++    setToolType(type);
++    setAddToolDialogOpen(true);
+   };
+ 
+-  // Reset form fields
+-  const resetForm = () =&gt; {
+-    setNewToolName("");
+-    setNewToolDescription("");
+-    setParameters([]);
++  // Close tool dialog
++  const closeToolDialog = () =&gt; {
++    setAddToolDialogOpen(false);
+     setEditingToolUuid(null);
+-    setCreateError(null);
+-    setValidationAttempted(false);
+   };
+ 
+   // Filter tools based on search query
+@@ -924,7 +170,7 @@ export default function ToolsPage() {
+       ((tool.description || tool.config?.description) &amp;&amp;
+         (tool.description || tool.config?.description)
+           .toLowerCase()
+-          .includes(searchQuery.toLowerCase())),
++          .includes(searchQuery.toLowerCase()))
+   );
+ 
+   return (
+@@ -936,21 +182,25 @@ export default function ToolsPage() {
+     &gt;
+       &lt;div className="space-y-6"&gt;
+         {/* Header */}
+-        &lt;div className="flex items-center justify-between"&gt;
+-          &lt;div&gt;
+-            &lt;h1 className="text-2xl font-semibold"&gt;Tools&lt;/h1&gt;
+-            &lt;p className="text-muted-foreground text-base leading-relaxed mt-1"&gt;
+-              Manage and configure tools that can be used by your agents.
+-            &lt;/p&gt;
+-          &lt;/div&gt;
++        &lt;div&gt;
++          &lt;h1 className="text-2xl font-semibold"&gt;Tools&lt;/h1&gt;
++          &lt;p className="text-muted-foreground text-base leading-relaxed mt-1"&gt;
++            Manage and configure tools that can be used by your agents
++          &lt;/p&gt;
++        &lt;/div&gt;
++        {/* Add Tool Cards */}
++        &lt;div className="flex gap-4"&gt;
+           &lt;button
+-            onClick={() =&gt; {
+-              resetForm();
+-              setAddToolSidebarOpen(true);
+-            }}
+-            className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
++            onClick={() =&gt; openAddToolDialog("webhook")}
++            className="h-10 px-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer text-base font-medium text-foreground"
+           &gt;
+-            Add tool
++            Add webhook tool
++          &lt;/button&gt;
++          &lt;button
++            onClick={() =&gt; openAddToolDialog("structured_output")}
++            className="h-10 px-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer text-base font-medium text-foreground"
++          &gt;
++            Add structured output tool
+           &lt;/button&gt;
+         &lt;/div&gt;
+ 
+@@ -1038,23 +288,31 @@ export default function ToolsPage() {
+                 ? "No tools match your search"
+                 : "You haven't created any tools yet"}
+             &lt;/p&gt;
+-            &lt;button
+-              onClick={() =&gt; {
+-                resetForm();
+-                setAddToolSidebarOpen(true);
+-              }}
+-              className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
+-            &gt;
+-              Add tool
+-            &lt;/button&gt;
++            &lt;div className="flex gap-4"&gt;
++              &lt;button
++                onClick={() =&gt; openAddToolDialog("webhook")}
++                className="h-10 px-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer text-base font-medium text-foreground"
++              &gt;
++                Add webhook tool
++              &lt;/button&gt;
++              &lt;button
++                onClick={() =&gt; openAddToolDialog("structured_output")}
++                className="h-10 px-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer text-base font-medium text-foreground"
++              &gt;
++                Add structured output tool
++              &lt;/button&gt;
++            &lt;/div&gt;
+           &lt;/div&gt;
+         ) : (
+           &lt;div className="border border-border rounded-xl overflow-hidden"&gt;
+             {/* Table Header */}
+-            &lt;div className="grid grid-cols-[200px_1fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30"&gt;
++            &lt;div className="grid grid-cols-[200px_150px_1fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30"&gt;
+               &lt;div className="text-sm font-medium text-muted-foreground"&gt;
+                 Name
+               &lt;/div&gt;
++              &lt;div className="text-sm font-medium text-muted-foreground"&gt;
++                Type
++              &lt;/div&gt;
+               &lt;div className="text-sm font-medium text-muted-foreground"&gt;
+                 Description
+               &lt;/div&gt;
+@@ -1064,14 +322,17 @@ export default function ToolsPage() {
+             {filteredTools.map((tool) =&gt; (
+               &lt;div
+                 key={tool.uuid}
+-                onClick={() =&gt; openEditTool(tool.uuid)}
+-                className="grid grid-cols-[200px_1fr_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer items-center"
++                onClick={() =&gt; openEditToolDialog(tool.uuid)}
++                className="grid grid-cols-[200px_150px_1fr_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer items-center"
+               &gt;
+                 &lt;div className="overflow-x-auto max-w-full"&gt;
+                   &lt;p className="text-sm font-medium text-foreground whitespace-nowrap"&gt;
+                     {tool.name}
+                   &lt;/p&gt;
+                 &lt;/div&gt;
++                &lt;p className="text-sm text-muted-foreground"&gt;
++                  {tool.config?.type === "webhook" ? "Webhook" : "Structured Output"}
++                &lt;/p&gt;
+                 &lt;p className="text-sm text-muted-foreground line-clamp-1"&gt;
+                   {tool.description || tool.config?.description || "—"}
+                 &lt;/p&gt;
+@@ -1102,255 +363,15 @@ export default function ToolsPage() {
+         )}
+       &lt;/div&gt;
+ 
+-      {/* Add Tool Sidebar */}
+-      {addToolSidebarOpen &amp;&amp; (
+-        &lt;div className="fixed inset-0 z-50 flex justify-end"&gt;
+-          {/* Backdrop */}
+-          &lt;div
+-            className="absolute inset-0 bg-black/50"
+-            onClick={() =&gt; {
+-              resetForm();
+-              setAddToolSidebarOpen(false);
+-            }}
+-          /&gt;
+-          {/* Sidebar */}
+-          &lt;div className="relative w-[40%] min-w-[500px] bg-background border-l border-border flex flex-col h-full shadow-2xl"&gt;
+-            {/* Header */}
+-            &lt;div className="flex items-center justify-between px-6 py-4 border-b border-border"&gt;
+-              &lt;div className="flex items-center gap-3"&gt;
+-                &lt;svg
+-                  className="w-5 h-5 text-muted-foreground"
+-                  fill="none"
+-                  viewBox="0 0 24 24"
+-                  stroke="currentColor"
+-                  strokeWidth={1.5}
+-                &gt;
+-                  &lt;path
+-                    strokeLinecap="round"
+-                    strokeLinejoin="round"
+-                    d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"
+-                  /&gt;
+-                &lt;/svg&gt;
+-                &lt;h2 className="text-lg font-semibold"&gt;
+-                  {editingToolUuid ? "Edit tool" : "Add tool"}
+-                &lt;/h2&gt;
+-              &lt;/div&gt;
+-              &lt;button
+-                onClick={() =&gt; {
+-                  resetForm();
+-                  setAddToolSidebarOpen(false);
+-                }}
+-                className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted transition-colors cursor-pointer"
+-              &gt;
+-                &lt;svg
+-                  className="w-5 h-5"
+-                  fill="none"
+-                  viewBox="0 0 24 24"
+-                  stroke="currentColor"
+-                  strokeWidth={2}
+-                &gt;
+-                  &lt;path
+-                    strokeLinecap="round"
+-                    strokeLinejoin="round"
+-                    d="M6 18L18 6M6 6l12 12"
+-                  /&gt;
+-                &lt;/svg&gt;
+-              &lt;/button&gt;
+-            &lt;/div&gt;
+-
+-            {/* Content */}
+-            &lt;div
+-              ref={sidebarContentRef}
+-              className="flex-1 overflow-y-auto p-6 space-y-6"
+-            &gt;
+-              {isLoadingTool ? (
+-                &lt;div className="flex items-center justify-center py-12"&gt;
+-                  &lt;svg
+-                    className="w-6 h-6 animate-spin"
+-                    fill="none"
+-                    viewBox="0 0 24 24"
+-                  &gt;
+-                    &lt;circle
+-                      className="opacity-25"
+-                      cx="12"
+-                      cy="12"
+-                      r="10"
+-                      stroke="currentColor"
+-                      strokeWidth="4"
+-                    &gt;&lt;/circle&gt;
+-                    &lt;path
+-                      className="opacity-75"
+-                      fill="currentColor"
+-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+-                    &gt;&lt;/path&gt;
+-                  &lt;/svg&gt;
+-                &lt;/div&gt;
+-              ) : (
+-                &lt;&gt;
+-                  {/* Helper Callout */}
+-                  &lt;div className="flex gap-3 p-4 rounded-xl bg-blue-500/10 border border-blue-500/20"&gt;
+-                    &lt;svg
+-                      className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5"
+-                      fill="none"
+-                      viewBox="0 0 24 24"
+-                      stroke="currentColor"
+-                      strokeWidth={1.5}
+-                    &gt;
+-                      &lt;path
+-                        strokeLinecap="round"
+-                        strokeLinejoin="round"
+-                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+-                      /&gt;
+-                    &lt;/svg&gt;
+-                    &lt;p className="text-sm text-blue-200"&gt;
+-                      Tools enable agents to produce a structured output. When
+-                      the agent needs to extract specific information (like a
+-                      customer name or order details), it can call a tool to
+-                      return data in a defined format.
+-                    &lt;/p&gt;
+-                  &lt;/div&gt;
+-
+-                  {/* Configuration Section */}
+-                  &lt;div className="border border-border rounded-xl p-5 space-y-5 bg-muted/30"&gt;
+-                    &lt;div&gt;
+-                      &lt;h3 className="text-base font-medium mb-1"&gt;
+-                        Configuration
+-                      &lt;/h3&gt;
+-                    &lt;/div&gt;
+-
+-                    {/* Name */}
+-                    &lt;div&gt;
+-                      &lt;label className="block text-sm font-medium mb-2"&gt;
+-                        Name &lt;span className="text-red-500"&gt;*&lt;/span&gt;
+-                      &lt;/label&gt;
+-                      &lt;input
+-                        type="text"
+-                        value={newToolName}
+-                        onChange={(e) =&gt; setNewToolName(e.target.value)}
+-                        placeholder="Name of your tool, use an informative name that reflects the purpose of the tool"
+-                        className={&#96;w-full h-10 px-4 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent ${
+-                          validationAttempted &amp;&amp; !newToolName.trim()
+-                            ? "border-red-500"
+-                            : "border-border"
+-                        }&#96;}
+-                      /&gt;
+-                    &lt;/div&gt;
+-
+-                    {/* Description */}
+-                    &lt;div&gt;
+-                      &lt;label className="block text-sm font-medium mb-2"&gt;
+-                        Description &lt;span className="text-red-500"&gt;*&lt;/span&gt;
+-                      &lt;/label&gt;
+-                      &lt;textarea
+-                        value={newToolDescription}
+-                        onChange={(e) =&gt; setNewToolDescription(e.target.value)}
+-                        placeholder="Describe to the LLM how and when to use the tool along with what should be passed to the tool"
+-                        rows={3}
+-                        className={&#96;w-full px-4 py-3 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none ${
+-                          validationAttempted &amp;&amp; !newToolDescription.trim()
+-                            ? "border-red-500"
+-                            : "border-border"
+-                        }&#96;}
+-                      /&gt;
+-                    &lt;/div&gt;
+-                  &lt;/div&gt;
+-
+-                  {/* Parameters Section */}
+-                  &lt;div className="border border-border rounded-xl p-5 space-y-5 bg-muted/30"&gt;
+-                    &lt;div className="flex items-start justify-between"&gt;
+-                      &lt;div&gt;
+-                        &lt;h3 className="text-base font-medium mb-1"&gt;
+-                          Parameters
+-                        &lt;/h3&gt;
+-                        &lt;p className="text-sm text-muted-foreground"&gt;
+-                          Define the structure of the output that the agent
+-                          should produce
+-                        &lt;/p&gt;
+-                      &lt;/div&gt;
+-                      &lt;button
+-                        onClick={addParameter}
+-                        className="h-9 px-4 rounded-md text-sm font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer whitespace-nowrap flex-shrink-0"
+-                      &gt;
+-                        Add param
+-                      &lt;/button&gt;
+-                    &lt;/div&gt;
+-
+-                    {/* Parameter Cards */}
+-                    {parameters.map((param) =&gt; (
+-                      &lt;ParameterCard
+-                        key={param.id}
+-                        param={param}
+-                        path={[]}
+-                        onUpdate={handleUpdateAtPath}
+-                        onRemove={handleRemoveAtPath}
+-                        onAddProperty={handleAddPropertyAtPath}
+-                        onSetItems={handleSetItemsAtPath}
+-                        validationAttempted={validationAttempted}
+-                        siblingNames={parameters
+-                          .filter((p) =&gt; p.id !== param.id)
+-                          .map((p) =&gt; p.name)}
+-                      /&gt;
+-                    ))}
+-                  &lt;/div&gt;
+-                &lt;/&gt;
+-              )}
+-            &lt;/div&gt;
+-
+-            {/* Footer */}
+-            &lt;div className="px-6 py-4 border-t border-border space-y-3"&gt;
+-              {createError &amp;&amp; (
+-                &lt;p className="text-sm text-red-500"&gt;{createError}&lt;/p&gt;
+-              )}
+-              &lt;div className="flex items-center justify-end gap-3"&gt;
+-                &lt;button
+-                  onClick={() =&gt; {
+-                    resetForm();
+-                    setAddToolSidebarOpen(false);
+-                  }}
+-                  disabled={isCreating || isLoadingTool}
+-                  className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+-                &gt;
+-                  Cancel
+-                &lt;/button&gt;
+-                &lt;button
+-                  onClick={editingToolUuid ? updateTool : createTool}
+-                  disabled={isCreating || isLoadingTool}
+-                  className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+-                &gt;
+-                  {isCreating ? (
+-                    &lt;&gt;
+-                      &lt;svg
+-                        className="w-4 h-4 animate-spin"
+-                        fill="none"
+-                        viewBox="0 0 24 24"
+-                      &gt;
+-                        &lt;circle
+-                          className="opacity-25"
+-                          cx="12"
+-                          cy="12"
+-                          r="10"
+-                          stroke="currentColor"
+-                          strokeWidth="4"
+-                        &gt;&lt;/circle&gt;
+-                        &lt;path
+-                          className="opacity-75"
+-                          fill="currentColor"
+-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+-                        &gt;&lt;/path&gt;
+-                      &lt;/svg&gt;
+-                      {editingToolUuid ? "Saving..." : "Creating..."}
+-                    &lt;/&gt;
+-                  ) : editingToolUuid ? (
+-                    "Save"
+-                  ) : (
+-                    "Add tool"
+-                  )}
+-                &lt;/button&gt;
+-              &lt;/div&gt;
+-            &lt;/div&gt;
+-          &lt;/div&gt;
+-        &lt;/div&gt;
+-      )}
++      {/* Add/Edit Tool Dialog */}
++      &lt;AddToolDialog
++        isOpen={addToolDialogOpen}
++        onClose={closeToolDialog}
++        toolType={toolType}
++        editingToolUuid={editingToolUuid}
++        backendAccessToken={backendAccessToken}
++        onToolsUpdated={setTools}
++      /&gt;
+ 
+       {/* Delete Confirmation Dialog */}
+       &lt;DeleteConfirmationDialog
+diff --git a/src/app/tts/page.tsx b/src/app/tts/page.tsx
+index cfb9e9b..7bc31c3 100644
+--- a/src/app/tts/page.tsx
++++ b/src/app/tts/page.tsx
+@@ -138,22 +138,20 @@ export default function TTSPage() {
+     &gt;
+       &lt;div className="space-y-6"&gt;
+         {/* Header */}
+-        &lt;div className="flex items-center justify-between"&gt;
+-          &lt;div&gt;
+-            &lt;h1 className="text-2xl font-semibold"&gt;
+-              Text-to-Speech Evaluation
+-            &lt;/h1&gt;
+-            &lt;p className="text-muted-foreground text-base leading-relaxed mt-1"&gt;
+-              Evaluate TTS quality across multiple providers
+-            &lt;/p&gt;
+-          &lt;/div&gt;
+-          &lt;button
+-            onClick={() =&gt; router.push("/tts/new")}
+-            className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
+-          &gt;
+-            New TTS evaluation
+-          &lt;/button&gt;
++        &lt;div&gt;
++          &lt;h1 className="text-2xl font-semibold"&gt;
++            Text-to-Speech Evaluation
++          &lt;/h1&gt;
++          &lt;p className="text-muted-foreground text-base leading-relaxed mt-1"&gt;
++            Evaluate TTS quality across multiple providers
++          &lt;/p&gt;
+         &lt;/div&gt;
++        &lt;button
++          onClick={() =&gt; router.push("/tts/new")}
++          className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
++        &gt;
++          New TTS evaluation
++        &lt;/button&gt;
+ 
+         {/* Jobs List / Loading / Error / Empty State */}
+         {isLoading ? (
+diff --git a/src/components/AddTestDialog.tsx b/src/components/AddTestDialog.tsx
+index 08a518e..b791aff 100644
+--- a/src/components/AddTestDialog.tsx
++++ b/src/components/AddTestDialog.tsx
+@@ -96,13 +96,32 @@ export function AddTestDialog({
+       if (initialConfig.history &amp;&amp; initialConfig.history.length &gt; 0) {
+         const messages: Array&lt;{
+           id: string;
+-          role: "agent" | "user" | "tool_call";
++          role: "agent" | "user" | "tool_call" | "tool_response";
+           content: string;
+           toolName?: string;
+           toolId?: string;
+-          toolParams?: Array&lt;{ name: string; value: string }&gt;;
++          toolParams?: Array&lt;{ name: string; value: string; group?: string }&gt;;
++          isWebhook?: boolean;
++          linkedToolCallId?: string;
+         }&gt; = [];
+ 
++        // Helper to format value - stringify objects/arrays for display
++        const formatValue = (val: any): string =&gt; {
++          if (val === null) return "null";
++          if (val === undefined) return "";
++          if (typeof val === "object") {
++            try {
++              return JSON.stringify(val, null, 2);
++            } catch {
++              return String(val);
++            }
++          }
++          return String(val);
++        };
++
++        // Track tool call IDs for linking tool responses
++        const toolCallIds: string[] = [];
++
+         initialConfig.history.forEach((historyItem, index) =&gt; {
+           if (historyItem.role === "assistant") {
+             if (historyItem.tool_calls &amp;&amp; historyItem.tool_calls.length &gt; 0) {
+@@ -114,16 +133,46 @@ export function AddTestDialog({
+               } catch {
+                 parsedArgs = {};
+               }
++              
++              const toolCallId = toolCall.id || &#96;tool-${index}&#96;;
++              toolCallIds.push(toolCallId);
++              
++              // Check if this is a webhook-style tool call (has body/query keys)
++              const webhookKeys = ["body", "query"];
++              const hasWebhookStructure = Object.keys(parsedArgs).some(k =&gt; webhookKeys.includes(k));
++              
++              let toolParams: Array&lt;{ name: string; value: string; group?: string }&gt; = [];
++              
++              if (hasWebhookStructure) {
++                // Extract params from body, query with their group (headers are not shown in UI)
++                webhookKeys.forEach(groupKey =&gt; {
++                  const groupValue = parsedArgs[groupKey];
++                  if (groupValue &amp;&amp; typeof groupValue === "object" &amp;&amp; !Array.isArray(groupValue)) {
++                    Object.entries(groupValue).forEach(([paramName, paramValue]) =&gt; {
++                      toolParams.push({
++                        name: paramName,
++                        value: formatValue(paramValue),
++                        group: groupKey,
++                      });
++                    });
++                  }
++                });
++              } else {
++                // Regular tool params (non-webhook)
++                toolParams = Object.entries(parsedArgs).map(([name, value]) =&gt; ({
++                  name,
++                  value: formatValue(value),
++                }));
++              }
++              
+               messages.push({
+-                id: toolCall.id || &#96;tool-${index}&#96;,
++                id: toolCallId,
+                 role: "tool_call",
+                 content: "",
+                 toolId: toolCall.id,
+                 toolName: toolCall.function.name,
+-                toolParams: Object.entries(parsedArgs).map(([name, value]) =&gt; ({
+-                  name,
+-                  value: String(value),
+-                })),
++                toolParams,
++                isWebhook: hasWebhookStructure,
+               });
+             } else {
+               // Regular assistant message
+@@ -139,8 +188,21 @@ export function AddTestDialog({
+               role: "user",
+               content: historyItem.content || "",
+             });
++          } else if (historyItem.role === "tool" &amp;&amp; historyItem.content) {
++            // Tool response message - link to the tool call
++            const linkedToolCallId = historyItem.tool_call_id || toolCallIds[toolCallIds.length - 1] || "";
++            // Find the linked tool call to get its name
++            const linkedToolCall = messages.find(
++              (m) =&gt; m.role === "tool_call" &amp;&amp; (m.toolId === linkedToolCallId || m.id === linkedToolCallId)
++            );
++            messages.push({
++              id: &#96;tool-response-${index}&#96;,
++              role: "tool_response",
++              content: historyItem.content,
++              linkedToolCallId,
++              toolName: linkedToolCall?.toolName || "",
++            });
+           }
+-          // Skip "tool" role messages as they are tool responses
+         });
+ 
+         if (messages.length &gt; 0) {
+@@ -223,11 +285,13 @@ export function AddTestDialog({
+   const [chatMessages, setChatMessages] = useState&lt;
+     Array&lt;{
+       id: string;
+-      role: "agent" | "user" | "tool_call";
++      role: "agent" | "user" | "tool_call" | "tool_response";
+       content: string;
+       toolName?: string;
+       toolId?: string;
+-      toolParams?: Array&lt;{ name: string; value: string }&gt;;
++      toolParams?: Array&lt;{ name: string; value: string; group?: string }&gt;;
++      isWebhook?: boolean;
++      linkedToolCallId?: string; // For tool_response to link back to tool_call
+     }&gt;
+   &gt;([{ id: "1", role: "agent", content: "Hello, how can I help you today?" }]);
+ 
+@@ -243,19 +307,35 @@ export function AddTestDialog({
+   const addToolCallMessage = (
+     toolId: string,
+     toolName: string,
+-    params: Array&lt;{ name: string; value: string }&gt;,
++    params: Array&lt;{ name: string; value: string; group?: string }&gt;,
++    isWebhook: boolean = false,
+   ) =&gt; {
+-    setChatMessages([
++    const toolCallId = Date.now().toString();
++    const newMessages: typeof chatMessages = [
+       ...chatMessages,
+       {
+-        id: Date.now().toString(),
++        id: toolCallId,
+         role: "tool_call",
+         content: "",
+         toolId,
+         toolName,
+         toolParams: params,
++        isWebhook,
+       },
+-    ]);
++    ];
++
++    // If it's a webhook tool, automatically add a tool response message after it
++    if (isWebhook) {
++      newMessages.push({
++        id: (Date.now() + 1).toString(),
++        role: "tool_response",
++        content: '{\n  "status": "success",\n  "response": {}\n}',
++        linkedToolCallId: toolCallId,
++        toolName,
++      });
++    }
++
++    setChatMessages(newMessages);
+     setToolCallDropdownOpen(false);
+     setPendingToolCall(null);
+   };
+@@ -286,7 +366,18 @@ export function AddTestDialog({
+   };
+ 
+   const removeChatMessage = (id: string) =&gt; {
+-    setChatMessages(chatMessages.filter((msg) =&gt; msg.id !== id));
++    const messageToRemove = chatMessages.find((msg) =&gt; msg.id === id);
++    
++    // If removing a tool_call that's a webhook, also remove its linked tool_response
++    if (messageToRemove?.role === "tool_call" &amp;&amp; messageToRemove?.isWebhook) {
++      setChatMessages(
++        chatMessages.filter(
++          (msg) =&gt; msg.id !== id &amp;&amp; msg.linkedToolCallId !== id
++        )
++      );
++    } else {
++      setChatMessages(chatMessages.filter((msg) =&gt; msg.id !== id));
++    }
+   };
+ 
+   const [addMessageDropdownOpen, setAddMessageDropdownOpen] = useState(false);
+@@ -350,6 +441,9 @@ export function AddTestDialog({
+   }, [isOpen, backendAccessToken]);
+ 
+   const addToolFromSelection = (tool: AvailableTool) =&gt; {
++    // Check if tool is a webhook type - default to accept any arguments for webhooks
++    const isWebhook = tool.config?.type === "webhook";
++
+     // Extract parameters from tool config - handle both array (new) and object (legacy) formats
+     let paramList: Array&lt;{ id: string; name: string; value: string }&gt; = [];
+     const params = tool.config?.parameters;
+@@ -380,7 +474,7 @@ export function AddTestDialog({
+       id: tool.uuid,
+       name: tool.name,
+       expectation: "should-call",
+-      acceptAnyParameterValues: false,
++      acceptAnyParameterValues: isWebhook, // Default to true for webhook tools
+       isInbuilt: false,
+       expectedParameters: paramList,
+     };
+@@ -551,10 +645,22 @@ export function AddTestDialog({
+         const toolCallId = generateUUID();
+ 
+         // Build the arguments object from tool params
+-        const argsObj: Record&lt;string, string&gt; = {};
++        const argsObj: Record&lt;string, any&gt; = {};
+         if (message.toolParams) {
+           for (const param of message.toolParams) {
+-            argsObj[param.name] = param.value;
++            // For webhook tools, group params by their group (query, body)
++            // Note: Headers are not shown in conversation history UI
++            if (message.isWebhook &amp;&amp; param.group) {
++              if (param.group === "body") {
++                if (!argsObj.body) argsObj.body = {};
++                argsObj.body[param.name] = param.value;
++              } else if (param.group === "query") {
++                if (!argsObj.query) argsObj.query = {};
++                argsObj.query[param.name] = param.value;
++              }
++            } else {
++              argsObj[param.name] = param.value;
++            }
+           }
+         }
+ 
+@@ -573,13 +679,22 @@ export function AddTestDialog({
+           ],
+         });
+ 
+-        // Add the tool response message
+-        history.push({
+-          role: "tool",
+-          content: '{"status": "received"}',
+-          tool_call_id: toolCallId,
+-        });
++        // For webhook tools, find the linked tool_response message and add it to history
++        // For non-webhook tools, don't add any tool response
++        if (message.isWebhook) {
++          const linkedResponse = chatMessages.find(
++            (m) =&gt; m.role === "tool_response" &amp;&amp; m.linkedToolCallId === message.id
++          );
++          if (linkedResponse &amp;&amp; linkedResponse.content) {
++            history.push({
++              role: "tool",
++              content: linkedResponse.content,
++              tool_call_id: toolCallId,
++            });
++          }
++        }
+       }
++      // Skip tool_response messages as they're handled with their linked tool_call
+     }
+ 
+     // Build the evaluation object based on the active tab
+@@ -652,6 +767,18 @@ export function AddTestDialog({
+     return { history, settings, evaluation };
+   };
+ 
++  // Helper to check if tool call messages have empty params
++  const hasEmptyToolCallParams = () =&gt; {
++    const toolCallMessages = chatMessages.filter((m) =&gt; m.role === "tool_call");
++    for (const msg of toolCallMessages) {
++      if (msg.toolParams &amp;&amp; msg.toolParams.length &gt; 0) {
++        const hasEmpty = msg.toolParams.some((p) =&gt; !p.value.trim());
++        if (hasEmpty) return true;
++      }
++    }
++    return false;
++  };
++
+   // Handle form submission
+   const handleSubmit = () =&gt; {
+     setLocalValidationAttempted(true);
+@@ -661,11 +788,25 @@ export function AddTestDialog({
+       setLocalValidationAttempted(false);
+     }, 3000);
+ 
++    // Validate tool call params in conversation history (for both test types)
++    if (hasEmptyToolCallParams()) {
++      return; // Don't submit if any tool call has empty params
++    }
++
+     // Validate required fields based on test type
+     if (activeTab === "next-reply") {
+       if (!testName.trim() || !expectedMessage.trim()) {
+         return; // Don't submit if validation fails
+       }
++      // Validate that all tool_response messages have valid JSON
++      const toolResponses = chatMessages.filter((m) =&gt; m.role === "tool_response");
++      for (const response of toolResponses) {
++        try {
++          JSON.parse(response.content);
++        } catch {
++          return; // Don't submit if any tool response has invalid JSON
++        }
++      }
+     } else {
+       // tool-invocation - name and at least one tool are required
+       if (!testName.trim() || selectedTools.length === 0) {
+@@ -686,6 +827,15 @@ export function AddTestDialog({
+           }
+         }
+       }
++      // Validate that all tool_response messages have valid JSON
++      const toolResponses = chatMessages.filter((m) =&gt; m.role === "tool_response");
++      for (const response of toolResponses) {
++        try {
++          JSON.parse(response.content);
++        } catch {
++          return; // Don't submit if any tool response has invalid JSON
++        }
++      }
+     }
+ 
+     const config = buildConfig();
+@@ -1373,40 +1523,213 @@ export function AddTestDialog({
+                             &lt;span className="text-sm font-medium text-foreground"&gt;
+                               {message.toolName}
+                             &lt;/span&gt;
++                            {message.isWebhook &amp;&amp; (
++                              &lt;span className="text-xs text-muted-foreground bg-background px-2 py-0.5 rounded"&gt;
++                                Webhook
++                              &lt;/span&gt;
++                            )}
+                           &lt;/div&gt;
+                           {message.toolParams &amp;&amp;
+                             message.toolParams.length &gt; 0 &amp;&amp; (
+                               &lt;div className="space-y-3 mt-3"&gt;
+-                                {message.toolParams.map((param, idx) =&gt; (
+-                                  &lt;div key={idx}&gt;
+-                                    &lt;label className="block text-sm font-medium text-muted-foreground mb-1.5"&gt;
+-                                      {param.name}
+-                                    &lt;/label&gt;
+-                                    &lt;input
+-                                      type="text"
+-                                      value={param.value}
+-                                      onChange={(e) =&gt;
+-                                        updateToolCallParam(
+-                                          message.id,
+-                                          param.name,
+-                                          e.target.value,
+-                                        )
+-                                      }
+-                                      placeholder={&#96;Enter ${param.name}&#96;}
+-                                      className="w-full h-10 px-4 rounded-lg text-sm bg-background text-foreground placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-accent"
+-                                    /&gt;
++                                {/* Group parameters by type for webhook tools */}
++                                {message.isWebhook ? (
++                                  &lt;&gt;
++                                    {/* Query Parameters */}
++                                    {message.toolParams.filter(p =&gt; p.group === "query").length &gt; 0 &amp;&amp; (
++                                      &lt;div className="bg-background border border-border rounded-xl p-3"&gt;
++                                        &lt;h5 className="text-xs font-medium text-muted-foreground mb-3 uppercase tracking-wide"&gt;
++                                          Query
++                                        &lt;/h5&gt;
++                                        &lt;div className="space-y-3"&gt;
++                                          {message.toolParams
++                                            .filter(p =&gt; p.group === "query")
++                                            .map((param, idx) =&gt; {
++                                              const isEmpty = !param.value.trim();
++                                              const showError = localValidationAttempted &amp;&amp; isEmpty;
++                                              return (
++                                                &lt;div key={idx}&gt;
++                                                  &lt;label className="block text-sm font-medium text-foreground mb-1.5"&gt;
++                                                    {param.name}
++                                                  &lt;/label&gt;
++                                                  &lt;input
++                                                    type="text"
++                                                    value={param.value}
++                                                    onChange={(e) =&gt;
++                                                      updateToolCallParam(
++                                                        message.id,
++                                                        param.name,
++                                                        e.target.value,
++                                                      )
++                                                    }
++                                                    placeholder={&#96;Enter ${param.name}&#96;}
++                                                    className={&#96;w-full h-10 px-3 rounded-lg text-sm bg-muted text-foreground placeholder:text-muted-foreground border focus:outline-none focus:ring-2 focus:ring-accent ${
++                                                      showError ? "border-red-500" : "border-border"
++                                                    }&#96;}
++                                                  /&gt;
++                                                  {showError &amp;&amp; (
++                                                    &lt;p className="text-xs text-red-500 mt-1"&gt;This field cannot be empty&lt;/p&gt;
++                                                  )}
++                                                &lt;/div&gt;
++                                              );
++                                            })}
++                                        &lt;/div&gt;
++                                      &lt;/div&gt;
++                                    )}
++                                    {/* Body Parameters */}
++                                    {message.toolParams.filter(p =&gt; p.group === "body").length &gt; 0 &amp;&amp; (
++                                      &lt;div className="bg-background border border-border rounded-xl p-3"&gt;
++                                        &lt;h5 className="text-xs font-medium text-muted-foreground mb-3 uppercase tracking-wide"&gt;
++                                          Body
++                                        &lt;/h5&gt;
++                                        &lt;div className="space-y-3"&gt;
++                                          {message.toolParams
++                                            .filter(p =&gt; p.group === "body")
++                                            .map((param, idx) =&gt; {
++                                              const isEmpty = !param.value.trim();
++                                              const showError = localValidationAttempted &amp;&amp; isEmpty;
++                                              return (
++                                                &lt;div key={idx}&gt;
++                                                  &lt;label className="block text-sm font-medium text-foreground mb-1.5"&gt;
++                                                    {param.name}
++                                                  &lt;/label&gt;
++                                                  &lt;input
++                                                    type="text"
++                                                    value={param.value}
++                                                    onChange={(e) =&gt;
++                                                      updateToolCallParam(
++                                                        message.id,
++                                                        param.name,
++                                                        e.target.value,
++                                                      )
++                                                    }
++                                                    placeholder={&#96;Enter ${param.name}&#96;}
++                                                    className={&#96;w-full h-10 px-3 rounded-lg text-sm bg-muted text-foreground placeholder:text-muted-foreground border focus:outline-none focus:ring-2 focus:ring-accent ${
++                                                      showError ? "border-red-500" : "border-border"
++                                                    }&#96;}
++                                                  /&gt;
++                                                  {showError &amp;&amp; (
++                                                    &lt;p className="text-xs text-red-500 mt-1"&gt;This field cannot be empty&lt;/p&gt;
++                                                  )}
++                                                &lt;/div&gt;
++                                              );
++                                            })}
++                                        &lt;/div&gt;
++                                      &lt;/div&gt;
++                                    )}
++                                  &lt;/&gt;
++                                ) : (
++                                  /* Regular tool parameters */
++                                  &lt;div className="space-y-3"&gt;
++                                    {message.toolParams.map((param, idx) =&gt; {
++                                      const isEmpty = !param.value.trim();
++                                      const showError = localValidationAttempted &amp;&amp; isEmpty;
++                                      return (
++                                        &lt;div key={idx}&gt;
++                                          &lt;label className="block text-sm font-medium text-foreground mb-1.5"&gt;
++                                            {param.name}
++                                          &lt;/label&gt;
++                                          &lt;input
++                                            type="text"
++                                            value={param.value}
++                                            onChange={(e) =&gt;
++                                              updateToolCallParam(
++                                                message.id,
++                                                param.name,
++                                                e.target.value,
++                                              )
++                                            }
++                                            placeholder={&#96;Enter ${param.name}&#96;}
++                                            className={&#96;w-full h-10 px-4 rounded-lg text-sm bg-background text-foreground placeholder:text-muted-foreground border focus:outline-none focus:ring-2 focus:ring-accent ${
++                                              showError ? "border-red-500" : "border-border"
++                                            }&#96;}
++                                          /&gt;
++                                          {showError &amp;&amp; (
++                                            &lt;p className="text-xs text-red-500 mt-1"&gt;This field cannot be empty&lt;/p&gt;
++                                          )}
++                                        &lt;/div&gt;
++                                      );
++                                    })}
+                                   &lt;/div&gt;
+-                                ))}
++                                )}
+                               &lt;/div&gt;
+                             )}
+                         &lt;/div&gt;
+                       &lt;/div&gt;
+                     )}
+ 
++                    {/* Tool Response Display (for webhook tools) */}
++                    {message.role === "tool_response" &amp;&amp; (
++                      &lt;div className="w-1/2"&gt;
++                        &lt;div className="bg-muted border border-border rounded-2xl p-4"&gt;
++                          &lt;div className="flex items-center gap-2 mb-2"&gt;
++                            &lt;svg
++                              className="w-4 h-4 text-muted-foreground"
++                              fill="none"
++                              viewBox="0 0 24 24"
++                              stroke="currentColor"
++                              strokeWidth={1.5}
++                            &gt;
++                              &lt;path
++                                strokeLinecap="round"
++                                strokeLinejoin="round"
++                                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
++                              /&gt;
++                            &lt;/svg&gt;
++                            &lt;span className="text-sm font-medium text-foreground"&gt;
++                              Tool Response
++                            &lt;/span&gt;
++                            &lt;span className="text-xs text-muted-foreground"&gt;
++                              ({message.toolName})
++                            &lt;/span&gt;
++                          &lt;/div&gt;
++                          &lt;div className="mt-2"&gt;
++                            &lt;label className="block text-xs font-medium text-muted-foreground mb-1.5"&gt;
++                              JSON Response &lt;span className="text-red-500"&gt;*&lt;/span&gt;
++                            &lt;/label&gt;
++                            &lt;textarea
++                              value={message.content}
++                              onChange={(e) =&gt;
++                                updateChatMessage(message.id, e.target.value)
++                              }
++                              placeholder='{"status": "success", "response": {}}'
++                              rows={5}
++                              className={&#96;w-full px-3 py-2 rounded-lg text-sm font-mono bg-background text-foreground placeholder:text-muted-foreground border focus:outline-none focus:ring-2 focus:ring-accent ${
++                                (() =&gt; {
++                                  try {
++                                    JSON.parse(message.content);
++                                    return "border-border";
++                                  } catch {
++                                    return message.content.trim()
++                                      ? "border-red-500"
++                                      : "border-border";
++                                  }
++                                })()
++                              }&#96;}
++                            /&gt;
++                            {(() =&gt; {
++                              try {
++                                JSON.parse(message.content);
++                                return null;
++                              } catch {
++                                return message.content.trim() ? (
++                                  &lt;p className="text-xs text-red-500 mt-1"&gt;
++                                    Invalid JSON format
++                                  &lt;/p&gt;
++                                ) : null;
++                              }
++                            })()}
++                          &lt;/div&gt;
++                        &lt;/div&gt;
++                      &lt;/div&gt;
++                    )}
++
+                     {/* Message Actions - Delete button for all messages, Add button only for last */}
+                     &lt;div className="flex items-center gap-2 relative"&gt;
+-                      {/* Delete and Add Message Buttons - only for last message */}
+-                      {index === chatMessages.length - 1 &amp;&amp; (
++                      {/* Delete and Add Message Buttons - only for last non-tool-response message */}
++                      {/* Tool response messages are linked to their tool call and shouldn't have independent actions */}
++                      {message.role !== "tool_response" &amp;&amp;
++                        index === chatMessages.length - 1 - (chatMessages[chatMessages.length - 1]?.role === "tool_response" ? 1 : 0) &amp;&amp; (
+                         &lt;&gt;
+                           &lt;button
+                             onClick={() =&gt; removeChatMessage(message.id)}
+@@ -1583,15 +1906,63 @@ export function AddTestDialog({
+                                           [],
+                                         );
+                                       }}
+-                                      onSelectCustomTool={(tool, params) =&gt; {
+-                                        // Always add tool call directly with params (empty values if has params)
++                                      onSelectCustomTool={(tool) =&gt; {
++                                        const isWebhook = tool.config?.type === "webhook";
++                                        let allParams: Array&lt;{ name: string; value: string; group?: string }&gt; = [];
++
++                                        if (isWebhook &amp;&amp; tool.config?.webhook) {
++                                          // Extract webhook-specific parameters
++                                          const webhook = tool.config.webhook;
++                                          
++                                          // Query parameters (for GET requests)
++                                          if (webhook.queryParameters &amp;&amp; Array.isArray(webhook.queryParameters)) {
++                                            webhook.queryParameters.forEach((p: any) =&gt; {
++                                              allParams.push({
++                                                name: p.id || p.name || "",
++                                                value: "",
++                                                group: "query",
++                                              });
++                                            });
++                                          }
++                                          
++                                          // Body parameters (for POST requests)
++                                          if (webhook.body?.parameters &amp;&amp; Array.isArray(webhook.body.parameters)) {
++                                            webhook.body.parameters.forEach((p: any) =&gt; {
++                                              allParams.push({
++                                                name: p.id || p.name || "",
++                                                value: "",
++                                                group: "body",
++                                              });
++                                            });
++                                          }
++                                          // Note: Headers are not shown in conversation history UI
++                                        } else {
++                                          // Structured output tool - use regular parameters
++                                          const params = tool.config?.parameters;
++                                          if (Array.isArray(params)) {
++                                            allParams = params.map((p: any) =&gt; ({
++                                              name: p.id || p.name || "",
++                                              value: "",
++                                            }));
++                                          } else {
++                                            const propsObj =
++                                              tool.config?.parameters?.properties ||
++                                              tool.config?.function?.parameters?.properties ||
++                                              tool.config?.properties ||
++                                              tool.config?.parameters ||
++                                              {};
++                                            allParams = Object.keys(propsObj).map((name) =&gt; ({
++                                              name,
++                                              value: "",
++                                            }));
++                                          }
++                                        }
++
+                                         addToolCallMessage(
+                                           tool.uuid,
+                                           tool.name,
+-                                          params.map((p) =&gt; ({
+-                                            name: p.name,
+-                                            value: "",
+-                                          })),
++                                          allParams,
++                                          isWebhook,
+                                         );
+                                       }}
+                                     /&gt;
+diff --git a/src/components/AddToolDialog.tsx b/src/components/AddToolDialog.tsx
+new file mode 100644
+index 0000000..0353bba
+--- /dev/null
++++ b/src/components/AddToolDialog.tsx
+@@ -0,0 +1,1588 @@
++"use client";
++
++import { useState, useEffect, useRef } from "react";
++import { signOut } from "next-auth/react";
++import { ParameterCard, Parameter } from "@/components/ParameterCard";
++import { NestedContainer } from "@/components/ui/NestedContainer";
++
++type ToolData = {
++  uuid: string;
++  name: string;
++  description?: string;
++  config: Record&lt;string, any&gt;;
++  created_at: string;
++  updated_at: string;
++};
++
++type ToolType = "structured_output" | "webhook";
++
++type AddToolDialogProps = {
++  isOpen: boolean;
++  onClose: () =&gt; void;
++  toolType: ToolType;
++  editingToolUuid: string | null;
++  backendAccessToken: string | undefined;
++  onToolsUpdated: (tools: ToolData[]) =&gt; void;
++};
++
++const TOOL_TYPE_CONFIG: Record&lt;
++  ToolType,
++  { addTitle: string; editTitle: string; description: string }
++&gt; = {
++  structured_output: {
++    addTitle: "Add structured output tool",
++    editTitle: "Edit structured output tool",
++    description:
++      "Structured output tools enable agents to extract information from a conversation in a defined format. Example: the user's name or order details.",
++  },
++  webhook: {
++    addTitle: "Add webhook tool",
++    editTitle: "Edit webhook tool",
++    description:
++      "Webhook tools allow agents to call external APIs or services to perform actions. Example: sending a notification or querying a database.",
++  },
++};
++
++export function AddToolDialog({
++  isOpen,
++  onClose,
++  toolType,
++  editingToolUuid,
++  backendAccessToken,
++  onToolsUpdated,
++}: AddToolDialogProps) {
++  const [toolName, setToolName] = useState("");
++  const [toolDescription, setToolDescription] = useState("");
++  const [parameters, setParameters] = useState&lt;Parameter[]&gt;([]);
++  const [isCreating, setIsCreating] = useState(false);
++  const [createError, setCreateError] = useState&lt;string | null&gt;(null);
++  const [isLoadingTool, setIsLoadingTool] = useState(false);
++  const [validationAttempted, setValidationAttempted] = useState(false);
++  const sidebarContentRef = useRef&lt;HTMLDivElement&gt;(null);
++
++  // Webhook-specific state
++  const [webhookMethod, setWebhookMethod] = useState&lt;"GET" | "POST" | "PUT" | "PATCH" | "DELETE"&gt;("POST");
++  const [webhookUrl, setWebhookUrl] = useState("");
++  const [responseTimeout, setResponseTimeout] = useState(20);
++  const [showTimeoutTooltip, setShowTimeoutTooltip] = useState(false);
++  
++  // Headers state
++  type WebhookHeader = {
++    id: string;
++    name: string;
++    value: string;
++  };
++  const [webhookHeaders, setWebhookHeaders] = useState&lt;WebhookHeader[]&gt;([]);
++
++  // Query parameters state (for webhook tools) - uses same Parameter type
++  const [queryParameters, setQueryParameters] = useState&lt;Parameter[]&gt;([]);
++  const [newlyAddedQueryParamId, setNewlyAddedQueryParamId] = useState&lt;string | null&gt;(null);
++  const queryParamRefs = useRef&lt;Map&lt;string, HTMLDivElement&gt;&gt;(new Map());
++
++  // Body parameters state (for webhook tools with POST, PUT, PATCH methods)
++  const [bodyDescription, setBodyDescription] = useState("");
++  const [bodyParameters, setBodyParameters] = useState&lt;Parameter[]&gt;([]);
++
++  // Reset form when dialog opens/closes or editingToolUuid changes
++  useEffect(() =&gt; {
++    if (isOpen) {
++      if (editingToolUuid) {
++        // Load existing tool data
++        loadToolData(editingToolUuid);
++      } else {
++        // Reset for new tool
++        resetForm();
++        // Add one default parameter for structured output tools
++        if (toolType === "structured_output") {
++          setParameters([
++            {
++              id: crypto.randomUUID(),
++              dataType: "string",
++              name: "",
++              required: true,
++              description: "",
++            },
++          ]);
++        }
++      }
++    }
++  }, [isOpen, editingToolUuid, toolType]);
++
++  const resetForm = () =&gt; {
++    setToolName("");
++    setToolDescription("");
++    setParameters([]);
++    setCreateError(null);
++    setValidationAttempted(false);
++    // Reset webhook-specific fields
++    setWebhookMethod("POST");
++    setWebhookUrl("");
++    setResponseTimeout(20);
++    setWebhookHeaders([]);
++    setQueryParameters([]);
++    setBodyDescription("");
++    setBodyParameters([]);
++  };
++
++  const handleClose = () =&gt; {
++    resetForm();
++    onClose();
++  };
++
++  // Scroll to newly added query parameter
++  useEffect(() =&gt; {
++    if (newlyAddedQueryParamId) {
++      setTimeout(() =&gt; {
++        const element = queryParamRefs.current.get(newlyAddedQueryParamId);
++        if (element) {
++          element.scrollIntoView({ behavior: "smooth", block: "center" });
++        }
++        setNewlyAddedQueryParamId(null);
++      }, 50);
++    }
++  }, [newlyAddedQueryParamId]);
++
++  // Scroll to bottom when parameters change (new parameter added)
++  const scrollToBottom = () =&gt; {
++    if (sidebarContentRef.current) {
++      setTimeout(() =&gt; {
++        sidebarContentRef.current?.scrollTo({
++          top: sidebarContentRef.current.scrollHeight,
++          behavior: "smooth",
++        });
++      }, 50);
++    }
++  };
++
++  const addParameter = () =&gt; {
++    setValidationAttempted(false);
++    setParameters([
++      ...parameters,
++      {
++        id: crypto.randomUUID(),
++        dataType: "string",
++        name: "",
++        required: true,
++        description: "",
++      },
++    ]);
++    scrollToBottom();
++  };
++
++  // Helper to update a parameter at any depth using a path of IDs
++  const updateParameterAtPath = (
++    params: Parameter[],
++    path: string[],
++    updates: Partial&lt;Parameter&gt;
++  ): Parameter[] =&gt; {
++    if (path.length === 0) return params;
++    const [currentId, ...restPath] = path;
++    return params.map((p) =&gt; {
++      if (p.id !== currentId) return p;
++      if (restPath.length === 0) {
++        return { ...p, ...updates };
++      }
++      if (restPath[0] === "__items__") {
++        const currentItems = p.items || {
++          id: crypto.randomUUID(),
++          dataType: "string",
++          name: "",
++          required: true,
++          description: "",
++        };
++        if (restPath.length === 1) {
++          return { ...p, items: { ...currentItems, ...updates } };
++        }
++        const [, ...deeperPath] = restPath;
++        const updatedItems = updateSingleParameterAtPath(
++          currentItems,
++          deeperPath,
++          updates
++        );
++        return { ...p, items: updatedItems };
++      }
++      return {
++        ...p,
++        properties: updateParameterAtPath(
++          p.properties || [],
++          restPath,
++          updates
++        ),
++      };
++    });
++  };
++
++  const updateSingleParameterAtPath = (
++    param: Parameter,
++    path: string[],
++    updates: Partial&lt;Parameter&gt;
++  ): Parameter =&gt; {
++    if (path.length === 0) {
++      return { ...param, ...updates };
++    }
++    const [currentSegment, ...restPath] = path;
++    if (currentSegment === "__items__") {
++      const currentItems = param.items || {
++        id: crypto.randomUUID(),
++        dataType: "string",
++        name: "",
++        required: true,
++        description: "",
++      };
++      if (restPath.length === 0) {
++        return { ...param, items: { ...currentItems, ...updates } };
++      }
++      return {
++        ...param,
++        items: updateSingleParameterAtPath(currentItems, restPath, updates),
++      };
++    }
++    return {
++      ...param,
++      properties: updateParameterAtPath(param.properties || [], path, updates),
++    };
++  };
++
++  const addPropertyAtPath = (
++    params: Parameter[],
++    path: string[]
++  ): Parameter[] =&gt; {
++    if (path.length === 0) return params;
++    const [currentId, ...restPath] = path;
++    return params.map((p) =&gt; {
++      if (p.id !== currentId) return p;
++      if (restPath.length === 0) {
++        return {
++          ...p,
++          properties: [
++            ...(p.properties || []),
++            {
++              id: crypto.randomUUID(),
++              dataType: "string",
++              name: "",
++              required: true,
++              description: "",
++            },
++          ],
++        };
++      }
++      if (restPath[0] === "__items__" &amp;&amp; p.items) {
++        return {
++          ...p,
++          items: addPropertyToSingleParam(p.items, restPath.slice(1)),
++        };
++      }
++      return {
++        ...p,
++        properties: addPropertyAtPath(p.properties || [], restPath),
++      };
++    });
++  };
++
++  const addPropertyToSingleParam = (
++    param: Parameter,
++    path: string[]
++  ): Parameter =&gt; {
++    if (path.length === 0) {
++      return {
++        ...param,
++        properties: [
++          ...(param.properties || []),
++          {
++            id: crypto.randomUUID(),
++            dataType: "string",
++            name: "",
++            required: true,
++            description: "",
++          },
++        ],
++      };
++    }
++    if (path[0] === "__items__" &amp;&amp; param.items) {
++      return {
++        ...param,
++        items: addPropertyToSingleParam(param.items, path.slice(1)),
++      };
++    }
++    return {
++      ...param,
++      properties: addPropertyAtPath(param.properties || [], path),
++    };
++  };
++
++  const removePropertyAtPath = (
++    params: Parameter[],
++    path: string[],
++    idToRemove: string
++  ): Parameter[] =&gt; {
++    if (path.length === 0) {
++      return params.filter((p) =&gt; p.id !== idToRemove);
++    }
++    const [currentId, ...restPath] = path;
++    return params.map((p) =&gt; {
++      if (p.id !== currentId) return p;
++      if (restPath[0] === "__items__" &amp;&amp; p.items) {
++        return {
++          ...p,
++          items: removePropertyFromSingleParam(
++            p.items,
++            restPath.slice(1),
++            idToRemove
++          ),
++        };
++      }
++      if (restPath.length === 0) {
++        return {
++          ...p,
++          properties: (p.properties || []).filter(
++            (prop) =&gt; prop.id !== idToRemove
++          ),
++        };
++      }
++      return {
++        ...p,
++        properties: removePropertyAtPath(
++          p.properties || [],
++          restPath,
++          idToRemove
++        ),
++      };
++    });
++  };
++
++  const removePropertyFromSingleParam = (
++    param: Parameter,
++    path: string[],
++    idToRemove: string
++  ): Parameter =&gt; {
++    if (path.length === 0) {
++      return {
++        ...param,
++        properties: (param.properties || []).filter((p) =&gt; p.id !== idToRemove),
++      };
++    }
++    if (path[0] === "__items__" &amp;&amp; param.items) {
++      return {
++        ...param,
++        items: removePropertyFromSingleParam(
++          param.items,
++          path.slice(1),
++          idToRemove
++        ),
++      };
++    }
++    return {
++      ...param,
++      properties: removePropertyAtPath(
++        param.properties || [],
++        path,
++        idToRemove
++      ),
++    };
++  };
++
++  const setItemsAtPath = (
++    params: Parameter[],
++    path: string[],
++    items: Parameter | undefined
++  ): Parameter[] =&gt; {
++    if (path.length === 0) return params;
++    const [currentId, ...restPath] = path;
++    return params.map((p) =&gt; {
++      if (p.id !== currentId) return p;
++      if (restPath.length === 0) {
++        return { ...p, items };
++      }
++      if (restPath[0] === "__items__" &amp;&amp; p.items) {
++        return {
++          ...p,
++          items: setItemsOnSingleParam(p.items, restPath.slice(1), items),
++        };
++      }
++      return {
++        ...p,
++        properties: setItemsAtPath(p.properties || [], restPath, items),
++      };
++    });
++  };
++
++  const setItemsOnSingleParam = (
++    param: Parameter,
++    path: string[],
++    items: Parameter | undefined
++  ): Parameter =&gt; {
++    if (path.length === 0) {
++      return { ...param, items };
++    }
++    if (path[0] === "__items__" &amp;&amp; param.items) {
++      return {
++        ...param,
++        items: setItemsOnSingleParam(param.items, path.slice(1), items),
++      };
++    }
++    return {
++      ...param,
++      properties: setItemsAtPath(param.properties || [], path, items),
++    };
++  };
++
++  // Handlers
++  const handleUpdateAtPath = (path: string[], updates: Partial&lt;Parameter&gt;) =&gt; {
++    setParameters((prev) =&gt; updateParameterAtPath(prev, path, updates));
++  };
++
++  const handleAddPropertyAtPath = (path: string[]) =&gt; {
++    setValidationAttempted(false);
++    setParameters((prev) =&gt; addPropertyAtPath(prev, path));
++    scrollToBottom();
++  };
++
++  const handleRemoveAtPath = (parentPath: string[], id: string) =&gt; {
++    setParameters((prev) =&gt; removePropertyAtPath(prev, parentPath, id));
++  };
++
++  const handleSetItemsAtPath = (
++    path: string[],
++    items: Parameter | undefined
++  ) =&gt; {
++    setValidationAttempted(false);
++    setParameters((prev) =&gt; setItemsAtPath(prev, path, items));
++  };
++
++  // Query parameter handlers (same logic, different state)
++  const handleQueryUpdateAtPath = (path: string[], updates: Partial&lt;Parameter&gt;) =&gt; {
++    setQueryParameters((prev) =&gt; updateParameterAtPath(prev, path, updates));
++  };
++
++  const handleQueryAddPropertyAtPath = (path: string[]) =&gt; {
++    setValidationAttempted(false);
++    setQueryParameters((prev) =&gt; addPropertyAtPath(prev, path));
++    scrollToBottom();
++  };
++
++  const handleQueryRemoveAtPath = (parentPath: string[], id: string) =&gt; {
++    setQueryParameters((prev) =&gt; removePropertyAtPath(prev, parentPath, id));
++  };
++
++  const handleQuerySetItemsAtPath = (
++    path: string[],
++    items: Parameter | undefined
++  ) =&gt; {
++    setValidationAttempted(false);
++    setQueryParameters((prev) =&gt; setItemsAtPath(prev, path, items));
++  };
++
++  const addQueryParameter = () =&gt; {
++    setValidationAttempted(false);
++    const newId = crypto.randomUUID();
++    setQueryParameters([
++      ...queryParameters,
++      {
++        id: newId,
++        dataType: "string",
++        name: "",
++        required: true,
++        description: "",
++      },
++    ]);
++    setNewlyAddedQueryParamId(newId);
++  };
++
++  // Body parameter handlers (same logic, different state)
++  const handleBodyUpdateAtPath = (path: string[], updates: Partial&lt;Parameter&gt;) =&gt; {
++    setBodyParameters((prev) =&gt; updateParameterAtPath(prev, path, updates));
++  };
++
++  const handleBodyAddPropertyAtPath = (path: string[]) =&gt; {
++    setValidationAttempted(false);
++    setBodyParameters((prev) =&gt; addPropertyAtPath(prev, path));
++    scrollToBottom();
++  };
++
++  const handleBodyRemoveAtPath = (parentPath: string[], id: string) =&gt; {
++    setBodyParameters((prev) =&gt; removePropertyAtPath(prev, parentPath, id));
++  };
++
++  const handleBodySetItemsAtPath = (
++    path: string[],
++    items: Parameter | undefined
++  ) =&gt; {
++    setValidationAttempted(false);
++    setBodyParameters((prev) =&gt; setItemsAtPath(prev, path, items));
++  };
++
++  const addBodyParameter = () =&gt; {
++    setValidationAttempted(false);
++    setBodyParameters([
++      ...bodyParameters,
++      {
++        id: crypto.randomUUID(),
++        dataType: "string",
++        name: "",
++        required: true,
++        description: "",
++      },
++    ]);
++    scrollToBottom();
++  };
++
++  // Validation helpers
++  const isValidUrl = (url: string): boolean =&gt; {
++    if (!url.trim()) return false;
++    try {
++      const urlObj = new URL(url.trim());
++      // Must be http or https
++      if (urlObj.protocol !== "http:" &amp;&amp; urlObj.protocol !== "https:") {
++        return false;
++      }
++      // Hostname must have a dot (domain.tld) or be localhost
++      const hostname = urlObj.hostname;
++      if (hostname !== "localhost" &amp;&amp; !hostname.includes(".")) {
++        return false;
++      }
++      return true;
++    } catch {
++      return false;
++    }
++  };
++
++  const hasDuplicateNames = (params: Parameter[]): boolean =&gt; {
++    const names = params
++      .map((p) =&gt; p.name.trim().toLowerCase())
++      .filter(Boolean);
++    return new Set(names).size !== names.length;
++  };
++
++  const hasInvalidParameters = (params: Parameter[]): boolean =&gt; {
++    if (hasDuplicateNames(params)) return true;
++    for (const p of params) {
++      if (!p.name.trim() || !p.description.trim()) return true;
++      if (p.dataType === "object") {
++        if (!p.properties || p.properties.length === 0) return true;
++        if (hasInvalidParameters(p.properties)) return true;
++      }
++      if (p.dataType === "array" &amp;&amp; p.items) {
++        if (hasInvalidSingleParameter(p.items)) return true;
++      }
++    }
++    return false;
++  };
++
++  const hasInvalidSingleParameter = (param: Parameter): boolean =&gt; {
++    if (!param.description.trim()) return true;
++    if (param.dataType === "object") {
++      if (!param.properties || param.properties.length === 0) return true;
++      if (hasInvalidParameters(param.properties)) return true;
++    }
++    if (param.dataType === "array" &amp;&amp; param.items) {
++      if (hasInvalidSingleParameter(param.items)) return true;
++    }
++    return false;
++  };
++
++  // JSON Schema helpers
++  const parameterToJsonSchema = (param: Parameter): Record&lt;string, any&gt; =&gt; {
++    const schema: Record&lt;string, any&gt; = {
++      type: param.dataType,
++      description: param.description,
++    };
++
++    if (param.dataType === "array" &amp;&amp; param.items) {
++      schema.items = {
++        type: param.items.dataType,
++        description: param.items.description,
++      };
++      if (
++        param.items.dataType === "object" &amp;&amp;
++        param.items.properties &amp;&amp;
++        param.items.properties.length &gt; 0
++      ) {
++        schema.items.properties = {};
++        const requiredProps: string[] = [];
++        param.items.properties.forEach((prop) =&gt; {
++          schema.items.properties[prop.name] = parameterToJsonSchema(prop);
++          if (prop.required) requiredProps.push(prop.name);
++        });
++        if (requiredProps.length &gt; 0) schema.items.required = requiredProps;
++      }
++      if (param.items.dataType === "array" &amp;&amp; param.items.items) {
++        schema.items.items = parameterToJsonSchema({
++          ...param.items.items,
++          name: "",
++          required: true,
++        });
++        delete schema.items.items.required;
++      }
++    }
++
++    if (
++      param.dataType === "object" &amp;&amp;
++      param.properties &amp;&amp;
++      param.properties.length &gt; 0
++    ) {
++      schema.properties = {};
++      const requiredProps: string[] = [];
++      param.properties.forEach((prop) =&gt; {
++        schema.properties[prop.name] = parameterToJsonSchema(prop);
++        if (prop.required) requiredProps.push(prop.name);
++      });
++      if (requiredProps.length &gt; 0) schema.required = requiredProps;
++    }
++
++    return schema;
++  };
++
++  const buildParametersConfig = (
++    params: Parameter[]
++  ): Array&lt;Record&lt;string, any&gt;&gt; =&gt; {
++    return params
++      .filter((param) =&gt; param.name)
++      .map((param) =&gt; {
++        const schema = parameterToJsonSchema(param);
++        return {
++          id: param.name,
++          ...schema,
++          required: param.required,
++        };
++      });
++  };
++
++  const parseItemsSchema = (itemsConfig: any): Parameter =&gt; {
++    const itemParam: Parameter = {
++      id: crypto.randomUUID(),
++      name: "",
++      dataType: itemsConfig.type || "string",
++      required: true,
++      description: itemsConfig.description || "",
++    };
++
++    if (itemsConfig.type === "object" &amp;&amp; itemsConfig.properties) {
++      itemParam.properties = [];
++      const requiredProps = itemsConfig.required || [];
++      Object.entries(itemsConfig.properties).forEach(
++        ([propName, propConfig]: [string, any]) =&gt; {
++          itemParam.properties!.push(
++            parseParameterSchema(
++              propName,
++              propConfig,
++              requiredProps.includes(propName)
++            )
++          );
++        }
++      );
++    }
++
++    if (itemsConfig.type === "array" &amp;&amp; itemsConfig.items) {
++      itemParam.items = parseItemsSchema(itemsConfig.items);
++    }
++
++    return itemParam;
++  };
++
++  const parseParameterSchema = (
++    paramName: string,
++    paramConfig: any,
++    isRequired: boolean = true
++  ): Parameter =&gt; {
++    const param: Parameter = {
++      id: crypto.randomUUID(),
++      name: paramName,
++      dataType: paramConfig.type || "string",
++      required: paramConfig.required ?? isRequired,
++      description: paramConfig.description || "",
++    };
++
++    if (paramConfig.type === "array" &amp;&amp; paramConfig.items) {
++      param.items = parseItemsSchema(paramConfig.items);
++    }
++
++    if (paramConfig.type === "object" &amp;&amp; paramConfig.properties) {
++      param.properties = [];
++      const requiredProps = paramConfig.required || [];
++      Object.entries(paramConfig.properties).forEach(
++        ([propName, propConfig]: [string, any]) =&gt; {
++          param.properties!.push(
++            parseParameterSchema(
++              propName,
++              propConfig,
++              requiredProps.includes(propName)
++            )
++          );
++        }
++      );
++    }
++
++    return param;
++  };
++
++  // Load tool data for editing
++  const loadToolData = async (uuid: string) =&gt; {
++    try {
++      setIsLoadingTool(true);
++      setCreateError(null);
++
++      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
++      if (!backendUrl) {
++        throw new Error("BACKEND_URL environment variable is not set");
++      }
++
++      const response = await fetch(&#96;${backendUrl}/tools/${uuid}&#96;, {
++        method: "GET",
++        headers: {
++          accept: "application/json",
++          "ngrok-skip-browser-warning": "true",
++          Authorization: &#96;Bearer ${backendAccessToken}&#96;,
++        },
++      });
++
++      if (response.status === 401) {
++        await signOut({ callbackUrl: "/login" });
++        return;
++      }
++
++      if (!response.ok) {
++        throw new Error("Failed to fetch tool details");
++      }
++
++      const toolData: ToolData = await response.json();
++
++      setToolName(toolData.name || "");
++      setToolDescription(
++        toolData.description || toolData.config?.description || ""
++      );
++
++      const toolParams: Parameter[] = [];
++      if (toolData.config?.parameters) {
++        if (Array.isArray(toolData.config.parameters)) {
++          toolData.config.parameters.forEach((paramConfig: any) =&gt; {
++            const paramName = paramConfig.id || paramConfig.name || "";
++            toolParams.push(parseParameterSchema(paramName, paramConfig));
++          });
++        } else {
++          Object.entries(toolData.config.parameters).forEach(
++            ([paramName, paramConfig]: [string, any]) =&gt; {
++              toolParams.push(parseParameterSchema(paramName, paramConfig));
++            }
++          );
++        }
++      }
++      setParameters(toolParams);
++
++      // Load webhook-specific fields if present
++      if (toolData.config?.webhook) {
++        setWebhookMethod(toolData.config.webhook.method || "POST");
++        setWebhookUrl(toolData.config.webhook.url || "");
++        setResponseTimeout(toolData.config.webhook.timeout || 20);
++        // Load headers
++        if (toolData.config.webhook.headers) {
++          setWebhookHeaders(
++            toolData.config.webhook.headers.map((h: any) =&gt; ({
++              id: crypto.randomUUID(),
++              name: h.name || "",
++              value: h.value || "",
++            }))
++          );
++        }
++        // Load query parameters (same format as parameters)
++        if (toolData.config.webhook.queryParameters) {
++          const queryParams: Parameter[] = [];
++          if (Array.isArray(toolData.config.webhook.queryParameters)) {
++            toolData.config.webhook.queryParameters.forEach((paramConfig: any) =&gt; {
++              const paramName = paramConfig.id || paramConfig.name || "";
++              queryParams.push(parseParameterSchema(paramName, paramConfig));
++            });
++          }
++          setQueryParameters(queryParams);
++        }
++        // Load body parameters (same format as parameters)
++        if (toolData.config.webhook.body) {
++          setBodyDescription(toolData.config.webhook.body.description || "");
++          if (toolData.config.webhook.body.parameters) {
++            const bodyParams: Parameter[] = [];
++            if (Array.isArray(toolData.config.webhook.body.parameters)) {
++              toolData.config.webhook.body.parameters.forEach((paramConfig: any) =&gt; {
++                const paramName = paramConfig.id || paramConfig.name || "";
++                bodyParams.push(parseParameterSchema(paramName, paramConfig));
++              });
++            }
++            setBodyParameters(bodyParams);
++          }
++        }
++      }
++    } catch (err) {
++      console.error("Error fetching tool:", err);
++      setCreateError(
++        err instanceof Error ? err.message : "Failed to load tool"
++      );
++    } finally {
++      setIsLoadingTool(false);
++    }
++  };
++
++  // Refetch tools list
++  const refetchTools = async () =&gt; {
++    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
++    if (!backendUrl) return;
++
++    const toolsResponse = await fetch(&#96;${backendUrl}/tools&#96;, {
++      method: "GET",
++      headers: {
++        accept: "application/json",
++        "ngrok-skip-browser-warning": "true",
++        Authorization: &#96;Bearer ${backendAccessToken}&#96;,
++      },
++    });
++
++    if (toolsResponse.ok) {
++      const updatedTools: ToolData[] = await toolsResponse.json();
++      onToolsUpdated(updatedTools);
++    }
++  };
++
++  // Create tool
++  const createTool = async () =&gt; {
++    setValidationAttempted(true);
++    if (!toolName.trim() || !toolDescription.trim()) return;
++    // Validate webhook URL if webhook type
++    if (toolType === "webhook" &amp;&amp; !isValidUrl(webhookUrl)) return;
++    // Validate body description for POST/PUT/PATCH methods
++    if (toolType === "webhook" &amp;&amp; ["POST", "PUT", "PATCH"].includes(webhookMethod) &amp;&amp; !bodyDescription.trim()) return;
++    if (hasInvalidParameters(parameters)) return;
++
++    try {
++      setIsCreating(true);
++      setCreateError(null);
++      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
++      if (!backendUrl) {
++        throw new Error("BACKEND_URL environment variable is not set");
++      }
++
++      const parametersConfig = buildParametersConfig(parameters);
++
++      // Build config based on tool type
++      const config: Record&lt;string, any&gt; = {
++        type: toolType, // Store tool type in config
++        parameters: parametersConfig,
++      };
++
++      if (toolType === "webhook") {
++        config.webhook = {
++          method: webhookMethod,
++          url: webhookUrl.trim(),
++          timeout: responseTimeout,
++          headers: webhookHeaders
++            .filter((h) =&gt; h.name.trim())
++            .map((h) =&gt; ({
++              name: h.name.trim(),
++              value: h.value,
++            })),
++          queryParameters: buildParametersConfig(queryParameters),
++          // Only include body for methods that support it
++          ...(["POST", "PUT", "PATCH"].includes(webhookMethod) &amp;&amp; {
++            body: {
++              description: bodyDescription.trim(),
++              parameters: buildParametersConfig(bodyParameters),
++            },
++          }),
++        };
++      }
++
++      const response = await fetch(&#96;${backendUrl}/tools&#96;, {
++        method: "POST",
++        headers: {
++          accept: "application/json",
++          "Content-Type": "application/json",
++          "ngrok-skip-browser-warning": "true",
++          Authorization: &#96;Bearer ${backendAccessToken}&#96;,
++        },
++        body: JSON.stringify({
++          name: toolName.trim(),
++          description: toolDescription.trim(),
++          config,
++        }),
++      });
++
++      if (response.status === 401) {
++        await signOut({ callbackUrl: "/login" });
++        return;
++      }
++
++      if (!response.ok) {
++        throw new Error("Failed to create tool");
++      }
++
++      await refetchTools();
++      handleClose();
++    } catch (err) {
++      console.error("Error creating tool:", err);
++      setCreateError(
++        err instanceof Error ? err.message : "Failed to create tool"
++      );
++    } finally {
++      setIsCreating(false);
++    }
++  };
++
++  // Update tool
++  const updateTool = async () =&gt; {
++    setValidationAttempted(true);
++    if (!toolName.trim() || !toolDescription.trim() || !editingToolUuid) return;
++    // Validate webhook URL if webhook type
++    if (toolType === "webhook" &amp;&amp; !isValidUrl(webhookUrl)) return;
++    // Validate body description for POST/PUT/PATCH methods
++    if (toolType === "webhook" &amp;&amp; ["POST", "PUT", "PATCH"].includes(webhookMethod) &amp;&amp; !bodyDescription.trim()) return;
++    if (hasInvalidParameters(parameters)) return;
++
++    try {
++      setIsCreating(true);
++      setCreateError(null);
++      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
++      if (!backendUrl) {
++        throw new Error("BACKEND_URL environment variable is not set");
++      }
++
++      const parametersConfig = buildParametersConfig(parameters);
++
++      // Build config based on tool type
++      const config: Record&lt;string, any&gt; = {
++        type: toolType, // Store tool type in config
++        parameters: parametersConfig,
++      };
++
++      if (toolType === "webhook") {
++        config.webhook = {
++          method: webhookMethod,
++          url: webhookUrl.trim(),
++          timeout: responseTimeout,
++          headers: webhookHeaders
++            .filter((h) =&gt; h.name.trim())
++            .map((h) =&gt; ({
++              name: h.name.trim(),
++              value: h.value,
++            })),
++          queryParameters: buildParametersConfig(queryParameters),
++          // Only include body for methods that support it
++          ...(["POST", "PUT", "PATCH"].includes(webhookMethod) &amp;&amp; {
++            body: {
++              description: bodyDescription.trim(),
++              parameters: buildParametersConfig(bodyParameters),
++            },
++          }),
++        };
++      }
++
++      const response = await fetch(&#96;${backendUrl}/tools/${editingToolUuid}&#96;, {
++        method: "PUT",
++        headers: {
++          accept: "application/json",
++          "Content-Type": "application/json",
++          "ngrok-skip-browser-warning": "true",
++          Authorization: &#96;Bearer ${backendAccessToken}&#96;,
++        },
++        body: JSON.stringify({
++          name: toolName.trim(),
++          description: toolDescription.trim(),
++          config,
++        }),
++      });
++
++      if (response.status === 401) {
++        await signOut({ callbackUrl: "/login" });
++        return;
++      }
++
++      if (!response.ok) {
++        throw new Error("Failed to update tool");
++      }
++
++      await refetchTools();
++      handleClose();
++    } catch (err) {
++      console.error("Error updating tool:", err);
++      setCreateError(
++        err instanceof Error ? err.message : "Failed to update tool"
++      );
++    } finally {
++      setIsCreating(false);
++    }
++  };
++
++  if (!isOpen) return null;
++
++  return (
++    &lt;div className="fixed inset-0 z-50 flex justify-end"&gt;
++      {/* Backdrop */}
++      &lt;div
++        className="absolute inset-0 bg-black/50"
++        onClick={handleClose}
++      /&gt;
++      {/* Sidebar */}
++      &lt;div className="relative w-[40%] min-w-[500px] bg-background border-l border-border flex flex-col h-full shadow-2xl"&gt;
++        {/* Header */}
++        &lt;div className="flex items-center justify-between px-6 py-4 border-b border-border"&gt;
++          &lt;div className="flex items-center gap-3"&gt;
++            &lt;svg
++              className="w-5 h-5 text-muted-foreground"
++              fill="none"
++              viewBox="0 0 24 24"
++              stroke="currentColor"
++              strokeWidth={1.5}
++            &gt;
++              &lt;path
++                strokeLinecap="round"
++                strokeLinejoin="round"
++                d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"
++              /&gt;
++            &lt;/svg&gt;
++            &lt;h2 className="text-lg font-semibold"&gt;
++              {editingToolUuid
++                ? TOOL_TYPE_CONFIG[toolType].editTitle
++                : TOOL_TYPE_CONFIG[toolType].addTitle}
++            &lt;/h2&gt;
++          &lt;/div&gt;
++          &lt;button
++            onClick={handleClose}
++            className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted transition-colors cursor-pointer"
++          &gt;
++            &lt;svg
++              className="w-5 h-5"
++              fill="none"
++              viewBox="0 0 24 24"
++              stroke="currentColor"
++              strokeWidth={2}
++            &gt;
++              &lt;path
++                strokeLinecap="round"
++                strokeLinejoin="round"
++                d="M6 18L18 6M6 6l12 12"
++              /&gt;
++            &lt;/svg&gt;
++          &lt;/button&gt;
++        &lt;/div&gt;
++
++        {/* Content */}
++        &lt;div
++          ref={sidebarContentRef}
++          className="flex-1 overflow-y-auto p-6 space-y-6"
++        &gt;
++          {isLoadingTool ? (
++            &lt;div className="flex items-center justify-center py-12"&gt;
++              &lt;svg
++                className="w-6 h-6 animate-spin"
++                fill="none"
++                viewBox="0 0 24 24"
++              &gt;
++                &lt;circle
++                  className="opacity-25"
++                  cx="12"
++                  cy="12"
++                  r="10"
++                  stroke="currentColor"
++                  strokeWidth="4"
++                &gt;&lt;/circle&gt;
++                &lt;path
++                  className="opacity-75"
++                  fill="currentColor"
++                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
++                &gt;&lt;/path&gt;
++              &lt;/svg&gt;
++            &lt;/div&gt;
++          ) : (
++            &lt;&gt;
++              {/* Helper Callout */}
++              &lt;div className="flex gap-3 p-4 rounded-xl bg-blue-500/10 border border-blue-500/20"&gt;
++                &lt;svg
++                  className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5"
++                  fill="none"
++                  viewBox="0 0 24 24"
++                  stroke="currentColor"
++                  strokeWidth={1.5}
++                &gt;
++                  &lt;path
++                    strokeLinecap="round"
++                    strokeLinejoin="round"
++                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
++                  /&gt;
++                &lt;/svg&gt;
++                &lt;p className="text-sm text-blue-700 dark:text-blue-200"&gt;
++                  {TOOL_TYPE_CONFIG[toolType].description}
++                &lt;/p&gt;
++              &lt;/div&gt;
++
++              {/* Configuration Section */}
++              &lt;div className="border border-border rounded-xl p-5 space-y-5 bg-muted/100"&gt;
++                &lt;div&gt;
++                  &lt;h3 className="text-base font-medium mb-1"&gt;
++                    Configuration
++                  &lt;/h3&gt;
++                &lt;/div&gt;
++
++                {/* Name */}
++                &lt;div&gt;
++                  &lt;label className="block text-sm font-medium mb-2"&gt;
++                    Name &lt;span className="text-red-500"&gt;*&lt;/span&gt;
++                  &lt;/label&gt;
++                  &lt;input
++                    type="text"
++                    value={toolName}
++                    onChange={(e) =&gt; setToolName(e.target.value)}
++                    placeholder="An informative name for the tool that reflects its purpose"
++                    className={&#96;w-full h-10 px-4 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent ${
++                      validationAttempted &amp;&amp; !toolName.trim()
++                        ? "border-red-500"
++                        : "border-border"
++                    }&#96;}
++                  /&gt;
++                &lt;/div&gt;
++
++                {/* Description */}
++                &lt;div&gt;
++                  &lt;label className="block text-sm font-medium mb-2"&gt;
++                    Description &lt;span className="text-red-500"&gt;*&lt;/span&gt;
++                  &lt;/label&gt;
++                  &lt;textarea
++                    value={toolDescription}
++                    onChange={(e) =&gt; setToolDescription(e.target.value)}
++                    placeholder="Describe to the LLM how and when to use the tool along with what should be passed to the tool"
++                    rows={3}
++                    className={&#96;w-full px-4 py-3 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none ${
++                      validationAttempted &amp;&amp; !toolDescription.trim()
++                        ? "border-red-500"
++                        : "border-border"
++                    }&#96;}
++                  /&gt;
++                &lt;/div&gt;
++
++                {/* Webhook-specific fields */}
++                {toolType === "webhook" &amp;&amp; (
++                  &lt;&gt;
++                    {/* Method and URL */}
++                    &lt;div className="flex gap-4"&gt;
++                      &lt;div className="w-36"&gt;
++                        &lt;label className="block text-sm font-medium mb-2"&gt;
++                          Method
++                        &lt;/label&gt;
++                        &lt;div className="relative"&gt;
++                          &lt;select
++                            value={webhookMethod}
++                            onChange={(e) =&gt;
++                              setWebhookMethod(
++                                e.target.value as "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
++                              )
++                            }
++                            className="w-full h-10 px-4 pr-10 rounded-md text-base border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent appearance-none cursor-pointer"
++                          &gt;
++                            &lt;option value="GET"&gt;GET&lt;/option&gt;
++                            &lt;option value="POST"&gt;POST&lt;/option&gt;
++                            &lt;option value="PUT"&gt;PUT&lt;/option&gt;
++                            &lt;option value="PATCH"&gt;PATCH&lt;/option&gt;
++                            &lt;option value="DELETE"&gt;DELETE&lt;/option&gt;
++                          &lt;/select&gt;
++                          &lt;svg
++                            className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none"
++                            fill="none"
++                            viewBox="0 0 24 24"
++                            stroke="currentColor"
++                            strokeWidth={2}
++                          &gt;
++                            &lt;path
++                              strokeLinecap="round"
++                              strokeLinejoin="round"
++                              d="M19 9l-7 7-7-7"
++                            /&gt;
++                          &lt;/svg&gt;
++                        &lt;/div&gt;
++                      &lt;/div&gt;
++                      &lt;div className="flex-1"&gt;
++                        &lt;label className="block text-sm font-medium mb-2"&gt;
++                          URL &lt;span className="text-red-500"&gt;*&lt;/span&gt;
++                        &lt;/label&gt;
++                        &lt;input
++                          type="text"
++                          value={webhookUrl}
++                          onChange={(e) =&gt; setWebhookUrl(e.target.value)}
++                          placeholder="https://example.com/{hi}/webhook"
++                          className={&#96;w-full h-10 px-4 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent ${
++                            validationAttempted &amp;&amp;
++                            toolType === "webhook" &amp;&amp;
++                            !isValidUrl(webhookUrl)
++                              ? "border-red-500"
++                              : "border-border"
++                          }&#96;}
++                        /&gt;
++                        {validationAttempted &amp;&amp;
++                          toolType === "webhook" &amp;&amp;
++                          !isValidUrl(webhookUrl) &amp;&amp; (
++                            &lt;p className="text-xs text-red-500 mt-1"&gt;
++                              {webhookUrl.trim()
++                                ? "Please enter a valid URL"
++                                : "URL is required"}
++                            &lt;/p&gt;
++                          )}
++                      &lt;/div&gt;
++                    &lt;/div&gt;
++
++                    {/* Response Timeout */}
++                    &lt;div&gt;
++                      &lt;label className="block text-sm font-medium mb-1"&gt;
++                        Response timeout (seconds)
++                      &lt;/label&gt;
++                      &lt;p className="text-sm text-muted-foreground mb-3"&gt;
++                        How long to wait for the webhook tool to respond before
++                        timing out. Default is 20 seconds.
++                      &lt;/p&gt;
++                      &lt;div className="relative pt-6"&gt;
++                        {/* Tooltip */}
++                        {showTimeoutTooltip &amp;&amp; (
++                          &lt;div
++                            className="absolute -top-1 transform -translate-x-1/2 pointer-events-none z-10"
++                            style={{
++                              left: &#96;calc(${((responseTimeout - 1) / 119) * 100}% + ${8 - ((responseTimeout - 1) / 119) * 16}px)&#96;,
++                            }}
++                          &gt;
++                            &lt;div className="bg-foreground text-background text-xs font-medium px-2 py-1 rounded-md whitespace-nowrap"&gt;
++                              {responseTimeout} secs
++                            &lt;/div&gt;
++                            &lt;div
++                              className="w-2 h-2 bg-foreground transform rotate-45 absolute left-1/2 -translate-x-1/2 -bottom-1"
++                            /&gt;
++                          &lt;/div&gt;
++                        )}
++                        {/* Track background */}
++                        &lt;div className="relative h-2"&gt;
++                          {/* Unfilled track */}
++                          &lt;div className="absolute inset-0 bg-muted rounded-full" /&gt;
++                          {/* Filled track */}
++                          &lt;div
++                            className="absolute top-0 left-0 h-full bg-foreground rounded-full"
++                            style={{
++                              width: &#96;${((responseTimeout - 1) / 119) * 100}%&#96;,
++                            }}
++                          /&gt;
++                          {/* Input */}
++                          &lt;input
++                            type="range"
++                            min={1}
++                            max={120}
++                            value={responseTimeout}
++                            onChange={(e) =&gt;
++                              setResponseTimeout(parseInt(e.target.value, 10))
++                            }
++                            onMouseEnter={() =&gt; setShowTimeoutTooltip(true)}
++                            onMouseLeave={() =&gt; setShowTimeoutTooltip(false)}
++                            onFocus={() =&gt; setShowTimeoutTooltip(true)}
++                            onBlur={() =&gt; setShowTimeoutTooltip(false)}
++                            className="absolute inset-0 w-full h-full appearance-none bg-transparent cursor-pointer [&amp;::-webkit-slider-thumb]:appearance-none [&amp;::-webkit-slider-thumb]:w-4 [&amp;::-webkit-slider-thumb]:h-4 [&amp;::-webkit-slider-thumb]:rounded-full [&amp;::-webkit-slider-thumb]:bg-foreground [&amp;::-webkit-slider-thumb]:cursor-pointer [&amp;::-webkit-slider-thumb]:shadow-md [&amp;::-moz-range-thumb]:w-4 [&amp;::-moz-range-thumb]:h-4 [&amp;::-moz-range-thumb]:rounded-full [&amp;::-moz-range-thumb]:bg-foreground [&amp;::-moz-range-thumb]:border-0 [&amp;::-moz-range-thumb]:cursor-pointer [&amp;::-moz-range-thumb]:shadow-md"
++                          /&gt;
++                        &lt;/div&gt;
++                      &lt;/div&gt;
++                    &lt;/div&gt;
++                  &lt;/&gt;
++                )}
++              &lt;/div&gt;
++
++              {/* Headers Section - Webhook only */}
++              {toolType === "webhook" &amp;&amp; (
++                &lt;div className="border border-border rounded-xl p-5 space-y-5 bg-muted/100"&gt;
++                  &lt;div className="flex items-start justify-between"&gt;
++                    &lt;div&gt;
++                      &lt;h3 className="text-base font-medium mb-1"&gt;Headers&lt;/h3&gt;
++                      &lt;p className="text-sm text-muted-foreground"&gt;
++                        Define headers that will be sent with the request
++                      &lt;/p&gt;
++                    &lt;/div&gt;
++                    &lt;button
++                      onClick={() =&gt; {
++                        setWebhookHeaders([
++                          ...webhookHeaders,
++                          {
++                            id: crypto.randomUUID(),
++                            name: "",
++                            value: "",
++                          },
++                        ]);
++                      }}
++                      className="h-9 px-4 rounded-md text-sm font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer whitespace-nowrap flex-shrink-0"
++                    &gt;
++                      Add header
++                    &lt;/button&gt;
++                  &lt;/div&gt;
++
++                  {/* Header Cards */}
++                  {webhookHeaders.map((header) =&gt; (
++                    &lt;div
++                      key={header.id}
++                      className="border border-border rounded-xl p-4 space-y-4 bg-background"
++                    &gt;
++                      {/* Name */}
++                      &lt;div&gt;
++                        &lt;label className="block text-sm font-medium mb-2"&gt;
++                          Name
++                        &lt;/label&gt;
++                        &lt;input
++                          type="text"
++                          value={header.name}
++                          onChange={(e) =&gt; {
++                            setWebhookHeaders(
++                              webhookHeaders.map((h) =&gt;
++                                h.id === header.id
++                                  ? { ...h, name: e.target.value }
++                                  : h
++                              )
++                            );
++                          }}
++                          placeholder="e.g., Authorization"
++                          className="w-full h-10 px-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
++                        /&gt;
++                      &lt;/div&gt;
++
++                      {/* Value */}
++                      &lt;div&gt;
++                        &lt;label className="block text-sm font-medium mb-2"&gt;
++                          Value
++                        &lt;/label&gt;
++                        &lt;input
++                          type="text"
++                          value={header.value}
++                          onChange={(e) =&gt; {
++                            setWebhookHeaders(
++                              webhookHeaders.map((h) =&gt;
++                                h.id === header.id
++                                  ? { ...h, value: e.target.value }
++                                  : h
++                              )
++                            );
++                          }}
++                          placeholder="Header value"
++                          className="w-full h-10 px-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
++                        /&gt;
++                      &lt;/div&gt;
++
++                      {/* Delete button */}
++                      &lt;div className="flex justify-end"&gt;
++                        &lt;button
++                          onClick={() =&gt; {
++                            setWebhookHeaders(
++                              webhookHeaders.filter((h) =&gt; h.id !== header.id)
++                            );
++                          }}
++                          className="h-9 px-4 rounded-md text-sm font-medium text-red-500 bg-red-500/10 hover:text-red-600 hover:bg-red-500/20 transition-colors cursor-pointer"
++                        &gt;
++                          Delete
++                        &lt;/button&gt;
++                      &lt;/div&gt;
++                    &lt;/div&gt;
++                  ))}
++                &lt;/div&gt;
++              )}
++
++              {/* Parameters Section - Structured Output Tools Only */}
++              {toolType === "structured_output" &amp;&amp; (
++                &lt;div className="border border-border rounded-xl p-5 space-y-5 bg-muted/100"&gt;
++                  &lt;div className="flex items-start justify-between"&gt;
++                    &lt;div&gt;
++                      &lt;h3 className="text-base font-medium mb-1"&gt;
++                        Parameters
++                      &lt;/h3&gt;
++                      &lt;p className="text-sm text-muted-foreground"&gt;
++                        Define the structure of the output that the agent
++                        should produce
++                      &lt;/p&gt;
++                    &lt;/div&gt;
++                    &lt;button
++                      onClick={addParameter}
++                      className="h-9 px-4 rounded-md text-sm font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer whitespace-nowrap flex-shrink-0"
++                    &gt;
++                      Add param
++                    &lt;/button&gt;
++                  &lt;/div&gt;
++
++                  {/* Parameter Cards */}
++                  {parameters.map((param) =&gt; (
++                    &lt;ParameterCard
++                      key={param.id}
++                      param={param}
++                      path={[]}
++                      onUpdate={handleUpdateAtPath}
++                      onRemove={handleRemoveAtPath}
++                      onAddProperty={handleAddPropertyAtPath}
++                      onSetItems={handleSetItemsAtPath}
++                      validationAttempted={validationAttempted}
++                      siblingNames={parameters
++                        .filter((p) =&gt; p.id !== param.id)
++                        .map((p) =&gt; p.name)}
++                      hideDelete={parameters.length === 1}
++                    /&gt;
++                  ))}
++                &lt;/div&gt;
++              )}
++
++              {/* Query Parameters Section - Webhook Tools Only */}
++              {toolType === "webhook" &amp;&amp; (
++                &lt;div className="border border-border rounded-xl p-5 space-y-5 bg-muted/100"&gt;
++                  &lt;div className="flex items-start justify-between"&gt;
++                    &lt;div&gt;
++                      &lt;h3 className="text-base font-medium mb-1"&gt;
++                        Query parameters
++                      &lt;/h3&gt;
++                      &lt;p className="text-sm text-muted-foreground"&gt;
++                        Define parameters that will be collected by the LLM and
++                        sent as the query of the request.
++                      &lt;/p&gt;
++                    &lt;/div&gt;
++                    &lt;button
++                      onClick={addQueryParameter}
++                      className="h-9 px-4 rounded-md text-sm font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer whitespace-nowrap flex-shrink-0"
++                    &gt;
++                      Add param
++                    &lt;/button&gt;
++                  &lt;/div&gt;
++
++                  {/* Query Parameter Cards */}
++                  {queryParameters.map((param) =&gt; (
++                    &lt;div
++                      key={param.id}
++                      ref={(el) =&gt; {
++                        if (el) {
++                          queryParamRefs.current.set(param.id, el);
++                        } else {
++                          queryParamRefs.current.delete(param.id);
++                        }
++                      }}
++                    &gt;
++                      &lt;ParameterCard
++                        param={param}
++                        path={[]}
++                        onUpdate={handleQueryUpdateAtPath}
++                        onRemove={handleQueryRemoveAtPath}
++                        onAddProperty={handleQueryAddPropertyAtPath}
++                        onSetItems={handleQuerySetItemsAtPath}
++                        validationAttempted={validationAttempted}
++                        siblingNames={queryParameters
++                          .filter((p) =&gt; p.id !== param.id)
++                          .map((p) =&gt; p.name)}
++                      /&gt;
++                    &lt;/div&gt;
++                  ))}
++                &lt;/div&gt;
++              )}
++
++              {/* Body Parameters Section - Webhook Tools with POST, PUT, PATCH Only */}
++              {toolType === "webhook" &amp;&amp; ["POST", "PUT", "PATCH"].includes(webhookMethod) &amp;&amp; (
++                &lt;div className="border border-border rounded-xl p-5 space-y-5 bg-muted/50"&gt;
++                  &lt;div&gt;
++                    &lt;h3 className="text-base font-medium mb-1"&gt;Body parameters&lt;/h3&gt;
++                    &lt;p className="text-sm text-muted-foreground"&gt;
++                      Define parameters that will be collected by the LLM and
++                      sent as the body of the request.
++                    &lt;/p&gt;
++                  &lt;/div&gt;
++
++                  {/* Inner container for body content */}
++                  &lt;div className="border border-border rounded-xl p-4 space-y-4 bg-background"&gt;
++                    {/* Body Description */}
++                    &lt;div&gt;
++                      &lt;label className="block text-sm font-medium mb-2"&gt;
++                        Description &lt;span className="text-red-500"&gt;*&lt;/span&gt;
++                      &lt;/label&gt;
++                      &lt;textarea
++                        value={bodyDescription}
++                        onChange={(e) =&gt; setBodyDescription(e.target.value)}
++                        placeholder="Describe the body structure"
++                        rows={3}
++                        className={&#96;w-full px-4 py-3 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none ${
++                          validationAttempted &amp;&amp; !bodyDescription.trim()
++                            ? "border-red-500"
++                            : "border-border"
++                        }&#96;}
++                      /&gt;
++                    &lt;/div&gt;
++
++                    {/* Properties - same UI as object type properties */}
++                    &lt;div&gt;
++                      &lt;label className="block text-sm font-medium mb-2"&gt;
++                        Properties
++                      &lt;/label&gt;
++                      &lt;NestedContainer onAddProperty={addBodyParameter}&gt;
++                        {/* Body Parameter Cards */}
++                        {bodyParameters.length &gt; 0 &amp;&amp; (
++                          &lt;div className="space-y-4"&gt;
++                            {bodyParameters.map((param) =&gt; (
++                              &lt;ParameterCard
++                                key={param.id}
++                                param={param}
++                                path={[]}
++                                onUpdate={handleBodyUpdateAtPath}
++                                onRemove={handleBodyRemoveAtPath}
++                                onAddProperty={handleBodyAddPropertyAtPath}
++                                onSetItems={handleBodySetItemsAtPath}
++                                validationAttempted={validationAttempted}
++                                siblingNames={bodyParameters
++                                  .filter((p) =&gt; p.id !== param.id)
++                                  .map((p) =&gt; p.name)}
++                              /&gt;
++                            ))}
++                          &lt;/div&gt;
++                        )}
++                      &lt;/NestedContainer&gt;
++                    &lt;/div&gt;
++                  &lt;/div&gt;
++                &lt;/div&gt;
++              )}
++            &lt;/&gt;
++          )}
++        &lt;/div&gt;
++
++        {/* Footer */}
++        &lt;div className="px-6 py-4 border-t border-border space-y-3"&gt;
++          {createError &amp;&amp; (
++            &lt;p className="text-sm text-red-500"&gt;{createError}&lt;/p&gt;
++          )}
++          &lt;div className="flex items-center justify-end gap-3"&gt;
++            &lt;button
++              onClick={handleClose}
++              disabled={isCreating || isLoadingTool}
++              className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
++            &gt;
++              Cancel
++            &lt;/button&gt;
++            &lt;button
++              onClick={editingToolUuid ? updateTool : createTool}
++              disabled={isCreating || isLoadingTool}
++              className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
++            &gt;
++              {isCreating ? (
++                &lt;&gt;
++                  &lt;svg
++                    className="w-4 h-4 animate-spin"
++                    fill="none"
++                    viewBox="0 0 24 24"
++                  &gt;
++                    &lt;circle
++                      className="opacity-25"
++                      cx="12"
++                      cy="12"
++                      r="10"
++                      stroke="currentColor"
++                      strokeWidth="4"
++                    &gt;&lt;/circle&gt;
++                    &lt;path
++                      className="opacity-75"
++                      fill="currentColor"
++                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
++                    &gt;&lt;/path&gt;
++                  &lt;/svg&gt;
++                  {editingToolUuid ? "Saving..." : "Creating..."}
++                &lt;/&gt;
++              ) : editingToolUuid ? (
++                "Save"
++              ) : (
++                "Add tool"
++              )}
++            &lt;/button&gt;
++          &lt;/div&gt;
++        &lt;/div&gt;
++      &lt;/div&gt;
++    &lt;/div&gt;
++  );
++}
+diff --git a/src/components/Agents.tsx b/src/components/Agents.tsx
+index 87b08b0..20c8e21 100644
+--- a/src/components/Agents.tsx
++++ b/src/components/Agents.tsx
+@@ -210,15 +210,15 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
+   return (
+     &lt;div className="space-y-6"&gt;
+       {/* Header */}
+-      &lt;div className="flex items-center justify-between"&gt;
++      &lt;div&gt;
+         &lt;h2 className="text-2xl font-semibold tracking-tight"&gt;Agents&lt;/h2&gt;
+-        &lt;button
+-          onClick={() =&gt; setDialogOpen(true)}
+-          className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
+-        &gt;
+-          New agent
+-        &lt;/button&gt;
+       &lt;/div&gt;
++      &lt;button
++        onClick={() =&gt; setDialogOpen(true)}
++        className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
++      &gt;
++        New agent
++      &lt;/button&gt;
+ 
+       {/* Search Bar */}
+       &lt;div className="relative"&gt;
+diff --git a/src/components/DataFieldPropertyCard.tsx b/src/components/DataFieldPropertyCard.tsx
+index 3c091f6..65aa90c 100644
+--- a/src/components/DataFieldPropertyCard.tsx
++++ b/src/components/DataFieldPropertyCard.tsx
+@@ -1,24 +1,26 @@
+-export type DataFieldProperty = {
+-  id: string;
+-  dataType: string;
+-  name: string;
+-  description: string;
+-  properties?: DataFieldProperty[];
+-  items?: DataFieldProperty;
+-};
++import { ParameterCard, Parameter } from "@/components/ParameterCard";
++
++/**
++ * @deprecated Use ParameterCard with showRequired={false} instead.
++ * This is a compatibility wrapper that will be removed in a future version.
++ */
++export type DataFieldProperty = Parameter;
+ 
+ type DataFieldPropertyCardProps = {
+-  property: DataFieldProperty;
++  property: Parameter;
+   path: string[];
+-  onUpdate: (path: string[], updates: Partial&lt;DataFieldProperty&gt;) =&gt; void;
++  onUpdate: (path: string[], updates: Partial&lt;Parameter&gt;) =&gt; void;
+   onRemove: (parentPath: string[], id: string) =&gt; void;
+   onAddProperty: (path: string[]) =&gt; void;
+-  onSetItems: (path: string[], items: DataFieldProperty | undefined) =&gt; void;
++  onSetItems: (path: string[], items: Parameter | undefined) =&gt; void;
+   validationAttempted?: boolean;
+   isArrayItem?: boolean;
+ };
+ 
+-// Recursive component for rendering data field property cards
++/**
++ * @deprecated Use ParameterCard with showRequired={false} instead.
++ * This wrapper maps the old DataFieldPropertyCard API to ParameterCard.
++ */
+ export const DataFieldPropertyCard = ({
+   property,
+   path,
+@@ -29,169 +31,17 @@ export const DataFieldPropertyCard = ({
+   validationAttempted = false,
+   isArrayItem = false,
+ }: DataFieldPropertyCardProps) =&gt; {
+-  const currentPath = [...path, property.id];
+-
+   return (
+-    &lt;div className="border border-border rounded-xl p-5 space-y-5 bg-background"&gt;
+-      {/* Data type and Identifier */}
+-      &lt;div className={isArrayItem ? "" : "flex gap-4"}&gt;
+-        &lt;div className={isArrayItem ? "" : "w-40"}&gt;
+-          &lt;label className="block text-sm font-medium mb-2"&gt;Data type&lt;/label&gt;
+-          &lt;div className="relative"&gt;
+-            &lt;select
+-              value={property.dataType}
+-              onChange={(e) =&gt; {
+-                const newType = e.target.value;
+-                onUpdate(isArrayItem ? path : currentPath, {
+-                  dataType: newType,
+-                });
+-              }}
+-              className="w-full h-10 pl-4 pr-10 rounded-md text-base border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent cursor-pointer appearance-none"
+-            &gt;
+-              &lt;option value="boolean"&gt;Boolean&lt;/option&gt;
+-              &lt;option value="integer"&gt;Integer&lt;/option&gt;
+-              &lt;option value="number"&gt;Number&lt;/option&gt;
+-              &lt;option value="string"&gt;String&lt;/option&gt;
+-              &lt;option value="object"&gt;Object&lt;/option&gt;
+-              &lt;option value="array"&gt;Array&lt;/option&gt;
+-            &lt;/select&gt;
+-            &lt;div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"&gt;
+-              &lt;svg
+-                className="w-4 h-4 text-muted-foreground"
+-                fill="none"
+-                viewBox="0 0 24 24"
+-                stroke="currentColor"
+-                strokeWidth={2}
+-              &gt;
+-                &lt;path
+-                  strokeLinecap="round"
+-                  strokeLinejoin="round"
+-                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+-                /&gt;
+-              &lt;/svg&gt;
+-            &lt;/div&gt;
+-          &lt;/div&gt;
+-        &lt;/div&gt;
+-        {!isArrayItem &amp;&amp; (
+-          &lt;div className="flex-1"&gt;
+-            &lt;label className="block text-sm font-medium mb-2"&gt;
+-              Name &lt;span className="text-red-500"&gt;*&lt;/span&gt;
+-            &lt;/label&gt;
+-            &lt;input
+-              type="text"
+-              value={property.name}
+-              onChange={(e) =&gt; onUpdate(currentPath, { name: e.target.value })}
+-              className={&#96;w-full h-10 px-4 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent ${
+-                validationAttempted &amp;&amp; !property.name.trim()
+-                  ? "border-red-500"
+-                  : "border-border"
+-              }&#96;}
+-            /&gt;
+-          &lt;/div&gt;
+-        )}
+-      &lt;/div&gt;
+-
+-      {/* Description */}
+-      &lt;div&gt;
+-        &lt;label className="block text-sm font-medium mb-2"&gt;
+-          Description &lt;span className="text-red-500"&gt;*&lt;/span&gt;
+-        &lt;/label&gt;
+-        &lt;textarea
+-          value={property.description}
+-          onChange={(e) =&gt;
+-            onUpdate(isArrayItem ? path : currentPath, {
+-              description: e.target.value,
+-            })
+-          }
+-          rows={3}
+-          className={&#96;w-full px-4 py-3 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none ${
+-            validationAttempted &amp;&amp; !property.description.trim()
+-              ? "border-red-500"
+-              : "border-border"
+-          }&#96;}
+-        /&gt;
+-      &lt;/div&gt;
+-
+-      {/* Properties section for object type */}
+-      {property.dataType === "object" &amp;&amp; (
+-        &lt;div&gt;
+-          &lt;label className="block text-sm font-medium mb-2"&gt;
+-            Properties &lt;span className="text-red-500"&gt;*&lt;/span&gt;
+-          &lt;/label&gt;
+-          &lt;div className="border border-border rounded-xl bg-[#1b1b1b] p-4 space-y-4"&gt;
+-            {property.properties &amp;&amp;
+-              property.properties.length &gt; 0 &amp;&amp;
+-              property.properties.map((prop) =&gt; (
+-                &lt;DataFieldPropertyCard
+-                  key={prop.id}
+-                  property={prop}
+-                  path={isArrayItem ? path : currentPath}
+-                  onUpdate={onUpdate}
+-                  onRemove={onRemove}
+-                  onAddProperty={onAddProperty}
+-                  onSetItems={onSetItems}
+-                  validationAttempted={validationAttempted}
+-                /&gt;
+-              ))}
+-            &lt;div className="flex justify-center"&gt;
+-              &lt;button
+-                type="button"
+-                onClick={() =&gt; onAddProperty(isArrayItem ? path : currentPath)}
+-                className={&#96;h-10 px-6 rounded-md text-sm font-medium border bg-background hover:bg-muted/50 transition-colors cursor-pointer ${
+-                  validationAttempted &amp;&amp;
+-                  (!property.properties || property.properties.length === 0)
+-                    ? "border-red-500"
+-                    : "border-border"
+-                }&#96;}
+-              &gt;
+-                Add property
+-              &lt;/button&gt;
+-            &lt;/div&gt;
+-          &lt;/div&gt;
+-        &lt;/div&gt;
+-      )}
+-
+-      {/* Item section for array type */}
+-      {property.dataType === "array" &amp;&amp; (
+-        &lt;div&gt;
+-          &lt;label className="block text-sm font-medium mb-2"&gt;Item&lt;/label&gt;
+-          &lt;div className="border border-border rounded-xl bg-[#1b1b1b] p-4 space-y-4"&gt;
+-            &lt;DataFieldPropertyCard
+-              property={
+-                property.items || {
+-                  id: crypto.randomUUID(),
+-                  dataType: "string",
+-                  name: "",
+-                  description: "",
+-                }
+-              }
+-              path={
+-                isArrayItem
+-                  ? [...path, "__items__"]
+-                  : [...currentPath, "__items__"]
+-              }
+-              onUpdate={onUpdate}
+-              onRemove={onRemove}
+-              onAddProperty={onAddProperty}
+-              onSetItems={onSetItems}
+-              validationAttempted={validationAttempted}
+-              isArrayItem={true}
+-            /&gt;
+-          &lt;/div&gt;
+-        &lt;/div&gt;
+-      )}
+-
+-      {/* Delete button - not shown for array items */}
+-      {!isArrayItem &amp;&amp; (
+-        &lt;div className="flex justify-end"&gt;
+-          &lt;button
+-            onClick={() =&gt; onRemove(path, property.id)}
+-            className="h-9 px-4 rounded-md text-sm font-medium text-red-500 bg-red-500/10 hover:text-red-600 hover:bg-red-500/20 transition-colors cursor-pointer"
+-          &gt;
+-            Delete
+-          &lt;/button&gt;
+-        &lt;/div&gt;
+-      )}
+-    &lt;/div&gt;
++    &lt;ParameterCard
++      param={property}
++      path={path}
++      onUpdate={onUpdate}
++      onRemove={onRemove}
++      onAddProperty={onAddProperty}
++      onSetItems={onSetItems}
++      validationAttempted={validationAttempted}
++      isArrayItem={isArrayItem}
++      showRequired={false}
++    /&gt;
+   );
+ };
+diff --git a/src/components/ParameterCard.tsx b/src/components/ParameterCard.tsx
+index 46fefc1..9cdb47e 100644
+--- a/src/components/ParameterCard.tsx
++++ b/src/components/ParameterCard.tsx
+@@ -1,8 +1,10 @@
++import { NestedContainer } from "@/components/ui/NestedContainer";
++
+ export type Parameter = {
+   id: string;
+   dataType: string;
+   name: string;
+-  required: boolean;
++  required?: boolean; // Optional - only used when showRequired is true
+   description: string;
+   properties?: Parameter[];
+   items?: Parameter; // For array types - defines the schema of array items
+@@ -19,9 +21,12 @@ type ParameterCardProps = {
+   isProperty?: boolean;
+   isArrayItem?: boolean;
+   siblingNames?: string[]; // Names of sibling parameters (excluding this one)
++  hideDelete?: boolean; // Hide delete button (e.g., when only one parameter exists)
++  showRequired?: boolean; // Show required checkbox (default: true)
+ };
+ 
+ // Recursive component for rendering parameter/property cards
++// Can be used for tool parameters, data field properties, etc.
+ export const ParameterCard = ({
+   param,
+   path,
+@@ -33,6 +38,8 @@ export const ParameterCard = ({
+   isProperty = false,
+   isArrayItem = false,
+   siblingNames = [],
++  hideDelete = false,
++  showRequired = true,
+ }: ParameterCardProps) =&gt; {
+   const currentPath = [...path, param.id];
+   const parentPath = path;
+@@ -113,8 +120,8 @@ export const ParameterCard = ({
+         )}
+       &lt;/div&gt;
+ 
+-      {/* Required checkbox - not shown for array items */}
+-      {!isArrayItem &amp;&amp; (
++      {/* Required checkbox - not shown for array items or when showRequired is false */}
++      {!isArrayItem &amp;&amp; showRequired &amp;&amp; (
+         &lt;div className="flex items-center gap-3"&gt;
+           &lt;button
+             onClick={() =&gt; onUpdate(currentPath, { required: !param.required })}
+@@ -174,7 +181,15 @@ export const ParameterCard = ({
+           &lt;label className="block text-sm font-medium mb-2"&gt;
+             Properties &lt;span className="text-red-500"&gt;*&lt;/span&gt;
+           &lt;/label&gt;
+-          &lt;div className="border border-border rounded-xl bg-[#1b1b1b] p-4 space-y-4"&gt;
++          &lt;NestedContainer
++            onAddProperty={() =&gt;
++              onAddProperty(isArrayItem ? [...path] : currentPath)
++            }
++            showValidationError={
++              validationAttempted &amp;&amp;
++              (!param.properties || param.properties.length === 0)
++            }
++          &gt;
+             {/* Render nested properties recursively */}
+             {param.properties &amp;&amp; param.properties.length &gt; 0 &amp;&amp; (
+               &lt;div className="space-y-4"&gt;
+@@ -194,28 +209,12 @@ export const ParameterCard = ({
+                         ?.filter((p) =&gt; p.id !== prop.id)
+                         .map((p) =&gt; p.name) ?? []
+                     }
++                    showRequired={showRequired}
+                   /&gt;
+                 ))}
+               &lt;/div&gt;
+             )}
+-            {/* Add property button */}
+-            &lt;div className="flex justify-center"&gt;
+-              &lt;button
+-                type="button"
+-                onClick={() =&gt;
+-                  onAddProperty(isArrayItem ? [...path] : currentPath)
+-                }
+-                className={&#96;h-10 px-6 rounded-md text-sm font-medium border bg-background hover:bg-muted/50 transition-colors cursor-pointer ${
+-                  validationAttempted &amp;&amp;
+-                  (!param.properties || param.properties.length === 0)
+-                    ? "border-red-500"
+-                    : "border-border"
+-                }&#96;}
+-              &gt;
+-                Add property
+-              &lt;/button&gt;
+-            &lt;/div&gt;
+-          &lt;/div&gt;
++          &lt;/NestedContainer&gt;
+         &lt;/div&gt;
+       )}
+ 
+@@ -223,7 +222,7 @@ export const ParameterCard = ({
+       {param.dataType === "array" &amp;&amp; (
+         &lt;div&gt;
+           &lt;label className="block text-sm font-medium mb-2"&gt;Item&lt;/label&gt;
+-          &lt;div className="border border-border rounded-xl bg-[#1b1b1b] p-4 space-y-4"&gt;
++          &lt;NestedContainer showAddButton={false}&gt;
+             &lt;ParameterCard
+               param={
+                 param.items || {
+@@ -245,13 +244,14 @@ export const ParameterCard = ({
+               onSetItems={onSetItems}
+               validationAttempted={validationAttempted}
+               isArrayItem={true}
++              showRequired={showRequired}
+             /&gt;
+-          &lt;/div&gt;
++          &lt;/NestedContainer&gt;
+         &lt;/div&gt;
+       )}
+ 
+-      {/* Delete button - not shown for array items */}
+-      {!isArrayItem &amp;&amp; (
++      {/* Delete button - not shown for array items or when hideDelete is true */}
++      {!isArrayItem &amp;&amp; !hideDelete &amp;&amp; (
+         &lt;div className="flex justify-end"&gt;
+           &lt;button
+             onClick={() =&gt; onRemove(parentPath, param.id)}
+diff --git a/src/components/RunTestDialog.tsx b/src/components/RunTestDialog.tsx
+index 752c1fc..ee73e1a 100644
+--- a/src/components/RunTestDialog.tsx
++++ b/src/components/RunTestDialog.tsx
+@@ -47,13 +47,13 @@ export function RunTestDialog({
+       &lt;div className="absolute inset-0 bg-black/50" onClick={onClose} /&gt;
+ 
+       {/* Dialog */}
+-      &lt;div className="relative w-full max-w-lg bg-[#1a1a1a] rounded-2xl shadow-2xl"&gt;
++      &lt;div className="relative w-full max-w-lg bg-background border border-border rounded-2xl shadow-2xl"&gt;
+         {/* Header */}
+         &lt;div className="flex items-center justify-between px-6 pt-5 pb-1"&gt;
+-          &lt;h2 className="text-xl font-semibold text-white"&gt;Run test&lt;/h2&gt;
++          &lt;h2 className="text-xl font-semibold text-foreground"&gt;Run test&lt;/h2&gt;
+           &lt;button
+             onClick={onClose}
+-            className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-[#333] transition-colors cursor-pointer"
++            className="w-8 h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
+           &gt;
+             &lt;svg
+               className="w-5 h-5"
+@@ -74,15 +74,15 @@ export function RunTestDialog({
+         {/* Content */}
+         &lt;div className="px-6 pb-2 space-y-4"&gt;
+           {/* Subtitle */}
+-          &lt;p className="text-gray-400 text-sm"&gt;
++          &lt;p className="text-muted-foreground text-sm"&gt;
+             Select an agent to run the test &amp;quot;{testName}&amp;quot;
+           &lt;/p&gt;
+ 
+           {/* Info Box */}
+-          &lt;div className="bg-[#252525] rounded-xl px-4 py-3 flex gap-3"&gt;
++          &lt;div className="bg-muted rounded-xl px-4 py-3 flex gap-3"&gt;
+             &lt;div className="flex-shrink-0 mt-0.5"&gt;
+               &lt;svg
+-                className="w-5 h-5 text-gray-400"
++                className="w-5 h-5 text-muted-foreground"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor"
+@@ -95,7 +95,7 @@ export function RunTestDialog({
+                 /&gt;
+               &lt;/svg&gt;
+             &lt;/div&gt;
+-            &lt;p className="text-gray-300 text-sm leading-relaxed"&gt;
++            &lt;p className="text-foreground text-sm leading-relaxed"&gt;
+               You can save and run tests in bulk. Check out the
+               &amp;quot;Tests&amp;quot; tab in the agent&amp;apos;s configuration.
+             &lt;/p&gt;
+@@ -113,15 +113,15 @@ export function RunTestDialog({
+           &lt;div className="flex items-center gap-3"&gt;
+             &lt;button
+               onClick={() =&gt; setAttachToAgent(!attachToAgent)}
+-              className={&#96;w-6 h-6 rounded-md border flex-shrink-0 flex items-center justify-center transition-colors cursor-pointer ${
++              className={&#96;w-6 h-6 rounded-md border-2 flex-shrink-0 flex items-center justify-center transition-colors cursor-pointer ${
+                 attachToAgent
+-                  ? "bg-white border-white"
+-                  : "border-[#444] hover:border-[#666]"
++                  ? "bg-foreground border-foreground"
++                  : "border-muted-foreground hover:border-foreground"
+               }&#96;}
+             &gt;
+               {attachToAgent &amp;&amp; (
+                 &lt;svg
+-                  className="w-4 h-4 text-black"
++                  className="w-4 h-4 text-background"
+                   fill="none"
+                   viewBox="0 0 24 24"
+                   stroke="currentColor"
+@@ -135,7 +135,7 @@ export function RunTestDialog({
+                 &lt;/svg&gt;
+               )}
+             &lt;/button&gt;
+-            &lt;span className="text-sm text-white"&gt;
++            &lt;span className="text-sm text-foreground"&gt;
+               Attach this test to the agent config
+             &lt;/span&gt;
+           &lt;/div&gt;
+@@ -145,14 +145,14 @@ export function RunTestDialog({
+         &lt;div className="px-6 py-3 flex items-center justify-end gap-3"&gt;
+           &lt;button
+             onClick={onClose}
+-            className="h-10 px-5 rounded-lg text-base font-medium bg-[#333] text-white hover:bg-[#444] transition-colors cursor-pointer"
++            className="h-10 px-5 rounded-lg text-base font-medium bg-muted text-foreground hover:bg-muted/80 transition-colors cursor-pointer"
+           &gt;
+             Cancel
+           &lt;/button&gt;
+           &lt;button
+             onClick={handleRunTest}
+             disabled={!selectedAgent}
+-            className="h-10 px-5 rounded-lg text-base font-medium bg-transparent text-white border border-[#444] hover:bg-[#333] transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
++            className="h-10 px-5 rounded-lg text-base font-medium bg-transparent text-foreground border border-border hover:bg-muted transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+           &gt;
+             &lt;svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"&gt;
+               &lt;path d="M8 5v14l11-7z" /&gt;
+diff --git a/src/components/ToolPicker.tsx b/src/components/ToolPicker.tsx
+index 013e2fc..ebf66ab 100644
+--- a/src/components/ToolPicker.tsx
++++ b/src/components/ToolPicker.tsx
+@@ -149,6 +149,7 @@ export function ToolPicker({
+             )}
+             {filteredTools.map((tool) =&gt; {
+               const params = getToolParams(tool);
++              const toolType = tool.config?.type === "webhook" ? "Webhook" : "Structured Output";
+               return (
+                 &lt;button
+                   key={tool.uuid}
+@@ -156,7 +157,7 @@ export function ToolPicker({
+                   className="w-full px-3 py-2.5 flex items-center gap-3 text-foreground hover:bg-muted transition-colors cursor-pointer border-b border-border last:border-b-0"
+                 &gt;
+                   &lt;svg
+-                    className="w-4 h-4 text-muted-foreground"
++                    className="w-4 h-4 text-muted-foreground flex-shrink-0"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor"
+@@ -168,7 +169,10 @@ export function ToolPicker({
+                       d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"
+                     /&gt;
+                   &lt;/svg&gt;
+-                  &lt;p className="text-sm font-medium text-left"&gt;{tool.name}&lt;/p&gt;
++                  &lt;div className="text-left"&gt;
++                    &lt;p className="text-sm font-medium"&gt;{tool.name}&lt;/p&gt;
++                    &lt;p className="text-xs text-muted-foreground"&gt;{toolType}&lt;/p&gt;
++                  &lt;/div&gt;
+                 &lt;/button&gt;
+               );
+             })}
+diff --git a/src/components/agent-tabs/DataExtractionTabContent.tsx b/src/components/agent-tabs/DataExtractionTabContent.tsx
+index e6f61a2..39ab1e8 100644
+--- a/src/components/agent-tabs/DataExtractionTabContent.tsx
++++ b/src/components/agent-tabs/DataExtractionTabContent.tsx
+@@ -1,11 +1,12 @@
+ "use client";
+ 
+ import React, { useState, useRef } from "react";
+-import {
+-  DataFieldPropertyCard,
+-  DataFieldProperty,
+-} from "@/components/DataFieldPropertyCard";
++import { ParameterCard, Parameter } from "@/components/ParameterCard";
+ import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
++import { NestedContainer } from "@/components/ui/NestedContainer";
++
++// Type alias for backward compatibility
++type DataFieldProperty = Parameter;
+ 
+ type DataExtractionFieldData = {
+   uuid: string;
+@@ -1061,11 +1062,17 @@ export function DataExtractionTabContent({
+                   &lt;label className="block text-sm font-medium mb-2"&gt;
+                     Properties &lt;span className="text-red-500"&gt;*&lt;/span&gt;
+                   &lt;/label&gt;
+-                  &lt;div className="border border-border rounded-xl bg-[#1b1b1b] p-4 space-y-4"&gt;
++                  &lt;NestedContainer
++                    onAddProperty={addDataFieldProperty}
++                    showValidationError={
++                      dataFieldValidationAttempted &amp;&amp;
++                      dataFieldProperties.length === 0
++                    }
++                  &gt;
+                     {dataFieldProperties.map((prop) =&gt; (
+-                      &lt;DataFieldPropertyCard
++                      &lt;ParameterCard
+                         key={prop.id}
+-                        property={prop}
++                        param={prop}
+                         path={[]}
+                         onUpdate={(path, updates) =&gt; {
+                           if (path.length === 0) {
+@@ -1114,23 +1121,10 @@ export function DataExtractionTabContent({
+                           }
+                         }}
+                         validationAttempted={dataFieldValidationAttempted}
++                        showRequired={false}
+                       /&gt;
+                     ))}
+-                    &lt;div className="flex justify-center"&gt;
+-                      &lt;button
+-                        type="button"
+-                        onClick={addDataFieldProperty}
+-                        className={&#96;h-10 px-6 rounded-md text-sm font-medium border bg-background hover:bg-muted/50 transition-colors cursor-pointer ${
+-                          dataFieldValidationAttempted &amp;&amp;
+-                          dataFieldProperties.length === 0
+-                            ? "border-red-500"
+-                            : "border-border"
+-                        }&#96;}
+-                      &gt;
+-                        Add property
+-                      &lt;/button&gt;
+-                    &lt;/div&gt;
+-                  &lt;/div&gt;
++                  &lt;/NestedContainer&gt;
+                 &lt;/div&gt;
+               )}
+ 
+@@ -1138,9 +1132,9 @@ export function DataExtractionTabContent({
+               {dataFieldDataType === "array" &amp;&amp; (
+                 &lt;div&gt;
+                   &lt;label className="block text-sm font-medium mb-2"&gt;Item&lt;/label&gt;
+-                  &lt;div className="border border-border rounded-xl bg-[#1b1b1b] p-4 space-y-4"&gt;
+-                    &lt;DataFieldPropertyCard
+-                      property={
++                  &lt;NestedContainer showAddButton={false}&gt;
++                    &lt;ParameterCard
++                      param={
+                         dataFieldItems || {
+                           id: crypto.randomUUID(),
+                           dataType: "string",
+@@ -1167,8 +1161,9 @@ export function DataExtractionTabContent({
+                       }}
+                       validationAttempted={dataFieldValidationAttempted}
+                       isArrayItem={true}
++                      showRequired={false}
+                     /&gt;
+-                  &lt;/div&gt;
++                  &lt;/NestedContainer&gt;
+                 &lt;/div&gt;
+               )}
+             &lt;/div&gt;
+diff --git a/src/components/agent-tabs/TestsTabContent.tsx b/src/components/agent-tabs/TestsTabContent.tsx
+index 15f9888..5860af3 100644
+--- a/src/components/agent-tabs/TestsTabContent.tsx
++++ b/src/components/agent-tabs/TestsTabContent.tsx
+@@ -1245,6 +1245,10 @@ export function TestsTabContent({
+                           &lt;/svg&gt;
+                           Running
+                         &lt;/span&gt;
++                      ) : run.status === "failed" ? (
++                        &lt;span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-500/20 text-red-500"&gt;
++                          Error
++                        &lt;/span&gt;
+                       ) : run.type === "llm-unit-test" ? (
+                         &lt;&gt;
+                           {run.passed !== null &amp;&amp; run.passed &gt; 0 &amp;&amp; (
+diff --git a/src/components/agent-tabs/ToolsTabContent.tsx b/src/components/agent-tabs/ToolsTabContent.tsx
+index 371584d..1719d4a 100644
+--- a/src/components/agent-tabs/ToolsTabContent.tsx
++++ b/src/components/agent-tabs/ToolsTabContent.tsx
+@@ -162,10 +162,13 @@ export function ToolsTabContent({
+           ) : (
+             &lt;div className="border border-border rounded-xl overflow-hidden"&gt;
+               {/* Table Header */}
+-              &lt;div className="grid grid-cols-[1fr_2fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30"&gt;
++              &lt;div className="grid grid-cols-[1fr_120px_2fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30"&gt;
+                 &lt;div className="text-sm font-medium text-muted-foreground"&gt;
+                   Name
+                 &lt;/div&gt;
++                &lt;div className="text-sm font-medium text-muted-foreground"&gt;
++                  Type
++                &lt;/div&gt;
+                 &lt;div className="text-sm font-medium text-muted-foreground"&gt;
+                   Description
+                 &lt;/div&gt;
+@@ -175,7 +178,7 @@ export function ToolsTabContent({
+               {filteredTools.map((tool) =&gt; (
+                 &lt;div
+                   key={tool.uuid}
+-                  className="grid grid-cols-[1fr_2fr_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors"
++                  className="grid grid-cols-[1fr_120px_2fr_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors"
+                 &gt;
+                   {/* Name Column */}
+                   &lt;div className="flex items-center"&gt;
+@@ -183,6 +186,12 @@ export function ToolsTabContent({
+                       {tool.name}
+                     &lt;/div&gt;
+                   &lt;/div&gt;
++                  {/* Type Column */}
++                  &lt;div className="flex items-center"&gt;
++                    &lt;p className="text-sm text-muted-foreground"&gt;
++                      {tool.config?.type === "webhook" ? "Webhook" : "Structured Output"}
++                    &lt;/p&gt;
++                  &lt;/div&gt;
+                   {/* Description Column */}
+                   &lt;div className="flex items-center"&gt;
+                     &lt;p className="text-sm text-muted-foreground line-clamp-1"&gt;
+diff --git a/src/components/test-results/shared.tsx b/src/components/test-results/shared.tsx
+index 1462d4f..d79fc74 100644
+--- a/src/components/test-results/shared.tsx
++++ b/src/components/test-results/shared.tsx
+@@ -105,6 +105,20 @@ export function SmallStatusBadge({ passed }: { passed: boolean }) {
+   );
+ }
+ 
++// Helper to format parameter value for display
++function formatParamValue(value: any): string {
++  if (value === null) return "null";
++  if (value === undefined) return "undefined";
++  if (typeof value === "object") {
++    try {
++      return JSON.stringify(value, null, 2);
++    } catch {
++      return String(value);
++    }
++  }
++  return String(value);
++}
++
+ // Shared Tool Call Card Component
+ export function ToolCallCard({
+   toolName,
+@@ -113,26 +127,35 @@ export function ToolCallCard({
+   toolName: string;
+   args: Record&lt;string, any&gt;;
+ }) {
++
+   return (
+-    &lt;div className="bg-muted/20 border border-border rounded-2xl p-4"&gt;
++    &lt;div className="bg-muted border border-border rounded-2xl p-4"&gt;
+       &lt;div className="flex items-center gap-2 mb-2"&gt;
+         &lt;ToolIcon className="w-4 h-4 text-muted-foreground" /&gt;
+         &lt;span className="text-sm font-medium text-foreground"&gt;{toolName}&lt;/span&gt;
+       &lt;/div&gt;
+-      {Object.keys(args).length &gt; 0 &amp;&amp; (
+-        &lt;div className="space-y-2 mt-3"&gt;
+-          {Object.entries(args).map(([paramName, paramValue]) =&gt; (
+-            &lt;div key={paramName}&gt;
+-              &lt;label className="block text-xs font-medium text-muted-foreground mb-1"&gt;
+-                {paramName}
+-              &lt;/label&gt;
+-              &lt;div className="px-3 py-2 rounded-lg text-sm bg-background border border-border text-foreground"&gt;
+-                {typeof paramValue === "object"
+-                  ? JSON.stringify(paramValue)
+-                  : String(paramValue)}
++      {Object.keys(args).filter(k =&gt; k !== "headers").length &gt; 0 &amp;&amp; (
++        &lt;div className="space-y-3 mt-3"&gt;
++          {Object.entries(args)
++            .filter(([paramName]) =&gt; paramName !== "headers")
++            .map(([paramName, paramValue]) =&gt; {
++            const displayValue = formatParamValue(paramValue);
++            const isMultiLine = displayValue.includes("\n");
++            return (
++              &lt;div key={paramName}&gt;
++                &lt;label className="block text-sm font-medium text-muted-foreground mb-1.5"&gt;
++                  {paramName}
++                &lt;/label&gt;
++                &lt;div
++                  className={&#96;px-3 py-2 rounded-lg text-sm bg-background border border-border text-foreground whitespace-pre-wrap break-all ${
++                    isMultiLine ? "font-mono text-xs" : ""
++                  }&#96;}
++                &gt;
++                  {displayValue}
++                &lt;/div&gt;
+               &lt;/div&gt;
+-            &lt;/div&gt;
+-          ))}
++            );
++          })}
+         &lt;/div&gt;
+       )}
+     &lt;/div&gt;
+@@ -164,8 +187,8 @@ export function TestDetailView({
+               &gt;
+                 {/* User Message */}
+                 {message.role === "user" &amp;&amp; (
+-                  &lt;div className="max-w-[80%]"&gt;
+-                    &lt;div className="px-4 py-3 rounded-2xl bg-[#242426] border border-[#444]"&gt;
++                  &lt;div className="w-1/2"&gt;
++                    &lt;div className="px-4 py-3 rounded-xl bg-muted border border-border"&gt;
+                       &lt;p className="text-sm text-foreground whitespace-pre-wrap"&gt;
+                         {message.content}
+                       &lt;/p&gt;
+@@ -181,8 +204,8 @@ export function TestDetailView({
+                         Agent
+                       &lt;/span&gt;
+                     &lt;/div&gt;
+-                    &lt;div className="max-w-[80%]"&gt;
+-                      &lt;div className="px-4 py-3 rounded-2xl bg-muted/30 border border-border"&gt;
++                    &lt;div className="w-1/2"&gt;
++                      &lt;div className="px-4 py-3 rounded-xl bg-background border border-border"&gt;
+                         &lt;p className="text-sm text-foreground whitespace-pre-wrap"&gt;
+                           {message.content}
+                         &lt;/p&gt;
+@@ -201,7 +224,7 @@ export function TestDetailView({
+                           Agent Tool Call
+                         &lt;/span&gt;
+                       &lt;/div&gt;
+-                      &lt;div className="max-w-[80%]"&gt;
++                      &lt;div className="w-1/2"&gt;
+                         {message.tool_calls.map((toolCall, tcIndex) =&gt; {
+                           let parsedArgs: Record&lt;string, any&gt; = {};
+                           try {
+@@ -246,8 +269,8 @@ export function TestDetailView({
+                 &lt;/span&gt;
+                 &lt;SmallStatusBadge passed={passed} /&gt;
+               &lt;/div&gt;
+-              &lt;div className="max-w-[80%]"&gt;
+-                &lt;div className="px-4 py-3 rounded-2xl bg-muted/30 border border-border"&gt;
++              &lt;div className="w-1/2"&gt;
++                &lt;div className="px-4 py-3 rounded-xl bg-background border border-border"&gt;
+                   &lt;p className="text-sm text-foreground whitespace-pre-wrap"&gt;
+                     {output.response}
+                   &lt;/p&gt;
+@@ -273,7 +296,7 @@ export function TestDetailView({
+               &lt;/div&gt;
+               &lt;div className="space-y-3"&gt;
+                 {output.tool_calls.map((toolCall, index) =&gt; (
+-                  &lt;div key={index} className="max-w-[80%]"&gt;
++                  &lt;div key={index} className="w-1/2"&gt;
+                     &lt;ToolCallCard
+                       toolName={toolCall.tool}
+                       args={toolCall.arguments}
+diff --git a/src/components/ui/NestedContainer.tsx b/src/components/ui/NestedContainer.tsx
+new file mode 100644
+index 0000000..aa65731
+--- /dev/null
++++ b/src/components/ui/NestedContainer.tsx
+@@ -0,0 +1,41 @@
++import React from "react";
++
++type NestedContainerProps = {
++  children: React.ReactNode;
++  onAddProperty?: () =&gt; void;
++  addButtonText?: string;
++  showAddButton?: boolean;
++  showValidationError?: boolean;
++};
++
++/**
++ * A theme-aware nested container for properties/items sections.
++ * Used in ParameterCard, AddToolDialog, DataExtractionTabContent, etc.
++ * Provides consistent styling for nested object properties and array items.
++ */
++export const NestedContainer = ({
++  children,
++  onAddProperty,
++  addButtonText = "Add property",
++  showAddButton = true,
++  showValidationError = false,
++}: NestedContainerProps) =&gt; {
++  return (
++    &lt;div className="border border-border rounded-xl bg-muted p-4 space-y-4"&gt;
++      {children}
++      {showAddButton &amp;&amp; onAddProperty &amp;&amp; (
++        &lt;div className="flex justify-center"&gt;
++          &lt;button
++            type="button"
++            onClick={onAddProperty}
++            className={&#96;h-10 px-6 rounded-md text-sm font-medium border bg-background hover:bg-muted/50 transition-colors cursor-pointer ${
++              showValidationError ? "border-red-500" : "border-border"
++            }&#96;}
++          &gt;
++            {addButtonText}
++          &lt;/button&gt;
++        &lt;/div&gt;
++      )}
++    &lt;/div&gt;
++  );
++};
+diff --git a/src/components/ui/index.ts b/src/components/ui/index.ts
+index 3a353d9..a42f6d9 100644
+--- a/src/components/ui/index.ts
++++ b/src/components/ui/index.ts
+@@ -9,4 +9,5 @@ export {
+   ResourceState,
+ } from "./LoadingState";
+ export { BackHeader } from "./BackHeader";
+-export { StatusBadge } from "./StatusBadge";
+\ No newline at end of file
++export { StatusBadge } from "./StatusBadge";
++export { NestedContainer } from "./NestedContainer";
+\ No newline at end of file
+
+```
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me try to get just the summary from the diff stat.</details></think>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2">
+<details><summary>Tool use: **run_terminal_command_v2** • Run command: git diff main... -- src/ 2>/dev/null | grep '^diff --git' | sed 's/diff --git a\///' | sed 's/ b\/.*//'</summary>
+
+```bash
+git diff main... -- src/ 2>/dev/null | grep '^diff --git' | sed 's/diff --git a\///' | sed 's/ b\/.*//'
+```
+
+```
+src/app/metrics/page.tsx
+src/app/personas/page.tsx
+src/app/scenarios/page.tsx
+src/app/simulations/[uuid]/runs/[runId]/page.tsx
+src/app/simulations/page.tsx
+src/app/stt/page.tsx
+src/app/tests/page.tsx
+src/app/tools/page.tsx
+src/app/tts/page.tsx
+src/components/AddTestDialog.tsx
+src/components/AddToolDialog.tsx
+src/components/Agents.tsx
+src/components/DataFieldPropertyCard.tsx
+src/components/ParameterCard.tsx
+src/components/RunTestDialog.tsx
+src/components/ToolPicker.tsx
+src/components/agent-tabs/DataExtractionTabContent.tsx
+src/components/agent-tabs/TestsTabContent.tsx
+src/components/agent-tabs/ToolsTabContent.tsx
+src/components/test-results/shared.tsx
+src/components/ui/NestedContainer.tsx
+src/components/ui/index.ts
+
+```
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me get a more readable summary by looking at the actual changes. Let me check what was changed in each major file.</details></think>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2">
+<details><summary>Tool use: **run_terminal_command_v2** • Run command: echo "=== AddTestDialog.tsx ===" && git diff main... -- src/components/AddTestDialog.tsx 2>/dev/null | grep -E '^[+-]' | grep -v '^[+-]{3}' | head -100</summary>
+
+```bash
+echo "=== AddTestDialog.tsx ===" && git diff main... -- src/components/AddTestDialog.tsx 2>/dev/null | grep -E '^[+-]' | grep -v '^[+-]{3}' | head -100
+```
+
+```
+=== AddTestDialog.tsx ===
+--- a/src/components/AddTestDialog.tsx
++++ b/src/components/AddTestDialog.tsx
+-          role: "agent" | "user" | "tool_call";
++          role: "agent" | "user" | "tool_call" | "tool_response";
+-          toolParams?: Array&lt;{ name: string; value: string }&gt;;
++          toolParams?: Array&lt;{ name: string; value: string; group?: string }&gt;;
++          isWebhook?: boolean;
++          linkedToolCallId?: string;
++        // Helper to format value - stringify objects/arrays for display
++        const formatValue = (val: any): string =&gt; {
++          if (val === null) return "null";
++          if (val === undefined) return "";
++          if (typeof val === "object") {
++            try {
++              return JSON.stringify(val, null, 2);
++            } catch {
++              return String(val);
++            }
++          }
++          return String(val);
++        };
++
++        // Track tool call IDs for linking tool responses
++        const toolCallIds: string[] = [];
++
++              
++              const toolCallId = toolCall.id || &#96;tool-${index}&#96;;
++              toolCallIds.push(toolCallId);
++              
++              // Check if this is a webhook-style tool call (has body/query keys)
++              const webhookKeys = ["body", "query"];
++              const hasWebhookStructure = Object.keys(parsedArgs).some(k =&gt; webhookKeys.includes(k));
++              
++              let toolParams: Array&lt;{ name: string; value: string; group?: string }&gt; = [];
++              
++              if (hasWebhookStructure) {
++                // Extract params from body, query with their group (headers are not shown in UI)
++                webhookKeys.forEach(groupKey =&gt; {
++                  const groupValue = parsedArgs[groupKey];
++                  if (groupValue &amp;&amp; typeof groupValue === "object" &amp;&amp; !Array.isArray(groupValue)) {
++                    Object.entries(groupValue).forEach(([paramName, paramValue]) =&gt; {
++                      toolParams.push({
++                        name: paramName,
++                        value: formatValue(paramValue),
++                        group: groupKey,
++                      });
++                    });
++                  }
++                });
++              } else {
++                // Regular tool params (non-webhook)
++                toolParams = Object.entries(parsedArgs).map(([name, value]) =&gt; ({
++                  name,
++                  value: formatValue(value),
++                }));
++              }
++              
+-                id: toolCall.id || &#96;tool-${index}&#96;,
++                id: toolCallId,
+-                toolParams: Object.entries(parsedArgs).map(([name, value]) =&gt; ({
+-                  name,
+-                  value: String(value),
+-                })),
++                toolParams,
++                isWebhook: hasWebhookStructure,
++          } else if (historyItem.role === "tool" &amp;&amp; historyItem.content) {
++            // Tool response message - link to the tool call
++            const linkedToolCallId = historyItem.tool_call_id || toolCallIds[toolCallIds.length - 1] || "";
++            // Find the linked tool call to get its name
++            const linkedToolCall = messages.find(
++              (m) =&gt; m.role === "tool_call" &amp;&amp; (m.toolId === linkedToolCallId || m.id === linkedToolCallId)
++            );
++            messages.push({
++              id: &#96;tool-response-${index}&#96;,
++              role: "tool_response",
++              content: historyItem.content,
++              linkedToolCallId,
++              toolName: linkedToolCall?.toolName || "",
++            });
+-          // Skip "tool" role messages as they are tool responses
+-      role: "agent" | "user" | "tool_call";
++      role: "agent" | "user" | "tool_call" | "tool_response";
+-      toolParams?: Array&lt;{ name: string; value: string }&gt;;
++      toolParams?: Array&lt;{ name: string; value: string; group?: string }&gt;;
++      isWebhook?: boolean;
++      linkedToolCallId?: string; // For tool_response to link back to tool_call
+-    params: Array&lt;{ name: string; value: string }&gt;,
++    params: Array&lt;{ name: string; value: string; group?: string }&gt;,
++    isWebhook: boolean = false,
+-    setChatMessages([
++    const toolCallId = Date.now().toString();
++    const newMessages: typeof chatMessages = [
+-        id: Date.now().toString(),
++        id: toolCallId,
++        isWebhook,
+-    ]);
++    ];
++
++    // If it's a webhook tool, automatically add a tool response message after it
++    if (isWebhook) {
+
+```
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me get the summary for the other key files as well to provide a comprehensive summary.</details></think>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2">
+<details><summary>Tool use: **run_terminal_command_v2** • Run command: echo "=== test-results/shared.tsx ===" && git diff main... -- src/components/test-results/shared.tsx 2>/dev/null | grep -E '^[+-]' | grep -v '^[+-]{3}' | head -50</summary>
+
+```bash
+echo "=== test-results/shared.tsx ===" && git diff main... -- src/components/test-results/shared.tsx 2>/dev/null | grep -E '^[+-]' | grep -v '^[+-]{3}' | head -50
+```
+
+```
+=== test-results/shared.tsx ===
+--- a/src/components/test-results/shared.tsx
++++ b/src/components/test-results/shared.tsx
++// Helper to format parameter value for display
++function formatParamValue(value: any): string {
++  if (value === null) return "null";
++  if (value === undefined) return "undefined";
++  if (typeof value === "object") {
++    try {
++      return JSON.stringify(value, null, 2);
++    } catch {
++      return String(value);
++    }
++  }
++  return String(value);
++}
++
++
+-    &lt;div className="bg-muted/20 border border-border rounded-2xl p-4"&gt;
++    &lt;div className="bg-muted border border-border rounded-2xl p-4"&gt;
+-      {Object.keys(args).length &gt; 0 &amp;&amp; (
+-        &lt;div className="space-y-2 mt-3"&gt;
+-          {Object.entries(args).map(([paramName, paramValue]) =&gt; (
+-            &lt;div key={paramName}&gt;
+-              &lt;label className="block text-xs font-medium text-muted-foreground mb-1"&gt;
+-                {paramName}
+-              &lt;/label&gt;
+-              &lt;div className="px-3 py-2 rounded-lg text-sm bg-background border border-border text-foreground"&gt;
+-                {typeof paramValue === "object"
+-                  ? JSON.stringify(paramValue)
+-                  : String(paramValue)}
++      {Object.keys(args).filter(k =&gt; k !== "headers").length &gt; 0 &amp;&amp; (
++        &lt;div className="space-y-3 mt-3"&gt;
++          {Object.entries(args)
++            .filter(([paramName]) =&gt; paramName !== "headers")
++            .map(([paramName, paramValue]) =&gt; {
++            const displayValue = formatParamValue(paramValue);
++            const isMultiLine = displayValue.includes("\n");
++            return (
++              &lt;div key={paramName}&gt;
++                &lt;label className="block text-sm font-medium text-muted-foreground mb-1.5"&gt;
++                  {paramName}
++                &lt;/label&gt;
++                &lt;div
++                  className={&#96;px-3 py-2 rounded-lg text-sm bg-background border border-border text-foreground whitespace-pre-wrap break-all ${
++                    isMultiLine ? "font-mono text-xs" : ""
++                  }&#96;}
++                &gt;
++                  {displayValue}
++                &lt;/div&gt;
+-            &lt;/div&gt;
+
+```
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me also check the simulation run page changes and the tools page changes.</details></think>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2">
+<details><summary>Tool use: **run_terminal_command_v2** • Run command: echo "=== Simulation Run Page ===" && git diff main... -- 'src/app/simulations/*/runs/*/page.tsx' 2>/dev/null | grep -E '^[+-]' | grep -v '^[+-]{3}' | head -80</summary>
+
+```bash
+echo "=== Simulation Run Page ===" && git diff main... -- 'src/app/simulations/*/runs/*/page.tsx' 2>/dev/null | grep -E '^[+-]' | grep -v '^[+-]{3}' | head -80
+```
+
+```
+=== Simulation Run Page ===
+--- a/src/app/simulations/[uuid]/runs/[runId]/page.tsx
++++ b/src/app/simulations/[uuid]/runs/[runId]/page.tsx
+-                  const filteredTranscript = fullTranscript.filter(
+-                    (entry) =&gt;
+-                      entry.role !== "tool" &amp;&amp; entry.role !== "end_reason",
+-                  );
++                  // Filter out end_reason, but keep tool messages that are webhook_response
++                  const filteredTranscript = fullTranscript.filter((entry) =&gt; {
++                    if (entry.role === "end_reason") return false;
++                    if (entry.role === "tool") {
++                      // Only include tool messages that are webhook_response
++                      try {
++                        const parsed = JSON.parse(entry.content || "");
++                        return parsed?.type === "webhook_response";
++                      } catch {
++                        return false;
++                      }
++                    }
++                    return true;
++                  });
+-                              return (
+-                                &lt;div
+-                                  key={toolIndex}
+-                                  className="bg-muted border border-border rounded-2xl p-4 mb-2"
+-                                &gt;
+-                                  &lt;div className="flex items-center gap-2 mb-2"&gt;
+-                                    &lt;svg
+-                                      className="w-4 h-4 text-muted-foreground"
+-                                      fill="none"
+-                                      viewBox="0 0 24 24"
+-                                      stroke="currentColor"
+-                                      strokeWidth={1.5}
+-                                    &gt;
+-                                      &lt;path
+-                                        strokeLinecap="round"
+-                                        strokeLinejoin="round"
+-                                        d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"
+-                                      /&gt;
+-                                    &lt;/svg&gt;
++
++                              // Helper to format parameter value
++                              const formatValue = (val: any): string =&gt; {
++                                if (val === null) return "null";
++                                if (val === undefined) return "undefined";
++                                if (typeof val === "object") {
++                                  try {
++                                    return JSON.stringify(val, null, 2);
++                                  } catch {
++                                    return String(val);
++                                  }
++                                }
++                                return String(val);
++                              };
++
++                                              return (
++                                                &lt;div
++                                                  key={toolIndex}
++                                                  className="bg-muted border border-border rounded-2xl p-4 mb-2"
++                                                &gt;
++                                                  &lt;div className="flex items-center gap-2 mb-2"&gt;
++                                                    &lt;svg
++                                                      className="w-4 h-4 text-muted-foreground"
++                                                      fill="none"
++                                                      viewBox="0 0 24 24"
++                                                      stroke="currentColor"
++                                                      strokeWidth={1.5}
++                                                    &gt;
++                                                      &lt;path
++                                                        strokeLinecap="round"
++                                                        strokeLinejoin="round"
++                                                        d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"
++                                                      /&gt;
++                                                    &lt;/svg&gt;
++                                                    &lt;span className="text-sm font-medium text-foreground"&gt;
++                                                      {toolCall.function.name}
++                                                    &lt;/span&gt;
++                                                  &lt;/div&gt;
++                                                  {Object.keys(parsedArgs).filter(k =&gt; k !== "headers").length &gt; 0 &amp;&amp; (
++                                                    &lt;div className="space-y-3 mt-3"&gt;
++                                                      {Object.entries(parsedArgs)
+
+```
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me also check the tools page and AddToolDialog changes since those are significant.</details></think>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2">
+<details><summary>Tool use: **run_terminal_command_v2** • Run command: echo "=== AddToolDialog.tsx (new file check) ===" && git diff main... --stat -- src/components/AddToolDialog.tsx 2>/dev/null</summary>
+
+```bash
+echo "=== AddToolDialog.tsx (new file check) ===" && git diff main... --stat -- src/components/AddToolDialog.tsx 2>/dev/null
+```
+
+```
+=== AddToolDialog.tsx (new file check) ===
+ src/components/AddToolDialog.tsx | 1588 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 1588 insertions(+)
+
+```
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I see that AddToolDialog.tsx is a new file with 1588 lines. Let me also check the tools page changes and the NestedContainer.</details></think>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2">
+<details><summary>Tool use: **run_terminal_command_v2** • Run command: echo "=== NestedContainer.tsx (new file) ===" && git diff main... --stat -- src/components/ui/NestedContainer.tsx 2>/dev/null && echo "" && echo "=== tools/page.tsx changes ===" && git diff main... --stat -- src/app/tools/page.tsx 2>/dev/null</summary>
+
+```bash
+echo "=== NestedContainer.tsx (new file) ===" && git diff main... --stat -- src/components/ui/NestedContainer.tsx 2>/dev/null && echo "" && echo "=== tools/page.tsx changes ===" && git diff main... --stat -- src/app/tools/page.tsx 2>/dev/null
+```
+
+```
+=== NestedContainer.tsx (new file) ===
+ src/components/ui/NestedContainer.tsx | 41 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+
+=== tools/page.tsx changes ===
+ src/app/tools/page.tsx | 1127 ++++--------------------------------------------
+ 1 file changed, 74 insertions(+), 1053 deletions(-)
+
+```
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I have enough information to provide a comprehensive summary of the code changes. Let me compile this into a clear summary.</details></think>
+
+---
+
+Here's a summary of the **actual code changes** (ignoring documentation):
+
+## Summary of Code Changes from `main`
+
+### New Files
+1. **`src/components/AddToolDialog.tsx`** (+1588 lines) - New reusable dialog component for creating/editing tools (webhook and structured output)
+2. **`src/components/ui/NestedContainer.tsx`** (+41 lines) - New theme-aware container component for nested properties
+
+### Major Changes
+
+**`src/components/AddTestDialog.tsx`** (~473 lines changed):
+- Added `tool_response` role support for webhook tool calls
+- Added `group` property to tool params (for `body`, `query` grouping)
+- Added `isWebhook` flag to messages
+- Webhook tool calls now auto-add a linked tool response message
+- Tool call params displayed in grouped containers (Query, Body) - headers excluded
+- Added validation: all tool call params must be non-empty (red border + error message on save)
+- Validation only triggers on local submit, not when message is added
+- Non-webhook tool calls no longer inject fake `{"status": "received"}` response
+
+**`src/app/tools/page.tsx`** (-1053, +74 lines):
+- Major refactor: moved tool creation/editing logic into `AddToolDialog` component
+- Page now uses the reusable dialog instead of inline form
+
+**`src/components/test-results/shared.tsx`** (~67 lines changed):
+- `ToolCallCard`: filters out `headers` from display
+- Added `formatParamValue` helper for pretty-printing JSON
+- Updated styling: `bg-muted` instead of `bg-muted/20`, larger spacing
+
+**`src/app/simulations/[uuid]/runs/[runId]/page.tsx`** (~190 lines changed):
+- Tool responses now shown in transcript (webhook_response type only)
+- Tool call args displayed as form fields (headers filtered out)
+- Error handling: if `response.status === "error"`, shows red border + warning icon
+
+### Minor Changes
+- **Multiple list pages** (metrics, personas, scenarios, simulations, stt, tests, tts): Minor UI consistency updates
+- **`ParameterCard.tsx`**: Added `hideDelete` and `showRequired` props
+- **`DataFieldPropertyCard.tsx`**: Now wraps `ParameterCard` with `showRequired={false}`
+- **`ToolPicker.tsx`**: Shows tool type (Webhook/Structured Output) below custom tools
+- **`ui/index.ts`**: Exports `NestedContainer`
+
+---
+
+_**User**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user is asking me to update app-details.md only if I made code changes. Looking at my last actions, I only ran git diff commands to summarize the changes - I did not make any code changes. Therefore, I should not update the documentation.</details></think>
+
+---
+
+I didn't make any code changes in my last response - I only ran `git diff` commands to summarize the existing changes. No documentation update is needed.
+
+---
+
+_**User**_
+
+what about this suggestion?
+
+---
+
+_**Agent (model claude-4.5-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user is showing me a code suggestion from what appears to be a code review or linting tool. The suggestion is about the `updateToolCallParam` function in `AddTestDialog.tsx`.
+
+The issue is: "The updateToolCallParam function matches parameters only by name without considering the group field, causing all parameters with the same name across different groups to be updated simultaneously"
+
+Looking at the suggested changes in the screenshot:
+- Line 353: Adding `group?: string,` parameter
+- Line 360-361: Changing from `p.name === paramName ? { ...p, value } : p,` to `p.name === paramName && p.group === group ? { ...p, value } : p,`
+- Lines 1564, 1606, 1643: Adding `param.group,` to the function calls
+
+This is a valid bug fix. If you</details></think>
 
 ---
 

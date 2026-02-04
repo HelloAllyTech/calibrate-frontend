@@ -350,6 +350,7 @@ export function AddTestDialog({
     messageId: string,
     paramName: string,
     value: string,
+    group?: string,
   ) => {
     setChatMessages(
       chatMessages.map((msg) =>
@@ -357,7 +358,7 @@ export function AddTestDialog({
           ? {
               ...msg,
               toolParams: msg.toolParams.map((p) =>
-                p.name === paramName ? { ...p, value } : p,
+                p.name === paramName && p.group === group ? { ...p, value } : p,
               ),
             }
           : msg,
@@ -1560,6 +1561,7 @@ export function AddTestDialog({
                                                         message.id,
                                                         param.name,
                                                         e.target.value,
+                                                        param.group,
                                                       )
                                                     }
                                                     placeholder={`Enter ${param.name}`}
@@ -1601,6 +1603,7 @@ export function AddTestDialog({
                                                         message.id,
                                                         param.name,
                                                         e.target.value,
+                                                        param.group,
                                                       )
                                                     }
                                                     placeholder={`Enter ${param.name}`}
@@ -1637,6 +1640,7 @@ export function AddTestDialog({
                                                 message.id,
                                                 param.name,
                                                 e.target.value,
+                                                param.group,
                                               )
                                             }
                                             placeholder={`Enter ${param.name}`}

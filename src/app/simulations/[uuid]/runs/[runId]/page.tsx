@@ -1384,8 +1384,6 @@ export default function SimulationRunPage() {
                             // Check if response has error status
                             const isError = parsed.status === "error";
 
-                            console.log(response)
-
                             // Format response as pretty JSON
                             const jsonString = JSON.stringify(response, null, 2);
 
