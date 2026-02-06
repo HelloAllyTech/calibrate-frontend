@@ -7,6 +7,7 @@ import { useSession, signOut } from "next-auth/react";
 import { AppLayout } from "@/components/AppLayout";
 import { ttsProviders } from "@/components/agent-tabs/constants/providers";
 import { formatStatus, getStatusBadgeClass } from "@/lib/status";
+import { useSidebarState } from "@/lib/sidebar";
 
 type TTSJob = {
   uuid: string;
@@ -31,7 +32,7 @@ export default function TTSPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useSidebarState();
   const [jobs, setJobs] = useState<TTSJob[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,12 +41,6 @@ export default function TTSPage() {
   // Set page title
   useEffect(() => {
     document.title = "Text to Speech | Calibrate";
-  }, []);
-
-  // Initialize sidebar state based on screen size
-  useEffect(() => {
-    const isDesktop = window.innerWidth >= 768;
-    setSidebarOpen(isDesktop);
   }, []);
 
   // Fetch TTS jobs

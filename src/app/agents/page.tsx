@@ -4,20 +4,15 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AppLayout } from "@/components/AppLayout";
 import { Agents } from "@/components/Agents";
+import { useSidebarState } from "@/lib/sidebar";
 
 export default function AgentsPage() {
   const router = useRouter();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useSidebarState();
 
   // Set page title
   useEffect(() => {
     document.title = "Agents | Calibrate";
-  }, []);
-
-  // Initialize sidebar state based on screen size
-  useEffect(() => {
-    const isDesktop = window.innerWidth >= 768;
-    setSidebarOpen(isDesktop);
   }, []);
 
   return (

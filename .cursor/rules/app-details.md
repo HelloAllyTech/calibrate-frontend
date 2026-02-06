@@ -1194,19 +1194,15 @@ All pages follow a consistent structure:
 
 - Use `"use client"` directive (client components)
 - Wrap content in `AppLayout` for sidebar navigation
-- Manage `sidebarOpen` state locally
+- Use `useSidebarState()` hook from `@/lib/sidebar` for sidebar state management
 - Use `useRouter` for navigation
 
 ```tsx
+import { useSidebarState } from "@/lib/sidebar";
+
 export default function ExamplePage() {
   const router = useRouter();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  // Initialize sidebar state based on screen size
-  useEffect(() => {
-    const isDesktop = window.innerWidth >= 768;
-    setSidebarOpen(isDesktop);
-  }, []);
+  const [sidebarOpen, setSidebarOpen] = useSidebarState();
 
   return (
     <AppLayout
@@ -1229,15 +1225,39 @@ export default function ExamplePage() {
 - `customHeader`: Optional React node for custom header content (left side of header bar)
 - `headerActions`: Optional React node for action buttons beside user profile dropdown (right side of header bar)
 
-**Sidebar Initialization Pattern:**
+**Sidebar State Hook (`src/lib/sidebar.ts`):**
 
-All pages must initialize the sidebar state responsively to prevent it from opening on mobile by default:
+The `useSidebarState()` hook manages sidebar open/closed state with proper SSR hydration:
 
-1. Initialize state as `false` to prevent flash on mobile
-2. Use `useEffect` to check screen size on mount
-3. Automatically open sidebar on desktop (≥768px), keep closed on mobile
+```tsx
+export const useSidebarState = (): [
+  boolean,
+  React.Dispatch<React.SetStateAction<boolean>>
+] => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [initialized, setInitialized] = useState(false);
 
-This pattern is applied to all list pages, detail pages, and evaluation pages.
+  useEffect(() => {
+    if (!initialized) {
+      const isDesktop = window.innerWidth >= 768;
+      setSidebarOpen(isDesktop);
+      setInitialized(true);
+    }
+  }, [initialized]);
+
+  return [sidebarOpen, setSidebarOpen];
+};
+```
+
+**Why this pattern:**
+
+1. **Hydration safety**: Initializes as `false` on both server and client to prevent React hydration mismatch errors
+2. **Responsive default**: After mount, sets sidebar open on desktop (≥768px), closed on mobile
+3. **No animation flash**: AppLayout has no transition animations on the sidebar, so state changes are instant
+4. **Centralized logic**: Single source of truth in `@/lib/sidebar.ts` - no duplicate code across pages
+5. **Persistence during navigation**: Sidebar state is managed per-page, but the hook ensures consistent behavior
+
+**Important**: Never use `typeof window !== 'undefined'` checks in `useState` initializers - this causes hydration mismatches because server renders with one value while client renders with another.
 
 **Responsive behavior (AppLayout):**
 
@@ -1252,11 +1272,10 @@ The entire application is fully responsive and works on mobile, tablet, and desk
   - **Auto-close on navigation**: Clicking any sidebar navigation item automatically closes the sidebar (checked via `window.innerWidth < 768`)
   - Solid background (`bg-background`) ensures content behind overlay is not visible
 - **Desktop** (768px+): Visible by default, toggleable between expanded (260px) and collapsed (56px) states
-  - Standard sidebar behavior with smooth transitions
   - Navigation clicks do NOT close the sidebar (desktop expected behavior)
 - **Styling**: Uses `bg-background` for solid, theme-aware background color
   - Border: `border-r border-border` for right edge separation
-  - Transitions: `transition-all duration-200` for smooth width changes
+  - **No transitions**: Sidebar width changes are instant (no `transition-all duration-200`) to prevent animation flicker during page navigation
 - **Navigation behavior**: All navigation items (`Link` components and external Documentation link) have `onClick` handlers that check viewport width and close sidebar on mobile
 
 **Header:**
@@ -1780,7 +1799,7 @@ Key styling:
 - For two-panel views, implement mobile navigation with hide/show panels and back buttons
 - Stats/summary info should show in header on desktop only (mobile stats removed for cleaner UI in TestRunnerDialog)
 - Right panel in two-panel layouts needs proper flex structure: `flex-col overflow-hidden` parent, `flex-shrink-0` for fixed sections, `flex-1 overflow-y-auto` for scrollable content
-- Initialize sidebar state as `false` then set based on screen size in `useEffect` to prevent mobile flash
+- Use `useSidebarState()` hook from `@/lib/sidebar` for sidebar state - handles hydration-safe initialization (prevents SSR mismatch and mobile flash)
 - **Mobile touch handling for interactive lists**: Use `<button>` elements instead of `<div>` with `onClick` for list items to ensure reliable touch events on mobile. Add both `onClick` and `onTouchEnd` handlers for maximum compatibility. Include `type="button"` to prevent form submission and `w-full` to make entire area tappable. Example: TestRunnerDialog's TestListItem component
 
 **Evaluation & Simulation Pages Responsive Spacing:**

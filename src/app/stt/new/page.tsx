@@ -5,20 +5,15 @@ import { useRouter } from "next/navigation";
 import { AppLayout } from "@/components/AppLayout";
 import { BackHeader } from "@/components/ui";
 import { SpeechToTextEvaluation } from "@/components/evaluations/SpeechToTextEvaluation";
+import { useSidebarState } from "@/lib/sidebar";
 
 export default function NewSTTEvaluationPage() {
   const router = useRouter();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useSidebarState();
 
   // Set page title
   useEffect(() => {
     document.title = "New STT Evaluation | Calibrate";
-  }, []);
-
-  // Initialize sidebar state based on screen size
-  useEffect(() => {
-    const isDesktop = window.innerWidth >= 768;
-    setSidebarOpen(isDesktop);
   }, []);
 
   const customHeader = (

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { AppLayout } from "@/components/AppLayout";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
+import { useSidebarState } from "@/lib/sidebar";
 
 type ScenarioData = {
   uuid: string;
@@ -21,19 +22,13 @@ export default function ScenariosPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useSidebarState();
   const [searchQuery, setSearchQuery] = useState("");
   const [addScenarioSidebarOpen, setAddScenarioSidebarOpen] = useState(false);
 
   // Set page title
   useEffect(() => {
     document.title = "Scenarios | Calibrate";
-  }, []);
-
-  // Initialize sidebar state based on screen size
-  useEffect(() => {
-    const isDesktop = window.innerWidth >= 768;
-    setSidebarOpen(isDesktop);
   }, []);
   const [scenarios, setScenarios] = useState<ScenarioData[]>([]);
   const [scenariosLoading, setScenariosLoading] = useState(true);

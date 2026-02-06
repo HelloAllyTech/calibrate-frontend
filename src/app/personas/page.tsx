@@ -7,6 +7,7 @@ import { useSession, signOut } from "next-auth/react";
 import { AppLayout } from "@/components/AppLayout";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
 import { Tooltip } from "@/components/Tooltip";
+import { useSidebarState } from "@/lib/sidebar";
 
 type PersonaData = {
   uuid: string;
@@ -27,17 +28,11 @@ export default function PersonasPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useSidebarState();
 
   // Set page title
   useEffect(() => {
     document.title = "Personas | Calibrate";
-  }, []);
-
-  // Initialize sidebar state based on screen size
-  useEffect(() => {
-    const isDesktop = window.innerWidth >= 768;
-    setSidebarOpen(isDesktop);
   }, []);
   const [searchQuery, setSearchQuery] = useState("");
   const [addPersonaSidebarOpen, setAddPersonaSidebarOpen] = useState(false);

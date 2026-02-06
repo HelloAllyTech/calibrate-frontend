@@ -6,6 +6,7 @@ import { useSession, signOut } from "next-auth/react";
 import { AppLayout } from "@/components/AppLayout";
 import { AddToolDialog } from "@/components/AddToolDialog";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
+import { useSidebarState } from "@/lib/sidebar";
 
 type ToolData = {
   uuid: string;
@@ -20,18 +21,12 @@ export default function ToolsPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useSidebarState();
   const [searchQuery, setSearchQuery] = useState("");
 
   // Set page title
   useEffect(() => {
     document.title = "Tools | Calibrate";
-  }, []);
-
-  // Initialize sidebar state based on screen size
-  useEffect(() => {
-    const isDesktop = window.innerWidth >= 768;
-    setSidebarOpen(isDesktop);
   }, []);
 
   const [addToolDialogOpen, setAddToolDialogOpen] = useState(false);

@@ -14,6 +14,7 @@ import { Tooltip } from "@/components/Tooltip";
 import { NotFoundState } from "@/components/ui";
 import { formatStatus, getStatusBadgeClass } from "@/lib/status";
 import { POLLING_INTERVAL_MS } from "@/constants/polling";
+import { useSidebarState } from "@/lib/sidebar";
 
 type MetricData = {
   mean: number;
@@ -81,7 +82,7 @@ export default function SimulationRunPage() {
   const backendAccessToken = (session as any)?.backendAccessToken;
   const uuid = params.uuid as string;
   const runId = params.runId as string;
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useSidebarState();
   const [runData, setRunData] = useState<RunData | null>(null);
   const [simulationName, setSimulationName] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -93,12 +94,6 @@ export default function SimulationRunPage() {
   >(null);
   // Store a frozen copy of the simulation once it's complete to prevent re-renders
   const frozenSimulationRef = useRef<SimulationResult | null>(null);
-
-  // Initialize sidebar state based on screen size
-  useEffect(() => {
-    const isDesktop = window.innerWidth >= 768;
-    setSidebarOpen(isDesktop);
-  }, []);
 
   // Refresh run data to get fresh presigned URLs when audio fails to load
   const refreshRunData = useCallback(async () => {

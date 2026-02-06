@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { AppLayout } from "@/components/AppLayout";
 import { AgentDetail, AgentDetailHeaderState } from "@/components/AgentDetail";
+import { useSidebarState } from "@/lib/sidebar";
 
 // Map tab IDs to display names for page title
 const tabDisplayNames: Record<string, string> = {
@@ -18,16 +19,10 @@ export default function AgentDetailPage() {
   const router = useRouter();
   const params = useParams();
   const uuid = params.uuid as string;
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useSidebarState();
   const [headerState, setHeaderState] = useState<AgentDetailHeaderState | null>(
     null
   );
-
-  // Initialize sidebar state based on screen size
-  useEffect(() => {
-    const isDesktop = window.innerWidth >= 768;
-    setSidebarOpen(isDesktop);
-  }, []);
 
   // Set page title when agent name or tab changes
   useEffect(() => {

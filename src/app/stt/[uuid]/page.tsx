@@ -13,6 +13,7 @@ import {
 } from "@/components/charts/LeaderboardBarChart";
 import { DownloadableTable } from "@/components/DownloadableTable";
 import { POLLING_INTERVAL_MS } from "@/constants/polling";
+import { useSidebarState } from "@/lib/sidebar";
 
 type ProviderMetrics = {
   wer: number;
@@ -83,7 +84,7 @@ export default function STTEvaluationDetailPage() {
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
   const taskId = params.uuid as string;
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useSidebarState();
   const [evaluationResult, setEvaluationResult] =
     useState<EvaluationResult | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -97,12 +98,6 @@ export default function STTEvaluationDetailPage() {
   );
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const tableContainerRef = useRef<HTMLDivElement | null>(null);
-
-  // Initialize sidebar state based on screen size
-  useEffect(() => {
-    const isDesktop = window.innerWidth >= 768;
-    setSidebarOpen(isDesktop);
-  }, []);
 
   // Set page title
   useEffect(() => {

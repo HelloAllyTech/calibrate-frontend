@@ -313,7 +313,7 @@ export function AppLayout({
       <aside
         className={`${
           sidebarOpen ? "w-[260px]" : "w-14"
-        } border-r border-border flex flex-col bg-background transition-all duration-200 ${
+        } border-r border-border flex flex-col bg-background ${
           sidebarOpen ? "fixed md:relative z-40 h-full" : "hidden md:flex"
         }`}
       >

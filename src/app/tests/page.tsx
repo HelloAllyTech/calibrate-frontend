@@ -13,6 +13,7 @@ import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog"
 import { TestRunnerDialog } from "@/components/TestRunnerDialog";
 import { RunTestDialog } from "@/components/RunTestDialog";
 import { AddTestDialog, TestConfig } from "@/components/AddTestDialog";
+import { useSidebarState } from "@/lib/sidebar";
 
 type TestData = {
   uuid: string;
@@ -35,18 +36,12 @@ export default function LLMPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useSidebarState();
   const [searchQuery, setSearchQuery] = useState("");
 
   // Set page title
   useEffect(() => {
     document.title = "Tests | Calibrate";
-  }, []);
-
-  // Initialize sidebar state based on screen size
-  useEffect(() => {
-    const isDesktop = window.innerWidth >= 768;
-    setSidebarOpen(isDesktop);
   }, []);
   const [addTestSidebarOpen, setAddTestSidebarOpen] = useState(false);
   const [newTestName, setNewTestName] = useState("");

@@ -7,6 +7,7 @@ import { useSession, signOut } from "next-auth/react";
 import { AppLayout } from "@/components/AppLayout";
 import { sttProviders } from "@/components/agent-tabs/constants/providers";
 import { formatStatus, getStatusBadgeClass } from "@/lib/status";
+import { useSidebarState } from "@/lib/sidebar";
 
 type STTJob = {
   uuid: string;
@@ -32,7 +33,7 @@ export default function STTPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useSidebarState();
   const [jobs, setJobs] = useState<STTJob[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,12 +42,6 @@ export default function STTPage() {
   // Set page title
   useEffect(() => {
     document.title = "Speech to Text | Calibrate";
-  }, []);
-
-  // Initialize sidebar state based on screen size
-  useEffect(() => {
-    const isDesktop = window.innerWidth >= 768;
-    setSidebarOpen(isDesktop);
   }, []);
 
   // Fetch STT jobs

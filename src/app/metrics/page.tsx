@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { AppLayout } from "@/components/AppLayout";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
+import { useSidebarState } from "@/lib/sidebar";
 
 type MetricData = {
   uuid: string;
@@ -18,7 +19,7 @@ export default function MetricsPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useSidebarState();
   const [searchQuery, setSearchQuery] = useState("");
   const [addMetricSidebarOpen, setAddMetricSidebarOpen] = useState(false);
   const [metrics, setMetrics] = useState<MetricData[]>([]);
@@ -27,12 +28,6 @@ export default function MetricsPage() {
   // Set page title
   useEffect(() => {
     document.title = "Metrics | Calibrate";
-  }, []);
-
-  // Initialize sidebar state based on screen size
-  useEffect(() => {
-    const isDesktop = window.innerWidth >= 768;
-    setSidebarOpen(isDesktop);
   }, []);
   const [metricsError, setMetricsError] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);

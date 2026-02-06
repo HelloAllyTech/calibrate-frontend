@@ -7,6 +7,7 @@ import { useSession, signOut } from "next-auth/react";
 import { AppLayout } from "@/components/AppLayout";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
 import { NewSimulationDialog } from "@/components/NewSimulationDialog";
+import { useSidebarState } from "@/lib/sidebar";
 
 type SimulationData = {
   uuid: string;
@@ -21,18 +22,12 @@ export default function SimulationsPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useSidebarState();
   const [searchQuery, setSearchQuery] = useState("");
 
   // Set page title
   useEffect(() => {
     document.title = "Simulations | Calibrate";
-  }, []);
-
-  // Initialize sidebar state based on screen size
-  useEffect(() => {
-    const isDesktop = window.innerWidth >= 768;
-    setSidebarOpen(isDesktop);
   }, []);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [dialogOpen, setDialogOpen] = useState(false);

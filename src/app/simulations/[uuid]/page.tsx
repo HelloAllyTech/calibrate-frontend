@@ -12,6 +12,7 @@ import {
   SimulationRunsTab,
 } from "@/components/simulation-tabs";
 import { LIMITS, CONTACT_LINK } from "@/constants/limits";
+import { useSidebarState } from "@/lib/sidebar";
 
 type PersonaData = {
   uuid: string;
@@ -67,16 +68,10 @@ export default function SimulationDetailPage() {
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
   const uuid = params.uuid as string;
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useSidebarState();
   const [simulation, setSimulation] = useState<SimulationData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Initialize sidebar state based on screen size
-  useEffect(() => {
-    const isDesktop = window.innerWidth >= 768;
-    setSidebarOpen(isDesktop);
-  }, []);
 
   // Form state
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
