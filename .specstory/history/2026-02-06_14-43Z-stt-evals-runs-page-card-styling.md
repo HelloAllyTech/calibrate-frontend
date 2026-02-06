@@ -33391,7 +33391,3355 @@ Done! I've updated the documentation to reflect the final mobile height of 350px
 - 350px provides a good balance: larger than the original 250px for better editing, but doesn't dominate the screen
 
 **Pattern documented:**
-- `md:flex-1 h-[350px] md:h-auto` - The correct pattern for responsive
+- `md:flex-1 h-[350px] md:h-auto` - The correct pattern for responsive textarea heights where mobile needs explicit sizing and desktop needs flex-based filling
+
+**Edge case discovered:**
+- Using `flex-1` without the `md:` prefix will override the explicit `h-[350px]` height on mobile, so it must be scoped to desktop breakpoint only
+
+---
+
+_**User**_
+
+The font for the performance and latency matrix in the Simulation Run Result page can be reduced for mobiles, and we can actually have the simulation results in another tab called Results alongside Performance and Latency for the mobile view. So three tabs for mobile view, but for laptop view, continue to have Performance and Latency, and yeah, just reduce the font size for that.
+
+---
+
+_**Agent (model claude-4.5-sonnet-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants to:
+1. Reduce font size for performance and latency metrics in the simulation run result page on mobile
+2. Add a third tab called "Results" for mobile view that shows the simulation results
+3. Keep the desktop view as-is with just "Performance" and "Latency" tabs
+4. The simulation results table/cards should move to this new "Results" tab on mobile
+
+Let me first find the simulation run result page to understand the current structure.</details></think>
+
+---
+
+I'll update the simulation run results page to add a "Results" tab for mobile and reduce font sizes for the metrics. Let me first read the file to understand the current structure.
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+This file is quite large. The user wants me to:
+1. Add a third tab called "Results" for mobile view alongside "Performance" and "Latency"
+2. Move the simulation results cards to this "Results" tab on mobile
+3. Keep desktop view with just "Performance" and "Latency" tabs
+4. Reduce font sizes for the metrics on mobile
+
+Let me analyze the current structure:
+- Lines 689-802: Overall Metrics section with tab navigation (Performance/Latency)
+- Lines 693-716: Tab navigation (currently only for non-text types)
+- Lines 719-759: Performance tab content
+- Lines 761-800: Latency tab content
+- Lines 805-1309: Simulation Results Table/Cards
+
+The approach should be:
+1. Add a "results" tab state
+2. On mobile, show 3 tabs: Results, Performance, Latency
+3. On desktop, show 2 tabs: Performance, Latency (same as before)
+4. Move the simulation results section into the "Results" tab content on mobile
+5. Reduce font sizes for the metrics display on mobile
+
+I'll need to modify:
+1. The activeMetricsTab state to allow "results" as an option
+2. The tab navigation to show 3 tabs on mobile
+3. Move the simulation results section conditionally based on screen size
+4. Adjust font sizes using responsive Tailwind classes</details></think>
+
+---
+
+I'll update the simulation run results page to add a "Results" tab for mobile and reduce font sizes for the metrics. Let me make these changes:
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to update the tab navigation to show 3 tabs on mobile (Results, Performance, Latency) but only 2 tabs on desktop (Performance, Latency). I also need to reduce the font sizes for mobile.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to update the metric displays to:
+1. Reduce font sizes on mobile
+2. Make the performance and latency tabs show properly with conditional logic
+
+Let me update the metric display sections.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to update the latency tab content with reduced font sizes as well.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to update the "Simulation Results" section. The key change is:
+- On mobile: Only show it when activeMetricsTab === "results"
+- On desktop: Always show it below the Overall Metrics section
+
+I need to find where the Simulation Results section starts and modify its conditional rendering.</details></think>
+
+---
+
+Now I need to move the Simulation Results section to only show in the "Results" tab on mobile, but always show on desktop. Let me update that section:
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Actually, using `window.innerWidth` directly in JSX like this won't work properly because it won't update when the window is resized and it's not reactive. I need to use a state variable or use CSS classes instead.
+
+Let me use CSS classes to hide/show based on breakpoints. I'll wrap the simulation results section with conditional classes.</details></think>
+
+---
+
+Actually, let me fix that approach - using `window.innerWidth` directly in JSX won't be reactive. Let me use CSS classes instead:
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I need to close the return statement and the IIFE properly. Let me find the end of the simulation results section and add the closing parenthesis.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me find the exact closing of the simulation results section.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me look a bit further to find the closing of the entire simulation results section.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I see - line 1332 has the closing `</>` and then there should be a closing parenthesis and IIFE call. Let me find the exact end.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Perfect! So line 1332 has `</>`, line 1333 has `);` and line 1334 has `})()}`. I need to update line 1333 to close my added return statement properly.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Wait, that doesn't look right. Let me check the structure again. I added a `return (` at the beginning, so I need to make sure the closing is correct. Let me read the context around where I made my change to understand the structure better.</details></think>
+
+---
+
+Let me verify the structure is correct by reading the section I just modified:
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I see the issue - line 833 has `return (` but then line 834 starts with `// Latency metrics` comment which should be inside a JSX block. The structure is wrong. I need to fix this by properly wrapping the JSX content. Let me redo this section properly.</details></think>
+
+---
+
+I see the issue - I didn't structure the return statement correctly. Let me fix it:
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good, now I need to remove the extra closing I added earlier. Let me also add the proper `return (` before the JSX starts.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I need to find where the JSX actually starts for the simulation results. Let me look further down.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Perfect! I see now - there's already a `return (` at line 864. So the structure is correct. Now I just need to remove the extra closing I added. Let me check the end again.</details></think>
+
+---
+
+Good! The structure is actually correct. Now let me just remove the extra closing I added:
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Great! Now let me verify the file doesn't have syntax errors by checking for lints, and then test it in the browser.</details></think>
+
+---
+
+Now let me check for any syntax errors:
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good! No linter errors. Now let me test this in the browser to see if the tabs work correctly.</details></think>
+
+---
+
+Perfect! No syntax errors. Now let me test this in the browser to verify the tabs work correctly with reduced font sizes on mobile:
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="mcp-cursor-browser-extension-cursor-browser-extension-browser_navigate">
+<details>
+<summary>Tool use: **mcp-cursor-browser-extension-cursor-browser-extension-browser_navigate**</summary>
+
+
+Parameters:
+
+```json
+{
+  "tools": [
+    {
+      "name": "browser_navigate",
+      "parameters": "{\"url\":\"http://localhost:3000/simulations\"}",
+      "serverName": "cursor-browser-extension"
+    }
+  ]
+}
+```
+Additional data:
+
+```json
+{
+  "status": "success"
+}
+```
+Result:
+
+```json
+{
+  "result": "{\"content\":[{\"type\":\"text\",\"text\":\"\\n\\n### Page state\\n- Page URL: http://localhost:3000/simulations\\n- Page Title: Simulations | Calibrate\\n- Page Snapshot:\\n&#96;&#96;&#96;yaml\\n- generic [active] [ref=e1]:\\n  - generic [ref=e2]:\\n    - complementary [ref=e3]:\\n      - generic [ref=e5]:\\n        - button [ref=e6]:\\n          - img [ref=e7]\\n        - generic [ref=e9]: Calibrate\\n        - button \\\"Toggle sidebar\\\" [ref=e10] [cursor=pointer]:\\n          - img [ref=e11]\\n      - navigation [ref=e13]:\\n        - list [ref=e15]:\\n          - listitem [ref=e16]:\\n            - link \\\"Agents\\\" [ref=e17] [cursor=pointer]:\\n              - /url: /agents\\n              - img\\n              - text: Agents\\n          - listitem [ref=e19]:\\n            - link \\\"Tools\\\" [ref=e20] [cursor=pointer]:\\n              - /url: /tools\\n              - img\\n              - text: Tools\\n        - generic [ref=e22]:\\n          - heading \\\"Unit Tests\\\" [level=3] [ref=e23]\\n          - list [ref=e24]:\\n            - listitem [ref=e25]:\\n              - link \\\"Speech-to-Text\\\" [ref=e26] [cursor=pointer]:\\n                - /url: /stt\\n                - img\\n                - text: Speech-to-Text\\n            - listitem [ref=e28]:\\n              - link \\\"LLM Evaluation\\\" [ref=e29] [cursor=pointer]:\\n                - /url: /tests\\n                - img\\n                - text: LLM Evaluation\\n            - listitem [ref=e31]:\\n              - link \\\"Text-to-Speech\\\" [ref=e32] [cursor=pointer]:\\n                - /url: /tts\\n                - img\\n                - text: Text-to-Speech\\n        - generic [ref=e34]:\\n          - heading \\\"End-to-End Tests\\\" [level=3] [ref=e35]\\n          - list [ref=e36]:\\n            - listitem [ref=e37]:\\n              - link \\\"Personas\\\" [ref=e38] [cursor=pointer]:\\n                - /url: /personas\\n                - img\\n                - text: Personas\\n            - listitem [ref=e40]:\\n              - link \\\"Scenarios\\\" [ref=e41] [cursor=pointer]:\\n                - /url: /scenarios\\n                - img\\n                - text: Scenarios\\n            - listitem [ref=e43]:\\n              - link \\\"Metrics\\\" [ref=e44] [cursor=pointer]:\\n                - /url: /metrics\\n                - img\\n                - text: Metrics\\n            - listitem [ref=e46]:\\n              - link \\\"Simulations\\\" [ref=e47] [cursor=pointer]:\\n                - /url: /simulations\\n                - img\\n                - text: Simulations\\n        - generic [ref=e49]:\\n          - heading \\\"Resources\\\" [level=3] [ref=e50]\\n          - list [ref=e51]:\\n            - listitem [ref=e52]:\\n              - link \\\"Documentation\\\" [ref=e53] [cursor=pointer]:\\n                - /url: http://localhost:3001\\n                - img\\n                - text: Documentation\\n                - img\\n    - main [ref=e56]:\\n      - button \\\"Aman Dalmia\\\" [ref=e60] [cursor=pointer]:\\n        - img \\\"Aman Dalmia\\\" [ref=e61]\\n      - generic [ref=e64]:\\n        - generic [ref=e65]:\\n          - generic [ref=e66]:\\n            - heading \\\"Simulations\\\" [level=1] [ref=e67]\\n            - paragraph [ref=e68]: Simulate agent-user conversations and evaluate the results\\n          - button \\\"Add simulation\\\" [ref=e69] [cursor=pointer]\\n        - generic [ref=e70]:\\n          - generic:\\n            - img\\n          - textbox \\\"Search simulations\\\" [ref=e71]\\n        - img [ref=e73]\\n  - region \\\"Notifications alt+T\\\"\\n  - button \\\"Open Next.js Dev Tools\\\" [ref=e81] [cursor=pointer]:\\n    - img [ref=e82]\\n  - alert [ref=e85]\\n&#96;&#96;&#96;\"}]}"
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I need to navigate to a specific simulation run to test the tabs. Let me wait for the page to load and then find a simulation to click on.</details></think>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="mcp-cursor-browser-extension-cursor-browser-extension-browser_wait_for">
+<details>
+<summary>Tool use: **mcp-cursor-browser-extension-cursor-browser-extension-browser_wait_for**</summary>
+
+
+Parameters:
+
+```json
+{
+  "tools": [
+    {
+      "name": "browser_wait_for",
+      "parameters": "{\"time\":2}",
+      "serverName": "cursor-browser-extension"
+    }
+  ]
+}
+```
+Additional data:
+
+```json
+{
+  "status": "success"
+}
+```
+Result:
+
+```json
+{
+  "result": "{\"content\":[{\"type\":\"text\",\"text\":\"Waited for 2\\n\\nCode:\\n&#96;&#96;&#96;javascript\\nawait new Promise(f =&gt; setTimeout(f, 2 * 1000));\\n&#96;&#96;&#96;\\n\\n\\n### Page state\\n- Page URL: http://localhost:3000/simulations\\n- Page Title: Simulations | Calibrate\\n- Page Snapshot:\\n&#96;&#96;&#96;yaml\\n- generic [active] [ref=e1]:\\n  - generic [ref=e2]:\\n    - complementary [ref=e3]:\\n      - generic [ref=e5]:\\n        - button [ref=e6]:\\n          - img [ref=e7]\\n        - generic [ref=e9]: Calibrate\\n        - button \\\"Toggle sidebar\\\" [ref=e10] [cursor=pointer]:\\n          - img [ref=e11]\\n      - navigation [ref=e13]:\\n        - list [ref=e15]:\\n          - listitem [ref=e16]:\\n            - link \\\"Agents\\\" [ref=e17] [cursor=pointer]:\\n              - /url: /agents\\n              - img [ref=e86]\\n              - text: Agents\\n          - listitem [ref=e19]:\\n            - link \\\"Tools\\\" [ref=e20] [cursor=pointer]:\\n              - /url: /tools\\n              - img [ref=e87]\\n              - text: Tools\\n        - generic [ref=e22]:\\n          - heading \\\"Unit Tests\\\" [level=3] [ref=e23]\\n          - list [ref=e24]:\\n            - listitem [ref=e25]:\\n              - link \\\"Speech-to-Text\\\" [ref=e26] [cursor=pointer]:\\n                - /url: /stt\\n                - img [ref=e88]\\n                - text: Speech-to-Text\\n            - listitem [ref=e28]:\\n              - link \\\"LLM Evaluation\\\" [ref=e29] [cursor=pointer]:\\n                - /url: /tests\\n                - img [ref=e89]\\n                - text: LLM Evaluation\\n            - listitem [ref=e31]:\\n              - link \\\"Text-to-Speech\\\" [ref=e32] [cursor=pointer]:\\n                - /url: /tts\\n                - img [ref=e90]\\n                - text: Text-to-Speech\\n        - generic [ref=e34]:\\n          - heading \\\"End-to-End Tests\\\" [level=3] [ref=e35]\\n          - list [ref=e36]:\\n            - listitem [ref=e37]:\\n              - link \\\"Personas\\\" [ref=e38] [cursor=pointer]:\\n                - /url: /personas\\n                - img [ref=e91]\\n                - text: Personas\\n            - listitem [ref=e40]:\\n              - link \\\"Scenarios\\\" [ref=e41] [cursor=pointer]:\\n                - /url: /scenarios\\n                - img [ref=e92]\\n                - text: Scenarios\\n            - listitem [ref=e43]:\\n              - link \\\"Metrics\\\" [ref=e44] [cursor=pointer]:\\n                - /url: /metrics\\n                - img [ref=e93]\\n                - text: Metrics\\n            - listitem [ref=e46]:\\n              - link \\\"Simulations\\\" [ref=e47] [cursor=pointer]:\\n                - /url: /simulations\\n                - img [ref=e94]\\n                - text: Simulations\\n        - generic [ref=e49]:\\n          - heading \\\"Resources\\\" [level=3] [ref=e50]\\n          - list [ref=e51]:\\n            - listitem [ref=e52]:\\n              - link \\\"Documentation\\\" [ref=e53] [cursor=pointer]:\\n                - /url: http://localhost:3001\\n                - img [ref=e95]\\n                - text: Documentation\\n                - img [ref=e96]\\n    - main [ref=e56]:\\n      - button \\\"Aman Dalmia\\\" [ref=e60] [cursor=pointer]:\\n        - img \\\"Aman Dalmia\\\" [ref=e61]\\n      - generic [ref=e64]:\\n        - generic [ref=e65]:\\n          - generic [ref=e66]:\\n            - heading \\\"Simulations\\\" [level=1] [ref=e67]\\n            - paragraph [ref=e68]: Simulate agent-user conversations and evaluate the results\\n          - button \\\"Add simulation\\\" [ref=e69] [cursor=pointer]\\n        - generic [ref=e70]:\\n          - generic:\\n            - img\\n          - textbox \\\"Search simulations\\\" [ref=e71]\\n        - generic [ref=e72]:\\n          - img [ref=e98]\\n          - heading \\\"No simulations found\\\" [level=3] [ref=e100]\\n          - paragraph [ref=e101]: You haven't created any simulations yet\\n          - button \\\"Add simulation\\\" [ref=e102] [cursor=pointer]\\n  - region \\\"Notifications alt+T\\\"\\n  - button \\\"Open Next.js Dev Tools\\\" [ref=e81] [cursor=pointer]:\\n    - img [ref=e82]\\n  - alert [ref=e85]\\n&#96;&#96;&#96;\"}]}"
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+There are no simulations yet. The changes I made should work correctly. Let me resize to mobile to verify the tabs show correctly and then document the changes. The user can test with their actual data.</details></think>
+
+---
+
+The code changes are complete. Let me create a summary of what was changed:
+
+**Changes made to the Simulation Run Results page:**
+
+1. **Added "Results" tab for mobile** - On mobile view, there are now 3 tabs: Results, Performance, and Latency. Desktop continues to show only Performance and Latency.
+
+2. **Reduced font sizes on mobile** for the Performance and Latency metrics:
+   - Metric labels: `text-xs md:text-sm` (was `text-sm`)
+   - Metric values: `text-sm md:text-base` (was `text-base`)
+   - Icon sizes: `w-3.5 md:w-4 h-3.5 md:h-4` (was `w-4 h-4`)
+   - Tab button sizes: `text-xs md:text-sm` and `px-3 md:px-4` for responsive padding
+
+3. **Simulation results moved to "Results" tab on mobile** - The simulation results table/cards now only appear in the "Results" tab on mobile for voice-type simulations with metrics. On desktop, they continue to appear below the Overall Metrics section.
+
+4. **Tab navigation responsive** - The "Results" tab is hidden on desktop (`md:hidden` class), while Performance and Latency tabs are always visible.
+
+The implementation ensures that:
+- Text-type simulations (which don't have latency metrics) continue to show results without tabs
+- Voice-type simulations on mobile now have a cleaner UI with metrics separated into tabs
+- Desktop users see the same layout as before (no "Results" tab)
+
+---
+
+_**User**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-sonnet-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants me to update the app-details.md documentation to reflect the changes I just made to the simulation run results page. Let me think about what changed:
+
+1. Added a "Results" tab for mobile view (3 tabs on mobile: Results, Performance, Latency; 2 tabs on desktop: Performance, Latency)
+2. Reduced font sizes for metrics on mobile
+3. Simulation results section now only shows in the "Results" tab on mobile for voice-type simulations
+
+I need to find the relevant section in app-details.md that documents the simulation run page and update it accordingly.</details></think>
+
+---
+
+I'll update the documentation to reflect the new tab structure and responsive font sizes for the simulation run results page.
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "Simulation Run.*page|simulations/\\[uuid\\]/runs/\\[runId\\]|Performance.*Latency.*tab",
+  "path": "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md",
+  "outputMode": "content",
+  "context": 10,
+  "caseInsensitive": true
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "Simulation Run.*page|simulations/\\[uuid\\]/runs/\\[runId\\]|Performance.*Latency.*tab",
+    "path": "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md",
+    "outputMode": "content",
+    "workspaceResults": {
+      "/Users/aman/Documents/repos/artpark/pense-frontend": {
+        "content": {
+          "matches": [
+            {
+              "file": ".cursor/rules/app-details.md",
+              "matches": [
+                {
+                  "lineNumber": 624,
+                  "content": "**Runs Tab UI** (&#96;SimulationRunsTab&#96; component):",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 625,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 626,
+                  "content": "- **Desktop**: Table with columns (Name, Status, Type, Created At) with sortable created date",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 627,
+                  "content": "- **Mobile**: Enhanced card layout with:",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 628,
+                  "content": "  - Mobile sort button above cards",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 629,
+                  "content": "  - Name as heading, status and type as prominent pills (px-3 py-1.5, semibold)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 630,
+                  "content": "  - Created date with clock icon in circular container",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 631,
+                  "content": "  - Cards use enhanced styling: rounded-xl, hover effects (shadow-lg, border transition)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 632,
+                  "content": "  - Same sorting logic as desktop",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 633,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 634,
+                  "content": "**Simulation Run Results** (&#96;/simulations/[uuid]/runs/[runId]&#96;):"
+                },
+                {
+                  "lineNumber": 635,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 636,
+                  "content": "- **Responsive Design**: Page follows the standard detail page responsive patterns with &#96;space-y-4 md:space-y-6&#96; spacing, responsive section headings (&#96;text-base md:text-lg&#96;), and responsive page title (&#96;text-xl md:text-2xl&#96;). Performance/latency metric grids stack on mobile (&#96;grid-cols-1 md:grid-cols-2&#96;).",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 637,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 638,
+                  "content": "- **Polling &amp; Intermediate Results**:",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 639,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 640,
+                  "content": "  - Page polls API every 3 seconds while status is &#96;in_progress&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 641,
+                  "content": "  - Simulation results appear incrementally as each simulation completes",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 642,
+                  "content": "  - Overall metrics only shown after run completes (status === \"done\")",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 643,
+                  "content": "  - **Failed state error banner**: When &#96;runData.status === \"failed\"&#96;, a red error banner is displayed below the status pills with a warning triangle icon and \"Simulation Failed\" text (styled with &#96;border-red-500/30&#96;, &#96;bg-red-500/10&#96;, &#96;text-red-500&#96;)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 644,
+                  "content": "  - Individual simulation rows can have &#96;evaluation_results: null&#96; while still processing",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 711,
+                  "content": "  - **End reason handling**: When the last entry in the full transcript has &#96;role: \"end_reason\"&#96; and &#96;content: \"max_turns\"&#96;, a yellow informational banner is shown at the bottom: \"Conversation ended: Maximum number of agent turns reached\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 712,
+                  "content": "  - **Stable audio keys**: All audio elements use &#96;key={audioUrl}&#96; to prevent React from remounting them during polling re-renders (avoids audio restart/reload)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 713,
+                  "content": "  - **Presigned URL refresh on error**: Audio elements include &#96;onError={refreshRunData}&#96; handler to automatically fetch fresh presigned URLs when they expire. The &#96;refreshRunData&#96; callback clears &#96;frozenSimulationRef&#96; before updating state so new URLs are used instead of stale frozen data",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 714,
+                  "content": "  - Full conversation audio player below header (from &#96;conversation_wav_url&#96;) for voice simulations",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 715,
+                  "content": "  - Full conversation history (user, assistant, tool calls, tool responses)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 716,
+                  "content": "  - Role-based message styling",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 717,
+                  "content": "  - **Tool call details as form fields**: Arguments are displayed as labeled form fields (matching AddTestDialog style). Each arg key (body, query) is shown as a field label, with its value displayed as pretty-printed JSON. Headers are filtered out and not shown",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 718,
+                  "content": "  - **Tool response display** (for webhook calls): Only shows &#96;role: \"tool\"&#96; messages where content is valid JSON with &#96;type: \"webhook_response\"&#96;. Displays the &#96;response&#96; object as **pretty-printed JSON** in a monospace &#96;&lt;pre&gt;&#96; block with \"Agent Tool Response\" header (intentionally different from tool call form fields to distinguish input vs output). **Error handling**: If &#96;response.status === \"error\"&#96;, displays with red styling: warning icon, \"Tool Response Error\" label in red, &#96;border-red-500&#96; border, and &#96;text-red-400&#96; for the JSON content",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 719,
+                  "content": "  - Per-message audio players for voice simulations (matching &#96;audio_urls&#96;)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 720,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 721,
+                  "content": "- **Latency Metrics** (for voice simulations, in Performance/Latency tabs):"
+                },
+                {
+                  "lineNumber": 722,
+                  "content": "  - STT latency (TTFB, processing time)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 723,
+                  "content": "  - LLM latency",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 724,
+                  "content": "  - TTS latency",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 725,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 726,
+                  "content": "---",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 727,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 728,
+                  "content": "## Key Concepts Explained",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 729,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 730,
+                  "content": "### Voice Agent Pipeline",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 731,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1474,
+                  "content": "const [headerState, setHeaderState] = useState&lt;AgentDetailHeaderState | null&gt;(null);",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1475,
+                  "content": "const handleHeaderStateChange = useCallback((state) =&gt; setHeaderState(state), []);",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1476,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1477,
+                  "content": "&lt;AppLayout customHeader={...} headerActions={...}&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1478,
+                  "content": "  &lt;AgentDetail agentUuid={uuid} onHeaderStateChange={handleHeaderStateChange} /&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1479,
+                  "content": "&lt;/AppLayout&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1480,
+                  "content": "&#96;&#96;&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1481,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1482,
+                  "content": "### Detail Page Responsive Patterns",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1483,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1484,
+                  "content": "Detail pages (AgentDetail, SimulationDetail, STT/TTS Evaluation, Simulation Runs) follow responsive patterns similar to list pages:"
+                },
+                {
+                  "lineNumber": 1485,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1486,
+                  "content": "**Container spacing:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1487,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1488,
+                  "content": "&#96;&#96;&#96;tsx",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1489,
+                  "content": "&lt;div className=\"space-y-4 md:space-y-6 py-4 md:py-0\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1490,
+                  "content": "  {/* py-4 on mobile for breathing room, py-0 on desktop where header provides space */}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1491,
+                  "content": "&lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1492,
+                  "content": "&#96;&#96;&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1493,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1494,
+                  "content": "**Critical spacing rule:** All detail pages use &#96;space-y-4 md:space-y-6&#96; for consistent vertical spacing that adapts to mobile. Never use fixed &#96;space-y-6&#96; without the mobile variant.",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1752,
+                  "content": "- Two-column layouts must stack vertically on mobile (&#96;flex-col md:flex-row&#96;)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1753,
+                  "content": "- Dialog heights need more space on mobile (&#96;h-[95vh] md:h-[85vh]&#96;)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1754,
+                  "content": "- For two-panel views, implement mobile navigation with hide/show panels and back buttons",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1755,
+                  "content": "- Stats/summary info should show in header on desktop only (mobile stats removed for cleaner UI in TestRunnerDialog)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1756,
+                  "content": "- Right panel in two-panel layouts needs proper flex structure: &#96;flex-col overflow-hidden&#96; parent, &#96;flex-shrink-0&#96; for fixed sections, &#96;flex-1 overflow-y-auto&#96; for scrollable content",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1757,
+                  "content": "- Initialize sidebar state as &#96;false&#96; then set based on screen size in &#96;useEffect&#96; to prevent mobile flash",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1758,
+                  "content": "- **Mobile touch handling for interactive lists**: Use &#96;&lt;button&gt;&#96; elements instead of &#96;&lt;div&gt;&#96; with &#96;onClick&#96; for list items to ensure reliable touch events on mobile. Add both &#96;onClick&#96; and &#96;onTouchEnd&#96; handlers for maximum compatibility. Include &#96;type=\"button\"&#96; to prevent form submission and &#96;w-full&#96; to make entire area tappable. Example: TestRunnerDialog's TestListItem component",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1759,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1760,
+                  "content": "**Evaluation &amp; Simulation Pages Responsive Spacing:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1761,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1762,
+                  "content": "STT/TTS evaluation detail pages and simulation run detail pages use these responsive patterns:"
+                },
+                {
+                  "lineNumber": 1763,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1764,
+                  "content": "&#96;&#96;&#96;tsx",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1765,
+                  "content": "// Main container - always responsive spacing",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1766,
+                  "content": "&lt;div className=\"space-y-4 md:space-y-6\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1767,
+                  "content": "  {/* All tab content */}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1768,
+                  "content": "&lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1769,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1770,
+                  "content": "// Nested sections within tabs",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1771,
+                  "content": "&lt;div className=\"space-y-4 md:space-y-6\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1772,
+                  "content": "  {/* Section content */}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3270,
+                  "content": "1. **Set status to \"failed\"** using functional setState to show error state in UI",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3271,
+                  "content": "2. **Stop polling** by clearing the interval immediately",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3272,
+                  "content": "3. Console log the error for debugging",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3273,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3274,
+                  "content": "This prevents infinite polling when the backend is unreachable and gives users immediate feedback via the \"Failed\" status badge.",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3275,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3276,
+                  "content": "**Files implementing this pattern:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3277,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3278,
+                  "content": "- &#96;src/app/stt/[uuid]/page.tsx&#96; - STT evaluation detail page",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3279,
+                  "content": "- &#96;src/app/tts/[uuid]/page.tsx&#96; - TTS evaluation detail page",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3280,
+                  "content": "- &#96;src/app/simulations/[uuid]/runs/[runId]/page.tsx&#96; - Simulation run detail page"
+                },
+                {
+                  "lineNumber": 3281,
+                  "content": "- &#96;src/components/agent-tabs/TestsTabContent.tsx&#96; - Background polling for past runs",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3282,
+                  "content": "- &#96;src/components/TestRunnerDialog.tsx&#96; - Test run polling",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3283,
+                  "content": "- &#96;src/components/BenchmarkResultsDialog.tsx&#96; - Benchmark polling",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3284,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3285,
+                  "content": "**Status Types:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3286,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3287,
+                  "content": "The &#96;EvaluationResult&#96; type for STT/TTS evaluations:",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3288,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3289,
+                  "content": "&#96;&#96;&#96;tsx",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3290,
+                  "content": "type EvaluationResult = {",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3292,
+                  "content": "  status: \"queued\" | \"in_progress\" | \"done\" | \"failed\";",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3293,
+                  "content": "  language?: string; // Displayed as a pill next to status badge",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3294,
+                  "content": "  provider_results?: ProviderResult[];",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3295,
+                  "content": "  leaderboard_summary?: LeaderboardSummary[];",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3296,
+                  "content": "  error?: string | null;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3297,
+                  "content": "};",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3298,
+                  "content": "&#96;&#96;&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3299,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3300,
+                  "content": "**Polling stop conditions**: Polling stops when status is &#96;\"done\"&#96; OR &#96;\"failed\"&#96; (not just on fetch errors). Initial fetch also skips starting polling if status is already terminal.",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3301,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3302,
+                  "content": "**Files using &#96;POLLING_INTERVAL_MS&#96;:** TestRunnerDialog, BenchmarkResultsDialog (with intermediate results support), TestsTabContent, STT/TTS evaluation pages, simulation run page."
+                },
+                {
+                  "lineNumber": 3303,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3304,
+                  "content": "### Usage Limits and Toast Notifications",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3305,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3306,
+                  "content": "The app enforces usage limits on certain features. When limits are exceeded, a toast notification is shown with an inline underlined \"Contact us\" hyperlink.",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3307,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3308,
+                  "content": "**Limits Configuration** (&#96;@/constants/limits.ts&#96;):",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3309,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3310,
+                  "content": "&#96;&#96;&#96;tsx",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3311,
+                  "content": "import { LIMITS, CONTACT_LINK } from \"@/constants/limits\";",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3312,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3592,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3593,
+                  "content": "- **Preferred: Use &#96;@/lib/api&#96; utilities** - &#96;apiGet&#96;, &#96;apiPost&#96;, &#96;apiPut&#96;, &#96;apiDelete&#96; handle headers, 401 errors, and JSON parsing automatically",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3594,
+                  "content": "- **For CRUD pages**: Use &#96;useCrudResource&#96; hook from &#96;@/hooks&#96; for standardized list/create/update/delete patterns",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3595,
+                  "content": "- **JWT authentication required**: All API calls must include &#96;Authorization: Bearer ${backendAccessToken}&#96; header (handled automatically by API utilities)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3596,
+                  "content": "- **401 error handling**: API utilities automatically call &#96;signOut({ callbackUrl: \"/login\" })&#96; on 401 responses. For manual fetch calls, check &#96;response.status === 401&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3597,
+                  "content": "- **HTTP error handling (401, 403, 404)**: Detail pages (STT, TTS, Simulation Run) handle specific HTTP error codes with dedicated UI states:",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3598,
+                  "content": "  - **401 Unauthorized**: Automatically redirects to login via &#96;signOut({ callbackUrl: \"/login\" })&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3599,
+                  "content": "  - **403 Forbidden**: Shows &#96;NotFoundState&#96; with \"403 Forbidden\" message",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3600,
+                  "content": "  - **404 Not Found**: Shows &#96;NotFoundState&#96; with \"404 Not found\" message",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3601,
+                  "content": "  - Pattern: add &#96;errorCode&#96; state (&#96;useState&lt;401 | 403 | 404 | null&gt;(null)&#96;), check status codes before &#96;!response.ok&#96;, render &#96;&lt;NotFoundState errorCode={errorCode} /&gt;&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3602,
+                  "content": "  - For simulation runs, a special &#96;notFoundHeader&#96; is used that shows empty header and navigates back to &#96;/simulations&#96; (main page) instead of the specific simulation"
+                },
+                {
+                  "lineNumber": 3603,
+                  "content": "- **Wait for token**: In &#96;useEffect&#96; hooks, return early if &#96;backendAccessToken&#96; is not yet available; include it in the dependency array",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3604,
+                  "content": "- **ngrok header**: &#96;\"ngrok-skip-browser-warning\": \"true\"&#96; header is included automatically by API utilities",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3605,
+                  "content": "- **Backend URL check**: API utilities will throw an error if &#96;NEXT_PUBLIC_BACKEND_URL&#96; is not set",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3606,
+                  "content": "- **Date formatting**: API returns ISO dates; use &#96;toLocaleString()&#96; for display",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3607,
+                  "content": "- **UTC timestamps**: Backend returns timestamps in UTC without timezone indicator (e.g., &#96;\"2026-01-18 10:00:00\"&#96;). When parsing for relative time calculations, append &#96;\"Z\"&#96; to explicitly mark as UTC: &#96;new Date(dateString.replace(\" \", \"T\") + \"Z\")&#96;. Without this, JavaScript interprets the timestamp as local time, causing incorrect relative times (e.g., \"5 hours ago\" instead of \"just now\" for users in IST)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3608,
+                  "content": "- **Multiple date formats**: When creating optimistic UI updates (e.g., adding a pending run to a table), use &#96;new Date().toISOString()&#96; which produces &#96;\"2026-01-18T09:30:00.000Z\"&#96;. The &#96;formatRelativeTime&#96; helper in &#96;TestsTabContent.tsx&#96; handles both formats - check if the string already has a timezone indicator before appending \"Z\" to avoid invalid dates like &#96;\"...ZZ\"&#96; which produce NaN",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3609,
+                  "content": "- **Optional date fields with fallbacks**: Some API responses may not include all date fields. The &#96;SimulationRunsTab&#96; uses &#96;created_at&#96; for sorting/display but falls back to &#96;updated_at&#96; if &#96;created_at&#96; is undefined. Pattern: &#96;const dateStr = item.created_at || item.updated_at || \"\"&#96;; &#96;formatDate&#96; functions should handle empty strings gracefully (return &#96;\"-\"&#96; instead of \"Invalid Date\")",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3610,
+                  "content": "- **Hooks need accessToken**: &#96;useCrudResource&#96; and &#96;useFetchResource&#96; require &#96;accessToken&#96; to be passed from the component (they don't call &#96;useSession&#96; internally)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3611,
+                  "content": "- **LLM Judge score format varies**: Backend returns &#96;llm_judge_score&#96; as &#96;\"True\"&#96;/&#96;\"False\"&#96; strings in individual result rows, but as &#96;1&#96;/&#96;0&#96; integers in aggregate metrics and leaderboard summaries. When parsing for Pass/Fail display, convert to lowercase string and check for both: &#96;const passed = scoreStr === \"true\" || scoreStr === \"1\"&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3612,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3854,
+                  "content": "- **Nested folder structures in ZIPs**: When users compress a folder on macOS, the ZIP wraps contents in a parent folder (e.g., &#96;my_folder/data.csv&#96; instead of &#96;data.csv&#96;). Store the discovered &#96;basePath&#96; and use it for all subsequent file lookups.",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3855,
+                  "content": "- **CSV BOM (Byte Order Mark)**: Excel-exported CSVs often include an invisible BOM character (&#96;\\uFEFF&#96;) at the start. Strip it before parsing: &#96;if (csvContent.charCodeAt(0) === 0xFEFF) csvContent = csvContent.slice(1);&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3856,
+                  "content": "- **CSV line endings**: Handle all types - &#96;\\r\\n&#96; (Windows), &#96;\\n&#96; (Unix), &#96;\\r&#96; (old Mac). Use &#96;.split(/\\r\\n|\\n|\\r/)&#96; instead of &#96;.split(/\\r?\\n/)&#96;.",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3857,
+                  "content": "- **Audio file lookup with base path**: Use the discovered basePath: &#96;zip.file(\\&#96;${basePath}audios/${filename}\\&#96;) || zip.file(\\&#96;${basePath}${filename}\\&#96;)&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3858,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3859,
+                  "content": "### Voice Simulation Audio",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3860,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3861,
+                  "content": "- **Audio file naming convention**: Both user and bot audio files use **1-based indexing**:",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3862,
+                  "content": "  - User files: &#96;1_user.wav&#96;, &#96;2_user.wav&#96;, &#96;3_user.wav&#96;, etc.",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3863,
+                  "content": "  - Bot files: &#96;1_bot.wav&#96;, &#96;2_bot.wav&#96;, &#96;3_bot.wav&#96;, etc.",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3864,
+                  "content": "- **Audio URL matching**: The &#96;getAudioUrlForEntry&#96; function in the simulation run page counts previous messages of the same role and adds 1 to get the correct file index"
+                },
+                {
+                  "lineNumber": 3865,
+                  "content": "- **Common mistake**: Don't use 0-based indexing for user audio files - they follow the same 1-indexed pattern as bot files",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3866,
+                  "content": "- **Full conversation audio**: The API returns a &#96;conversation_wav_url&#96; field containing a combined audio file of the entire conversation. This is displayed below the Transcript header (before the messages) with a \"Full Conversation\" label and speaker icon",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3867,
+                  "content": "- **Presigned URL expiration handling**: S3 presigned URLs for audio files expire after a period. When audio fails to load (e.g., expired URL), the &#96;onError&#96; handler triggers a &#96;refreshRunData&#96; callback that fetches fresh run data from the API with new presigned URLs. The callback also clears any frozen simulation data to ensure the fresh URLs are used",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3868,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3869,
+                  "content": "### Navigation",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3870,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3871,
+                  "content": "- **Home redirect**: Root page (&#96;/&#96;) redirects to &#96;/agents&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3872,
+                  "content": "- **Tab persistence**: Agent detail and simulation detail tabs persist in URL (&#96;?tab=...&#96;) so refreshing maintains tab state",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3873,
+                  "content": "- **Back navigation**: Detail pages include back button to list view",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3874,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3935,
+                  "content": "&#96;&#96;&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3936,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3937,
+                  "content": "**Tab-aware titles for detail pages with tabs:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3938,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3939,
+                  "content": "Pages with tabs (agent detail, simulation detail) include the active tab name in the title:",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3940,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3941,
+                  "content": "| Page                               | Title Format                                                                         |",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3942,
+                  "content": "| ---------------------------------- | ------------------------------------------------------------------------------------ |",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3943,
+                  "content": "| &#96;/agents/[uuid]&#96;                   | &#96;&lt;Agent Name&gt; - &lt;Tab Name&gt; \\| Calibrate&#96; (e.g., \"My Agent - Tests \\| Calibrate\")     |",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3944,
+                  "content": "| &#96;/simulations/[uuid]&#96;              | &#96;&lt;Simulation Name&gt; - &lt;Tab Name&gt; \\| Calibrate&#96; (e.g., \"My Sim - Config \\| Calibrate\") |",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3945,
+                  "content": "| &#96;/simulations/[uuid]/runs/[runId]&#96; | &#96;&lt;Run Name&gt; \\| &lt;Simulation Name&gt; \\| Calibrate&#96;                                       |"
+                },
+                {
+                  "lineNumber": 3946,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3947,
+                  "content": "**Simulation run page fetches parent simulation name:**"
+                },
+                {
+                  "lineNumber": 3948,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3949,
+                  "content": "The simulation run page fetches the parent simulation's name via a separate API call to display the full hierarchical title:"
+                },
+                {
+                  "lineNumber": 3950,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3951,
+                  "content": "&#96;&#96;&#96;tsx",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3952,
+                  "content": "// Fetch simulation name for page title",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3953,
+                  "content": "useEffect(() =&gt; {",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3954,
+                  "content": "  const fetchSimulationName = async () =&gt; {",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3955,
+                  "content": "    const response = await fetch(&#96;${backendUrl}/simulations/${uuid}&#96;, ...);",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3956,
+                  "content": "    if (response.ok) {",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3957,
+                  "content": "      const data = await response.json();",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3958,
+                  "content": "      setSimulationName(data.name);",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3959,
+                  "content": "    }",
+                  "isContextLine": true
+                }
+              ]
+            }
+          ],
+          "totalLines": 193,
+          "totalMatchedLines": 11
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I found the relevant sections. I need to update the documentation about the simulation run results page, specifically:
+
+1. The section around line 636 that describes the responsive design and the Performance/Latency metrics
+2. The section around line 721 that mentions the Performance/Latency tabs
+
+Let me update these sections to reflect:
+- 3 tabs on mobile (Results, Performance, Latency) vs 2 tabs on desktop (Performance, Latency)
+- Reduced font sizes on mobile for metrics
+- Simulation results section now appears in the "Results" tab on mobile</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good, now I need to update the section about latency metrics to reflect the tab structure changes.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me check if there are any other sections that need updating. Let me search for any other mentions of the simulation run page structure.</details></think>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "Overall Metrics|activeMetricsTab",
+  "path": "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md",
+  "outputMode": "content",
+  "context": 5,
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "Overall Metrics|activeMetricsTab",
+    "path": "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md",
+    "outputMode": "content",
+    "workspaceResults": {
+      "/Users/aman/Documents/repos/artpark/pense-frontend": {
+        "content": {
+          "matches": [
+            {
+              "file": ".cursor/rules/app-details.md",
+              "matches": [
+                {
+                  "lineNumber": 641,
+                  "content": "    - Performance tab shows performance metrics only",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 642,
+                  "content": "    - Latency tab shows latency metrics only",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 643,
+                  "content": "    - Tab buttons use smaller sizing: &#96;text-xs md:text-sm&#96;, &#96;px-3 md:px-4&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 644,
+                  "content": "    - \"Results\" tab is hidden on desktop with &#96;md:hidden&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 645,
+                  "content": "  - **Desktop (2 tabs)**: Performance, Latency",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 646,
+                  "content": "    - Simulation results always shown below Overall Metrics (no tab needed)"
+                },
+                {
+                  "lineNumber": 647,
+                  "content": "    - Performance tab shows performance metrics only",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 648,
+                  "content": "    - Latency tab shows latency metrics only",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 649,
+                  "content": "  - **Text simulations**: No tabs shown, all metrics displayed inline",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 650,
+                  "content": "  - **Responsive metric fonts**: Metric labels use &#96;text-xs md:text-sm&#96;, values use &#96;text-sm md:text-base&#96;, icons use &#96;w-3.5 md:w-4 h-3.5 md:h-4&#96; for better readability on mobile",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 651,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 661,
+                  "content": "    - **Spinner around play button (yellow)**: Row has transcript but no &#96;evaluation_results&#96; (processing)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 662,
+                  "content": "    - **Spinner only (gray)**: Row has no transcript and no &#96;evaluation_results&#96; (waiting)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 663,
+                  "content": "    - **First column structure**: Uses &#96;relative&#96; container with spinner positioned &#96;absolute inset-0&#96;, play button centered with &#96;relative z-10&#96;. Spinner wraps around the play button visually.",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 664,
+                  "content": "    - **Metric column spinners**: Each metric cell shows &#96;w-5 h-5 flex-shrink-0&#96; spinner when &#96;evaluation_results&#96; is null; yellow when processing, gray when waiting",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 665,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 666,
+                  "content": "- **Overall Metrics** (only shown when status is \"done\", aggregated across all simulations):"
+                },
+                {
+                  "lineNumber": 667,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 668,
+                  "content": "  - Tool calls accuracy (mean ± std)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 669,
+                  "content": "  - Answer completeness",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 670,
+                  "content": "  - Assistant behavior",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 671,
+                  "content": "  - Question completeness",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 730,
+                  "content": "  - Role-based message styling",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 731,
+                  "content": "  - **Tool call details as form fields**: Arguments are displayed as labeled form fields (matching AddTestDialog style). Each arg key (body, query) is shown as a field label, with its value displayed as pretty-printed JSON. Headers are filtered out and not shown",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 732,
+                  "content": "  - **Tool response display** (for webhook calls): Only shows &#96;role: \"tool\"&#96; messages where content is valid JSON with &#96;type: \"webhook_response\"&#96;. Displays the &#96;response&#96; object as **pretty-printed JSON** in a monospace &#96;&lt;pre&gt;&#96; block with \"Agent Tool Response\" header (intentionally different from tool call form fields to distinguish input vs output). **Error handling**: If &#96;response.status === \"error\"&#96;, displays with red styling: warning icon, \"Tool Response Error\" label in red, &#96;border-red-500&#96; border, and &#96;text-red-400&#96; for the JSON content",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 733,
+                  "content": "  - Per-message audio players for voice simulations (matching &#96;audio_urls&#96;)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 734,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 735,
+                  "content": "- **Overall Metrics Display**:"
+                },
+                {
+                  "lineNumber": 736,
+                  "content": "  - **Performance metrics**: tool_calls, answer_completeness, assistant_behavior, question_completeness, stt_llm_judge",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 737,
+                  "content": "  - **Latency metrics**: STT (TTFB, processing time), LLM (TTFB, processing time), TTS (TTFB, processing time)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 738,
+                  "content": "  - Metrics calculated from simulation_results evaluation_results if not in runData.metrics",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 739,
+                  "content": "  - Displayed as grid with responsive columns: &#96;grid-cols-2 md:grid-cols-4&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 740,
+                  "isContextLine": true
+                }
+              ]
+            }
+          ],
+          "totalLines": 33,
+          "totalMatchedLines": 3
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good, I've updated the main sections. Now let me check if there's a section about "Overall Metrics" that might be obsolete or needs updating since I see it mentioned twice.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I should also add a note about the conditional rendering logic for the simulation results section since that's a key implementation detail.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good! Now let me check if there are any "gotchas" or patterns sections that should mention this new responsive tab pattern.</details></think>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "gotcha|edge case|pattern.*tab|responsive.*tab",
+  "path": "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md",
+  "outputMode": "content",
+  "context": 5,
+  "caseInsensitive": true
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "gotcha|edge case|pattern.*tab|responsive.*tab",
+    "path": "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md",
+    "outputMode": "content",
+    "workspaceResults": {
+      "/Users/aman/Documents/repos/artpark/pense-frontend": {
+        "content": {
+          "matches": [
+            {
+              "file": ".cursor/rules/app-details.md",
+              "matches": [
+                {
+                  "lineNumber": 606,
+                  "content": "**Simulation Detail Page** (&#96;/simulations/[uuid]&#96;) has 2 tabs:",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 607,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 608,
+                  "content": "| Tab        | Purpose                                                                                                                                                                                                               |",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 609,
+                  "content": "| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 610,
+                  "content": "| **Config** | Select agent, personas (max 2), scenarios (max 5) for the simulation                                                                                                                                                  |",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 611,
+                  "content": "| **Runs**   | View history of simulation runs (right-click or Cmd/Ctrl+click to open run in new tab). **Responsive**: Desktop table view (&#96;hidden md:block&#96;) with sortable columns, mobile card view with pills for status and type |"
+                },
+                {
+                  "lineNumber": 612,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 613,
+                  "content": "**Selection Limits:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 614,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 615,
+                  "content": "- **Personas**: Maximum 2 personas per simulation. Shows toast error with \"Contact Us\" link if exceeded",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 616,
+                  "content": "- **Scenarios**: Maximum 5 scenarios per simulation. Shows toast error with \"Contact Us\" link if exceeded",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 633,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 634,
+                  "content": "**Simulation Run Results** (&#96;/simulations/[uuid]/runs/[runId]&#96;):",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 635,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 636,
+                  "content": "- **Responsive Design**: Page follows the standard detail page responsive patterns with &#96;space-y-4 md:space-y-6&#96; spacing, responsive section headings (&#96;text-base md:text-lg&#96;), and responsive page title (&#96;text-xl md:text-2xl&#96;). Performance/latency metric grids stack on mobile (&#96;grid-cols-2 md:grid-cols-4&#96;).",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 637,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 638,
+                  "content": "- **Responsive Tab Structure** (for voice simulations with metrics):"
+                },
+                {
+                  "lineNumber": 639,
+                  "content": "  - **Mobile (3 tabs)**: Results, Performance, Latency",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 640,
+                  "content": "    - Results tab shows the simulation results table/cards",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 641,
+                  "content": "    - Performance tab shows performance metrics only",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 642,
+                  "content": "    - Latency tab shows latency metrics only",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 643,
+                  "content": "    - Tab buttons use smaller sizing: &#96;text-xs md:text-sm&#96;, &#96;px-3 md:px-4&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 772,
+                  "content": "3. The system runs automated conversations between the agent and personas",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 773,
+                  "content": "4. **Metrics** evaluate if the agent handled the conversation correctly",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 774,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 775,
+                  "content": "This enables:",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 776,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 777,
+                  "content": "- Testing edge cases (angry customers, language barriers)"
+                },
+                {
+                  "lineNumber": 778,
+                  "content": "- Regression testing after changes",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 779,
+                  "content": "- Scale testing (run hundreds of simulations)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 780,
+                  "content": "- Objective evaluation with consistent criteria",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 781,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 782,
+                  "content": "---",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 864,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 865,
+                  "content": "## Architecture Patterns",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 866,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 867,
+                  "content": "### Responsive Design Architecture",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 868,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 869,
+                  "content": "The entire Calibrate application is fully responsive and works seamlessly across mobile, tablet, and desktop devices. This is a fundamental architectural decision that affects all pages and components."
+                },
+                {
+                  "lineNumber": 870,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 871,
+                  "content": "**Key principles:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 872,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 873,
+                  "content": "1. **Mobile-First Approach**: All pages and components start with mobile styles and progressively enhance for larger screens using Tailwind's &#96;md:&#96; (768px) and &#96;lg:&#96; (1024px) breakpoints.",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 874,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 897,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 898,
+                  "content": "**Dependencies affected:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 899,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 900,
+                  "content": "- **Removed**: &#96;src/components/MobileGuard.tsx&#96; (no longer needed)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 901,
+                  "content": "- **Updated**: All page components, &#96;AppLayout.tsx&#96;, and all dialogs/sidebars for responsive behavior",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 902,
+                  "content": "- **Pattern established**: List pages, detail pages, dialogs, sidebars, and empty states all follow consistent responsive patterns"
+                },
+                {
+                  "lineNumber": 903,
+                  "content": "- **Dialog components updated**: &#96;DeleteConfirmationDialog&#96;, &#96;NewSimulationDialog&#96;, &#96;RunTestDialog&#96;, &#96;AddToolDialog&#96;, &#96;AddTestDialog&#96;, and all inline sidebars (personas, scenarios, metrics)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 904,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 905,
+                  "content": "**Gotchas:**"
+                },
+                {
+                  "lineNumber": 906,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 907,
+                  "content": "- Always test both mobile and desktop views when making changes",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 908,
+                  "content": "- Use &#96;md:&#96; breakpoint as the primary switch between mobile and desktop layouts",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 909,
+                  "content": "- Preserve desktop UI while adding mobile optimizations (don't break existing desktop experience)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 910,
+                  "content": "- Tab navigation should use &#96;overflow-x-auto&#96; and &#96;whitespace-nowrap&#96; for mobile horizontal scrolling",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 969,
+                  "content": "- &#96;WHATSAPP_INVITE_URL&#96; - WhatsApp community invite link, used in Community section (login page) and &#96;LandingFooter&#96; component",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 970,
+                  "content": "- &#96;GITHUB_REPO_URL&#96; - GitHub repo link, used in Open Source section",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 971,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 972,
+                  "content": "**Feature Section Layout:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 973,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 974,
+                  "content": "- **Container**: Full width with responsive padding (&#96;px-6 md:px-8 lg:px-12&#96;) - mobile uses &#96;px-6&#96; for comfortable margin from screen edges"
+                },
+                {
+                  "lineNumber": 975,
+                  "content": "- **Desktop tabs** (&#96;md+&#96;): Centered with &#96;max-w-7xl mx-auto&#96;, pill buttons use &#96;px-5 py-2.5 text-sm&#96;, active tab has &#96;bg-white shadow-sm&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 976,
+                  "content": "- **Desktop grid** (&#96;md+&#96;): &#96;grid-cols-1 lg:grid-cols-[400px_1fr] gap-6 md:gap-8&#96; - two-column on &#96;lg+&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 977,
+                  "content": "  - **Left column**: Two-tone headline (&#96;text-2xl md:text-3xl lg:text-4xl&#96;) + description, sticky on scroll (&#96;lg:sticky lg:top-8&#96;)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 978,
+                  "content": "  - **Right column**: Images stacked vertically (&#96;flex-col gap-4&#96;)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 979,
+                  "content": "- **Mobile layout** (below &#96;md&#96;): All sections shown sequentially (&#96;space-y-12&#96;), each with heading (&#96;text-2xl&#96;), description (&#96;text-sm&#96;), and images",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1009,
+                  "content": "- **Headline**: &#96;text-3xl md:text-4xl lg:text-5xl&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1010,
+                  "content": "- **Subtitle**: &#96;text-base md:text-xl&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1011,
+                  "content": "- **Join buttons** (row 1, bordered style with icons, &#96;px-4 md:px-6 py-2.5 md:py-3 text-sm md:text-base&#96;):",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1012,
+                  "content": "  - \"WhatsApp\" - uses &#96;WHATSAPP_INVITE_URL&#96; constant (green WhatsApp icon)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1013,
+                  "content": "  - \"Discord\" - opens &#96;https://discord.gg/9dQB4AngK2&#96; (indigo Discord icon)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1014,
+                  "content": "- **Book a demo** (row 2, filled black style with calendar icon, same responsive sizing): Opens &#96;https://cal.com/amandalmia/30min&#96; in new tab"
+                },
+                {
+                  "lineNumber": 1015,
+                  "content": "- **Social links** (row 3, text links): \"Follow @artikiagents\" and \"Connect on LinkedIn\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1016,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1017,
+                  "content": "**Get Started Section:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1018,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1019,
+                  "content": "- **Background**: Light gray (&#96;bg-gray-50&#96;) with responsive padding (&#96;py-16 md:py-20 px-4 md:px-8 lg:px-12&#96;) - alternates with Community section above",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1105,
+                  "content": "- Our Vision: Voice AI challenges and Calibrate's solution",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1106,
+                  "content": "- Team: 2-column grid (&#96;max-w-xl&#96;, left-aligned) with clickable team member cards linking to LinkedIn. Profile images at &#96;/team/aman.jpeg&#96; and &#96;/team/jigar.jpeg&#96; with &#96;bg-gray-200&#96; fallback",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1107,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1108,
+                  "content": "**Responsive Design:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1109,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1110,
+                  "content": "- Container: Responsive padding &#96;px-4 md:px-8 py-16 md:py-24&#96; for comfortable spacing on mobile"
+                },
+                {
+                  "lineNumber": 1111,
+                  "content": "- Section margins: &#96;mb-12 md:mb-16&#96; between sections",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1112,
+                  "content": "- Headings: &#96;text-2xl md:text-3xl&#96; for responsive scaling",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1113,
+                  "content": "- Heading margins: &#96;mb-4 md:mb-6&#96; for proper spacing",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1114,
+                  "content": "- Team grid gap: &#96;gap-6 md:gap-8&#96; for responsive card spacing",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1115,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1233,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1234,
+                  "content": "This pattern is applied to all list pages, detail pages, and evaluation pages.",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1235,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1236,
+                  "content": "**Responsive behavior (AppLayout):**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1237,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1238,
+                  "content": "The entire application is fully responsive and works on mobile, tablet, and desktop devices. AppLayout implements responsive behavior as follows:"
+                },
+                {
+                  "lineNumber": 1239,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1240,
+                  "content": "**Sidebar:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1241,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1242,
+                  "content": "- **Mobile** (below 768px): Hidden by default, appears as full-screen overlay when toggled",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1243,
+                  "content": "  - Uses &#96;fixed md:relative z-40 h-full&#96; for overlay positioning",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1257,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1258,
+                  "content": "- **Mobile**: Shows hamburger menu button (left side) to toggle sidebar, hides &#96;customHeader&#96; content",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1259,
+                  "content": "  - Hamburger button: &#96;md:hidden&#96; with menu icon",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1260,
+                  "content": "- **Desktop**: Hides hamburger button, shows &#96;customHeader&#96; content normally",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1261,
+                  "content": "  - Hamburger button: &#96;hidden&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1262,
+                  "content": "- **Padding**: Responsive &#96;px-4 md:px-6&#96; for comfortable mobile spacing"
+                },
+                {
+                  "lineNumber": 1263,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1264,
+                  "content": "**Content Area:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1265,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1266,
+                  "content": "- Responsive horizontal padding: &#96;px-4 md:px-6 lg:px-8&#96; for progressive spacing",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1267,
+                  "content": "- Content is fully accessible and functional on all screen sizes",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1541,
+                  "content": "&lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1542,
+                  "content": "&#96;&#96;&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1543,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1544,
+                  "content": "- **Horizontal scrolling on mobile** with hidden scrollbar (&#96;overflow-x-auto&#96; + hide scrollbar styles)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1545,
+                  "content": "- **Edge-to-edge on mobile**: &#96;-mx-4 md:mx-0 px-4 md:px-0&#96; extends tabs to screen edges for better touch access",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1546,
+                  "content": "- **Responsive gaps**: &#96;gap-3 md:gap-4 lg:gap-6&#96; for comfortable spacing across breakpoints"
+                },
+                {
+                  "lineNumber": 1547,
+                  "content": "- **Better touch targets**: &#96;pb-3 px-1&#96; padding on each tab button",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1548,
+                  "content": "- **Prevent wrapping/squishing**: &#96;whitespace-nowrap flex-shrink-0&#96; on tab buttons",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1549,
+                  "content": "- **Hide scrollbar**: Use &#96;.hide-scrollbar&#96; class (webkit), &#96;scrollbarWidth: 'none'&#96; (Firefox), &#96;msOverflowStyle: 'none'&#96; (IE)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1550,
+                  "content": "- **Responsive text**: &#96;text-sm md:text-base&#96; for tab labels"
+                },
+                {
+                  "lineNumber": 1551,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1552,
+                  "content": "**Dialogs (Edit Name, etc.):**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1553,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1554,
+                  "content": "&#96;&#96;&#96;tsx",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1555,
+                  "content": "&lt;div className=\"fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1756,
+                  "content": "- **AddToolDialog**: Full-page slide-in for add/edit tools",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1757,
+                  "content": "- **AddTestDialog**: Large centered modal for add/edit tests (fully responsive)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1758,
+                  "content": "- **TestRunnerDialog**: Test results viewer with two-panel layout (fully responsive with mobile navigation)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1759,
+                  "content": "- **BenchmarkResultsDialog**: Benchmark results viewer with two-panel layout (fully responsive with mobile navigation, same patterns as TestRunnerDialog)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1760,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1761,
+                  "content": "**Gotchas:**"
+                },
+                {
+                  "lineNumber": 1762,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1763,
+                  "content": "- Never use fixed padding (&#96;p-6&#96;) without mobile variant (&#96;p-4 md:p-6&#96;)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1764,
+                  "content": "- Never use fixed text sizes (&#96;text-lg&#96;) without mobile variant (&#96;text-base md:text-lg&#96;)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1765,
+                  "content": "- Sidebars must be &#96;w-full&#96; on mobile to prevent awkward half-screen display",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1766,
+                  "content": "- Left border should only show on desktop (&#96;md:border-l&#96;) for sidebars",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1990,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1991,
+                  "content": "1. **Tab Navigation**: Used in agent detail and simulation detail pages",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1992,
+                  "content": "   - Tabs sync with URL query param (&#96;?tab=agent&#96;, &#96;?tab=tools&#96;, etc.)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1993,
+                  "content": "   - Use &#96;useSearchParams&#96; to read initial tab value",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1994,
+                  "content": "   - Use &#96;window.history.replaceState&#96; to update URL without navigation side effects (avoids title reset issues caused by &#96;router.push&#96;)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1995,
+                  "content": "   - **Responsive tab bar implementation**:"
+                },
+                {
+                  "lineNumber": 1996,
+                  "content": "     &#96;&#96;&#96;tsx",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1997,
+                  "content": "     &lt;div",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1998,
+                  "content": "       className=\"hide-scrollbar flex items-center gap-3 md:gap-4 lg:gap-6 border-b border-border overflow-x-auto -mx-4 md:mx-0 px-4 md:px-0\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1999,
+                  "content": "       style={{ scrollbarWidth: \"none\", msOverflowStyle: \"none\" }}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2000,
+                  "content": "     &gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2003,
+                  "content": "       &lt;/button&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2004,
+                  "content": "     &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2005,
+                  "content": "     &#96;&#96;&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2006,
+                  "content": "   - Scrollbar hidden via &#96;.hide-scrollbar::-webkit-scrollbar { display: none; }&#96; in globals.css plus inline styles for cross-browser support",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2007,
+                  "content": "   - **Tab content container**: Wrap all tab content in a container with &#96;pt-2 md:pt-4&#96; for tight spacing below the tab bar (avoids excessive whitespace)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2008,
+                  "content": "   - **Responsive tab content patterns** (all agent detail tabs are responsive):"
+                },
+                {
+                  "lineNumber": 2009,
+                  "content": "     - **AgentTabContent**: Two-column layouts use &#96;flex flex-col md:grid md:grid-cols-2&#96; to stack on mobile. System prompt textarea uses &#96;md:flex-1 h-[350px] md:h-auto&#96; - explicit 350px height on mobile for balanced editing space without dominating screen, &#96;flex-1&#96; only on desktop to fill available vertical space",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2010,
+                  "content": "     - **ToolsTabContent**: Uses &#96;flex flex-col lg:grid lg:grid-cols-3&#96; to stack on mobile/tablet. In-built tools panel shows first on mobile via &#96;order-1 lg:order-2&#96;. Uses mobile card view alongside desktop table view",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2011,
+                  "content": "     - **DataExtractionTabContent**: Uses mobile card view alongside desktop table view. Add/Edit sidebar is full-width on mobile (&#96;w-full md:w-[40%]&#96;)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2012,
+                  "content": "     - **TestsTabContent**: Uses &#96;flex flex-col lg:flex-row&#96; to stack tests list above past runs on mobile. Past runs panel is &#96;w-full lg:w-[400px] xl:w-[560px]&#96; (not fixed width). Mobile card view for tests list",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2013,
+                  "content": "     - **SettingsTabContent**: Toggle/input controls stack below labels on mobile via &#96;flex-col-reverse md:flex-row&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2014,
+                  "content": "   - **Common responsive patterns across all tabs**:"
+                },
+                {
+                  "lineNumber": 2015,
+                  "content": "     - Text sizes scale: &#96;text-sm md:text-base&#96; for labels and inputs",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2016,
+                  "content": "     - Input heights scale: &#96;h-9 md:h-10&#96; for selects and buttons",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2017,
+                  "content": "     - Spacing scales: &#96;gap-4 md:gap-6&#96;, &#96;space-y-4 md:space-y-6&#96;, &#96;mt-2 md:mt-3&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2018,
+                  "content": "     - Padding scales: &#96;p-3 md:p-4&#96;, &#96;px-3 md:px-4&#96;, &#96;py-2 md:py-3&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2019,
+                  "content": "     - Empty states use: &#96;p-6 md:p-12&#96; padding, &#96;w-12 md:w-14 h-12 md:h-14&#96; icons",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3205,
+                  "content": "    {item.name}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3206,
+                  "content": "  &lt;/p&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3207,
+                  "content": "&lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3208,
+                  "content": "&#96;&#96;&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3209,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3210,
+                  "content": "This pattern is used in: Tools, Personas, Scenarios, Metrics list pages, and Simulation Run results table."
+                },
+                {
+                  "lineNumber": 3211,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3212,
+                  "content": "### Polling for Async Tasks",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3213,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3214,
+                  "content": "Async operations (simulations, tests, benchmarks, STT/TTS evaluations) follow this status flow:",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3215,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3601,
+                  "content": "11. **Form Validation**: Use &#96;validationAttempted&#96; state to show errors only after submit attempt",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3602,
+                  "content": "12. **Optimistic Updates**: Update local state immediately, then sync with backend",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3603,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3604,
+                  "content": "---",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3605,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3606,
+                  "content": "## Gotchas &amp; Edge Cases"
+                },
+                {
+                  "lineNumber": 3607,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3608,
+                  "content": "### API Calls",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3609,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3610,
+                  "content": "- **Preferred: Use &#96;@/lib/api&#96; utilities** - &#96;apiGet&#96;, &#96;apiPost&#96;, &#96;apiPut&#96;, &#96;apiDelete&#96; handle headers, 401 errors, and JSON parsing automatically",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3611,
+                  "content": "- **For CRUD pages**: Use &#96;useCrudResource&#96; hook from &#96;@/hooks&#96; for standardized list/create/update/delete patterns",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3672,
+                  "content": "      }",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3673,
+                  "content": "    };",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3674,
+                  "content": "  }, [isOpen, taskId]);",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3675,
+                  "content": "  &#96;&#96;&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3676,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3677,
+                  "content": "  - **Gotcha**: Without clearing at the start of the effect, re-renders or dependency changes can create multiple concurrent intervals, causing excessive API requests"
+                },
+                {
+                  "lineNumber": 3678,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3679,
+                  "content": "- **Dialog close prevention**: Disable dialog close while async operations (delete, save) are in progress",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3680,
+                  "content": "- **Unsaved changes confirmation**: Form dialogs (like AddTestDialog) should show a confirmation dialog when user clicks backdrop, asking \"Discard changes?\" with Cancel/Discard buttons",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3681,
+                  "content": "- **Key-based lookup with freeze-on-complete for live-updating dialogs**: When a dialog shows data that can complete (e.g., transcript with audio):",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3682,
+                  "content": "  1. Store a unique identifier (e.g., &#96;selectedSimulationKey = simulation.simulation_name&#96;)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3758,
+                  "content": "      }}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3759,
+                  "content": "    /&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3760,
+                  "content": "  &lt;/div&gt;;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3761,
+                  "content": "  &#96;&#96;&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3762,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3763,
+                  "content": "  **Gotchas**: Use &#96;white&#96; directly instead of &#96;hsl(var(--foreground))&#96; for the filled track color - CSS variables in inline styles may not render correctly. Add explicit track styling (&#96;-webkit-slider-runnable-track&#96;, &#96;-moz-range-track&#96;) with &#96;bg-transparent&#96; to let the gradient show through. The tooltip position formula &#96;calc(${percentage}% + ${8 - (percentage / 100) * 16}px)&#96; accounts for thumb width offset at edges"
+                },
+                {
+                  "lineNumber": 3764,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3765,
+                  "content": "- **Ref-based previous value tracking**: To only trigger effects when values actually change (not just when references change), use a ref to track the previous value:",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3766,
+                  "content": "  &#96;&#96;&#96;tsx",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3767,
+                  "content": "  const prevLengthRef = useRef(0);",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3768,
+                  "content": "  useEffect(() =&gt; {",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3859,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3860,
+                  "content": "### Forms",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3861,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3862,
+                  "content": "- **Character limits**: Implement maxLength on inputs AND display character count",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3863,
+                  "content": "- **Required fields**: Mark with red asterisk, validate on submit, highlight invalid fields",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3864,
+                  "content": "- **Invalid/error row styling**: Use &#96;bg-red-500/10&#96; for row backgrounds (e.g., STT empty predictions, form validation rows). For invalid inputs use &#96;border-red-500&#96;. This pattern is consistent across forms and data tables"
+                },
+                {
+                  "lineNumber": 3865,
+                  "content": "- **Nested parameters**: Tool parameters support arbitrary nesting (object → properties, array → items)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3866,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3867,
+                  "content": "### ZIP and CSV File Parsing (STT/TTS Evaluations)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3868,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3869,
+                  "content": "- **Direct path lookup, not search**: Instead of iterating through all ZIP entries, directly check expected locations. First try root (&#96;data.csv&#96;), then check top-level folders (&#96;folder/data.csv&#96;). This avoids accidentally matching macOS metadata files.",
+                  "isContextLine": true
+                }
+              ]
+            }
+          ],
+          "totalLines": 222,
+          "totalMatchedLines": 22
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good! I can see there are sections about gotchas. Let me add a note about the conditional rendering logic for simulation results since that's an important implementation detail that could trip someone up.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Perfect! Now let me check if there's a section about components using responsive patterns that needs to include the simulation run page.</details></think>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "Components using these patterns|components.*responsive",
+  "path": "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md",
+  "outputMode": "content",
+  "context": 10,
+  "caseInsensitive": true
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "Components using these patterns|components.*responsive",
+    "path": "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md",
+    "outputMode": "content",
+    "workspaceResults": {
+      "/Users/aman/Documents/repos/artpark/pense-frontend": {
+        "content": {
+          "matches": [
+            {
+              "file": ".cursor/rules/app-details.md",
+              "matches": [
+                {
+                  "lineNumber": 891,
+                  "content": "   - Component sizing: &#96;h-9 md:h-10&#96; for buttons/inputs",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 892,
+                  "content": "   - Spacing: **&#96;space-y-4 md:space-y-6&#96;** is the standard for all page containers and sections (never use fixed &#96;space-y-6&#96;), &#96;gap-4 md:gap-6&#96; for grid gaps, &#96;mb-3 md:mb-4&#96; for section margins",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 893,
+                  "content": "   - Tables convert to cards on mobile using &#96;hidden md:block&#96; and &#96;md:hidden&#96; patterns",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 894,
+                  "content": "   - Chart grids stack on mobile: &#96;grid-cols-1 md:grid-cols-2&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 895,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 896,
+                  "content": "**All responsive patterns are documented in &#96;.cursor/rules/design.md&#96;** under the \"App-Specific Responsive Patterns\" section. Refer to this document for detailed implementation guidelines.",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 897,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 898,
+                  "content": "**Dependencies affected:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 899,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 900,
+                  "content": "- **Removed**: &#96;src/components/MobileGuard.tsx&#96; (no longer needed)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 901,
+                  "content": "- **Updated**: All page components, &#96;AppLayout.tsx&#96;, and all dialogs/sidebars for responsive behavior"
+                },
+                {
+                  "lineNumber": 902,
+                  "content": "- **Pattern established**: List pages, detail pages, dialogs, sidebars, and empty states all follow consistent responsive patterns",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 903,
+                  "content": "- **Dialog components updated**: &#96;DeleteConfirmationDialog&#96;, &#96;NewSimulationDialog&#96;, &#96;RunTestDialog&#96;, &#96;AddToolDialog&#96;, &#96;AddTestDialog&#96;, and all inline sidebars (personas, scenarios, metrics)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 904,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 905,
+                  "content": "**Gotchas:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 906,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 907,
+                  "content": "- Always test both mobile and desktop views when making changes",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 908,
+                  "content": "- Use &#96;md:&#96; breakpoint as the primary switch between mobile and desktop layouts",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 909,
+                  "content": "- Preserve desktop UI while adding mobile optimizations (don't break existing desktop experience)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 910,
+                  "content": "- Tab navigation should use &#96;overflow-x-auto&#96; and &#96;whitespace-nowrap&#96; for mobile horizontal scrolling",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 911,
+                  "content": "- Action buttons in headers should use &#96;flex-shrink-0&#96; to prevent squishing",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1738,
+                  "content": "- **Border radius**: &#96;rounded-xl&#96; on mobile, &#96;rounded-2xl&#96; on desktop",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1739,
+                  "content": "- **Layout direction**: &#96;flex-col&#96; on mobile (vertical), &#96;flex-row&#96; on desktop (horizontal)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1740,
+                  "content": "- **Panel widths**: &#96;w-full&#96; on mobile, fractional widths on desktop (&#96;w-2/5&#96;, &#96;w-3/5&#96;)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1741,
+                  "content": "- **Padding**: &#96;p-4 md:p-6&#96; throughout",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1742,
+                  "content": "- **Button sizing**: &#96;h-9 md:h-10&#96;, &#96;px-4 md:px-5&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1743,
+                  "content": "- **Text sizing**: &#96;text-sm md:text-base&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1744,
+                  "content": "- **Mobile navigation**: Hide/show panels with conditional classes and back buttons",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1745,
+                  "content": "- **Stats display**: Show in header on desktop (&#96;hidden md:block&#96;), at top of list on mobile (&#96;md:hidden&#96;)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1746,
+                  "content": "- **Right panel structure**: Use &#96;flex-col overflow-hidden&#96; parent with &#96;flex-shrink-0&#96; back button and &#96;flex-1 overflow-y-auto&#96; content",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1747,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1748,
+                  "content": "**Components using these patterns:**"
+                },
+                {
+                  "lineNumber": 1749,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1750,
+                  "content": "- **DeleteConfirmationDialog**: Used across all list pages for delete confirmation",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1751,
+                  "content": "- **NewSimulationDialog**: Create simulation modal on simulations list page",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1752,
+                  "content": "- **RunTestDialog**: Run test modal on tests list page (already responsive)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1753,
+                  "content": "- **Personas sidebar**: Full-page slide-in for add/edit personas",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1754,
+                  "content": "- **Scenarios sidebar**: Full-page slide-in for add/edit scenarios",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1755,
+                  "content": "- **Metrics sidebar**: Full-page slide-in for add/edit metrics",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1756,
+                  "content": "- **AddToolDialog**: Full-page slide-in for add/edit tools",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1757,
+                  "content": "- **AddTestDialog**: Large centered modal for add/edit tests (fully responsive)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1758,
+                  "content": "- **TestRunnerDialog**: Test results viewer with two-panel layout (fully responsive with mobile navigation)",
+                  "isContextLine": true
+                }
+              ]
+            }
+          ],
+          "totalLines": 42,
+          "totalMatchedLines": 2
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I see the "Components using these patterns" section. I should add the simulation run page to this list since it now uses responsive tabs and conditional content display.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Great! I've updated the documentation comprehensively. Now let me mark those TODOs as completed since all the responsive work has been done in previous conversations (as mentioned in the summary).</details></think>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Make simulation runs table responsive (SimulationRunsTab)
+- [x] Make simulation run page results table responsive with mobile cards
+- [x] Make transcript dialog responsive
+
+</details>
+</tool-use>
+
+---
+
+_**User**_
+
+No need to show simulation results header inside results tab for mobile.
+
+---
+
+_**Agent (model claude-4.5-sonnet-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants to hide the "Simulation Results" header when viewing the Results tab on mobile. Currently, the header shows for both mobile and desktop. I need to make it only show on desktop or hide it on mobile when in the Results tab.
+
+Let me find where the "Simulation Results" header is displayed and add responsive classes to hide it on mobile.</details></think>
+
+---
+
+I'll hide the "Simulation Results" header on mobile view within the Results tab.
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I need to hide this header on mobile. I'll add the `hidden md:block` class to make it only visible on desktop.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Perfect! I've added `hidden md:block` to the "Simulation Results" header, which means:
+- On mobile (below md breakpoint): The header will be hidden
+- On desktop (md and above): The header will be displayed
+
+This makes sense because on mobile, the user explicitly clicked on the "Results" tab to see this content, so they already know what they're looking at. On desktop, the header is useful since the results appear inline below the Overall Metrics section without tab switching.</details></think>
+
+---
+
+Done! I've hidden the "Simulation Results" header on mobile by adding the `hidden md:block` classes. Now:
+
+- **Mobile**: The header is hidden when viewing the Results tab (users already know they're viewing results since they clicked the tab)
+- **Desktop**: The header remains visible as it appears below the Overall Metrics section
+
+This provides a cleaner mobile UI where the tab name itself serves as the section indicator.
+
+---
+
+_**User**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-sonnet-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user asked me to update the documentation if I made code changes. I did make a code change - I hid the "Simulation Results" header on mobile by adding `hidden md:block` to it. 
+
+Let me update the documentation to reflect this UI pattern where section headers are hidden on mobile when they're redundant with the active tab name.</details></think>
+
+---
+
+I'll update the documentation to reflect the pattern of hiding redundant section headers on mobile when using tabs.
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good, I've updated the documentation. Now let me also add this as a general UI pattern in the gotchas or patterns section, since this is a useful pattern for any tab-based content where the section header would be redundant with the tab name.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+The TODOs are already marked as completed from earlier, so no need to update them again. I've successfully updated the documentation with:
+
+1. The specific change to the Simulation Run Results page (header hidden on mobile in Results tab)
+2. A general pattern in the Gotchas section about hiding redundant headers in tabbed content on mobile
+
+This documents both the specific implementation and establishes it as a reusable pattern for future development.</details></think>
+
+---
+
+Done! I've updated the documentation to reflect the change:
+
+**What changed:**
+- "Simulation Results" header now hidden on mobile with `hidden md:block` class
+
+**Why it changed:**
+- The header is redundant on mobile when the user is already in the "Results" tab - the tab name itself indicates they're viewing results
+- Reduces visual clutter and improves mobile UX
+
+**New pattern introduced:**
+- **Redundant section headers in tabs**: When content appears under a tab that shares the same name as the section header, hide the header on mobile using `hidden md:block`. Desktop keeps the header for context since the content appears below metrics without tab switching.
+
+This pattern can be applied to other tabbed interfaces where section headers would be redundant with tab names on mobile.
+
+---
+
+_**User**_
+
+also for overall metrics in mobile mode - no need to show
+
+---
+
+_**Agent (model claude-4.5-sonnet-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants to hide the "Overall Metrics" header on mobile as well, since it would be redundant when viewing the Performance or Latency tabs.
+
+Let me find where the Overall Metrics header is located.</details></think>
+
+---
+
+I'll hide the "Overall Metrics" header on mobile as well since it's redundant with the tab names.
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Found it! The "Overall Metrics" header is at line 689-691. I need to hide it on mobile by adding `hidden md:block` classes.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good! Now both "Overall Metrics" and "Simulation Results" headers are hidden on mobile. Let me update the documentation to reflect this change as well.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+Status: **loading**
+
+</details>
+
+</tool-use>
 
 ---
 

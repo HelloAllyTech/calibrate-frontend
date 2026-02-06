@@ -633,7 +633,24 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
 
 **Simulation Run Results** (`/simulations/[uuid]/runs/[runId]`):
 
-- **Responsive Design**: Page follows the standard detail page responsive patterns with `space-y-4 md:space-y-6` spacing, responsive section headings (`text-base md:text-lg`), and responsive page title (`text-xl md:text-2xl`). Performance/latency metric grids stack on mobile (`grid-cols-1 md:grid-cols-2`).
+- **Responsive Design**: Page follows the standard detail page responsive patterns with `space-y-4 md:space-y-6` spacing, responsive section headings (`text-base md:text-lg`), and responsive page title (`text-xl md:text-2xl`). Performance/latency metric grids stack on mobile (`grid-cols-2 md:grid-cols-4`).
+
+- **Responsive Tab Structure** (for voice simulations with metrics):
+
+  - **Mobile (3 tabs)**: Results, Performance, Latency
+    - Results tab shows the simulation results table/cards
+    - Performance tab shows performance metrics only
+    - Latency tab shows latency metrics only
+    - Tab buttons use smaller sizing: `text-xs md:text-sm`, `px-3 md:px-4`
+    - "Results" tab is hidden on desktop with `md:hidden`
+    - **Section headers hidden on mobile**: Both "Overall Metrics" and "Simulation Results" headers use `hidden md:block` to avoid redundancy with tab names (cleaner mobile UI)
+  - **Desktop (2 tabs)**: Performance, Latency
+    - Both section headers visible for context
+    - Simulation results always shown below Overall Metrics section
+    - Performance tab shows performance metrics only
+    - Latency tab shows latency metrics only
+  - **Text simulations**: No tabs shown, all metrics displayed inline with visible headers
+  - **Responsive metric fonts**: Metric labels use `text-xs md:text-sm`, values use `text-sm md:text-base`, icons use `w-3.5 md:w-4 h-3.5 md:h-4` for better readability on mobile
 
 - **Polling & Intermediate Results**:
 
@@ -649,12 +666,14 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
     - **First column structure**: Uses `relative` container with spinner positioned `absolute inset-0`, play button centered with `relative z-10`. Spinner wraps around the play button visually.
     - **Metric column spinners**: Each metric cell shows `w-5 h-5 flex-shrink-0` spinner when `evaluation_results` is null; yellow when processing, gray when waiting
 
-- **Overall Metrics** (only shown when status is "done", aggregated across all simulations):
+- **Overall Metrics Section** (only shown when status is "done", aggregated across all simulations):
 
-  - Tool calls accuracy (mean ± std)
-  - Answer completeness
-  - Assistant behavior
-  - Question completeness
+  - Displays below status pills and above simulation results
+  - **Tab structure**: For voice simulations with metrics, shows Results/Performance/Latency tabs on mobile, Performance/Latency tabs on desktop
+  - **Metrics shown**:
+    - Performance: Tool calls accuracy, answer completeness, assistant behavior, question_completeness, stt_llm_judge (percentage display)
+    - Latency: STT/LLM/TTS TTFB and processing time (millisecond/second display)
+  - Calculated from `runData.metrics` or derived from individual simulation `evaluation_results`
 
 - **Per-Simulation Results Table** (shows intermediate results as each simulation completes):
 
@@ -718,10 +737,12 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
   - **Tool response display** (for webhook calls): Only shows `role: "tool"` messages where content is valid JSON with `type: "webhook_response"`. Displays the `response` object as **pretty-printed JSON** in a monospace `<pre>` block with "Agent Tool Response" header (intentionally different from tool call form fields to distinguish input vs output). **Error handling**: If `response.status === "error"`, displays with red styling: warning icon, "Tool Response Error" label in red, `border-red-500` border, and `text-red-400` for the JSON content
   - Per-message audio players for voice simulations (matching `audio_urls`)
 
-- **Latency Metrics** (for voice simulations, in Performance/Latency tabs):
-  - STT latency (TTFB, processing time)
-  - LLM latency
-  - TTS latency
+- **Simulation Results Conditional Display**:
+  - **Mobile with metrics (voice type)**: Only shows in "Results" tab (`activeMetricsTab === "results"`)
+  - **Desktop**: Always shows below Overall Metrics section (no tab switching)
+  - **Text simulations**: Always shows (no tabs, no conditional display)
+  - Implementation uses `window.innerWidth < 768` check combined with `activeMetricsTab` state to conditionally render
+  - Prevents duplicate display on mobile when switching between Performance/Latency tabs
 
 ---
 
@@ -1739,6 +1760,7 @@ Key styling:
 - **AddToolDialog**: Full-page slide-in for add/edit tools
 - **AddTestDialog**: Large centered modal for add/edit tests (fully responsive)
 - **TestRunnerDialog**: Test results viewer with two-panel layout (fully responsive with mobile navigation)
+- **Simulation Run Page**: `/simulations/[uuid]/runs/[runId]` - Responsive tabs (3 tabs on mobile: Results/Performance/Latency, 2 tabs on desktop: Performance/Latency), conditional content display, reduced font sizes on mobile
 - **BenchmarkResultsDialog**: Benchmark results viewer with two-panel layout (fully responsive with mobile navigation, same patterns as TestRunnerDialog)
 
 **Gotchas:**
@@ -1747,6 +1769,8 @@ Key styling:
 - Never use fixed text sizes (`text-lg`) without mobile variant (`text-base md:text-lg`)
 - Sidebars must be `w-full` on mobile to prevent awkward half-screen display
 - Left border should only show on desktop (`md:border-l`) for sidebars
+- **Tab-based content visibility**: When showing different content based on active tab + screen size (e.g., simulation run results), use `window.innerWidth` checks combined with state to conditionally render. Pattern: Check if mobile (`window.innerWidth < 768`) AND wrong tab before returning null. Example: Simulation run results only show in "Results" tab on mobile but always show on desktop
+- **Redundant section headers in tabs**: Hide section headers on mobile when they duplicate or are implied by tab names. Use `hidden md:block` on the header. Pattern: If content appears under tabs like "Results", "Performance", or "Latency", hide the corresponding section headers ("Overall Metrics", "Simulation Results") on mobile. Desktop keeps headers visible for context since content appears without tab switching. Example: Both "Overall Metrics" and "Simulation Results" headers hidden on mobile in simulation run page
 - Always include `mx-2 md:mx-4` on centered dialogs for mobile edge spacing
 - Input/button heights must be `h-9` on mobile for proper touch targets (not `h-8`)
 - Two-column layouts must stack vertically on mobile (`flex-col md:flex-row`)

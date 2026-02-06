@@ -165,8 +165,8 @@ export default function SimulationRunPage() {
   }, [selectedSimulationKey, runData?.simulation_results]);
 
   const [activeMetricsTab, setActiveMetricsTab] = useState<
-    "performance" | "latency"
-  >("performance");
+    "results" | "performance" | "latency"
+  >("results");
 
   // Ref for transcript container to auto-scroll
   const transcriptContainerRef = useRef<HTMLDivElement>(null);
@@ -686,16 +686,27 @@ export default function SimulationRunPage() {
 
                 return (
                   <div>
-                    <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4">
+                    <h2 className="hidden md:block text-base md:text-lg font-semibold mb-3 md:mb-4">
                       Overall Metrics
                     </h2>
 
-                    {/* Tab Navigation - only show for non-text types */}
+                    {/* Tab Navigation - 3 tabs for mobile (Results, Performance, Latency), 2 tabs for desktop (Performance, Latency) - only show for non-text types */}
                     {!isTextType && (
                       <div className="flex gap-2 border-b border-border mb-4">
+                        {/* Results tab - mobile only */}
+                        <button
+                          onClick={() => setActiveMetricsTab("results")}
+                          className={`md:hidden px-3 py-2 text-xs font-medium border-b-2 transition-colors cursor-pointer ${
+                            activeMetricsTab === "results"
+                              ? "border-foreground text-foreground"
+                              : "border-transparent text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          Results
+                        </button>
                         <button
                           onClick={() => setActiveMetricsTab("performance")}
-                          className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors cursor-pointer ${
+                          className={`px-3 md:px-4 py-2 text-xs md:text-sm font-medium border-b-2 transition-colors cursor-pointer ${
                             activeMetricsTab === "performance"
                               ? "border-foreground text-foreground"
                               : "border-transparent text-muted-foreground hover:text-foreground"
@@ -705,7 +716,7 @@ export default function SimulationRunPage() {
                         </button>
                         <button
                           onClick={() => setActiveMetricsTab("latency")}
-                          className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors cursor-pointer ${
+                          className={`px-3 md:px-4 py-2 text-xs md:text-sm font-medium border-b-2 transition-colors cursor-pointer ${
                             activeMetricsTab === "latency"
                               ? "border-foreground text-foreground"
                               : "border-transparent text-muted-foreground hover:text-foreground"
@@ -729,12 +740,12 @@ export default function SimulationRunPage() {
                             key === "stt_llm_judge_score";
                           return (
                             <div key={key}>
-                              <div className="text-sm text-muted-foreground mb-2 flex items-center gap-1.5">
+                              <div className="text-xs md:text-sm text-muted-foreground mb-2 flex items-center gap-1.5">
                                 {key}
                                 {isSttLlmJudge && (
                                   <Tooltip content="This is the speech to text accuracy for the text spoken by the simulated user calculated by comparing it with the transcribed text by the agent">
                                     <svg
-                                      className="w-4 h-4 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                                      className="w-3.5 md:w-4 h-3.5 md:h-4 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                                       fill="none"
                                       viewBox="0 0 24 24"
                                       stroke="currentColor"
@@ -749,7 +760,7 @@ export default function SimulationRunPage() {
                                   </Tooltip>
                                 )}
                               </div>
-                              <div className="text-base font-medium text-foreground">
+                              <div className="text-sm md:text-base font-medium text-foreground">
                                 {Math.round(mean * 100)}%
                               </div>
                             </div>
@@ -768,12 +779,12 @@ export default function SimulationRunPage() {
                             const tooltipContent = getLatencyMetricTooltip(key);
                             return (
                               <div key={key}>
-                                <div className="text-sm text-muted-foreground mb-2 flex items-center gap-1.5">
+                                <div className="text-xs md:text-sm text-muted-foreground mb-2 flex items-center gap-1.5">
                                   {key}
                                   {tooltipContent && (
                                     <Tooltip content={tooltipContent}>
                                       <svg
-                                        className="w-4 h-4 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                                        className="w-3.5 md:w-4 h-3.5 md:h-4 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         stroke="currentColor"
@@ -788,7 +799,7 @@ export default function SimulationRunPage() {
                                     </Tooltip>
                                   )}
                                 </div>
-                                <div className="text-base font-medium text-foreground">
+                                <div className="text-sm md:text-base font-medium text-foreground">
                                   {mean < 1
                                     ? `${(mean * 1000).toFixed(2)}ms`
                                     : `${mean.toFixed(2)}s`}
@@ -802,10 +813,23 @@ export default function SimulationRunPage() {
                 );
               })()}
 
-            {/* Simulation Results Table */}
+            {/* Simulation Results Table - show in Results tab on mobile, always show on desktop */}
             {runData.simulation_results &&
               runData.simulation_results.length > 0 &&
               (() => {
+                // On mobile (voice type with metrics): only show when Results tab is active
+                // On desktop: always show
+                // For text type: always show (no tabs)
+                const isTextType = runData.type === "text";
+                const shouldShow =
+                  isTextType ||
+                  !runData.metrics ||
+                  activeMetricsTab === "results";
+
+                if (!shouldShow && window.innerWidth < 768) {
+                  return null;
+                }
+
                 // Latency metrics to exclude from the table (shown in latency tab)
                 const latencyMetricKeys = [
                   "stt/ttft",
@@ -839,7 +863,7 @@ export default function SimulationRunPage() {
 
                 return (
                   <>
-                    <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4">
+                    <h2 className="hidden md:block text-base md:text-lg font-semibold mb-3 md:mb-4">
                       Simulation Results
                     </h2>
 
