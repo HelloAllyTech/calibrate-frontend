@@ -81,7 +81,7 @@ export default function SimulationRunPage() {
   const backendAccessToken = (session as any)?.backendAccessToken;
   const uuid = params.uuid as string;
   const runId = params.runId as string;
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [runData, setRunData] = useState<RunData | null>(null);
   const [simulationName, setSimulationName] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -93,6 +93,12 @@ export default function SimulationRunPage() {
   >(null);
   // Store a frozen copy of the simulation once it's complete to prevent re-renders
   const frozenSimulationRef = useRef<SimulationResult | null>(null);
+
+  // Initialize sidebar state based on screen size
+  useEffect(() => {
+    const isDesktop = window.innerWidth >= 768;
+    setSidebarOpen(isDesktop);
+  }, []);
 
   // Refresh run data to get fresh presigned URLs when audio fails to load
   const refreshRunData = useCallback(async () => {
@@ -136,7 +142,7 @@ export default function SimulationRunPage() {
     }
 
     const currentSim = runData.simulation_results.find(
-      (sim) => sim.simulation_name === selectedSimulationKey,
+      (sim) => sim.simulation_name === selectedSimulationKey
     );
 
     if (!currentSim) {
@@ -331,28 +337,28 @@ export default function SimulationRunPage() {
 
   const getEvaluationResult = (
     simulation: SimulationResult,
-    metricName: string,
+    metricName: string
   ) => {
     if (!simulation.evaluation_results) return null;
     // Handle mapping: stt_llm_judge metric key maps to stt_llm_judge_score evaluation result
     const evaluationName =
       metricName === "stt_llm_judge" ? "stt_llm_judge_score" : metricName;
     const result = simulation.evaluation_results.find(
-      (r) => r.name === evaluationName || r.name === metricName,
+      (r) => r.name === evaluationName || r.name === metricName
     );
     return result?.value ?? 0;
   };
 
   const getEvaluationReasoning = (
     simulation: SimulationResult,
-    metricName: string,
+    metricName: string
   ) => {
     if (!simulation.evaluation_results) return "";
     // Handle mapping: stt_llm_judge metric key maps to stt_llm_judge_score evaluation result
     const evaluationName =
       metricName === "stt_llm_judge" ? "stt_llm_judge_score" : metricName;
     const result = simulation.evaluation_results.find(
-      (r) => r.name === evaluationName || r.name === metricName,
+      (r) => r.name === evaluationName || r.name === metricName
     );
     return result?.reasoning ?? "";
   };
@@ -378,10 +384,10 @@ export default function SimulationRunPage() {
       component === "stt"
         ? "speech to text"
         : component === "llm"
-          ? "language model"
-          : component === "tts"
-            ? "text to speech"
-            : component;
+        ? "language model"
+        : component === "tts"
+        ? "text to speech"
+        : component;
 
     if (metricType === "ttft") {
       return `Time to first byte for ${componentName}`;
@@ -408,7 +414,7 @@ export default function SimulationRunPage() {
     entry: TranscriptEntry,
     entryIndex: number,
     audioUrls: string[] | undefined,
-    filteredTranscript: TranscriptEntry[],
+    filteredTranscript: TranscriptEntry[]
   ): string | null => {
     if (!audioUrls || !runData || runData.type !== "voice") {
       return null;
@@ -465,7 +471,7 @@ export default function SimulationRunPage() {
         </svg>
       </button>
       <div className="flex items-center gap-3">
-        <h1 className="text-2xl font-semibold">
+        <h1 className="text-xl md:text-2xl font-semibold">
           {runData?.name || "Loading..."}
         </h1>
         {(runData?.status.toLowerCase() === "in_progress" ||
@@ -512,7 +518,7 @@ export default function SimulationRunPage() {
         </svg>
       </button>
       <div>
-        <h1 className="text-2xl font-semibold">Loading...</h1>
+        <h1 className="text-xl md:text-2xl font-semibold">Loading...</h1>
       </div>
     </div>
   );
@@ -535,7 +541,7 @@ export default function SimulationRunPage() {
       onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
       customHeader={getHeader()}
     >
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6 py-4 md:py-6">
         {isLoading ? (
           <div className="flex items-center justify-center gap-3 py-8">
             <svg
@@ -559,11 +565,11 @@ export default function SimulationRunPage() {
             </svg>
           </div>
         ) : error ? (
-          <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-            <p className="text-base text-red-500 mb-2">{error}</p>
+          <div className="border border-border rounded-xl p-8 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+            <p className="text-sm md:text-base text-red-500 mb-2">{error}</p>
             <button
               onClick={() => window.location.reload()}
-              className="text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              className="text-sm md:text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             >
               Retry
             </button>
@@ -571,19 +577,19 @@ export default function SimulationRunPage() {
         ) : errorCode ? (
           <NotFoundState errorCode={errorCode} />
         ) : runData ? (
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             {/* Status and Type Pills */}
             <div className="flex items-center gap-2">
               <span
                 className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${getStatusBadgeClass(
-                  runData.status,
+                  runData.status
                 )}`}
               >
                 {formatStatus(runData.status)}
               </span>
               <span
                 className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${getTypeBadgeClass(
-                  runData.type,
+                  runData.type
                 )}`}
               >
                 {runData.type}
@@ -650,7 +656,7 @@ export default function SimulationRunPage() {
                     if (simulation.evaluation_results) {
                       latencyKeys.forEach((key) => {
                         const result = simulation.evaluation_results!.find(
-                          (r) => r.name === key,
+                          (r) => r.name === key
                         );
                         if (result && typeof result.value === "number") {
                           latencyValues[key].push(result.value);
@@ -680,7 +686,7 @@ export default function SimulationRunPage() {
 
                 return (
                   <div>
-                    <h2 className="text-lg font-semibold mb-4">
+                    <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4">
                       Overall Metrics
                     </h2>
 
@@ -814,7 +820,7 @@ export default function SimulationRunPage() {
                 let displayMetricKeys: string[] = [];
                 if (runData.metrics) {
                   displayMetricKeys = Object.keys(runData.metrics).filter(
-                    (key) => !latencyMetricKeys.includes(key),
+                    (key) => !latencyMetricKeys.includes(key)
                   );
                 } else {
                   // Derive from simulation_results' evaluation_results
@@ -833,10 +839,12 @@ export default function SimulationRunPage() {
 
                 return (
                   <>
-                    <h2 className="text-lg font-semibold mb-4">
+                    <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4">
                       Simulation Results
                     </h2>
-                    <div className="border border-border rounded-xl overflow-hidden bg-muted/20">
+
+                    {/* Desktop Table View */}
+                    <div className="hidden md:block border border-border rounded-xl overflow-hidden bg-muted/20">
                       <div className="overflow-x-auto">
                         <table className="w-full table-fixed">
                           <thead className="bg-background border-t border-border">
@@ -877,7 +885,7 @@ export default function SimulationRunPage() {
                                 // Priority: completed (3) > processing (2) > waiting (1)
                                 const getPriority = (
                                   hasTranscript: boolean,
-                                  hasResults: boolean,
+                                  hasResults: boolean
                                 ) => {
                                   if (hasResults) return 3; // completed
                                   if (hasTranscript) return 2; // processing (yellow spinner)
@@ -987,14 +995,14 @@ export default function SimulationRunPage() {
                                     {displayMetricKeys.map((metricKey) => {
                                       const value = getEvaluationResult(
                                         simulation,
-                                        metricKey,
+                                        metricKey
                                       );
                                       const isSttLlmJudge =
                                         metricKey === "stt_llm_judge" ||
                                         metricKey === "stt_llm_judge_score";
                                       const reasoning = getEvaluationReasoning(
                                         simulation,
-                                        metricKey,
+                                        metricKey
                                       );
 
                                       // If evaluation_results is null, show spinner (metrics still processing)
@@ -1038,7 +1046,7 @@ export default function SimulationRunPage() {
                                       // For stt_llm_judge, show percentage
                                       if (isSttLlmJudge) {
                                         const percentage = parseFloat(
-                                          (value * 100).toFixed(2),
+                                          (value * 100).toFixed(2)
                                         );
                                         return (
                                           <td
@@ -1103,6 +1111,199 @@ export default function SimulationRunPage() {
                         </table>
                       </div>
                     </div>
+
+                    {/* Mobile Card View */}
+                    <div className="md:hidden space-y-4">
+                      {[...runData.simulation_results]
+                        .sort((a, b) => {
+                          const aHasTranscript =
+                            (a.transcript?.length ?? 0) > 0;
+                          const bHasTranscript =
+                            (b.transcript?.length ?? 0) > 0;
+                          const aHasResults = !!a.evaluation_results;
+                          const bHasResults = !!b.evaluation_results;
+
+                          const getPriority = (
+                            hasTranscript: boolean,
+                            hasResults: boolean
+                          ) => {
+                            if (hasResults) return 3;
+                            if (hasTranscript) return 2;
+                            return 1;
+                          };
+
+                          return (
+                            getPriority(bHasTranscript, bHasResults) -
+                            getPriority(aHasTranscript, aHasResults)
+                          );
+                        })
+                        .map((simulation, index) => {
+                          const isProcessing =
+                            isSimulationProcessing(simulation);
+                          const isWaiting = isSimulationWaiting(simulation);
+                          const hasTranscript =
+                            (simulation.transcript?.length ?? 0) > 0;
+
+                          return (
+                            <div
+                              key={index}
+                              className="border border-border rounded-xl overflow-hidden bg-background"
+                            >
+                              <div className="p-5">
+                                {/* Persona and Scenario with Labels */}
+                                <div className="space-y-3 mb-4 pb-4 border-b border-border/50">
+                                  <div>
+                                    <div className="text-xs text-muted-foreground mb-1">
+                                      Persona
+                                    </div>
+                                    <div className="text-sm font-medium text-foreground">
+                                      {simulation.persona.label}
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <div className="text-xs text-muted-foreground mb-1">
+                                      Scenario
+                                    </div>
+                                    <div className="text-sm font-medium text-foreground">
+                                      {simulation.scenario.name}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Metrics Section */}
+                                {displayMetricKeys.length > 0 && (
+                                  <div className="mb-4">
+                                    <div className="text-xs font-semibold text-foreground mb-3">
+                                      Metrics
+                                    </div>
+                                    <div className="space-y-3">
+                                      {displayMetricKeys.map((metricKey) => {
+                                        const value = getEvaluationResult(
+                                          simulation,
+                                          metricKey
+                                        );
+                                        const isSttLlmJudge =
+                                          metricKey === "stt_llm_judge" ||
+                                          metricKey === "stt_llm_judge_score";
+                                        const reasoning =
+                                          getEvaluationReasoning(
+                                            simulation,
+                                            metricKey
+                                          );
+
+                                        return (
+                                          <div
+                                            key={metricKey}
+                                            className="flex items-center justify-between py-2 border-b border-border/50 last:border-b-0"
+                                          >
+                                            <span className="text-xs text-muted-foreground">
+                                              {metricKey}
+                                            </span>
+                                            <div className="flex items-center gap-2">
+                                              {value === null ? (
+                                                <svg
+                                                  className={`w-4 h-4 flex-shrink-0 animate-spin ${
+                                                    isProcessing
+                                                      ? "text-yellow-500"
+                                                      : "text-gray-500"
+                                                  }`}
+                                                  fill="none"
+                                                  viewBox="0 0 24 24"
+                                                >
+                                                  <circle
+                                                    className="opacity-25"
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="10"
+                                                    stroke="currentColor"
+                                                    strokeWidth="4"
+                                                  ></circle>
+                                                  <path
+                                                    className="opacity-75"
+                                                    fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                                  ></path>
+                                                </svg>
+                                              ) : isSttLlmJudge ? (
+                                                <span className="text-sm font-medium text-foreground">
+                                                  {parseFloat(
+                                                    (value * 100).toFixed(2)
+                                                  )}
+                                                  %
+                                                </span>
+                                              ) : (
+                                                <div className="flex items-center gap-1.5">
+                                                  <span
+                                                    className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                                                      value === 1
+                                                        ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400"
+                                                        : "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400"
+                                                    }`}
+                                                  >
+                                                    {value === 1
+                                                      ? "Pass"
+                                                      : "Fail"}
+                                                  </span>
+                                                  {reasoning && (
+                                                    <Tooltip
+                                                      content={reasoning}
+                                                    >
+                                                      <svg
+                                                        className="w-3.5 h-3.5 text-muted-foreground cursor-pointer"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
+                                                        strokeWidth={2}
+                                                      >
+                                                        <path
+                                                          strokeLinecap="round"
+                                                          strokeLinejoin="round"
+                                                          d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                                                        />
+                                                      </svg>
+                                                    </Tooltip>
+                                                  )}
+                                                </div>
+                                              )}
+                                            </div>
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Transcript Button */}
+                                {hasTranscript && (
+                                  <button
+                                    onClick={() =>
+                                      openTranscriptDialog(simulation)
+                                    }
+                                    className="w-full h-9 flex items-center justify-center gap-2 rounded-md text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
+                                  >
+                                    <svg
+                                      className="w-4 h-4"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                      strokeWidth={2}
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"
+                                      />
+                                    </svg>
+                                    {isProcessing
+                                      ? "Processing..."
+                                      : "View Transcript"}
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                    </div>
                   </>
                 );
               })()}
@@ -1118,10 +1319,10 @@ export default function SimulationRunPage() {
             className="absolute inset-0 bg-black/50"
             onClick={closeTranscriptDialog}
           />
-          {/* Sidebar */}
-          <div className="relative w-[40%] min-w-[500px] bg-background border-l border-border flex flex-col h-full shadow-2xl">
+          {/* Sidebar - full width on mobile, 40% on desktop */}
+          <div className="relative w-full md:w-[40%] md:min-w-[500px] bg-background border-l border-border flex flex-col h-full shadow-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4">
+            <div className="flex items-center justify-between px-4 md:px-6 py-4">
               <div className="flex items-center gap-3">
                 <svg
                   className="w-5 h-5 text-muted-foreground"
@@ -1136,7 +1337,9 @@ export default function SimulationRunPage() {
                     d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"
                   />
                 </svg>
-                <h2 className="text-lg font-semibold">Transcript</h2>
+                <h2 className="text-base md:text-lg font-semibold">
+                  Transcript
+                </h2>
               </div>
               <button
                 onClick={closeTranscriptDialog}
@@ -1160,7 +1363,7 @@ export default function SimulationRunPage() {
 
             {/* Full Conversation Audio Player - show for voice runs with conversation_wav_url */}
             {selectedSimulation.conversation_wav_url && (
-              <div className="px-6 pb-4 border-b border-border">
+              <div className="px-4 md:px-6 pb-4 border-b border-border">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-sm font-medium text-foreground">
                     Hear the full conversation
@@ -1181,7 +1384,7 @@ export default function SimulationRunPage() {
             {/* Content */}
             <div
               ref={transcriptContainerRef}
-              className="flex-1 overflow-y-auto p-6"
+              className="flex-1 overflow-y-auto p-4 md:p-6"
             >
               <div className="space-y-4">
                 {(() => {
@@ -1220,7 +1423,7 @@ export default function SimulationRunPage() {
                       entry,
                       index,
                       selectedSimulation.audio_urls,
-                      filteredTranscript,
+                      filteredTranscript
                     );
                     return (
                       <div
@@ -1242,7 +1445,9 @@ export default function SimulationRunPage() {
                         {audioUrl && (
                           <div
                             className={
-                              entry.role === "user" ? "w-1/2" : "w-1/2"
+                              entry.role === "user"
+                                ? "w-full md:w-1/2"
+                                : "w-full md:w-1/2"
                             }
                           >
                             <audio
@@ -1259,7 +1464,7 @@ export default function SimulationRunPage() {
 
                         {/* User Message */}
                         {entry.role === "user" && entry.content && (
-                          <div className="w-1/2">
+                          <div className="w-full md:w-1/2">
                             <div className="px-4 py-3 rounded-xl text-sm text-foreground bg-muted border border-border whitespace-pre-wrap">
                               {entry.content}
                             </div>
@@ -1270,7 +1475,7 @@ export default function SimulationRunPage() {
                         {entry.role === "assistant" &&
                           entry.content &&
                           !entry.tool_calls && (
-                            <div className="w-1/2">
+                            <div className="w-full md:w-1/2">
                               <div className="px-4 py-3 rounded-xl text-sm text-foreground bg-accent border border-border whitespace-pre-wrap">
                                 {entry.content}
                               </div>
@@ -1279,12 +1484,12 @@ export default function SimulationRunPage() {
 
                         {/* Tool Call Display */}
                         {entry.role === "assistant" && entry.tool_calls && (
-                          <div className="w-1/2">
+                          <div className="w-full md:w-1/2">
                             {entry.tool_calls.map((toolCall, toolIndex) => {
                               let parsedArgs: Record<string, any> = {};
                               try {
                                 parsedArgs = JSON.parse(
-                                  toolCall.function.arguments,
+                                  toolCall.function.arguments
                                 );
                               } catch {
                                 parsedArgs = {};
@@ -1304,57 +1509,61 @@ export default function SimulationRunPage() {
                                 return String(val);
                               };
 
-                                              return (
-                                                <div
-                                                  key={toolIndex}
-                                                  className="bg-muted border border-border rounded-2xl p-4 mb-2"
-                                                >
-                                                  <div className="flex items-center gap-2 mb-2">
-                                                    <svg
-                                                      className="w-4 h-4 text-muted-foreground"
-                                                      fill="none"
-                                                      viewBox="0 0 24 24"
-                                                      stroke="currentColor"
-                                                      strokeWidth={1.5}
-                                                    >
-                                                      <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"
-                                                      />
-                                                    </svg>
-                                                    <span className="text-sm font-medium text-foreground">
-                                                      {toolCall.function.name}
-                                                    </span>
-                                                  </div>
-                                                  {Object.keys(parsedArgs).filter(k => k !== "headers").length > 0 && (
-                                                    <div className="space-y-3 mt-3">
-                                                      {Object.entries(parsedArgs)
-                                                        .filter(([key]) => key !== "headers")
-                                                        .map(
-                                                        ([key, value], paramIndex) => {
-                                                          const displayValue = formatValue(value);
-                                                          const isMultiLine = displayValue.includes("\n");
-                                                          return (
-                                                            <div key={paramIndex}>
-                                                              <label className="block text-sm font-medium text-foreground mb-1.5">
-                                                                {key}
-                                                              </label>
-                                                              <div
-                                                                className={`px-3 py-2 bg-background border border-border rounded-lg text-sm text-muted-foreground whitespace-pre-wrap break-all ${
-                                                                  isMultiLine ? "font-mono text-xs" : ""
-                                                                }`}
-                                                              >
-                                                                {displayValue}
-                                                              </div>
-                                                            </div>
-                                                          );
-                                                        },
-                                                      )}
-                                                    </div>
-                                                  )}
-                                                </div>
-                                              );
+                              return (
+                                <div
+                                  key={toolIndex}
+                                  className="bg-muted border border-border rounded-2xl p-4 mb-2"
+                                >
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <svg
+                                      className="w-4 h-4 text-muted-foreground"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                      strokeWidth={1.5}
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"
+                                      />
+                                    </svg>
+                                    <span className="text-sm font-medium text-foreground">
+                                      {toolCall.function.name}
+                                    </span>
+                                  </div>
+                                  {Object.keys(parsedArgs).filter(
+                                    (k) => k !== "headers"
+                                  ).length > 0 && (
+                                    <div className="space-y-3 mt-3">
+                                      {Object.entries(parsedArgs)
+                                        .filter(([key]) => key !== "headers")
+                                        .map(([key, value], paramIndex) => {
+                                          const displayValue =
+                                            formatValue(value);
+                                          const isMultiLine =
+                                            displayValue.includes("\n");
+                                          return (
+                                            <div key={paramIndex}>
+                                              <label className="block text-sm font-medium text-foreground mb-1.5">
+                                                {key}
+                                              </label>
+                                              <div
+                                                className={`px-3 py-2 bg-background border border-border rounded-lg text-sm text-muted-foreground whitespace-pre-wrap break-all ${
+                                                  isMultiLine
+                                                    ? "font-mono text-xs"
+                                                    : ""
+                                                }`}
+                                              >
+                                                {displayValue}
+                                              </div>
+                                            </div>
+                                          );
+                                        })}
+                                    </div>
+                                  )}
+                                </div>
+                              );
                             })}
                           </div>
                         )}
@@ -1385,10 +1594,14 @@ export default function SimulationRunPage() {
                             const isError = parsed.status === "error";
 
                             // Format response as pretty JSON
-                            const jsonString = JSON.stringify(response, null, 2);
+                            const jsonString = JSON.stringify(
+                              response,
+                              null,
+                              2
+                            );
 
                             return (
-                              <div className="w-1/2">
+                              <div className="w-full md:w-1/2">
                                 <div className="flex items-center gap-2 mb-2">
                                   {isError ? (
                                     <>
@@ -1415,8 +1628,18 @@ export default function SimulationRunPage() {
                                     </span>
                                   )}
                                 </div>
-                                <div className={`bg-muted rounded-2xl p-4 border ${isError ? "border-red-500" : "border-border"}`}>
-                                  <pre className={`text-sm font-mono whitespace-pre-wrap break-all ${isError ? "text-red-400" : "text-foreground"}`}>
+                                <div
+                                  className={`bg-muted rounded-2xl p-4 border ${
+                                    isError ? "border-red-500" : "border-border"
+                                  }`}
+                                >
+                                  <pre
+                                    className={`text-sm font-mono whitespace-pre-wrap break-all ${
+                                      isError
+                                        ? "text-red-400"
+                                        : "text-foreground"
+                                    }`}
+                                  >
                                     {jsonString}
                                   </pre>
                                 </div>

@@ -69,7 +69,7 @@ export default function TTSEvaluationDetailPage() {
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
   const taskId = params.uuid as string;
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [evaluationResult, setEvaluationResult] =
     useState<EvaluationResult | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -82,6 +82,12 @@ export default function TTSEvaluationDetailPage() {
     null
   );
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Initialize sidebar state based on screen size
+  useEffect(() => {
+    const isDesktop = window.innerWidth >= 768;
+    setSidebarOpen(isDesktop);
+  }, []);
 
   // Set page title
   useEffect(() => {
@@ -154,7 +160,11 @@ export default function TTSEvaluationDetailPage() {
         }
 
         // Start polling if not done or failed
-        if (result.status !== "done" && result.status !== "failed" && !pollingIntervalRef.current) {
+        if (
+          result.status !== "done" &&
+          result.status !== "failed" &&
+          !pollingIntervalRef.current
+        ) {
           pollingIntervalRef.current = setInterval(() => {
             pollTaskStatus(taskId, backendUrl);
           }, POLLING_INTERVAL_MS);
@@ -241,7 +251,7 @@ export default function TTSEvaluationDetailPage() {
       onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
       customHeader={customHeader}
     >
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6">
         {/* Loading State */}
         {isLoading && (
           <div className="flex items-center justify-center gap-3 py-8">
@@ -302,7 +312,6 @@ export default function TTSEvaluationDetailPage() {
             {evaluationResult.provider_results &&
               evaluationResult.provider_results.length > 0 && (
                 <>
-
                   {/* Tab Navigation */}
                   <div className="flex gap-2 border-b border-border">
                     {/* Only show Leaderboard tab when done */}
@@ -353,7 +362,7 @@ export default function TTSEvaluationDetailPage() {
 
                   {/* About Tab */}
                   {activeTab === "about" && (
-                    <div className="space-y-6">
+                    <div className="space-y-4 md:space-y-6">
                       <div className="border rounded-xl overflow-hidden">
                         <table className="w-full">
                           <thead className="bg-muted/50 border-b border-border">
@@ -415,7 +424,7 @@ export default function TTSEvaluationDetailPage() {
 
                   {/* Leaderboard Tab */}
                   {activeTab === "leaderboard" && (
-                    <div className="space-y-6 -mx-8 px-8 w-[calc(100vw-260px)] ml-[calc((260px-100vw)/2+50%)] relative">
+                    <div className="space-y-4 md:space-y-6 -mx-4 md:-mx-8 px-4 md:px-8 w-[calc(100vw-32px)] md:w-[calc(100vw-260px)] ml-[calc((32px-100vw)/2+50%)] md:ml-[calc((260px-100vw)/2+50%)] relative">
                       {evaluationResult.leaderboard_summary &&
                         evaluationResult.leaderboard_summary.length > 0 && (
                           <>
@@ -434,7 +443,9 @@ export default function TTSEvaluationDetailPage() {
                                   key: "ttfb",
                                   header: "TTFB (s)",
                                   render: (value) =>
-                                    value != null ? parseFloat(value.toFixed(4)) : "-",
+                                    value != null
+                                      ? parseFloat(value.toFixed(4))
+                                      : "-",
                                 },
                               ]}
                               data={evaluationResult.leaderboard_summary}
@@ -449,9 +460,9 @@ export default function TTSEvaluationDetailPage() {
                                 );
                               const colorMap = getColorMap(providerNames);
                               return (
-                                <div className="space-y-6">
+                                <div className="space-y-4 md:space-y-6">
                                   {/* Row 1: LLM Judge Score and TTFB */}
-                                  <div className="grid grid-cols-2 gap-6">
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                                     <LeaderboardBarChart
                                       title="LLM Judge Score"
                                       data={evaluationResult.leaderboard_summary.map(
@@ -585,7 +596,11 @@ export default function TTSEvaluationDetailPage() {
                           }
 
                           // Show spinner if provider is in progress and has no results yet
-                          if (providerResult.success === null && (!providerResult.results || providerResult.results.length === 0)) {
+                          if (
+                            providerResult.success === null &&
+                            (!providerResult.results ||
+                              providerResult.results.length === 0)
+                          ) {
                             return (
                               <div className="flex items-center justify-center h-full">
                                 <div className="flex items-center gap-3">
@@ -619,7 +634,9 @@ export default function TTSEvaluationDetailPage() {
                               <div className="flex items-center justify-center h-full">
                                 <div className="border border-red-500/50 bg-red-500/10 rounded-lg p-4 max-w-md text-center">
                                   <div className="text-red-500 text-[14px] font-medium mb-1">
-                                  There was an error running this provider. Please contact us by posting your issue to help us help you.
+                                    There was an error running this provider.
+                                    Please contact us by posting your issue to
+                                    help us help you.
                                   </div>
                                 </div>
                               </div>
@@ -627,8 +644,7 @@ export default function TTSEvaluationDetailPage() {
                           }
 
                           return (
-                            <div className="space-y-6">
-
+                            <div className="space-y-4 md:space-y-6">
                               {/* Overall Metrics - Only show if success */}
                               {providerResult.success &&
                                 providerResult.metrics && (
@@ -642,7 +658,8 @@ export default function TTSEvaluationDetailPage() {
                                           LLM Judge Score
                                         </div>
                                         <div className="text-[18px] font-semibold text-foreground">
-                                          {providerResult.metrics.llm_judge_score ?? "-"}
+                                          {providerResult.metrics
+                                            .llm_judge_score ?? "-"}
                                         </div>
                                       </div>
                                       <div>
@@ -650,8 +667,13 @@ export default function TTSEvaluationDetailPage() {
                                           TTFB (s)
                                         </div>
                                         <div className="text-[18px] font-semibold text-foreground">
-                                          {providerResult.metrics.ttfb?.mean != null
-                                            ? parseFloat(providerResult.metrics.ttfb.mean.toFixed(4))
+                                          {providerResult.metrics.ttfb?.mean !=
+                                          null
+                                            ? parseFloat(
+                                                providerResult.metrics.ttfb.mean.toFixed(
+                                                  4
+                                                )
+                                              )
                                             : "-"}
                                         </div>
                                       </div>
@@ -761,7 +783,9 @@ export default function TTSEvaluationDetailPage() {
                                                                   fill="none"
                                                                   viewBox="0 0 24 24"
                                                                   stroke="currentColor"
-                                                                  strokeWidth={2}
+                                                                  strokeWidth={
+                                                                    2
+                                                                  }
                                                                 >
                                                                   <path
                                                                     strokeLinecap="round"

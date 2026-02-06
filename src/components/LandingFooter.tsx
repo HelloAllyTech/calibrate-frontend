@@ -5,11 +5,11 @@ const WHATSAPP_INVITE_URL =
 
 export function LandingFooter() {
   return (
-    <footer className="bg-gray-50 text-gray-500 py-16 px-12 border-t border-gray-200">
+    <footer className="bg-gray-50 text-gray-500 py-10 md:py-16 px-4 md:px-8 lg:px-12 border-t border-gray-200">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
           {/* Company Column */}
-          <div className="border-l border-gray-300 pl-8 flex flex-col">
+          <div className="border-l border-gray-300 pl-6 md:pl-8 flex flex-col">
             <h3 className="text-gray-400 text-sm tracking-[0.2em] uppercase mb-6">
               Company
             </h3>
@@ -48,7 +48,7 @@ export function LandingFooter() {
           </div>
 
           {/* Resources Column */}
-          <div className="border-l border-gray-300 pl-8">
+          <div className="border-l border-gray-300 pl-6 md:pl-8">
             <h3 className="text-gray-400 text-sm tracking-[0.2em] uppercase mb-6">
               Resources
             </h3>
@@ -90,7 +90,7 @@ export function LandingFooter() {
           </div>
 
           {/* Community Column */}
-          <div className="border-l border-gray-300 pl-8">
+          <div className="border-l border-gray-300 pl-6 md:pl-8">
             <h3 className="text-gray-400 text-sm tracking-[0.2em] uppercase mb-6">
               Community
             </h3>
@@ -107,7 +107,7 @@ export function LandingFooter() {
               </li>
               <li>
                 <a
-                  href="https://discord.gg/xCJ55Ban"
+                  href="https://discord.gg/9dQB4AngK2"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-gray-900 transition-colors"
@@ -130,7 +130,7 @@ export function LandingFooter() {
         </div>
 
         {/* Copyright */}
-        <div className="mt-16 text-right text-gray-400 text-sm">
+        <div className="mt-10 md:mt-16 text-right text-gray-400 text-sm">
           © {new Date().getFullYear()}
         </div>
       </div>

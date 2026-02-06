@@ -20,7 +20,7 @@ export default function ToolsPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   // Set page title
@@ -28,9 +28,17 @@ export default function ToolsPage() {
     document.title = "Tools | Calibrate";
   }, []);
 
+  // Initialize sidebar state based on screen size
+  useEffect(() => {
+    const isDesktop = window.innerWidth >= 768;
+    setSidebarOpen(isDesktop);
+  }, []);
+
   const [addToolDialogOpen, setAddToolDialogOpen] = useState(false);
   const [editingToolUuid, setEditingToolUuid] = useState<string | null>(null);
-  const [toolType, setToolType] = useState<"structured_output" | "webhook">("structured_output");
+  const [toolType, setToolType] = useState<"structured_output" | "webhook">(
+    "structured_output"
+  );
   const [tools, setTools] = useState<ToolData[]>([]);
   const [toolsLoading, setToolsLoading] = useState(true);
   const [toolsError, setToolsError] = useState<string | null>(null);
@@ -151,7 +159,8 @@ export default function ToolsPage() {
     setEditingToolUuid(uuid);
     // Get tool type from config, default to "structured_output" if not present
     const tool = tools.find((t) => t.uuid === uuid);
-    const type = tool?.config?.type === "webhook" ? "webhook" : "structured_output";
+    const type =
+      tool?.config?.type === "webhook" ? "webhook" : "structured_output";
     setToolType(type);
     setAddToolDialogOpen(true);
   };
@@ -180,25 +189,25 @@ export default function ToolsPage() {
       sidebarOpen={sidebarOpen}
       onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
     >
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6 py-4 md:py-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-semibold">Tools</h1>
-          <p className="text-muted-foreground text-base leading-relaxed mt-1">
+          <h1 className="text-xl md:text-2xl font-semibold">Tools</h1>
+          <p className="text-muted-foreground text-sm md:text-base leading-relaxed mt-1">
             Manage and configure tools that can be used by your agents
           </p>
         </div>
         {/* Add Tool Cards */}
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
           <button
             onClick={() => openAddToolDialog("webhook")}
-            className="h-10 px-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer text-base font-medium text-foreground"
+            className="h-9 md:h-10 px-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer text-sm md:text-base font-medium text-foreground"
           >
             Add webhook tool
           </button>
           <button
             onClick={() => openAddToolDialog("structured_output")}
-            className="h-10 px-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer text-base font-medium text-foreground"
+            className="h-9 md:h-10 px-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer text-sm md:text-base font-medium text-foreground"
           >
             Add structured output tool
           </button>
@@ -226,7 +235,7 @@ export default function ToolsPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search tools"
-            className="w-full h-10 pl-10 pr-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+            className="w-full h-9 md:h-10 pl-10 pr-4 rounded-md text-sm md:text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
           />
         </div>
 
@@ -254,20 +263,22 @@ export default function ToolsPage() {
             </svg>
           </div>
         ) : toolsError ? (
-          <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-            <p className="text-base text-red-500 mb-2">{toolsError}</p>
+          <div className="border border-border rounded-xl p-8 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+            <p className="text-sm md:text-base text-red-500 mb-2">
+              {toolsError}
+            </p>
             <button
               onClick={() => window.location.reload()}
-              className="text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              className="text-sm md:text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             >
               Retry
             </button>
           </div>
         ) : filteredTools.length === 0 ? (
-          <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-            <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center mb-4">
+          <div className="border border-border rounded-xl p-8 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+            <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-muted flex items-center justify-center mb-3 md:mb-4">
               <svg
-                className="w-7 h-7 text-muted-foreground"
+                className="w-6 h-6 md:w-7 md:h-7 text-muted-foreground"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -280,86 +291,142 @@ export default function ToolsPage() {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-1">
+            <h3 className="text-base md:text-lg font-semibold text-foreground mb-1">
               No tools found
             </h3>
-            <p className="text-base text-muted-foreground mb-4">
+            <p className="text-sm md:text-base text-muted-foreground mb-3 md:mb-4 text-center px-4">
               {searchQuery
                 ? "No tools match your search"
                 : "You haven't created any tools yet"}
             </p>
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full sm:w-auto px-4 sm:px-0">
               <button
                 onClick={() => openAddToolDialog("webhook")}
-                className="h-10 px-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer text-base font-medium text-foreground"
+                className="h-9 md:h-10 px-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer text-sm md:text-base font-medium text-foreground"
               >
                 Add webhook tool
               </button>
               <button
                 onClick={() => openAddToolDialog("structured_output")}
-                className="h-10 px-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer text-base font-medium text-foreground"
+                className="h-9 md:h-10 px-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer text-sm md:text-base font-medium text-foreground"
               >
                 Add structured output tool
               </button>
             </div>
           </div>
         ) : (
-          <div className="border border-border rounded-xl overflow-hidden">
-            {/* Table Header */}
-            <div className="grid grid-cols-[200px_150px_1fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
-              <div className="text-sm font-medium text-muted-foreground">
-                Name
-              </div>
-              <div className="text-sm font-medium text-muted-foreground">
-                Type
-              </div>
-              <div className="text-sm font-medium text-muted-foreground">
-                Description
-              </div>
-              <div className="w-8"></div>
-            </div>
-            {/* Table Rows */}
-            {filteredTools.map((tool) => (
-              <div
-                key={tool.uuid}
-                onClick={() => openEditToolDialog(tool.uuid)}
-                className="grid grid-cols-[200px_150px_1fr_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer items-center"
-              >
-                <div className="overflow-x-auto max-w-full">
-                  <p className="text-sm font-medium text-foreground whitespace-nowrap">
-                    {tool.name}
-                  </p>
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block border border-border rounded-xl overflow-hidden">
+              {/* Table Header */}
+              <div className="grid grid-cols-[200px_150px_1fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
+                <div className="text-sm font-medium text-muted-foreground">
+                  Name
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  {tool.config?.type === "webhook" ? "Webhook" : "Structured Output"}
-                </p>
-                <p className="text-sm text-muted-foreground line-clamp-1">
-                  {tool.description || tool.config?.description || "—"}
-                </p>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openDeleteDialog(tool);
-                  }}
-                  className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                    />
-                  </svg>
-                </button>
+                <div className="text-sm font-medium text-muted-foreground">
+                  Type
+                </div>
+                <div className="text-sm font-medium text-muted-foreground">
+                  Description
+                </div>
+                <div className="w-8"></div>
               </div>
-            ))}
-          </div>
+              {/* Table Rows */}
+              {filteredTools.map((tool) => (
+                <div
+                  key={tool.uuid}
+                  onClick={() => openEditToolDialog(tool.uuid)}
+                  className="grid grid-cols-[200px_150px_1fr_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer items-center"
+                >
+                  <div className="overflow-x-auto max-w-full">
+                    <p className="text-sm font-medium text-foreground whitespace-nowrap">
+                      {tool.name}
+                    </p>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {tool.config?.type === "webhook"
+                      ? "Webhook"
+                      : "Structured Output"}
+                  </p>
+                  <p className="text-sm text-muted-foreground line-clamp-1">
+                    {tool.description || tool.config?.description || "—"}
+                  </p>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openDeleteDialog(tool);
+                    }}
+                    className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-3">
+              {filteredTools.map((tool) => (
+                <div
+                  key={tool.uuid}
+                  className="border border-border rounded-lg overflow-hidden bg-background"
+                >
+                  <div
+                    onClick={() => openEditToolDialog(tool.uuid)}
+                    className="p-4 cursor-pointer"
+                  >
+                    <div className="font-medium text-sm text-foreground mb-1">
+                      {tool.name}
+                    </div>
+                    <div className="text-xs text-muted-foreground mb-2">
+                      {tool.config?.type === "webhook"
+                        ? "Webhook"
+                        : "Structured Output"}
+                    </div>
+                    <div className="text-xs text-muted-foreground line-clamp-2">
+                      {tool.description || tool.config?.description || "—"}
+                    </div>
+                  </div>
+                  <div className="px-4 pb-3 pt-0">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDeleteDialog(tool);
+                      }}
+                      className="w-full h-8 flex items-center justify-center gap-2 rounded-md text-xs font-medium text-red-500 bg-red-500/10 hover:bg-red-500/20 transition-colors"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                        />
+                      </svg>
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
 

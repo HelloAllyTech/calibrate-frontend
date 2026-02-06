@@ -35,12 +35,18 @@ export default function LLMPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   // Set page title
   useEffect(() => {
     document.title = "Tests | Calibrate";
+  }, []);
+
+  // Initialize sidebar state based on screen size
+  useEffect(() => {
+    const isDesktop = window.innerWidth >= 768;
+    setSidebarOpen(isDesktop);
   }, []);
   const [addTestSidebarOpen, setAddTestSidebarOpen] = useState(false);
   const [newTestName, setNewTestName] = useState("");
@@ -57,7 +63,7 @@ export default function LLMPage() {
     "next-reply" | "tool-invocation" | undefined
   >(undefined);
   const [initialConfig, setInitialConfig] = useState<TestConfig | undefined>(
-    undefined,
+    undefined
   );
 
   // Delete confirmation state
@@ -110,7 +116,7 @@ export default function LLMPage() {
       } catch (err) {
         console.error("Error fetching tests:", err);
         setTestsError(
-          err instanceof Error ? err.message : "Failed to load tests",
+          err instanceof Error ? err.message : "Failed to load tests"
         );
       } finally {
         setTestsLoading(false);
@@ -183,7 +189,7 @@ export default function LLMPage() {
   const handleRunTest = async (
     agentUuid: string,
     agentName: string,
-    attachToAgent: boolean,
+    attachToAgent: boolean
   ) => {
     if (!testToRun) return;
 
@@ -294,7 +300,7 @@ export default function LLMPage() {
     } catch (err) {
       console.error("Error creating test:", err);
       setCreateError(
-        err instanceof Error ? err.message : "Failed to create test",
+        err instanceof Error ? err.message : "Failed to create test"
       );
     } finally {
       setIsCreating(false);
@@ -337,11 +343,11 @@ export default function LLMPage() {
       // Populate form fields with test data
       setNewTestName(testData.name || "");
       setNewTestDescription(
-        testData.config?.description || testData.description || "",
+        testData.config?.description || testData.description || ""
       );
       // Set initial tab based on test type
       setInitialTab(
-        testData.type === "tool_call" ? "tool-invocation" : "next-reply",
+        testData.type === "tool_call" ? "tool-invocation" : "next-reply"
       );
       // Set initial config to populate dialog fields
       if (testData.config) {
@@ -350,7 +356,7 @@ export default function LLMPage() {
     } catch (err) {
       console.error("Error fetching test:", err);
       setCreateError(
-        err instanceof Error ? err.message : "Failed to load test",
+        err instanceof Error ? err.message : "Failed to load test"
       );
     } finally {
       setIsLoadingTest(false);
@@ -415,7 +421,7 @@ export default function LLMPage() {
     } catch (err) {
       console.error("Error updating test:", err);
       setCreateError(
-        err instanceof Error ? err.message : "Failed to update test",
+        err instanceof Error ? err.message : "Failed to update test"
       );
     } finally {
       setIsCreating(false);
@@ -443,7 +449,7 @@ export default function LLMPage() {
       (test.config?.description &&
         test.config.description
           .toLowerCase()
-          .includes(searchQuery.toLowerCase())),
+          .includes(searchQuery.toLowerCase()))
   );
 
   return (
@@ -453,23 +459,27 @@ export default function LLMPage() {
       sidebarOpen={sidebarOpen}
       onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
     >
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6 py-4 md:py-6">
         {/* Header */}
-        <div>
-          <h1 className="text-2xl font-semibold">LLM Evaluation</h1>
-          <p className="text-muted-foreground text-base leading-relaxed mt-1">
-            Create and manage tests to evaluate your LLM
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+          <div>
+            <h1 className="text-xl md:text-2xl font-semibold">
+              LLM Evaluation
+            </h1>
+            <p className="text-muted-foreground text-sm md:text-base leading-relaxed mt-1">
+              Create and manage tests to evaluate your LLM
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              resetForm();
+              setAddTestSidebarOpen(true);
+            }}
+            className="h-9 md:h-10 px-4 rounded-md text-sm md:text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer flex-shrink-0"
+          >
+            Add test
+          </button>
         </div>
-        <button
-          onClick={() => {
-            resetForm();
-            setAddTestSidebarOpen(true);
-          }}
-          className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
-        >
-          Add test
-        </button>
 
         {/* Search Input */}
         <div className="relative max-w-md">
@@ -493,7 +503,7 @@ export default function LLMPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search tests"
-            className="w-full h-10 pl-10 pr-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+            className="w-full h-9 md:h-10 pl-10 pr-4 rounded-md text-sm md:text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
           />
         </div>
 
@@ -521,30 +531,32 @@ export default function LLMPage() {
             </svg>
           </div>
         ) : testsError ? (
-          <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-            <p className="text-base text-red-500 mb-2">{testsError}</p>
+          <div className="border border-border rounded-xl p-8 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+            <p className="text-sm md:text-base text-red-500 mb-2">
+              {testsError}
+            </p>
             <button
               onClick={() => window.location.reload()}
-              className="text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              className="text-sm md:text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             >
               Retry
             </button>
           </div>
         ) : filteredTests.length === 0 ? (
-          <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-            <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center mb-4">
+          <div className="border border-border rounded-xl p-8 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+            <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-muted flex items-center justify-center mb-3 md:mb-4">
               <svg
-                className="w-7 h-7 text-muted-foreground"
+                className="w-6 h-6 md:w-7 md:h-7 text-muted-foreground"
                 viewBox="0 0 24 24"
                 fill="currentColor"
               >
                 <path d="M9 3h6v2h-1v4.5l4.5 7.5c.5.83.5 1.5-.17 2.17-.67.67-1.34.83-2.33.83H8c-1 0-1.67-.17-2.33-.83-.67-.67-.67-1.34-.17-2.17L10 9.5V5H9V3zm3 8.5L8.5 17h7L12 11.5z" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-1">
+            <h3 className="text-base md:text-lg font-semibold text-foreground mb-1">
               No tests found
             </h3>
-            <p className="text-base text-muted-foreground mb-4">
+            <p className="text-sm md:text-base text-muted-foreground mb-3 md:mb-4 text-center">
               {searchQuery
                 ? "No tests match your search"
                 : "You haven't created any tests yet"}
@@ -554,93 +566,162 @@ export default function LLMPage() {
                 resetForm();
                 setAddTestSidebarOpen(true);
               }}
-              className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
+              className="h-9 md:h-10 px-4 rounded-md text-sm md:text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
             >
               Add test
             </button>
           </div>
         ) : (
-          <div className="border border-border rounded-xl overflow-hidden">
-            {/* Table Header */}
-            <div className="grid grid-cols-[1fr_1fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
-              <div className="text-sm font-medium text-muted-foreground">
-                Name
-              </div>
-              <div className="text-sm font-medium text-muted-foreground">
-                Type
-              </div>
-              <div className="w-16"></div>
-            </div>
-            {/* Table Rows */}
-            {filteredTests.map((test) => (
-              <div
-                key={test.uuid}
-                onClick={() => openEditTest(test.uuid)}
-                className="grid grid-cols-[1fr_1fr_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer items-center"
-              >
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-foreground truncate">
-                    {test.name}
-                  </p>
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block border border-border rounded-xl overflow-hidden">
+              {/* Table Header */}
+              <div className="grid grid-cols-[1fr_1fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
+                <div className="text-sm font-medium text-muted-foreground">
+                  Name
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  {test.type === "response"
-                    ? "Next Reply"
-                    : test.type === "tool_call"
+                <div className="text-sm font-medium text-muted-foreground">
+                  Type
+                </div>
+                <div className="w-16"></div>
+              </div>
+              {/* Table Rows */}
+              {filteredTests.map((test) => (
+                <div
+                  key={test.uuid}
+                  onClick={() => openEditTest(test.uuid)}
+                  className="grid grid-cols-[1fr_1fr_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer items-center"
+                >
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-foreground truncate">
+                      {test.name}
+                    </p>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {test.type === "response"
+                      ? "Next Reply"
+                      : test.type === "tool_call"
                       ? "Tool Call"
                       : "—"}
-                </p>
-                <div className="flex items-center gap-1">
-                  {/* Play Button */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openRunTestDialog(test);
-                    }}
-                    className="group relative w-8 h-8 flex items-center justify-center rounded-lg bg-foreground/90 text-background hover:bg-foreground transition-colors cursor-pointer"
-                  >
-                    <svg
-                      className="w-3.5 h-3.5"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
+                  </p>
+                  <div className="flex items-center gap-1">
+                    {/* Play Button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openRunTestDialog(test);
+                      }}
+                      className="group relative w-8 h-8 flex items-center justify-center rounded-lg bg-foreground/90 text-background hover:bg-foreground transition-colors cursor-pointer"
                     >
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                    {/* Tooltip */}
-                    <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                      <span className="px-3 py-1.5 text-sm font-medium text-gray-900 bg-white rounded-full whitespace-nowrap shadow-lg">
-                        Run this test
-                      </span>
-                      {/* Arrow */}
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-white"></div>
-                    </div>
-                  </button>
-                  {/* Delete Button */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openDeleteDialog(test);
-                    }}
-                    className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
+                      <svg
+                        className="w-3.5 h-3.5"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                      {/* Tooltip */}
+                      <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                        <span className="px-3 py-1.5 text-sm font-medium text-gray-900 bg-white rounded-full whitespace-nowrap shadow-lg">
+                          Run this test
+                        </span>
+                        {/* Arrow */}
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-white"></div>
+                      </div>
+                    </button>
+                    {/* Delete Button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDeleteDialog(test);
+                      }}
+                      className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                      />
-                    </svg>
-                  </button>
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-3">
+              {filteredTests.map((test) => (
+                <div
+                  key={test.uuid}
+                  className="border border-border rounded-lg overflow-hidden bg-background"
+                >
+                  <div
+                    onClick={() => openEditTest(test.uuid)}
+                    className="p-4 cursor-pointer"
+                  >
+                    <div className="font-medium text-sm text-foreground mb-1">
+                      {test.name}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {test.type === "response"
+                        ? "Next Reply"
+                        : test.type === "tool_call"
+                        ? "Tool Call"
+                        : "—"}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 pb-3 pt-0">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openRunTestDialog(test);
+                      }}
+                      className="flex-1 h-8 flex items-center justify-center gap-2 rounded-md text-xs font-medium text-background bg-foreground hover:opacity-90 transition-opacity"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                      Run test
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDeleteDialog(test);
+                      }}
+                      className="flex-1 h-8 flex items-center justify-center gap-2 rounded-md text-xs font-medium text-red-500 bg-red-500/10 hover:bg-red-500/20 transition-colors"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                        />
+                      </svg>
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
 

@@ -183,71 +183,164 @@ export function SimulationRunsTab({ simulationUuid }: SimulationRunsTabProps) {
   });
 
   return (
-    <div className="border border-border rounded-xl overflow-hidden">
-      {/* Table Header */}
-      <div className="grid grid-cols-[1fr_1fr_1fr_1fr] gap-4 px-4 py-2 border-b border-border bg-muted/30">
-        <div className="text-sm font-medium text-muted-foreground">Name</div>
-        <div className="text-sm font-medium text-muted-foreground">Status</div>
-        <div className="text-sm font-medium text-muted-foreground">Type</div>
-        <div className="text-sm font-medium text-muted-foreground">
-          <button
-            onClick={toggleSort}
-            className="flex items-center gap-2 hover:text-foreground transition-colors cursor-pointer"
-          >
-            Created At
-            <svg
-              className={`w-4 h-4 transition-transform ${
-                sortOrder === "asc" ? "rotate-180" : ""
-              }`}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-      {/* Table Rows */}
-      {sortedRuns.map((run) => (
-        <Link
-          key={run.uuid}
-          href={`/simulations/${simulationUuid}/runs/${run.uuid}`}
-          className="grid grid-cols-[1fr_1fr_1fr_1fr] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors items-center"
+    <>
+      {/* Mobile Sort Button */}
+      <div className="flex justify-end md:hidden mb-3">
+        <button
+          onClick={toggleSort}
+          className="flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50"
         >
-          <div className="min-w-0">
-            <p className="text-sm font-medium text-foreground truncate">
-              {run.name}
+          Sort by date
+          <svg
+            className={`w-4 h-4 transition-transform ${
+              sortOrder === "asc" ? "rotate-180" : ""
+            }`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"
+            />
+          </svg>
+        </button>
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden md:block border border-border rounded-xl overflow-hidden">
+        {/* Table Header */}
+        <div className="grid grid-cols-[1fr_1fr_1fr_1fr] gap-4 px-4 py-2 border-b border-border bg-muted/30">
+          <div className="text-sm font-medium text-muted-foreground">Name</div>
+          <div className="text-sm font-medium text-muted-foreground">
+            Status
+          </div>
+          <div className="text-sm font-medium text-muted-foreground">Type</div>
+          <div className="text-sm font-medium text-muted-foreground">
+            <button
+              onClick={toggleSort}
+              className="flex items-center gap-2 hover:text-foreground transition-colors cursor-pointer"
+            >
+              Created At
+              <svg
+                className={`w-4 h-4 transition-transform ${
+                  sortOrder === "asc" ? "rotate-180" : ""
+                }`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        {/* Table Rows */}
+        {sortedRuns.map((run) => (
+          <Link
+            key={run.uuid}
+            href={`/simulations/${simulationUuid}/runs/${run.uuid}`}
+            className="grid grid-cols-[1fr_1fr_1fr_1fr] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors items-center"
+          >
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-foreground truncate">
+                {run.name}
+              </p>
+            </div>
+            <div>
+              <span
+                className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${getStatusBadgeClass(
+                  run.status
+                )}`}
+              >
+                {formatStatus(run.status)}
+              </span>
+            </div>
+            <div>
+              <span
+                className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${getTypeBadgeClass(
+                  run.type
+                )}`}
+              >
+                {run.type}
+              </span>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {formatDate(run.created_at || run.updated_at || "")}
             </p>
-          </div>
-          <div>
-            <span
-              className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${getStatusBadgeClass(
-                run.status
-              )}`}
-            >
-              {formatStatus(run.status)}
-            </span>
-          </div>
-          <div>
-            <span
-              className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${getTypeBadgeClass(
-                run.type
-              )}`}
-            >
-              {run.type}
-            </span>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            {formatDate(run.created_at || run.updated_at || "")}
-          </p>
-        </Link>
-      ))}
-    </div>
+          </Link>
+        ))}
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="md:hidden space-y-4">
+        {sortedRuns.map((run) => (
+          <Link
+            key={run.uuid}
+            href={`/simulations/${simulationUuid}/runs/${run.uuid}`}
+            className="block border border-border rounded-xl overflow-hidden bg-background hover:shadow-lg hover:border-foreground/20 transition-all duration-200"
+          >
+            <div className="p-5">
+              {/* Name */}
+              <div className="font-medium text-sm text-foreground mb-3">
+                {run.name}
+              </div>
+
+              {/* Status and Type Pills */}
+              <div className="flex flex-wrap gap-2 mb-4">
+                <span
+                  className={`inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold ${getStatusBadgeClass(
+                    run.status
+                  )}`}
+                >
+                  {formatStatus(run.status)}
+                </span>
+                <span
+                  className={`inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold ${getTypeBadgeClass(
+                    run.type
+                  )}`}
+                >
+                  {run.type}
+                </span>
+              </div>
+
+              {/* Created date with icon */}
+              <div className="flex items-center gap-3 pt-2 border-t border-border/50">
+                <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center">
+                  <svg
+                    className="w-4 h-4 text-muted-foreground"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs text-muted-foreground mb-0.5">
+                    Created
+                  </p>
+                  <p className="text-sm font-medium text-foreground">
+                    {formatDate(run.created_at || run.updated_at || "")}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </>
   );
 }

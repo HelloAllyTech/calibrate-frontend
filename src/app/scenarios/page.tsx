@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { AppLayout } from "@/components/AppLayout";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
@@ -20,13 +21,19 @@ export default function ScenariosPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [addScenarioSidebarOpen, setAddScenarioSidebarOpen] = useState(false);
 
   // Set page title
   useEffect(() => {
     document.title = "Scenarios | Calibrate";
+  }, []);
+
+  // Initialize sidebar state based on screen size
+  useEffect(() => {
+    const isDesktop = window.innerWidth >= 768;
+    setSidebarOpen(isDesktop);
   }, []);
   const [scenarios, setScenarios] = useState<ScenarioData[]>([]);
   const [scenariosLoading, setScenariosLoading] = useState(true);
@@ -362,24 +369,26 @@ export default function ScenariosPage() {
       sidebarOpen={sidebarOpen}
       onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
     >
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6 py-4 md:py-6">
         {/* Header */}
-        <div>
-          <h1 className="text-2xl font-semibold">Scenarios</h1>
-          <p className="text-muted-foreground text-base leading-relaxed mt-1">
-            Scenarios define the specific task or conversation goal for the
-            simulation
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+          <div>
+            <h1 className="text-xl md:text-2xl font-semibold">Scenarios</h1>
+            <p className="text-muted-foreground text-sm md:text-base leading-relaxed mt-1">
+              Scenarios define the specific task or conversation goal for the
+              simulation
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              resetForm();
+              setAddScenarioSidebarOpen(true);
+            }}
+            className="h-9 md:h-10 px-4 rounded-md text-sm md:text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer flex-shrink-0"
+          >
+            Add scenario
+          </button>
         </div>
-        <button
-          onClick={() => {
-            resetForm();
-            setAddScenarioSidebarOpen(true);
-          }}
-          className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
-        >
-          Add scenario
-        </button>
 
         {/* Search Input */}
         <div className="relative max-w-md">
@@ -403,7 +412,7 @@ export default function ScenariosPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search scenarios"
-            className="w-full h-10 pl-10 pr-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+            className="w-full h-9 md:h-10 pl-10 pr-4 rounded-md text-sm md:text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
           />
         </div>
 
@@ -431,20 +440,22 @@ export default function ScenariosPage() {
             </svg>
           </div>
         ) : scenariosError ? (
-          <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-            <p className="text-base text-red-500 mb-2">{scenariosError}</p>
+          <div className="border border-border rounded-xl p-8 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+            <p className="text-sm md:text-base text-red-500 mb-2">
+              {scenariosError}
+            </p>
             <button
               onClick={() => window.location.reload()}
-              className="text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              className="text-sm md:text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             >
               Retry
             </button>
           </div>
         ) : filteredScenarios.length === 0 ? (
-          <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-            <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center mb-4">
+          <div className="border border-border rounded-xl p-8 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+            <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-muted flex items-center justify-center mb-3 md:mb-4">
               <svg
-                className="w-7 h-7 text-muted-foreground"
+                className="w-6 h-6 md:w-7 md:h-7 text-muted-foreground"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -457,10 +468,10 @@ export default function ScenariosPage() {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-1">
+            <h3 className="text-base md:text-lg font-semibold text-foreground mb-1">
               No scenarios found
             </h3>
-            <p className="text-base text-muted-foreground mb-4">
+            <p className="text-sm md:text-base text-muted-foreground mb-3 md:mb-4 text-center">
               {searchQuery
                 ? "No scenarios match your search"
                 : "You haven't created any scenarios yet"}
@@ -470,62 +481,111 @@ export default function ScenariosPage() {
                 resetForm();
                 setAddScenarioSidebarOpen(true);
               }}
-              className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
+              className="h-9 md:h-10 px-4 rounded-md text-sm md:text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
             >
               Add scenario
             </button>
           </div>
         ) : (
-          <div className="border border-border rounded-xl overflow-hidden">
-            {/* Table Header */}
-            <div className="grid grid-cols-[200px_1fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
-              <div className="text-sm font-medium text-muted-foreground">
-                Label
-              </div>
-              <div className="text-sm font-medium text-muted-foreground">
-                Description
-              </div>
-              <div className="w-8"></div>
-            </div>
-            {/* Table Rows */}
-            {filteredScenarios.map((scenario) => (
-              <div
-                key={scenario.uuid}
-                onClick={() => openEditScenario(scenario.uuid)}
-                className="grid grid-cols-[200px_1fr_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer items-center"
-              >
-                <div className="overflow-x-auto max-w-full">
-                  <p className="text-sm font-medium text-foreground whitespace-nowrap">
-                    {scenario.name}
-                  </p>
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block border border-border rounded-xl overflow-hidden">
+              {/* Table Header */}
+              <div className="grid grid-cols-[200px_1fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
+                <div className="text-sm font-medium text-muted-foreground">
+                  Label
                 </div>
-                <p className="text-sm text-muted-foreground line-clamp-1">
-                  {scenario.description || "—"}
-                </p>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openDeleteDialog(scenario);
-                  }}
-                  className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                    />
-                  </svg>
-                </button>
+                <div className="text-sm font-medium text-muted-foreground">
+                  Description
+                </div>
+                <div className="w-8"></div>
               </div>
-            ))}
-          </div>
+              {/* Table Rows */}
+              {filteredScenarios.map((scenario) => (
+                <div
+                  key={scenario.uuid}
+                  onClick={() => openEditScenario(scenario.uuid)}
+                  className="grid grid-cols-[200px_1fr_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer items-center"
+                >
+                  <div className="overflow-x-auto max-w-full">
+                    <p className="text-sm font-medium text-foreground whitespace-nowrap">
+                      {scenario.name}
+                    </p>
+                  </div>
+                  <p className="text-sm text-muted-foreground line-clamp-1">
+                    {scenario.description || "—"}
+                  </p>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openDeleteDialog(scenario);
+                    }}
+                    className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-3">
+              {filteredScenarios.map((scenario) => (
+                <div
+                  key={scenario.uuid}
+                  className="border border-border rounded-lg overflow-hidden bg-background"
+                >
+                  <div
+                    onClick={() => openEditScenario(scenario.uuid)}
+                    className="p-4 cursor-pointer"
+                  >
+                    <div className="font-medium text-sm text-foreground mb-1">
+                      {scenario.name}
+                    </div>
+                    <div className="text-xs text-muted-foreground line-clamp-2">
+                      {scenario.description || "—"}
+                    </div>
+                  </div>
+                  <div className="px-4 pb-3 pt-0">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDeleteDialog(scenario);
+                      }}
+                      className="w-full h-8 flex items-center justify-center gap-2 rounded-md text-xs font-medium text-red-500 bg-red-500/10 hover:bg-red-500/20 transition-colors"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                        />
+                      </svg>
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
 
@@ -541,9 +601,9 @@ export default function ScenariosPage() {
             }}
           />
           {/* Sidebar */}
-          <div className="relative w-[40%] min-w-[500px] bg-background border-l border-border flex flex-col h-full shadow-2xl">
+          <div className="relative w-full md:w-[40%] md:min-w-[500px] bg-background md:border-l border-border flex flex-col h-full shadow-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+            <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-b border-border">
               <div className="flex items-center gap-3">
                 <svg
                   className="w-5 h-5 text-muted-foreground"
@@ -558,7 +618,7 @@ export default function ScenariosPage() {
                     d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
                   />
                 </svg>
-                <h2 className="text-lg font-semibold">
+                <h2 className="text-base md:text-lg font-semibold">
                   {editingScenarioUuid ? "Edit scenario" : "Add scenario"}
                 </h2>
               </div>
@@ -586,7 +646,7 @@ export default function ScenariosPage() {
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-6">
               {isLoadingScenario ? (
                 <div className="flex items-center justify-center py-12">
                   <svg
@@ -612,10 +672,10 @@ export default function ScenariosPage() {
               ) : (
                 <>
                   {/* Form Fields */}
-                  <div className="space-y-5">
+                  <div className="space-y-4 md:space-y-5">
                     {/* Label */}
                     <div>
-                      <label className="block text-sm font-medium mb-2">
+                      <label className="block text-xs md:text-sm font-medium mb-2">
                         Label <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -623,7 +683,7 @@ export default function ScenariosPage() {
                         value={scenarioLabel}
                         onChange={(e) => setScenarioLabel(e.target.value)}
                         placeholder="e.g., Crop Insurance Inquiry"
-                        className={`w-full h-10 px-4 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent ${
+                        className={`w-full h-9 md:h-10 px-3 md:px-4 rounded-md text-sm md:text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent ${
                           validationAttempted && !scenarioLabel.trim()
                             ? "border-red-500"
                             : "border-border"
@@ -633,15 +693,20 @@ export default function ScenariosPage() {
 
                     {/* Description */}
                     <div>
-                      <label className="block text-sm font-medium mb-1">
+                      <label className="block text-xs md:text-sm font-medium mb-1">
                         Description <span className="text-red-500">*</span>
                       </label>
-                      <p className="text-sm text-muted-foreground mb-2">
+                      <p className="text-xs md:text-sm text-muted-foreground mb-2">
                         Define WHAT the persona should do (e.g., &quot;Call to
                         get a refund&quot;, &quot;Ask for PTO&quot;,
                         &quot;Inquire about balance&quot;). Use{" "}
-                        <span className="text-white">Personas</span> to define
-                        HOW to behave.
+                        <Link
+                          href="/personas"
+                          className="font-semibold text-foreground underline decoration-foreground/30 underline-offset-2 hover:decoration-foreground/60 transition-colors"
+                        >
+                          Personas
+                        </Link>{" "}
+                        to define HOW to behave.
                       </p>
                       <textarea
                         value={scenarioDescription}

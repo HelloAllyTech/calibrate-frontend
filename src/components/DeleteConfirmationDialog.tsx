@@ -32,22 +32,26 @@ export function DeleteConfirmationDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-background rounded-xl w-full max-w-md p-6 shadow-2xl">
-        <h2 className="text-lg font-semibold text-foreground mb-2">{title}</h2>
-        <p className="text-base text-muted-foreground mb-6">{message}</p>
-        <div className="flex items-center justify-end gap-3">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="bg-background rounded-xl w-full max-w-md p-5 md:p-6 shadow-2xl">
+        <h2 className="text-base md:text-lg font-semibold text-foreground mb-2">
+          {title}
+        </h2>
+        <p className="text-sm md:text-base text-muted-foreground mb-5 md:mb-6">
+          {message}
+        </p>
+        <div className="flex items-center justify-end gap-2 md:gap-3">
           <button
             onClick={handleClose}
             disabled={isDeleting}
-            className="h-10 px-4 rounded-md text-sm font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="h-9 md:h-10 px-4 rounded-md text-xs md:text-sm font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {cancelText}
           </button>
           <button
             onClick={onConfirm}
             disabled={isDeleting}
-            className="h-10 px-4 rounded-md text-sm font-medium bg-red-800 text-white hover:bg-red-900 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="h-9 md:h-10 px-4 rounded-md text-xs md:text-sm font-medium bg-red-800 text-white hover:bg-red-900 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             {isDeleting && (
               <svg

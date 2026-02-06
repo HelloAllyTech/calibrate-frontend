@@ -19,12 +19,10 @@ export default function AboutPage() {
       <LandingHeader showLogoLink talkToUsHref="/login#join-community" />
 
       {/* Content */}
-      <div className="max-w-4xl mx-auto px-8 py-24">
-        
-
+      <div className="max-w-4xl mx-auto px-4 md:px-8 py-16 md:py-24">
         {/* Mission Section */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-medium text-gray-900 mb-6 tracking-[-0.02em]">
+        <div className="mb-12 md:mb-16">
+          <h2 className="text-2xl md:text-3xl font-medium text-gray-900 mb-4 md:mb-6 tracking-[-0.02em]">
             Our Vision
           </h2>
           <p className="text-lg text-gray-600 leading-relaxed mb-4">
@@ -42,11 +40,11 @@ export default function AboutPage() {
         </div>
 
         {/* Team Section */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-medium text-gray-900 mb-6 tracking-[-0.02em]">
+        <div className="mb-12 md:mb-16">
+          <h2 className="text-2xl md:text-3xl font-medium text-gray-900 mb-4 md:mb-6 tracking-[-0.02em]">
             Team
           </h2>
-          <div className="grid md:grid-cols-2 gap-8 max-w-xl">
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8 max-w-xl">
             <a
               href="https://linkedin.com/in/aman-dalmia"
               target="_blank"

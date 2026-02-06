@@ -76,22 +76,22 @@ export function NewSimulationDialog({
       onClick={onClose}
     >
       <div
-        className="bg-background border border-border rounded-xl p-8 max-w-lg w-full mx-4 shadow-lg"
+        className="bg-background border border-border rounded-xl p-5 md:p-8 max-w-lg w-full mx-4 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="mb-6">
-          <h2 className="text-2xl font-semibold tracking-tight mb-1">
+        <div className="mb-5 md:mb-6">
+          <h2 className="text-xl md:text-2xl font-semibold tracking-tight mb-1">
             Create your simulation
           </h2>
-          <p className="text-muted-foreground text-[15px]">
+          <p className="text-muted-foreground text-sm md:text-[15px]">
             Choose a name that reflects your simulation&apos;s purpose
           </p>
         </div>
 
         {/* Simulation Name Input */}
-        <div className="mb-6">
-          <label className="block text-[13px] font-medium text-foreground mb-2">
+        <div className="mb-5 md:mb-6">
+          <label className="block text-xs md:text-[13px] font-medium text-foreground mb-2">
             Simulation Name <span className="text-red-500">*</span>
           </label>
           <div className="relative">
@@ -104,7 +104,7 @@ export function NewSimulationDialog({
                 }
               }}
               placeholder="Enter simulation name"
-              className="w-full h-10 px-3 pr-16 rounded-md text-[13px] border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+              className="w-full h-9 md:h-10 px-3 pr-16 rounded-md text-xs md:text-[13px] border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
               maxLength={maxLength}
             />
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">

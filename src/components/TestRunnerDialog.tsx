@@ -117,6 +117,15 @@ export function TestRunnerDialog({
   const [currentTaskId, setCurrentTaskId] = useState<string | null>(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Debug: Log when selectedTestUuid changes
+  useEffect(() => {
+    console.log("selectedTestUuid changed to:", selectedTestUuid);
+    console.log(
+      "testResults:",
+      testResults.map((r) => ({ uuid: r.test.uuid, name: r.test.name }))
+    );
+  }, [selectedTestUuid, testResults]);
+
   // Start polling when dialog opens with a taskId (viewing existing run)
   useEffect(() => {
     // Clear any existing polling interval first
@@ -756,6 +765,16 @@ export function TestRunnerDialog({
     (r) => r.test.uuid === selectedTestUuid
   );
 
+  // Debug: Log selectedResult
+  useEffect(() => {
+    console.log(
+      "selectedResult:",
+      selectedResult
+        ? { name: selectedResult.test.name, status: selectedResult.status }
+        : null
+    );
+  }, [selectedResult]);
+
   const passedTests = testResults.filter((r) => r.status === "passed");
   const failedTests = testResults.filter((r) => r.status === "failed");
   const queuedTests = testResults.filter((r) => r.status === "queued");
@@ -765,21 +784,23 @@ export function TestRunnerDialog({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-background rounded-xl w-full max-w-5xl h-[80vh] flex flex-col shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-0 md:p-4">
+      <div className="bg-background rounded-none md:rounded-xl w-full max-w-5xl h-full md:h-[80vh] flex flex-col shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-          <h2 className="text-lg font-semibold text-foreground">
+        <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-b border-border">
+          <h2 className="text-base md:text-lg font-semibold text-foreground">
             Test Status for {agentName}
           </h2>
           <div className="flex items-center gap-3">
-            {/* Passed/Failed counts */}
+            {/* Passed/Failed counts - desktop only */}
             {testResults.length > 0 &&
               (passedTests.length > 0 || failedTests.length > 0) && (
-                <TestStats
-                  passedCount={passedTests.length}
-                  failedCount={failedTests.length}
-                />
+                <div className="hidden md:block">
+                  <TestStats
+                    passedCount={passedTests.length}
+                    failedCount={failedTests.length}
+                  />
+                </div>
               )}
             <button
               onClick={onClose}
@@ -793,7 +814,11 @@ export function TestRunnerDialog({
         {/* Content */}
         <div className="flex-1 flex overflow-hidden">
           {/* Left Panel - Test List */}
-          <div className="w-80 border-r border-border flex flex-col overflow-hidden">
+          <div
+            className={`w-full md:w-80 border-r border-border flex flex-col overflow-hidden ${
+              selectedTestUuid ? "hidden md:flex" : "flex"
+            }`}
+          >
             <div className="flex-1 overflow-y-auto">
               {/* Failed Tests - Always shown first */}
               {failedTests.length > 0 && (
@@ -898,9 +923,39 @@ export function TestRunnerDialog({
           </div>
 
           {/* Right Panel - Test Details */}
-          <div className="flex-1 overflow-y-auto">
+          <div
+            className={`flex-1 ${
+              selectedTestUuid ? "flex" : "hidden md:flex"
+            } flex-col overflow-hidden`}
+          >
             {selectedResult ? (
-              <LocalTestDetailView result={selectedResult} />
+              <>
+                {/* Mobile Back Button */}
+                <div className="md:hidden px-4 py-3 border-b border-border flex-shrink-0">
+                  <button
+                    onClick={() => setSelectedTestUuid(null)}
+                    className="flex items-center gap-2 text-sm text-foreground hover:text-muted-foreground transition-colors"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 19l-7-7 7-7"
+                      />
+                    </svg>
+                    Back to tests
+                  </button>
+                </div>
+                <div className="flex-1 overflow-y-auto">
+                  <LocalTestDetailView result={selectedResult} />
+                </div>
+              </>
             ) : (
               <EmptyStateView message="Select a test to view details" />
             )}
@@ -921,10 +976,19 @@ function TestListItem({
   isSelected: boolean;
   onSelect: () => void;
 }) {
+  const handleClick = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("TestListItem clicked:", result.test.name, result.test.uuid);
+    onSelect();
+  };
+
   return (
-    <div
-      onClick={onSelect}
-      className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
+    <button
+      type="button"
+      onClick={handleClick}
+      onTouchEnd={handleClick}
+      className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
         isSelected ? "bg-muted" : "hover:bg-muted/50"
       }`}
     >
@@ -932,7 +996,7 @@ function TestListItem({
       <span className="text-sm text-foreground truncate">
         {result.test.name}
       </span>
-    </div>
+    </button>
   );
 }
 
@@ -967,7 +1031,7 @@ function LocalTestDetailView({ result }: { result: TestResult }) {
 
   if (result.error) {
     return (
-      <div className="p-6">
+      <div className="p-4 md:p-6">
         <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
             <svg

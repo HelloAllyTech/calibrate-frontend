@@ -37,11 +37,11 @@ export function AgentTabContent({
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-8 h-[calc(100vh-200px)]">
+      <div className="flex flex-col md:grid md:grid-cols-2 gap-6 md:gap-8 md:h-[calc(100vh-200px)]">
         {/* Left Column: System Prompt */}
         <div className="flex flex-col">
           <div className="flex items-center gap-2 mb-2">
-            <label className="text-base font-medium text-foreground">
+            <label className="text-sm md:text-base font-medium text-foreground">
               System prompt
             </label>
             <div className="relative group">
@@ -66,35 +66,35 @@ export function AgentTabContent({
               </div>
             </div>
           </div>
-          <div className="bg-muted/30 rounded-xl overflow-hidden border border-border flex-1">
+          <div className="bg-muted/30 rounded-xl overflow-hidden border border-border flex-1 h-[250px] md:h-auto">
             <textarea
               value={systemPrompt}
               onChange={(e) => setSystemPrompt(e.target.value)}
-              className="w-full h-full px-4 py-3 text-base bg-muted/30 text-foreground focus:outline-none resize-none"
+              className="w-full h-full px-3 md:px-4 py-3 text-sm md:text-base bg-muted/30 text-foreground focus:outline-none resize-none"
             />
           </div>
         </div>
 
         {/* Right Column: STT, TTS, LLM */}
-        <div className="space-y-8">
+        <div className="space-y-6 md:space-y-8">
           {/* Speech To Text */}
           <div>
             <div className="flex items-center justify-between mb-2">
               <div>
-                <h3 className="text-base font-medium text-foreground">
+                <h3 className="text-sm md:text-base font-medium text-foreground">
                   Speech To Text
                 </h3>
-                <p className="text-base text-muted-foreground mt-0.5">
+                <p className="text-sm md:text-base text-muted-foreground mt-0.5">
                   Select the STT provider for the agent
                 </p>
               </div>
             </div>
-            <div className="mt-3">
+            <div className="mt-2 md:mt-3">
               <div className="relative">
                 <select
                   value={sttProvider}
                   onChange={(e) => setSttProvider(e.target.value)}
-                  className="w-full h-10 px-4 pr-10 rounded-md text-base border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent cursor-pointer appearance-none"
+                  className="w-full h-9 md:h-10 px-3 md:px-4 pr-10 rounded-md text-sm md:text-base border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent cursor-pointer appearance-none"
                 >
                   {sttProviders.map((provider) => (
                     <option key={provider.value} value={provider.value}>
@@ -125,20 +125,20 @@ export function AgentTabContent({
           <div>
             <div className="flex items-center justify-between mb-2">
               <div>
-                <h3 className="text-base font-medium text-foreground">
+                <h3 className="text-sm md:text-base font-medium text-foreground">
                   Text To Speech
                 </h3>
-                <p className="text-base text-muted-foreground mt-0.5">
+                <p className="text-sm md:text-base text-muted-foreground mt-0.5">
                   Select the TTS provider for the agent
                 </p>
               </div>
             </div>
-            <div className="mt-3">
+            <div className="mt-2 md:mt-3">
               <div className="relative">
                 <select
                   value={ttsProvider}
                   onChange={(e) => setTtsProvider(e.target.value)}
-                  className="w-full h-10 px-4 pr-10 rounded-md text-base border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent cursor-pointer appearance-none"
+                  className="w-full h-9 md:h-10 px-3 md:px-4 pr-10 rounded-md text-sm md:text-base border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent cursor-pointer appearance-none"
                 >
                   {ttsProviders.map((provider) => (
                     <option key={provider.value} value={provider.value}>
@@ -169,16 +169,18 @@ export function AgentTabContent({
           <div>
             <div className="flex items-center justify-between mb-2">
               <div>
-                <h3 className="text-base font-medium text-foreground">LLM</h3>
-                <p className="text-base text-muted-foreground mt-0.5">
+                <h3 className="text-sm md:text-base font-medium text-foreground">
+                  LLM
+                </h3>
+                <p className="text-sm md:text-base text-muted-foreground mt-0.5">
                   Select which provider and model to use for the LLM
                 </p>
               </div>
             </div>
-            <div className="mt-3">
+            <div className="mt-2 md:mt-3">
               <button
                 onClick={() => setLlmModalOpen(true)}
-                className="w-full h-10 px-4 rounded-md text-base border border-border bg-background hover:bg-muted/50 flex items-center justify-between cursor-pointer transition-colors"
+                className="w-full h-9 md:h-10 px-3 md:px-4 rounded-md text-sm md:text-base border border-border bg-background hover:bg-muted/50 flex items-center justify-between cursor-pointer transition-colors"
               >
                 <span
                   className={

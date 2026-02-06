@@ -18,7 +18,7 @@ export default function MetricsPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [addMetricSidebarOpen, setAddMetricSidebarOpen] = useState(false);
   const [metrics, setMetrics] = useState<MetricData[]>([]);
@@ -27,6 +27,12 @@ export default function MetricsPage() {
   // Set page title
   useEffect(() => {
     document.title = "Metrics | Calibrate";
+  }, []);
+
+  // Initialize sidebar state based on screen size
+  useEffect(() => {
+    const isDesktop = window.innerWidth >= 768;
+    setSidebarOpen(isDesktop);
   }, []);
   const [metricsError, setMetricsError] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
@@ -412,23 +418,25 @@ export default function MetricsPage() {
       sidebarOpen={sidebarOpen}
       onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
     >
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6 py-4 md:py-6">
         {/* Header */}
-        <div>
-          <h1 className="text-2xl font-semibold">Metrics</h1>
-          <p className="text-muted-foreground text-base leading-relaxed mt-1">
-            Understand and analyze the performance of your agents
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+          <div>
+            <h1 className="text-xl md:text-2xl font-semibold">Metrics</h1>
+            <p className="text-muted-foreground text-sm md:text-base leading-relaxed mt-1">
+              Understand and analyze the performance of your agents
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              resetForm();
+              setAddMetricSidebarOpen(true);
+            }}
+            className="h-9 md:h-10 px-4 rounded-md text-sm md:text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer flex-shrink-0"
+          >
+            Add metric
+          </button>
         </div>
-        <button
-          onClick={() => {
-            resetForm();
-            setAddMetricSidebarOpen(true);
-          }}
-          className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
-        >
-          Add metric
-        </button>
 
         {/* Search Input */}
         <div className="relative max-w-md">
@@ -452,7 +460,7 @@ export default function MetricsPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search metrics"
-            className="w-full h-10 pl-10 pr-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+            className="w-full h-9 md:h-10 pl-10 pr-4 rounded-md text-sm md:text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
           />
         </div>
 
@@ -480,20 +488,22 @@ export default function MetricsPage() {
             </svg>
           </div>
         ) : metricsError ? (
-          <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-            <p className="text-base text-red-500 mb-2">{metricsError}</p>
+          <div className="border border-border rounded-xl p-8 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+            <p className="text-sm md:text-base text-red-500 mb-2">
+              {metricsError}
+            </p>
             <button
               onClick={() => window.location.reload()}
-              className="text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              className="text-sm md:text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             >
               Retry
             </button>
           </div>
         ) : filteredMetrics.length === 0 ? (
-          <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-            <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center mb-4">
+          <div className="border border-border rounded-xl p-8 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+            <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-muted flex items-center justify-center mb-3 md:mb-4">
               <svg
-                className="w-7 h-7 text-muted-foreground"
+                className="w-6 h-6 md:w-7 md:h-7 text-muted-foreground"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -506,10 +516,10 @@ export default function MetricsPage() {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-1">
+            <h3 className="text-base md:text-lg font-semibold text-foreground mb-1">
               No metrics found
             </h3>
-            <p className="text-base text-muted-foreground mb-4">
+            <p className="text-sm md:text-base text-muted-foreground mb-3 md:mb-4 text-center">
               {searchQuery
                 ? "No metrics match your search"
                 : "You haven't created any metrics yet"}
@@ -519,89 +529,160 @@ export default function MetricsPage() {
                 resetForm();
                 setAddMetricSidebarOpen(true);
               }}
-              className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
+              className="h-9 md:h-10 px-4 rounded-md text-sm md:text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
             >
               Add metric
             </button>
           </div>
         ) : (
-          <div className="border border-border rounded-xl overflow-hidden">
-            {/* Table Header */}
-            <div className="grid grid-cols-[200px_1fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
-              <div className="text-sm font-medium text-muted-foreground">
-                Name
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block border border-border rounded-xl overflow-hidden">
+              {/* Table Header */}
+              <div className="grid grid-cols-[200px_1fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
+                <div className="text-sm font-medium text-muted-foreground">
+                  Name
+                </div>
+                <div className="text-sm font-medium text-muted-foreground">
+                  Description
+                </div>
+                <div className="w-16"></div>
               </div>
-              <div className="text-sm font-medium text-muted-foreground">
-                Description
-              </div>
-              <div className="w-16"></div>
-            </div>
-            {/* Table Rows */}
-            {filteredMetrics.map((metric) => (
-              <div
-                key={metric.uuid}
-                onClick={() => openEditMetric(metric.uuid)}
-                className="grid grid-cols-[200px_1fr_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer items-center"
-              >
-                <div className="overflow-x-auto max-w-full">
-                  <p className="text-sm font-medium text-foreground whitespace-nowrap">
-                    {metric.name}
+              {/* Table Rows */}
+              {filteredMetrics.map((metric) => (
+                <div
+                  key={metric.uuid}
+                  onClick={() => openEditMetric(metric.uuid)}
+                  className="grid grid-cols-[200px_1fr_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer items-center"
+                >
+                  <div className="overflow-x-auto max-w-full">
+                    <p className="text-sm font-medium text-foreground whitespace-nowrap">
+                      {metric.name}
+                    </p>
+                  </div>
+                  <p className="text-sm text-muted-foreground line-clamp-1">
+                    {metric.description || "—"}
                   </p>
-                </div>
-                <p className="text-sm text-muted-foreground line-clamp-1">
-                  {metric.description || "—"}
-                </p>
-                <div className="flex items-center gap-1">
-                  {/* Duplicate Button */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openDuplicateDialog(metric);
-                    }}
-                    className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-pointer"
-                    title="Duplicate metric"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={1.5}
+                  <div className="flex items-center gap-1">
+                    {/* Duplicate Button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDuplicateDialog(metric);
+                      }}
+                      className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-pointer"
+                      title="Duplicate metric"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
-                      />
-                    </svg>
-                  </button>
-                  {/* Delete Button */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openDeleteDialog(metric);
-                    }}
-                    className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
-                    title="Delete metric"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
+                        />
+                      </svg>
+                    </button>
+                    {/* Delete Button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDeleteDialog(metric);
+                      }}
+                      className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+                      title="Delete metric"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                      />
-                    </svg>
-                  </button>
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-3">
+              {filteredMetrics.map((metric) => (
+                <div
+                  key={metric.uuid}
+                  className="border border-border rounded-lg overflow-hidden bg-background"
+                >
+                  <div
+                    onClick={() => openEditMetric(metric.uuid)}
+                    className="p-4 cursor-pointer"
+                  >
+                    <div className="font-medium text-sm text-foreground mb-1">
+                      {metric.name}
+                    </div>
+                    <div className="text-xs text-muted-foreground line-clamp-2">
+                      {metric.description || "—"}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 pb-3 pt-0">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDuplicateDialog(metric);
+                      }}
+                      className="flex-1 h-8 flex items-center justify-center gap-2 rounded-md text-xs font-medium text-foreground bg-muted hover:bg-muted/70 transition-colors"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
+                        />
+                      </svg>
+                      Duplicate
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDeleteDialog(metric);
+                      }}
+                      className="flex-1 h-8 flex items-center justify-center gap-2 rounded-md text-xs font-medium text-red-500 bg-red-500/10 hover:bg-red-500/20 transition-colors"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                        />
+                      </svg>
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
 
@@ -617,9 +698,9 @@ export default function MetricsPage() {
             }}
           />
           {/* Sidebar */}
-          <div className="relative w-full max-w-xl bg-background border-l border-border flex flex-col h-full shadow-2xl">
+          <div className="relative w-full md:max-w-xl bg-background md:border-l border-border flex flex-col h-full shadow-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+            <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-b border-border">
               <div className="flex items-center gap-3">
                 <svg
                   className="w-5 h-5 text-muted-foreground"
@@ -634,7 +715,7 @@ export default function MetricsPage() {
                     d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"
                   />
                 </svg>
-                <h2 className="text-lg font-semibold">
+                <h2 className="text-base md:text-lg font-semibold">
                   {editingMetricUuid ? "Edit metric" : "Add metric"}
                 </h2>
               </div>
@@ -662,7 +743,7 @@ export default function MetricsPage() {
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
+            <div className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col gap-4 md:gap-6">
               {isLoadingMetric ? (
                 <div className="flex items-center justify-center py-12">
                   <svg
@@ -689,7 +770,7 @@ export default function MetricsPage() {
                 <>
                   {/* Metric name */}
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label className="block text-xs md:text-sm font-medium mb-2">
                       Metric name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -697,7 +778,7 @@ export default function MetricsPage() {
                       value={metricName}
                       placeholder="Enter the name of the metric"
                       onChange={(e) => setMetricName(e.target.value)}
-                      className={`w-full h-10 px-4 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent ${
+                      className={`w-full h-9 md:h-10 px-3 md:px-4 rounded-md text-sm md:text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent ${
                         validationAttempted &&
                         (!metricName.trim() || isNameDuplicate(metricName))
                           ? "border-red-500"
@@ -705,7 +786,7 @@ export default function MetricsPage() {
                       }`}
                     />
                     {validationAttempted && isNameDuplicate(metricName) && (
-                      <p className="text-sm text-red-500 mt-1">
+                      <p className="text-xs md:text-sm text-red-500 mt-1">
                         A metric with this name already exists
                       </p>
                     )}
@@ -906,11 +987,11 @@ function DuplicateMetricDialog({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="mb-6">
-          <h2 className="text-2xl font-semibold tracking-tight mb-1">
+        <div className="mb-4 md:mb-6">
+          <h2 className="text-xl md:text-2xl font-semibold tracking-tight mb-1">
             Duplicate metric
           </h2>
-          <p className="text-muted-foreground text-[15px]">
+          <p className="text-muted-foreground text-sm md:text-[15px]">
             Choose a name for the duplicated metric
           </p>
         </div>

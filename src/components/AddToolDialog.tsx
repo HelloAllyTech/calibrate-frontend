@@ -61,11 +61,13 @@ export function AddToolDialog({
   const sidebarContentRef = useRef<HTMLDivElement>(null);
 
   // Webhook-specific state
-  const [webhookMethod, setWebhookMethod] = useState<"GET" | "POST" | "PUT" | "PATCH" | "DELETE">("POST");
+  const [webhookMethod, setWebhookMethod] = useState<
+    "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
+  >("POST");
   const [webhookUrl, setWebhookUrl] = useState("");
   const [responseTimeout, setResponseTimeout] = useState(20);
   const [showTimeoutTooltip, setShowTimeoutTooltip] = useState(false);
-  
+
   // Headers state
   type WebhookHeader = {
     id: string;
@@ -76,7 +78,9 @@ export function AddToolDialog({
 
   // Query parameters state (for webhook tools) - uses same Parameter type
   const [queryParameters, setQueryParameters] = useState<Parameter[]>([]);
-  const [newlyAddedQueryParamId, setNewlyAddedQueryParamId] = useState<string | null>(null);
+  const [newlyAddedQueryParamId, setNewlyAddedQueryParamId] = useState<
+    string | null
+  >(null);
   const queryParamRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
   // Body parameters state (for webhook tools with POST, PUT, PATCH methods)
@@ -450,7 +454,10 @@ export function AddToolDialog({
   };
 
   // Query parameter handlers (same logic, different state)
-  const handleQueryUpdateAtPath = (path: string[], updates: Partial<Parameter>) => {
+  const handleQueryUpdateAtPath = (
+    path: string[],
+    updates: Partial<Parameter>
+  ) => {
     setQueryParameters((prev) => updateParameterAtPath(prev, path, updates));
   };
 
@@ -489,7 +496,10 @@ export function AddToolDialog({
   };
 
   // Body parameter handlers (same logic, different state)
-  const handleBodyUpdateAtPath = (path: string[], updates: Partial<Parameter>) => {
+  const handleBodyUpdateAtPath = (
+    path: string[],
+    updates: Partial<Parameter>
+  ) => {
     setBodyParameters((prev) => updateParameterAtPath(prev, path, updates));
   };
 
@@ -794,10 +804,12 @@ export function AddToolDialog({
         if (toolData.config.webhook.queryParameters) {
           const queryParams: Parameter[] = [];
           if (Array.isArray(toolData.config.webhook.queryParameters)) {
-            toolData.config.webhook.queryParameters.forEach((paramConfig: any) => {
-              const paramName = paramConfig.id || paramConfig.name || "";
-              queryParams.push(parseParameterSchema(paramName, paramConfig));
-            });
+            toolData.config.webhook.queryParameters.forEach(
+              (paramConfig: any) => {
+                const paramName = paramConfig.id || paramConfig.name || "";
+                queryParams.push(parseParameterSchema(paramName, paramConfig));
+              }
+            );
           }
           setQueryParameters(queryParams);
         }
@@ -807,10 +819,12 @@ export function AddToolDialog({
           if (toolData.config.webhook.body.parameters) {
             const bodyParams: Parameter[] = [];
             if (Array.isArray(toolData.config.webhook.body.parameters)) {
-              toolData.config.webhook.body.parameters.forEach((paramConfig: any) => {
-                const paramName = paramConfig.id || paramConfig.name || "";
-                bodyParams.push(parseParameterSchema(paramName, paramConfig));
-              });
+              toolData.config.webhook.body.parameters.forEach(
+                (paramConfig: any) => {
+                  const paramName = paramConfig.id || paramConfig.name || "";
+                  bodyParams.push(parseParameterSchema(paramName, paramConfig));
+                }
+              );
             }
             setBodyParameters(bodyParams);
           }
@@ -850,18 +864,21 @@ export function AddToolDialog({
   const createTool = async () => {
     setValidationAttempted(true);
     if (!toolName.trim() || !toolDescription.trim()) return;
-    
+
     if (toolType === "webhook") {
       // Validate webhook URL
       if (!isValidUrl(webhookUrl)) return;
       // Validate headers - if any header exists, both name and value are required
-      if (webhookHeaders.length > 0 && hasInvalidHeaders(webhookHeaders)) return;
+      if (webhookHeaders.length > 0 && hasInvalidHeaders(webhookHeaders))
+        return;
       // Validate query parameters
-      if (queryParameters.length > 0 && hasInvalidParameters(queryParameters)) return;
+      if (queryParameters.length > 0 && hasInvalidParameters(queryParameters))
+        return;
       // Validate body description and parameters for POST/PUT/PATCH methods
       if (["POST", "PUT", "PATCH"].includes(webhookMethod)) {
         if (!bodyDescription.trim()) return;
-        if (bodyParameters.length > 0 && hasInvalidParameters(bodyParameters)) return;
+        if (bodyParameters.length > 0 && hasInvalidParameters(bodyParameters))
+          return;
       }
     } else {
       // Validate structured output parameters
@@ -946,18 +963,21 @@ export function AddToolDialog({
   const updateTool = async () => {
     setValidationAttempted(true);
     if (!toolName.trim() || !toolDescription.trim() || !editingToolUuid) return;
-    
+
     if (toolType === "webhook") {
       // Validate webhook URL
       if (!isValidUrl(webhookUrl)) return;
       // Validate headers - if any header exists, both name and value are required
-      if (webhookHeaders.length > 0 && hasInvalidHeaders(webhookHeaders)) return;
+      if (webhookHeaders.length > 0 && hasInvalidHeaders(webhookHeaders))
+        return;
       // Validate query parameters
-      if (queryParameters.length > 0 && hasInvalidParameters(queryParameters)) return;
+      if (queryParameters.length > 0 && hasInvalidParameters(queryParameters))
+        return;
       // Validate body description and parameters for POST/PUT/PATCH methods
       if (["POST", "PUT", "PATCH"].includes(webhookMethod)) {
         if (!bodyDescription.trim()) return;
-        if (bodyParameters.length > 0 && hasInvalidParameters(bodyParameters)) return;
+        if (bodyParameters.length > 0 && hasInvalidParameters(bodyParameters))
+          return;
       }
     } else {
       // Validate structured output parameters
@@ -1043,14 +1063,11 @@ export function AddToolDialog({
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
       {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/50"
-        onClick={handleClose}
-      />
+      <div className="absolute inset-0 bg-black/50" onClick={handleClose} />
       {/* Sidebar */}
-      <div className="relative w-[40%] min-w-[500px] bg-background border-l border-border flex flex-col h-full shadow-2xl">
+      <div className="relative w-full md:w-[40%] md:min-w-[500px] bg-background md:border-l border-border flex flex-col h-full shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+        <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-b border-border">
           <div className="flex items-center gap-3">
             <svg
               className="w-5 h-5 text-muted-foreground"
@@ -1143,9 +1160,7 @@ export function AddToolDialog({
               {/* Configuration Section */}
               <div className="border border-border rounded-xl p-5 space-y-5 bg-muted/100">
                 <div>
-                  <h3 className="text-base font-medium mb-1">
-                    Configuration
-                  </h3>
+                  <h3 className="text-base font-medium mb-1">Configuration</h3>
                 </div>
 
                 {/* Name */}
@@ -1198,7 +1213,12 @@ export function AddToolDialog({
                             value={webhookMethod}
                             onChange={(e) =>
                               setWebhookMethod(
-                                e.target.value as "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
+                                e.target.value as
+                                  | "GET"
+                                  | "POST"
+                                  | "PUT"
+                                  | "PATCH"
+                                  | "DELETE"
                               )
                             }
                             className="w-full h-10 px-4 pr-10 rounded-md text-base border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent appearance-none cursor-pointer"
@@ -1268,15 +1288,17 @@ export function AddToolDialog({
                           <div
                             className="absolute -top-1 transform -translate-x-1/2 pointer-events-none z-10"
                             style={{
-                              left: `calc(${((responseTimeout - 1) / 119) * 100}% + ${8 - ((responseTimeout - 1) / 119) * 16}px)`,
+                              left: `calc(${
+                                ((responseTimeout - 1) / 119) * 100
+                              }% + ${
+                                8 - ((responseTimeout - 1) / 119) * 16
+                              }px)`,
                             }}
                           >
                             <div className="bg-foreground text-background text-xs font-medium px-2 py-1 rounded-md whitespace-nowrap">
                               {responseTimeout} secs
                             </div>
-                            <div
-                              className="w-2 h-2 bg-foreground transform rotate-45 absolute left-1/2 -translate-x-1/2 -bottom-1"
-                            />
+                            <div className="w-2 h-2 bg-foreground transform rotate-45 absolute left-1/2 -translate-x-1/2 -bottom-1" />
                           </div>
                         )}
                         {/* Track background */}
@@ -1420,12 +1442,10 @@ export function AddToolDialog({
                 <div className="border border-border rounded-xl p-5 space-y-5 bg-muted/100">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h3 className="text-base font-medium mb-1">
-                        Parameters
-                      </h3>
+                      <h3 className="text-base font-medium mb-1">Parameters</h3>
                       <p className="text-sm text-muted-foreground">
-                        Define the structure of the output that the agent
-                        should produce
+                        Define the structure of the output that the agent should
+                        produce
                       </p>
                     </div>
                     <button
@@ -1507,76 +1527,77 @@ export function AddToolDialog({
               )}
 
               {/* Body Parameters Section - Webhook Tools with POST, PUT, PATCH Only */}
-              {toolType === "webhook" && ["POST", "PUT", "PATCH"].includes(webhookMethod) && (
-                <div className="border border-border rounded-xl p-5 space-y-5 bg-muted/50">
-                  <div>
-                    <h3 className="text-base font-medium mb-1">Body parameters</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Define parameters that will be collected by the LLM and
-                      sent as the body of the request.
-                    </p>
-                  </div>
-
-                  {/* Inner container for body content */}
-                  <div className="border border-border rounded-xl p-4 space-y-4 bg-background">
-                    {/* Body Description */}
+              {toolType === "webhook" &&
+                ["POST", "PUT", "PATCH"].includes(webhookMethod) && (
+                  <div className="border border-border rounded-xl p-5 space-y-5 bg-muted/50">
                     <div>
-                      <label className="block text-sm font-medium mb-2">
-                        Description <span className="text-red-500">*</span>
-                      </label>
-                      <textarea
-                        value={bodyDescription}
-                        onChange={(e) => setBodyDescription(e.target.value)}
-                        placeholder="Describe the body structure"
-                        rows={3}
-                        className={`w-full px-4 py-3 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none ${
-                          validationAttempted && !bodyDescription.trim()
-                            ? "border-red-500"
-                            : "border-border"
-                        }`}
-                      />
+                      <h3 className="text-base font-medium mb-1">
+                        Body parameters
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        Define parameters that will be collected by the LLM and
+                        sent as the body of the request.
+                      </p>
                     </div>
 
-                    {/* Properties - same UI as object type properties */}
-                    <div>
-                      <label className="block text-sm font-medium mb-2">
-                        Properties
-                      </label>
-                      <NestedContainer onAddProperty={addBodyParameter}>
-                        {/* Body Parameter Cards */}
-                        {bodyParameters.length > 0 && (
-                          <div className="space-y-4">
-                            {bodyParameters.map((param) => (
-                              <ParameterCard
-                                key={param.id}
-                                param={param}
-                                path={[]}
-                                onUpdate={handleBodyUpdateAtPath}
-                                onRemove={handleBodyRemoveAtPath}
-                                onAddProperty={handleBodyAddPropertyAtPath}
-                                onSetItems={handleBodySetItemsAtPath}
-                                validationAttempted={validationAttempted}
-                                siblingNames={bodyParameters
-                                  .filter((p) => p.id !== param.id)
-                                  .map((p) => p.name)}
-                              />
-                            ))}
-                          </div>
-                        )}
-                      </NestedContainer>
+                    {/* Inner container for body content */}
+                    <div className="border border-border rounded-xl p-4 space-y-4 bg-background">
+                      {/* Body Description */}
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          Description <span className="text-red-500">*</span>
+                        </label>
+                        <textarea
+                          value={bodyDescription}
+                          onChange={(e) => setBodyDescription(e.target.value)}
+                          placeholder="Describe the body structure"
+                          rows={3}
+                          className={`w-full px-4 py-3 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none ${
+                            validationAttempted && !bodyDescription.trim()
+                              ? "border-red-500"
+                              : "border-border"
+                          }`}
+                        />
+                      </div>
+
+                      {/* Properties - same UI as object type properties */}
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          Properties
+                        </label>
+                        <NestedContainer onAddProperty={addBodyParameter}>
+                          {/* Body Parameter Cards */}
+                          {bodyParameters.length > 0 && (
+                            <div className="space-y-4">
+                              {bodyParameters.map((param) => (
+                                <ParameterCard
+                                  key={param.id}
+                                  param={param}
+                                  path={[]}
+                                  onUpdate={handleBodyUpdateAtPath}
+                                  onRemove={handleBodyRemoveAtPath}
+                                  onAddProperty={handleBodyAddPropertyAtPath}
+                                  onSetItems={handleBodySetItemsAtPath}
+                                  validationAttempted={validationAttempted}
+                                  siblingNames={bodyParameters
+                                    .filter((p) => p.id !== param.id)
+                                    .map((p) => p.name)}
+                                />
+                              ))}
+                            </div>
+                          )}
+                        </NestedContainer>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
             </>
           )}
         </div>
 
         {/* Footer */}
         <div className="px-6 py-4 border-t border-border space-y-3">
-          {createError && (
-            <p className="text-sm text-red-500">{createError}</p>
-          )}
+          {createError && <p className="text-sm text-red-500">{createError}</p>}
           <div className="flex items-center justify-end gap-3">
             <button
               onClick={handleClose}

@@ -208,17 +208,19 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6 py-4 md:py-6">
       {/* Header */}
-      <div>
-        <h2 className="text-2xl font-semibold tracking-tight">Agents</h2>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h2 className="text-xl md:text-2xl font-semibold tracking-tight">
+          Agents
+        </h2>
+        <button
+          onClick={() => setDialogOpen(true)}
+          className="h-9 md:h-10 px-4 rounded-md text-sm md:text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
+        >
+          New agent
+        </button>
       </div>
-      <button
-        onClick={() => setDialogOpen(true)}
-        className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
-      >
-        New agent
-      </button>
 
       {/* Search Bar */}
       <div className="relative">
@@ -242,7 +244,7 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search agents"
-          className="w-full h-10 pl-10 pr-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+          className="w-full h-9 md:h-10 pl-10 pr-4 rounded-md text-sm md:text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
         />
       </div>
 
@@ -282,10 +284,10 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
           </div>
         </div>
       ) : sortedAgents.length === 0 ? (
-        <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-          <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center mb-4">
+        <div className="border border-border rounded-xl p-8 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+          <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-muted flex items-center justify-center mb-3 md:mb-4">
             <svg
-              className="w-7 h-7 text-muted-foreground"
+              className="w-6 h-6 md:w-7 md:h-7 text-muted-foreground"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -298,145 +300,125 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
               />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-foreground mb-1">
+          <h3 className="text-base md:text-lg font-semibold text-foreground mb-1">
             No agents found
           </h3>
-          <p className="text-base text-muted-foreground mb-4">
+          <p className="text-sm md:text-base text-muted-foreground mb-3 md:mb-4 text-center">
             Get started by creating your first agent
           </p>
           <button
             onClick={() => setDialogOpen(true)}
-            className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
+            className="h-9 md:h-10 px-4 rounded-md text-sm md:text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
           >
             New agent
           </button>
         </div>
       ) : (
-        <div className="border border-border rounded-xl overflow-hidden">
-          {/* Table Header */}
-          <div className="grid grid-cols-[1fr_1fr_auto_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
-            <div className="text-sm font-medium text-muted-foreground">
-              Name
-            </div>
-            <div className="text-sm font-medium text-muted-foreground">
-              <button
-                onClick={toggleSort}
-                className="flex items-center gap-2 hover:text-foreground transition-colors cursor-pointer"
-              >
-                Last updated at
-                <svg
-                  className={`w-4 h-4 transition-transform ${
-                    sortOrder === "asc" ? "rotate-180" : ""
-                  }`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"
-                  />
-                </svg>
-              </button>
-            </div>
-            <div className="w-8"></div>
-            <div className="w-8"></div>
-          </div>
-          {/* Table Body */}
-          {sortedAgents.map((agent) => (
-            <div
-              key={agent.uuid}
-              className="grid grid-cols-[1fr_1fr_auto_auto] gap-4 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors"
+        <>
+          {/* Mobile Sort Button */}
+          <div className="flex justify-end md:hidden mb-3">
+            <button
+              onClick={toggleSort}
+              className="flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50"
             >
-              {/* Name Column */}
-              <Link
-                href={`/agents/${agent.uuid}`}
-                onClick={(e) => {
-                  if (onNavigateToAgent) {
-                    e.preventDefault();
-                    onNavigateToAgent(agent.uuid);
-                  }
-                }}
-                className="flex items-center px-4 py-2"
+              Sort by date
+              <svg
+                className={`w-4 h-4 transition-transform ${
+                  sortOrder === "asc" ? "rotate-180" : ""
+                }`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
               >
-                <div className="text-sm font-medium text-foreground">
-                  {agent.name}
-                </div>
-              </Link>
-              {/* Last Updated At Column */}
-              <Link
-                href={`/agents/${agent.uuid}`}
-                onClick={(e) => {
-                  if (onNavigateToAgent) {
-                    e.preventDefault();
-                    onNavigateToAgent(agent.uuid);
-                  }
-                }}
-                className="flex items-center px-4 py-2"
-              >
-                <span className="text-sm text-muted-foreground">
-                  {agent.updatedAt}
-                </span>
-              </Link>
-              {/* Duplicate Button */}
-              <div className="flex items-center">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"
+                />
+              </svg>
+            </button>
+          </div>
+
+          {/* Desktop Table View */}
+          <div className="hidden md:block border border-border rounded-xl overflow-hidden">
+            {/* Table Header */}
+            <div className="grid grid-cols-[1fr_1fr_auto_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
+              <div className="text-sm font-medium text-muted-foreground">
+                Name
+              </div>
+              <div className="text-sm font-medium text-muted-foreground">
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openDuplicateDialog(agent);
-                  }}
-                  className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-pointer"
-                  title="Duplicate agent"
+                  onClick={toggleSort}
+                  className="flex items-center gap-2 hover:text-foreground transition-colors cursor-pointer"
                 >
+                  Last updated at
                   <svg
-                    className="w-4 h-4"
+                    className={`w-4 h-4 transition-transform ${
+                      sortOrder === "asc" ? "rotate-180" : ""
+                    }`}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
-                    strokeWidth={1.5}
+                    strokeWidth={2}
                   >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
+                      d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"
                     />
                   </svg>
                 </button>
               </div>
-              {/* Delete Button */}
-              <div className="flex items-center">
-                <button
+              <div className="w-8"></div>
+              <div className="w-8"></div>
+            </div>
+            {/* Table Body */}
+            {sortedAgents.map((agent) => (
+              <div
+                key={agent.uuid}
+                className="grid grid-cols-[1fr_1fr_auto_auto] gap-4 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors"
+              >
+                {/* Name Column */}
+                <Link
+                  href={`/agents/${agent.uuid}`}
                   onClick={(e) => {
-                    e.stopPropagation();
-                    openDeleteDialog(agent);
+                    if (onNavigateToAgent) {
+                      e.preventDefault();
+                      onNavigateToAgent(agent.uuid);
+                    }
                   }}
-                  disabled={deletingAgentUuid === agent.uuid}
-                  className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                  title="Delete agent"
+                  className="flex items-center px-4 py-2"
                 >
-                  {deletingAgentUuid === agent.uuid ? (
-                    <svg
-                      className="w-4 h-4 animate-spin"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                  ) : (
+                  <div className="text-sm font-medium text-foreground">
+                    {agent.name}
+                  </div>
+                </Link>
+                {/* Last Updated At Column */}
+                <Link
+                  href={`/agents/${agent.uuid}`}
+                  onClick={(e) => {
+                    if (onNavigateToAgent) {
+                      e.preventDefault();
+                      onNavigateToAgent(agent.uuid);
+                    }
+                  }}
+                  className="flex items-center px-4 py-2"
+                >
+                  <span className="text-sm text-muted-foreground">
+                    {agent.updatedAt}
+                  </span>
+                </Link>
+                {/* Duplicate Button */}
+                <div className="flex items-center">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openDuplicateDialog(agent);
+                    }}
+                    className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-pointer"
+                    title="Duplicate agent"
+                  >
                     <svg
                       className="w-4 h-4"
                       fill="none"
@@ -447,15 +429,162 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                        d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
                       />
                     </svg>
-                  )}
-                </button>
+                  </button>
+                </div>
+                {/* Delete Button */}
+                <div className="flex items-center">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openDeleteDialog(agent);
+                    }}
+                    disabled={deletingAgentUuid === agent.uuid}
+                    className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Delete agent"
+                  >
+                    {deletingAgentUuid === agent.uuid ? (
+                      <svg
+                        className="w-4 h-4 animate-spin"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                    ) : (
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="md:hidden space-y-3">
+            {sortedAgents.map((agent) => (
+              <div
+                key={agent.uuid}
+                className="border border-border rounded-lg overflow-hidden bg-background"
+              >
+                <Link
+                  href={`/agents/${agent.uuid}`}
+                  onClick={(e) => {
+                    if (onNavigateToAgent) {
+                      e.preventDefault();
+                      onNavigateToAgent(agent.uuid);
+                    }
+                  }}
+                  className="block p-4"
+                >
+                  <div className="font-medium text-sm text-foreground mb-1">
+                    {agent.name}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {agent.updatedAt}
+                  </div>
+                </Link>
+                <div className="flex items-center gap-2 px-4 pb-3 pt-0">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openDuplicateDialog(agent);
+                    }}
+                    className="flex-1 h-8 flex items-center justify-center gap-2 rounded-md text-xs font-medium text-foreground bg-muted/50 hover:bg-muted transition-colors"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={1.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
+                      />
+                    </svg>
+                    Duplicate
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openDeleteDialog(agent);
+                    }}
+                    disabled={deletingAgentUuid === agent.uuid}
+                    className="flex-1 h-8 flex items-center justify-center gap-2 rounded-md text-xs font-medium text-red-500 bg-red-500/10 hover:bg-red-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {deletingAgentUuid === agent.uuid ? (
+                      <svg
+                        className="w-4 h-4 animate-spin"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                    ) : (
+                      <>
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={1.5}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                          />
+                        </svg>
+                        Delete
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {/* New Agent Dialog */}

@@ -67,10 +67,16 @@ export default function SimulationDetailPage() {
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
   const uuid = params.uuid as string;
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [simulation, setSimulation] = useState<SimulationData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Initialize sidebar state based on screen size
+  useEffect(() => {
+    const isDesktop = window.innerWidth >= 768;
+    setSidebarOpen(isDesktop);
+  }, []);
 
   // Form state
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
@@ -660,7 +666,7 @@ export default function SimulationDetailPage() {
       customHeader={customHeader}
       headerActions={headerActions}
     >
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6 py-4 md:py-6">
         {/* Content */}
         {isLoading ? (
           <div className="flex items-center justify-center gap-3 py-8">
@@ -685,20 +691,20 @@ export default function SimulationDetailPage() {
             </svg>
           </div>
         ) : error ? (
-          <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-            <p className="text-base text-red-500 mb-2">{error}</p>
+          <div className="border border-border rounded-xl p-8 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+            <p className="text-sm md:text-base text-red-500 mb-2">{error}</p>
             <button
               onClick={() => window.location.reload()}
-              className="text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              className="text-sm md:text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             >
               Retry
             </button>
           </div>
         ) : simulation ? (
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             {/* Tabs - only shown when configured */}
             {isConfigured && (
-              <div className="flex gap-6 border-b border-border">
+              <div className="flex gap-4 md:gap-6 border-b border-border overflow-x-auto">
                 <button
                   onClick={() => {
                     setActiveTab("config");
@@ -708,7 +714,7 @@ export default function SimulationDetailPage() {
                       `/simulations/${uuid}?tab=config`
                     );
                   }}
-                  className={`pb-2 text-base font-medium transition-colors cursor-pointer ${
+                  className={`pb-2 text-sm md:text-base font-medium transition-colors cursor-pointer whitespace-nowrap ${
                     activeTab === "config"
                       ? "text-foreground border-b-2 border-foreground"
                       : "text-muted-foreground hover:text-foreground"
@@ -725,7 +731,7 @@ export default function SimulationDetailPage() {
                       `/simulations/${uuid}?tab=runs`
                     );
                   }}
-                  className={`pb-2 text-base font-medium transition-colors cursor-pointer ${
+                  className={`pb-2 text-sm md:text-base font-medium transition-colors cursor-pointer whitespace-nowrap ${
                     activeTab === "runs"
                       ? "text-foreground border-b-2 border-foreground"
                       : "text-muted-foreground hover:text-foreground"

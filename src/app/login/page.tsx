@@ -45,15 +45,20 @@ const tabs = [
   },
 ];
 
-const WHATSAPP_INVITE_URL = "https://chat.whatsapp.com/JygDNcZ943a3VmZDXYMg5Z?mode=gi_t";
+const WHATSAPP_INVITE_URL =
+  "https://chat.whatsapp.com/JygDNcZ943a3VmZDXYMg5Z?mode=gi_t";
 const GITHUB_REPO_URL = "https://github.com/artpark-sahai-org/calibrate";
 
 export default function LoginPage() {
   const [activeTab, setActiveTab] = useState("stt");
+  const [getStartedTab, setGetStartedTab] = useState<"evaluate" | "learn">(
+    "evaluate"
+  );
 
   // Set page title
   useEffect(() => {
-    document.title = "Calibrate | Evaluation and testing framework for voice agents";
+    document.title =
+      "Calibrate | Evaluation and testing framework for voice agents";
   }, []);
 
   const handleGoogleSignIn = () => {
@@ -97,30 +102,31 @@ export default function LoginPage() {
         <div className="absolute top-20 left-1/4 w-64 h-64 bg-emerald-100 rounded-full blur-3xl opacity-40"></div>
         <div className="absolute top-40 right-1/4 w-48 h-48 bg-blue-100 rounded-full blur-3xl opacity-40"></div>
 
-        <div className="relative max-w-4xl mx-auto px-8 pt-24 pb-16 text-center">
-          <h1 className="text-5xl md:text-6xl font-medium text-gray-900 leading-[1.1] mb-6 tracking-[-0.02em]">
+        <div className="relative max-w-4xl mx-auto px-4 md:px-8 pt-16 md:pt-24 pb-12 md:pb-16 text-center">
+          <h1 className="text-4xl md:text-6xl font-medium text-gray-900 leading-[1.1] mb-4 md:mb-6 tracking-[-0.02em]">
             Build & scale your
             <br />
             voice agents with confidence
           </h1>
 
-          <p className="text-xl text-gray-500 max-w-2xl mx-auto">
-            Evaluate every component of your voice agent, identify where it fails and
-            rapidly improve performance with an automated testing process
+          <p className="text-base md:text-xl text-gray-500 max-w-2xl mx-auto">
+            Evaluate every component of your voice agent, identify where it
+            fails and rapidly improve performance with an automated testing
+            process
           </p>
         </div>
       </div>
 
       {/* Feature Tabs Section */}
-      <div className="px-12 pb-20">
-        {/* Tabs */}
-        <div className="flex justify-center mb-12 max-w-7xl mx-auto">
+      <div className="px-6 md:px-8 lg:px-12 pb-16 md:pb-20">
+        {/* Tabs - Hidden on mobile */}
+        <div className="hidden md:flex justify-center mb-8 md:mb-12 max-w-7xl mx-auto">
           <div className="inline-flex items-center gap-1 p-1 bg-gray-100 rounded-xl">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+                className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap ${
                   activeTab === tab.id
                     ? "bg-white text-gray-900 shadow-sm"
                     : "text-gray-600 hover:text-gray-900"
@@ -132,11 +138,11 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Two Column Layout - Text left, Images right */}
-        <div className="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-8 items-start">
+        {/* Desktop: Tabbed view */}
+        <div className="hidden md:grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-6 md:gap-8 items-start">
           {/* Left - Text Content */}
           <div className="text-left lg:sticky lg:top-8">
-            <h2 className="text-3xl md:text-4xl leading-[1.2] tracking-[-0.01em] mb-6">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl leading-[1.2] tracking-[-0.01em] mb-4 md:mb-6">
               <span className="font-medium text-gray-900">
                 {tabs.find((t) => t.id === activeTab)?.headingBold}
               </span>{" "}
@@ -145,7 +151,7 @@ export default function LoginPage() {
               </span>
             </h2>
             {/* Description */}
-            <p className="text-gray-500">
+            <p className="text-sm md:text-base text-gray-500">
               {tabs.find((t) => t.id === activeTab)?.description}
             </p>
           </div>
@@ -161,139 +167,200 @@ export default function LoginPage() {
                     className="w-full h-auto"
                   />
                 </div>
-              ),
+              )
             )}
           </div>
+        </div>
+
+        {/* Mobile: All sections stacked */}
+        <div className="md:hidden space-y-12">
+          {tabs.map((tab) => (
+            <div key={tab.id} className="space-y-4">
+              <div className="text-left">
+                <h2 className="text-2xl leading-[1.2] tracking-[-0.01em] mb-3">
+                  <span className="font-medium text-gray-900">
+                    {tab.headingBold}
+                  </span>{" "}
+                  <span className="font-normal text-gray-400">
+                    {tab.headingLight}
+                  </span>
+                </h2>
+                <p className="text-sm text-gray-500">{tab.description}</p>
+              </div>
+              <div className="flex flex-col gap-4">
+                {tab.images.map((src, idx) => (
+                  <div
+                    key={idx}
+                    className="rounded-xl overflow-hidden shadow-xl"
+                  >
+                    <img
+                      src={src}
+                      alt={`${tab.label} preview ${idx + 1}`}
+                      className="w-full h-auto"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Integrations Section */}
-      <div className="bg-white py-24 px-12">
+      <div className="bg-white py-16 md:py-24 px-4 md:px-8 lg:px-12">
         <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-medium text-gray-900 mb-6 leading-[1.1] tracking-[-0.02em]">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium text-gray-900 mb-4 md:mb-6 leading-[1.1] tracking-[-0.02em]">
             Works with any
             <br />
             voice agent stack
           </h2>
-          <p className="text-xl text-gray-500 mb-10 max-w-2xl mx-auto">
+          <p className="text-base md:text-xl text-gray-500 mb-8 md:mb-10 max-w-2xl mx-auto">
             Python SDK and CLI for seamless integration,
-            <br />
-            supports all major STT, TTS, and LLM providers
-            <br />
-            with more coming soon
+            <br className="hidden md:block" /> supports all major STT, TTS, and
+            LLM providers
+            <br className="hidden md:block" /> with more coming soon
           </p>
-          <div className="flex items-center justify-center gap-8 mb-16">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 mb-10 md:mb-16">
             <a
               href={`${process.env.NEXT_PUBLIC_DOCS_URL}/integrations`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-gray-900 hover:text-gray-600 transition-colors"
+              className="inline-flex items-center gap-2 px-5 md:px-6 py-2.5 md:py-3 text-sm md:text-base font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
             >
-              Integration overview
+              See all integrations
               <span>→</span>
             </a>
             <a
               href="https://forms.gle/AoGE6DMs7N4DNAK2A"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-gray-900 hover:text-gray-600 transition-colors"
+              className="inline-flex items-center gap-2 px-5 md:px-6 py-2.5 md:py-3 text-sm md:text-base font-medium border border-gray-300 rounded-lg text-gray-900 hover:bg-gray-50 transition-colors"
             >
-              Request new integration
+              Request an integration
               <span>→</span>
             </a>
           </div>
 
           {/* Integration Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 border border-gray-200 rounded-xl overflow-hidden">
+          <div className="grid grid-cols-4 border border-gray-200 rounded-xl overflow-hidden">
             {/* Row 1 */}
-            <div className="flex items-center justify-center p-5 border-r border-b border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">
+            <div className="flex items-center justify-center p-3 md:p-5 border-r border-b border-gray-200 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
                 Deepgram
               </span>
             </div>
-            <div className="flex items-center justify-center p-5 border-r border-b border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">
+            <div className="flex items-center justify-center p-3 md:p-5 border-r border-b border-gray-200 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
                 ElevenLabs
               </span>
             </div>
-            <div className="flex items-center justify-center p-5 border-r border-b border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">OpenAI</span>
+            <div className="flex items-center justify-center p-3 md:p-5 border-r border-b border-gray-200 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
+                OpenAI
+              </span>
             </div>
-            <div className="flex items-center justify-center p-5 border-b border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">Google</span>
+            <div className="flex items-center justify-center p-3 md:p-5 border-b border-gray-200 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
+                Google
+              </span>
             </div>
             {/* Row 2 */}
-            <div className="flex items-center justify-center p-5 border-r border-b border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">
+            <div className="flex items-center justify-center p-3 md:p-5 border-r border-b border-gray-200 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
                 Cartesia
               </span>
             </div>
-            <div className="flex items-center justify-center p-5 border-r border-b border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">
+            <div className="flex items-center justify-center p-3 md:p-5 border-r border-b border-gray-200 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
                 Anthropic
               </span>
             </div>
-            <div className="flex items-center justify-center p-5 border-r border-b border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">Groq</span>
+            <div className="flex items-center justify-center p-3 md:p-5 border-r border-b border-gray-200 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
+                Groq
+              </span>
             </div>
-            <div className="flex items-center justify-center p-5 border-b border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">
+            <div className="flex items-center justify-center p-3 md:p-5 border-b border-gray-200 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
                 DeepSeek
               </span>
             </div>
             {/* Row 3 */}
-            <div className="flex items-center justify-center p-5 border-r border-b border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">
+            <div className="flex items-center justify-center p-3 md:p-5 border-r border-b border-gray-200 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
                 Smallest AI
               </span>
             </div>
-            <div className="flex items-center justify-center p-5 border-r border-b border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">Claude</span>
+            <div className="flex items-center justify-center p-3 md:p-5 border-r border-b border-gray-200 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
+                Claude
+              </span>
             </div>
-            <div className="flex items-center justify-center p-5 border-r border-b border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">Gemini</span>
+            <div className="flex items-center justify-center p-3 md:p-5 border-r border-b border-gray-200 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
+                Gemini
+              </span>
             </div>
-            <div className="flex items-center justify-center p-5 border-b border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">Qwen</span>
+            <div className="flex items-center justify-center p-3 md:p-5 border-b border-gray-200 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
+                Qwen
+              </span>
             </div>
             {/* Row 4 */}
-            <div className="flex items-center justify-center p-5 border-r border-b border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">Meta</span>
+            <div className="flex items-center justify-center p-3 md:p-5 border-r border-b border-gray-200 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
+                Meta
+              </span>
             </div>
-            <div className="flex items-center justify-center p-5 border-r border-b border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">Mistral</span>
+            <div className="flex items-center justify-center p-3 md:p-5 border-r border-b border-gray-200 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
+                Mistral
+              </span>
             </div>
-            <div className="flex items-center justify-center p-5 border-r border-b border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">Cohere</span>
+            <div className="flex items-center justify-center p-3 md:p-5 border-r border-b border-gray-200 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
+                Cohere
+              </span>
             </div>
-            <div className="flex items-center justify-center p-5 border-b border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">Sarvam</span>
+            <div className="flex items-center justify-center p-3 md:p-5 border-b border-gray-200 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
+                Sarvam
+              </span>
             </div>
             {/* Row 5 */}
-            <div className="flex items-center justify-center p-5 border-r border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">AI21</span>
+            <div className="flex items-center justify-center p-3 md:p-5 border-r border-gray-200 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
+                AI21
+              </span>
             </div>
-            <div className="flex items-center justify-center p-5 border-r border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">Baidu</span>
+            <div className="flex items-center justify-center p-3 md:p-5 border-r border-gray-200 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
+                Baidu
+              </span>
             </div>
-            <div className="flex items-center justify-center p-5 border-r border-gray-200 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">NVIDIA</span>
+            <div className="flex items-center justify-center p-3 md:p-5 border-r border-gray-200 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
+                NVIDIA
+              </span>
             </div>
-            <div className="flex items-center justify-center p-5 bg-gray-50">
-              <span className="text-gray-900 text-sm font-medium">Amazon</span>
+            <div className="flex items-center justify-center p-3 md:p-5 bg-gray-50">
+              <span className="text-gray-900 text-xs md:text-sm font-medium text-center">
+                Amazon
+              </span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Open Source Section */}
-      <div className="bg-gray-50 py-24 px-12">
+      <div className="bg-gray-50 py-16 md:py-24 px-4 md:px-8 lg:px-12">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-medium text-gray-900 mb-6 leading-[1.1] tracking-[-0.02em]">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium text-gray-900 mb-4 md:mb-6 leading-[1.1] tracking-[-0.02em]">
             Proudly open source
           </h2>
-          <p className="text-xl text-gray-500 mb-10">
-            Calibrate is committed to open source. <br />
+          <p className="text-base md:text-xl text-gray-500 mb-8 md:mb-10">
+            Calibrate is committed to open source.{" "}
+            <br className="hidden md:block" />
             You can either use the hosted version or run it{" "}
             <a
               href={GITHUB_REPO_URL}
@@ -308,10 +375,10 @@ export default function LoginPage() {
             href={GITHUB_REPO_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 px-6 py-4 bg-gray-900 border border-gray-900 rounded-xl hover:bg-gray-800 transition-colors"
+            className="inline-flex items-center gap-2 md:gap-3 px-4 md:px-6 py-3 md:py-4 bg-gray-900 border border-gray-900 rounded-xl hover:bg-gray-800 transition-colors"
           >
             <svg
-              className="w-8 h-8 text-white"
+              className="w-6 h-6 md:w-8 md:h-8 text-white"
               fill="currentColor"
               viewBox="0 0 24 24"
             >
@@ -321,7 +388,7 @@ export default function LoginPage() {
                 clipRule="evenodd"
               />
             </svg>
-            <span className="text-white font-medium">
+            <span className="text-white text-sm md:text-base font-medium">
               artpark-sahai-org/calibrate
             </span>
             <span className="text-gray-400">★</span>
@@ -330,36 +397,47 @@ export default function LoginPage() {
       </div>
 
       {/* Join the Community Section */}
-      <div id="join-community" className="bg-white py-24 px-12 scroll-mt-20">
+      <div
+        id="join-community"
+        className="bg-white py-16 md:py-24 px-4 md:px-8 lg:px-12 scroll-mt-20"
+      >
         <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-medium text-gray-900 mb-6 leading-[1.1] tracking-[-0.02em]">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium text-gray-900 mb-4 md:mb-6 leading-[1.1] tracking-[-0.02em]">
             Join the community
           </h2>
-          <p className="text-xl text-gray-500 mb-10">
-            Talk to the team building Calibrate to get your questions answered and
-            shape our roadmap
+          <p className="text-base md:text-xl text-gray-500 mb-8 md:mb-10">
+            Talk to the team building Calibrate to get your questions answered
+            and shape our roadmap
           </p>
-          <div className="flex flex-col items-center gap-6">
-            <div className="flex items-center justify-center gap-4">
+          <div className="flex flex-col items-center gap-4 md:gap-6">
+            <div className="flex items-center justify-center gap-3 md:gap-4">
               <a
                 href={WHATSAPP_INVITE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-lg text-gray-900 hover:bg-gray-50 transition-colors"
+                className="inline-flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 text-sm md:text-base border border-gray-300 rounded-lg text-gray-900 hover:bg-gray-50 transition-colors"
               >
-                <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                <svg
+                  className="w-5 h-5 text-green-500"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
                 </svg>
                 WhatsApp
               </a>
               <a
-                href="https://discord.gg/xCJ55Ban"
+                href="https://discord.gg/9dQB4AngK2"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-lg text-gray-900 hover:bg-gray-50 transition-colors"
+                className="inline-flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 text-sm md:text-base border border-gray-300 rounded-lg text-gray-900 hover:bg-gray-50 transition-colors"
               >
-                <svg className="w-5 h-5 text-indigo-500" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z"/>
+                <svg
+                  className="w-5 h-5 text-indigo-500"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z" />
                 </svg>
                 Discord
               </a>
@@ -368,10 +446,20 @@ export default function LoginPage() {
               href="https://cal.com/amandalmia/30min"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+              className="inline-flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 text-sm md:text-base bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
               </svg>
               Book a demo
             </a>
@@ -380,28 +468,58 @@ export default function LoginPage() {
       </div>
 
       {/* Get Started Section */}
-      <div className="bg-gray-50 py-20 px-12">
-        <div className="max-w-6xl mx-auto text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-medium text-gray-900 mb-4 tracking-[-0.02em]">
+      <div className="bg-gray-50 py-16 md:py-20 px-4 md:px-8 lg:px-12">
+        <div className="max-w-6xl mx-auto text-center mb-10 md:mb-16">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium text-gray-900 mb-3 md:mb-4 tracking-[-0.02em]">
             Start testing with Calibrate today
           </h2>
-          <p className="text-xl text-gray-500">
+          <p className="text-base md:text-xl text-gray-500">
             Choose your path to start building better voice agents
           </p>
         </div>
 
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Mobile: Segmented tabs */}
+        <div className="md:hidden flex justify-center mb-6 max-w-6xl mx-auto">
+          <div className="inline-flex items-center gap-1 p-1 bg-gray-100 rounded-xl">
+            <button
+              onClick={() => setGetStartedTab("evaluate")}
+              className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap ${
+                getStartedTab === "evaluate"
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              Evaluate your agent
+            </button>
+            <button
+              onClick={() => setGetStartedTab("learn")}
+              className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap ${
+                getStartedTab === "learn"
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              Learn more
+            </button>
+          </div>
+        </div>
+
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {/* Left Column - Evaluate */}
-          <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200">
-            <h3 className="text-xl font-semibold text-gray-900 mb-6">
+          <div
+            className={`bg-gray-50 rounded-2xl p-4 md:p-8 border border-gray-200 ${
+              getStartedTab === "learn" ? "hidden md:block" : ""
+            }`}
+          >
+            <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-4 md:mb-6">
               Evaluate your agent
             </h3>
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               <a
                 href={`${process.env.NEXT_PUBLIC_DOCS_URL}/quickstart/speech-to-text`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-4 p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
+                className="flex items-start gap-3 md:gap-4 p-3 md:p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
               >
                 <div className="text-gray-400 mt-1">
                   <svg
@@ -435,7 +553,7 @@ export default function LoginPage() {
                 href={`${process.env.NEXT_PUBLIC_DOCS_URL}/quickstart/text-to-text`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-4 p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
+                className="flex items-start gap-3 md:gap-4 p-3 md:p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
               >
                 <div className="text-gray-400 mt-1">
                   <svg
@@ -469,7 +587,7 @@ export default function LoginPage() {
                 href={`${process.env.NEXT_PUBLIC_DOCS_URL}/quickstart/text-to-speech`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-4 p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
+                className="flex items-start gap-3 md:gap-4 p-3 md:p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
               >
                 <div className="text-gray-400 mt-1">
                   <svg
@@ -503,7 +621,7 @@ export default function LoginPage() {
                 href={`${process.env.NEXT_PUBLIC_DOCS_URL}/quickstart/simulations`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-4 p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
+                className="flex items-start gap-3 md:gap-4 p-3 md:p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
               >
                 <div className="text-gray-400 mt-1">
                   <svg
@@ -536,14 +654,18 @@ export default function LoginPage() {
           </div>
 
           {/* Right Column - Learn More */}
-          <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200">
-            <h3 className="text-xl font-semibold text-gray-900 mb-6">
+          <div
+            className={`bg-gray-50 rounded-2xl p-4 md:p-8 border border-gray-200 ${
+              getStartedTab === "evaluate" ? "hidden md:block" : ""
+            }`}
+          >
+            <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-4 md:mb-6">
               Learn more
             </h3>
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               <a
                 href="#"
-                className="flex items-start gap-4 p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
+                className="flex items-start gap-3 md:gap-4 p-3 md:p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
               >
                 <div className="text-gray-400 mt-1">
                   <svg
@@ -580,7 +702,7 @@ export default function LoginPage() {
 
               <a
                 href={`${process.env.NEXT_PUBLIC_DOCS_URL}/core-concepts`}
-                className="flex items-start gap-4 p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
+                className="flex items-start gap-3 md:gap-4 p-3 md:p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
               >
                 <div className="text-gray-400 mt-1">
                   <svg
@@ -614,7 +736,7 @@ export default function LoginPage() {
                 href="https://cal.com/amandalmia/30min"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-4 p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
+                className="flex items-start gap-3 md:gap-4 p-3 md:p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
               >
                 <div className="text-gray-400 mt-1">
                   <svg
@@ -646,7 +768,7 @@ export default function LoginPage() {
                 href="https://voiceaiandvoiceagents.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-4 p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
+                className="flex items-start gap-3 md:gap-4 p-3 md:p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all group"
               >
                 <div className="text-gray-400 mt-1">
                   <svg
@@ -681,17 +803,17 @@ export default function LoginPage() {
       </div>
 
       {/* Final CTA Section */}
-      <div className="bg-gray-900 py-24 px-12">
+      <div className="bg-gray-900 py-16 md:py-24 px-4 md:px-8 lg:px-12">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-medium text-white mb-6 leading-[1.1] tracking-[-0.02em]">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium text-white mb-4 md:mb-6 leading-[1.1] tracking-[-0.02em]">
             Ready to get started?
           </h2>
-          <p className="text-xl text-gray-400 mb-10">
+          <p className="text-base md:text-xl text-gray-400 mb-8 md:mb-10">
             Become a team that ships reliable voice agents beyond vibe checks
           </p>
           <button
             onClick={handleGoogleSignIn}
-            className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-white hover:bg-gray-100 text-gray-800 font-medium rounded-xl transition-all duration-200 cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 bg-white hover:bg-gray-100 text-gray-800 text-sm md:text-base font-medium rounded-xl transition-all duration-200 cursor-pointer"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path

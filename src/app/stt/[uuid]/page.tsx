@@ -61,16 +61,20 @@ const getProviderLabel = (value: string): string => {
 
 // Helper function to check if a provider has any empty predictions
 const hasEmptyPredictions = (providerResult: ProviderResult): boolean => {
-  return providerResult.results?.some(
-    (r) => !r.pred || r.pred.trim() === ""
-  ) ?? false;
+  return (
+    providerResult.results?.some((r) => !r.pred || r.pred.trim() === "") ??
+    false
+  );
 };
 
 // Helper function to get the index of the first empty prediction
-const getFirstEmptyPredictionIndex = (providerResult: ProviderResult): number => {
-  return providerResult.results?.findIndex(
-    (r) => !r.pred || r.pred.trim() === ""
-  ) ?? -1;
+const getFirstEmptyPredictionIndex = (
+  providerResult: ProviderResult
+): number => {
+  return (
+    providerResult.results?.findIndex((r) => !r.pred || r.pred.trim() === "") ??
+    -1
+  );
 };
 
 export default function STTEvaluationDetailPage() {
@@ -79,7 +83,7 @@ export default function STTEvaluationDetailPage() {
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
   const taskId = params.uuid as string;
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [evaluationResult, setEvaluationResult] =
     useState<EvaluationResult | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -93,6 +97,12 @@ export default function STTEvaluationDetailPage() {
   );
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const tableContainerRef = useRef<HTMLDivElement | null>(null);
+
+  // Initialize sidebar state based on screen size
+  useEffect(() => {
+    const isDesktop = window.innerWidth >= 768;
+    setSidebarOpen(isDesktop);
+  }, []);
 
   // Set page title
   useEffect(() => {
@@ -163,7 +173,11 @@ export default function STTEvaluationDetailPage() {
         }
 
         // Start polling if not done or failed
-        if (result.status !== "done" && result.status !== "failed" && !pollingIntervalRef.current) {
+        if (
+          result.status !== "done" &&
+          result.status !== "failed" &&
+          !pollingIntervalRef.current
+        ) {
           pollingIntervalRef.current = setInterval(() => {
             pollTaskStatus(taskId, backendUrl);
           }, POLLING_INTERVAL_MS);
@@ -250,7 +264,7 @@ export default function STTEvaluationDetailPage() {
       onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
       customHeader={customHeader}
     >
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6">
         {/* Loading State */}
         {isLoading && (
           <div className="flex items-center justify-center gap-3 py-8">
@@ -361,7 +375,7 @@ export default function STTEvaluationDetailPage() {
 
                   {/* About Tab */}
                   {activeTab === "about" && (
-                    <div className="space-y-6">
+                    <div className="space-y-4 md:space-y-6">
                       <div className="border rounded-xl overflow-hidden">
                         <table className="w-full">
                           <thead className="bg-muted/50 border-b border-border">
@@ -473,7 +487,7 @@ export default function STTEvaluationDetailPage() {
 
                   {/* Leaderboard Tab */}
                   {activeTab === "leaderboard" && (
-                    <div className="space-y-6 -mx-8 px-8 w-[calc(100vw-260px)] ml-[calc((260px-100vw)/2+50%)] relative">
+                    <div className="space-y-4 md:space-y-6 -mx-4 md:-mx-8 px-4 md:px-8 w-[calc(100vw-32px)] md:w-[calc(100vw-260px)] ml-[calc((32px-100vw)/2+50%)] md:ml-[calc((260px-100vw)/2+50%)] relative">
                       {evaluationResult.leaderboard_summary &&
                         evaluationResult.leaderboard_summary.length > 0 && (
                           <>
@@ -489,7 +503,9 @@ export default function STTEvaluationDetailPage() {
                                   key: "string_similarity",
                                   header: "String Similarity",
                                   render: (value) =>
-                                    value != null ? parseFloat(value.toFixed(4)) : "-",
+                                    value != null
+                                      ? parseFloat(value.toFixed(4))
+                                      : "-",
                                 },
                                 {
                                   key: "llm_judge_score",
@@ -537,7 +553,7 @@ export default function STTEvaluationDetailPage() {
                                   </div>
 
                                   {/* Row 2: LLM Judge Score */}
-                                  <div className="grid grid-cols-2 gap-6">
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                                     <LeaderboardBarChart
                                       title="LLM Judge Score"
                                       data={evaluationResult.leaderboard_summary.map(
@@ -576,16 +592,28 @@ export default function STTEvaluationDetailPage() {
                                   <div
                                     key={providerResult.provider}
                                     onClick={() => {
-                                      setActiveProviderTab(providerResult.provider);
+                                      setActiveProviderTab(
+                                        providerResult.provider
+                                      );
                                       // Scroll to first empty prediction after a short delay
                                       if (hasEmptyPredictions(providerResult)) {
                                         setTimeout(() => {
-                                          const firstEmptyIndex = getFirstEmptyPredictionIndex(providerResult);
-                                          if (firstEmptyIndex >= 0 && tableContainerRef.current) {
-                                            const row = tableContainerRef.current.querySelector(
-                                              `[data-row-index="${firstEmptyIndex}"]`
+                                          const firstEmptyIndex =
+                                            getFirstEmptyPredictionIndex(
+                                              providerResult
                                             );
-                                            row?.scrollIntoView({ behavior: "smooth", block: "center" });
+                                          if (
+                                            firstEmptyIndex >= 0 &&
+                                            tableContainerRef.current
+                                          ) {
+                                            const row =
+                                              tableContainerRef.current.querySelector(
+                                                `[data-row-index="${firstEmptyIndex}"]`
+                                              );
+                                            row?.scrollIntoView({
+                                              behavior: "smooth",
+                                              block: "center",
+                                            });
                                           }
                                         }, 100);
                                       }
@@ -600,7 +628,8 @@ export default function STTEvaluationDetailPage() {
                                     {providerResult.success === null ? (
                                       // In progress - yellow dot
                                       <div className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse flex-shrink-0"></div>
-                                    ) : providerResult.success === true && !hasEmptyPredictions(providerResult) ? (
+                                    ) : providerResult.success === true &&
+                                      !hasEmptyPredictions(providerResult) ? (
                                       // Done, passed, no empty predictions - green tick
                                       <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
                                         <svg
@@ -670,7 +699,11 @@ export default function STTEvaluationDetailPage() {
                           }
 
                           // Show spinner if provider is in progress and has no results yet
-                          if (providerResult.success === null && (!providerResult.results || providerResult.results.length === 0)) {
+                          if (
+                            providerResult.success === null &&
+                            (!providerResult.results ||
+                              providerResult.results.length === 0)
+                          ) {
                             return (
                               <div className="flex items-center justify-center h-full">
                                 <div className="flex items-center gap-3">
@@ -704,7 +737,9 @@ export default function STTEvaluationDetailPage() {
                               <div className="flex items-center justify-center h-full">
                                 <div className="border border-red-500/50 bg-red-500/10 rounded-lg p-4 max-w-md text-center">
                                   <div className="text-red-500 text-[14px] font-medium mb-1">
-                                    There was an error running this provider. Please contact us by posting your issue to help us help you.
+                                    There was an error running this provider.
+                                    Please contact us by posting your issue to
+                                    help us help you.
                                   </div>
                                 </div>
                               </div>
@@ -712,46 +747,56 @@ export default function STTEvaluationDetailPage() {
                           }
 
                           return (
-                            <div className="space-y-6">
-
+                            <div className="space-y-4 md:space-y-6">
                               {/* Overall Metrics - Only show if success */}
-                              {providerResult.success && providerResult.metrics && (
-                                <div className="border rounded-xl p-4 bg-muted/10">
-                                  <h3 className="text-[15px] font-semibold mb-4">
-                                    Overall Metrics
-                                  </h3>
-                                  <div className="grid grid-cols-3 gap-4">
-                                    <div>
-                                      <div className="text-[12px] text-muted-foreground mb-1">
-                                        WER
+                              {providerResult.success &&
+                                providerResult.metrics && (
+                                  <div className="border rounded-xl p-4 bg-muted/10">
+                                    <h3 className="text-[15px] font-semibold mb-4">
+                                      Overall Metrics
+                                    </h3>
+                                    <div className="grid grid-cols-3 gap-4">
+                                      <div>
+                                        <div className="text-[12px] text-muted-foreground mb-1">
+                                          WER
+                                        </div>
+                                        <div className="text-[18px] font-semibold text-foreground">
+                                          {providerResult.metrics.wer != null
+                                            ? parseFloat(
+                                                providerResult.metrics.wer.toFixed(
+                                                  4
+                                                )
+                                              )
+                                            : "-"}
+                                        </div>
                                       </div>
-                                      <div className="text-[18px] font-semibold text-foreground">
-                                        {providerResult.metrics.wer != null
-                                          ? parseFloat(providerResult.metrics.wer.toFixed(4))
-                                          : "-"}
+                                      <div>
+                                        <div className="text-[12px] text-muted-foreground mb-1">
+                                          String Similarity
+                                        </div>
+                                        <div className="text-[18px] font-semibold text-foreground">
+                                          {providerResult.metrics
+                                            .string_similarity != null
+                                            ? parseFloat(
+                                                providerResult.metrics.string_similarity.toFixed(
+                                                  4
+                                                )
+                                              )
+                                            : "-"}
+                                        </div>
                                       </div>
-                                    </div>
-                                    <div>
-                                      <div className="text-[12px] text-muted-foreground mb-1">
-                                        String Similarity
-                                      </div>
-                                      <div className="text-[18px] font-semibold text-foreground">
-                                        {providerResult.metrics.string_similarity != null
-                                          ? parseFloat(providerResult.metrics.string_similarity.toFixed(4))
-                                          : "-"}
-                                      </div>
-                                    </div>
-                                    <div>
-                                      <div className="text-[12px] text-muted-foreground mb-1">
-                                        LLM Judge Score
-                                      </div>
-                                      <div className="text-[18px] font-semibold text-foreground">
-                                        {providerResult.metrics.llm_judge_score ?? "-"}
+                                      <div>
+                                        <div className="text-[12px] text-muted-foreground mb-1">
+                                          LLM Judge Score
+                                        </div>
+                                        <div className="text-[18px] font-semibold text-foreground">
+                                          {providerResult.metrics
+                                            .llm_judge_score ?? "-"}
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
-                                </div>
-                              )}
+                                )}
 
                               {/* Results Table */}
                               {providerResult.results &&
@@ -773,7 +818,10 @@ export default function STTEvaluationDetailPage() {
                                     allRowsHaveMetrics;
 
                                   return (
-                                    <div className="border rounded-xl overflow-visible" ref={tableContainerRef}>
+                                    <div
+                                      className="border rounded-xl overflow-visible"
+                                      ref={tableContainerRef}
+                                    >
                                       <div className="overflow-x-auto rounded-xl">
                                         <table className="w-full table-fixed">
                                           <thead className="bg-muted/50 border-b border-border">
@@ -840,13 +888,20 @@ export default function STTEvaluationDetailPage() {
                                                       <>
                                                         <td className="px-4 py-3 text-[13px] text-foreground">
                                                           {result.wer != null
-                                                            ? parseFloat(parseFloat(result.wer).toFixed(4))
+                                                            ? parseFloat(
+                                                                parseFloat(
+                                                                  result.wer
+                                                                ).toFixed(4)
+                                                              )
                                                             : "-"}
                                                         </td>
                                                         <td className="px-4 py-3 text-[13px] text-foreground">
-                                                          {result.string_similarity != null
+                                                          {result.string_similarity !=
+                                                          null
                                                             ? parseFloat(
-                                                                parseFloat(result.string_similarity).toFixed(4)
+                                                                parseFloat(
+                                                                  result.string_similarity
+                                                                ).toFixed(4)
                                                               )
                                                             : "-"}
                                                         </td>
@@ -893,7 +948,9 @@ export default function STTEvaluationDetailPage() {
                                                                       fill="none"
                                                                       viewBox="0 0 24 24"
                                                                       stroke="currentColor"
-                                                                      strokeWidth={2}
+                                                                      strokeWidth={
+                                                                        2
+                                                                      }
                                                                     >
                                                                       <path
                                                                         strokeLinecap="round"

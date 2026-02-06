@@ -18,10 +18,16 @@ export default function AgentDetailPage() {
   const router = useRouter();
   const params = useParams();
   const uuid = params.uuid as string;
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [headerState, setHeaderState] = useState<AgentDetailHeaderState | null>(
     null
   );
+
+  // Initialize sidebar state based on screen size
+  useEffect(() => {
+    const isDesktop = window.innerWidth >= 768;
+    setSidebarOpen(isDesktop);
+  }, []);
 
   // Set page title when agent name or tab changes
   useEffect(() => {
@@ -63,7 +69,7 @@ export default function AgentDetailPage() {
         </svg>
       </button>
       <span
-        className="text-base font-semibold text-foreground cursor-pointer hover:opacity-70 transition-opacity"
+        className="text-sm md:text-base font-semibold text-foreground cursor-pointer hover:opacity-70 transition-opacity truncate"
         onClick={() => headerState?.onEditName()}
         title="Click to edit name"
       >
@@ -75,11 +81,11 @@ export default function AgentDetailPage() {
   // Save button for header actions
   const headerActions =
     headerState && !headerState.isLoading ? (
-      <div className="mr-2">
+      <div className="mr-1 md:mr-2">
         <button
           onClick={() => headerState.onSave()}
           disabled={headerState.isSaving}
-          className="h-8 px-4 rounded-md text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
+          className="h-8 px-3 md:px-4 rounded-md text-xs md:text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
         >
           {headerState.isSaving && (
             <svg

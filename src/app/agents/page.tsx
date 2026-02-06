@@ -6,12 +6,19 @@ import { AppLayout } from "@/components/AppLayout";
 import { Agents } from "@/components/Agents";
 
 export default function AgentsPage() {
+  const router = useRouter();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   // Set page title
   useEffect(() => {
     document.title = "Agents | Calibrate";
   }, []);
-  const router = useRouter();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  // Initialize sidebar state based on screen size
+  useEffect(() => {
+    const isDesktop = window.innerWidth >= 768;
+    setSidebarOpen(isDesktop);
+  }, []);
 
   return (
     <AppLayout

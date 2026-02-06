@@ -127,35 +127,34 @@ export function ToolCallCard({
   toolName: string;
   args: Record<string, any>;
 }) {
-
   return (
     <div className="bg-muted border border-border rounded-2xl p-4">
       <div className="flex items-center gap-2 mb-2">
         <ToolIcon className="w-4 h-4 text-muted-foreground" />
         <span className="text-sm font-medium text-foreground">{toolName}</span>
       </div>
-      {Object.keys(args).filter(k => k !== "headers").length > 0 && (
+      {Object.keys(args).filter((k) => k !== "headers").length > 0 && (
         <div className="space-y-3 mt-3">
           {Object.entries(args)
             .filter(([paramName]) => paramName !== "headers")
             .map(([paramName, paramValue]) => {
-            const displayValue = formatParamValue(paramValue);
-            const isMultiLine = displayValue.includes("\n");
-            return (
-              <div key={paramName}>
-                <label className="block text-sm font-medium text-muted-foreground mb-1.5">
-                  {paramName}
-                </label>
-                <div
-                  className={`px-3 py-2 rounded-lg text-sm bg-background border border-border text-foreground whitespace-pre-wrap break-all ${
-                    isMultiLine ? "font-mono text-xs" : ""
-                  }`}
-                >
-                  {displayValue}
+              const displayValue = formatParamValue(paramValue);
+              const isMultiLine = displayValue.includes("\n");
+              return (
+                <div key={paramName}>
+                  <label className="block text-sm font-medium text-muted-foreground mb-1.5">
+                    {paramName}
+                  </label>
+                  <div
+                    className={`px-3 py-2 rounded-lg text-sm bg-background border border-border text-foreground whitespace-pre-wrap break-all ${
+                      isMultiLine ? "font-mono text-xs" : ""
+                    }`}
+                  >
+                    {displayValue}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       )}
     </div>
@@ -173,7 +172,7 @@ export function TestDetailView({
   passed: boolean;
 }) {
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       {/* Chat History from test_case.history */}
       {history.length > 0 && (
         <div className="space-y-4">
@@ -187,8 +186,8 @@ export function TestDetailView({
               >
                 {/* User Message */}
                 {message.role === "user" && (
-                  <div className="w-1/2">
-                    <div className="px-4 py-3 rounded-xl bg-muted border border-border">
+                  <div className="w-[70%] md:w-1/2">
+                    <div className="px-3 md:px-4 py-2.5 md:py-3 rounded-xl bg-muted border border-border">
                       <p className="text-sm text-foreground whitespace-pre-wrap">
                         {message.content}
                       </p>
@@ -204,8 +203,8 @@ export function TestDetailView({
                         Agent
                       </span>
                     </div>
-                    <div className="w-1/2">
-                      <div className="px-4 py-3 rounded-xl bg-background border border-border">
+                    <div className="w-[70%] md:w-1/2">
+                      <div className="px-3 md:px-4 py-2.5 md:py-3 rounded-xl bg-background border border-border">
                         <p className="text-sm text-foreground whitespace-pre-wrap">
                           {message.content}
                         </p>
@@ -224,7 +223,7 @@ export function TestDetailView({
                           Agent Tool Call
                         </span>
                       </div>
-                      <div className="w-1/2">
+                      <div className="w-[70%] md:w-1/2">
                         {message.tool_calls.map((toolCall, tcIndex) => {
                           let parsedArgs: Record<string, any> = {};
                           try {
@@ -259,8 +258,8 @@ export function TestDetailView({
             <div
               className={`${
                 passed
-                  ? "border-l-4 border-l-green-500 pl-3"
-                  : "border-l-4 border-l-red-500 pl-3"
+                  ? "border-l-4 border-l-green-500 pl-2 md:pl-3"
+                  : "border-l-4 border-l-red-500 pl-2 md:pl-3"
               }`}
             >
               <div className="flex items-center gap-2 mb-1">
@@ -269,8 +268,8 @@ export function TestDetailView({
                 </span>
                 <SmallStatusBadge passed={passed} />
               </div>
-              <div className="w-1/2">
-                <div className="px-4 py-3 rounded-xl bg-background border border-border">
+              <div className="w-[70%] md:w-1/2">
+                <div className="px-3 md:px-4 py-2.5 md:py-3 rounded-xl bg-background border border-border">
                   <p className="text-sm text-foreground whitespace-pre-wrap">
                     {output.response}
                   </p>
@@ -284,8 +283,8 @@ export function TestDetailView({
             <div
               className={`${
                 passed
-                  ? "border-l-4 border-l-green-500 pl-3"
-                  : "border-l-4 border-l-red-500 pl-3"
+                  ? "border-l-4 border-l-green-500 pl-2 md:pl-3"
+                  : "border-l-4 border-l-red-500 pl-2 md:pl-3"
               }`}
             >
               <div className="flex items-center gap-2 mb-2">
@@ -296,7 +295,7 @@ export function TestDetailView({
               </div>
               <div className="space-y-3">
                 {output.tool_calls.map((toolCall, index) => (
-                  <div key={index} className="w-1/2">
+                  <div key={index} className="w-[70%] md:w-1/2">
                     <ToolCallCard
                       toolName={toolCall.tool}
                       args={toolCall.arguments}

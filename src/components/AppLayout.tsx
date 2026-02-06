@@ -251,7 +251,7 @@ export function AppLayout({
     if (newTheme === "device") {
       // Follow system preference
       const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)",
+        "(prefers-color-scheme: dark)"
       ).matches;
       root.classList.add(prefersDark ? "dark" : "light");
     } else {
@@ -309,11 +309,13 @@ export function AppLayout({
 
   return (
     <div className="flex h-screen bg-background">
-      {/* Sidebar */}
+      {/* Sidebar - Hidden on mobile, overlay on tablet, fixed on desktop */}
       <aside
         className={`${
           sidebarOpen ? "w-[260px]" : "w-14"
-        } border-r border-border flex flex-col bg-muted/30 transition-all duration-200`}
+        } border-r border-border flex flex-col bg-background transition-all duration-200 ${
+          sidebarOpen ? "fixed md:relative z-40 h-full" : "hidden md:flex"
+        }`}
       >
         {/* Logo */}
         <div className="h-14 flex items-center px-4 border-b border-border">
@@ -419,6 +421,12 @@ export function AppLayout({
                             href={process.env.NEXT_PUBLIC_DOCS_URL}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={() => {
+                              // Close sidebar on mobile when clicking external link
+                              if (window.innerWidth < 768 && sidebarOpen) {
+                                onSidebarToggle();
+                              }
+                            }}
                             className="w-full flex items-center gap-2.5 px-2 py-2 rounded-md text-base font-medium transition-colors cursor-pointer text-muted-foreground hover:bg-accent/50 hover:text-foreground"
                           >
                             {item.icon}
@@ -440,6 +448,12 @@ export function AppLayout({
                         ) : (
                           <Link
                             href={`/${item.id}`}
+                            onClick={() => {
+                              // Close sidebar on mobile when clicking nav link
+                              if (window.innerWidth < 768 && sidebarOpen) {
+                                onSidebarToggle();
+                              }
+                            }}
                             className={`w-full flex items-center gap-2.5 px-2 py-2 rounded-md text-base font-medium transition-colors cursor-pointer ${
                               activeItem === item.id
                                 ? "bg-accent text-accent-foreground"
@@ -460,11 +474,40 @@ export function AppLayout({
         )}
       </aside>
 
+      {/* Backdrop for mobile sidebar */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 md:hidden"
+          onClick={onSidebarToggle}
+        />
+      )}
+
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="h-14 flex items-center justify-between px-6">
-          <div>{customHeader}</div>
+        <header className="h-14 flex items-center justify-between px-4 md:px-6">
+          {/* Mobile menu button */}
+          <button
+            onClick={onSidebarToggle}
+            className="md:hidden w-9 h-9 flex items-center justify-center rounded-md hover:bg-accent transition-colors cursor-pointer"
+            aria-label="Toggle menu"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+              />
+            </svg>
+          </button>
+
+          <div className="hidden md:block">{customHeader}</div>
 
           {/* Header Actions and User Profile */}
           <div className="flex items-center gap-3">
@@ -569,7 +612,7 @@ export function AppLayout({
 
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto">
-          <div className="w-full px-8">{children}</div>
+          <div className="w-full px-4 md:px-6 lg:px-8">{children}</div>
         </div>
       </main>
     </div>

@@ -69,3 +69,8 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--muted-foreground);
 }
+
+/* Hide scrollbar for tabs navigation */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

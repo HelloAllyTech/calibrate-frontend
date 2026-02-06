@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { AppLayout } from "@/components/AppLayout";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
@@ -23,14 +24,21 @@ type PersonaData = {
 const DEFAULT_CHARACTERISTICS = `You are Rajesh, a 45-year-old farmer from rural Karnataka who speaks primarily in Kannada with limited English proficiency. You are polite and friendly but speak slowly with natural pauses like "uhh" and "umm". You have a calm and patient demeanor but can become frustrated when technical jargon is used. You prefer simple, straightforward explanations and often ask for clarification. You tend to repeat important information to make sure you understood correctly.`;
 
 export default function PersonasPage() {
+  const router = useRouter();
+  const { data: session } = useSession();
+  const backendAccessToken = (session as any)?.backendAccessToken;
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   // Set page title
   useEffect(() => {
     document.title = "Personas | Calibrate";
   }, []);
-  const router = useRouter();
-  const { data: session } = useSession();
-  const backendAccessToken = (session as any)?.backendAccessToken;
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  // Initialize sidebar state based on screen size
+  useEffect(() => {
+    const isDesktop = window.innerWidth >= 768;
+    setSidebarOpen(isDesktop);
+  }, []);
   const [searchQuery, setSearchQuery] = useState("");
   const [addPersonaSidebarOpen, setAddPersonaSidebarOpen] = useState(false);
   const [personas, setPersonas] = useState<PersonaData[]>([]);
@@ -400,6 +408,15 @@ export default function PersonasPage() {
     return labels[value] || value;
   };
 
+  // Helper to display gender in Hindi
+  const getGenderInHindi = (gender: string) => {
+    const genderMap: Record<string, string> = {
+      male: "पुरुष",
+      female: "महिला",
+    };
+    return genderMap[gender.toLowerCase()] || gender;
+  };
+
   return (
     <AppLayout
       activeItem="personas"
@@ -407,24 +424,26 @@ export default function PersonasPage() {
       sidebarOpen={sidebarOpen}
       onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
     >
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6 py-4 md:py-6">
         {/* Header */}
-        <div>
-          <h1 className="text-2xl font-semibold">Personas</h1>
-          <p className="text-muted-foreground text-base leading-relaxed mt-1">
-            Personas define the characteristics of the simulated user
-            interacting with your agent
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+          <div>
+            <h1 className="text-xl md:text-2xl font-semibold">Personas</h1>
+            <p className="text-muted-foreground text-sm md:text-base leading-relaxed mt-1">
+              Personas define the characteristics of the simulated user
+              interacting with your agent
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              resetForm();
+              setAddPersonaSidebarOpen(true);
+            }}
+            className="h-9 md:h-10 px-4 rounded-md text-sm md:text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer flex-shrink-0"
+          >
+            Add persona
+          </button>
         </div>
-        <button
-          onClick={() => {
-            resetForm();
-            setAddPersonaSidebarOpen(true);
-          }}
-          className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
-        >
-          Add persona
-        </button>
 
         {/* Search Input */}
         <div className="relative max-w-md">
@@ -448,7 +467,7 @@ export default function PersonasPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search personas"
-            className="w-full h-10 pl-10 pr-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+            className="w-full h-9 md:h-10 pl-10 pr-4 rounded-md text-sm md:text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
           />
         </div>
 
@@ -476,20 +495,22 @@ export default function PersonasPage() {
             </svg>
           </div>
         ) : personasError ? (
-          <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-            <p className="text-base text-red-500 mb-2">{personasError}</p>
+          <div className="border border-border rounded-xl p-8 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+            <p className="text-sm md:text-base text-red-500 mb-2">
+              {personasError}
+            </p>
             <button
               onClick={() => window.location.reload()}
-              className="text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              className="text-sm md:text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             >
               Retry
             </button>
           </div>
         ) : filteredPersonas.length === 0 ? (
-          <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-            <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center mb-4">
+          <div className="border border-border rounded-xl p-8 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+            <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-muted flex items-center justify-center mb-3 md:mb-4">
               <svg
-                className="w-7 h-7 text-muted-foreground"
+                className="w-6 h-6 md:w-7 md:h-7 text-muted-foreground"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -502,10 +523,10 @@ export default function PersonasPage() {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-1">
+            <h3 className="text-base md:text-lg font-semibold text-foreground mb-1">
               No personas found
             </h3>
-            <p className="text-base text-muted-foreground mb-4">
+            <p className="text-sm md:text-base text-muted-foreground mb-3 md:mb-4 text-center">
               {searchQuery
                 ? "No personas match your search"
                 : "You haven't created any personas yet"}
@@ -515,84 +536,157 @@ export default function PersonasPage() {
                 resetForm();
                 setAddPersonaSidebarOpen(true);
               }}
-              className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
+              className="h-9 md:h-10 px-4 rounded-md text-sm md:text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
             >
               Add persona
             </button>
           </div>
         ) : (
-          <div className="border border-border rounded-xl overflow-hidden">
-            {/* Table Header */}
-            <div className="grid grid-cols-[200px_1fr_100px_100px_120px_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
-              <div className="text-sm font-medium text-muted-foreground">
-                Label
-              </div>
-              <div className="text-sm font-medium text-muted-foreground">
-                Characteristics
-              </div>
-              {/* Gender column header - commented out to hide gender */}
-              <div className="text-sm font-medium text-muted-foreground">
-                Gender
-              </div>
-              <div className="text-sm font-medium text-muted-foreground">
-                Language
-              </div>
-              <div className="text-sm font-medium text-muted-foreground">
-                Interruption
-              </div>
-              <div className="w-8"></div>
-            </div>
-            {/* Table Rows */}
-            {filteredPersonas.map((persona) => (
-              <div
-                key={persona.uuid}
-                onClick={() => openEditPersona(persona.uuid)}
-                className="grid grid-cols-[200px_1fr_100px_100px_120px_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer items-center"
-              >
-                <div className="overflow-x-auto max-w-full">
-                  <p className="text-sm font-medium text-foreground whitespace-nowrap">
-                    {persona.name}
-                  </p>
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block border border-border rounded-xl overflow-hidden">
+              {/* Table Header */}
+              <div className="grid grid-cols-[200px_1fr_100px_100px_120px_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
+                <div className="text-sm font-medium text-muted-foreground">
+                  Label
                 </div>
-                <p className="text-sm text-muted-foreground line-clamp-1">
-                  {persona.description || "—"}
-                </p>
-                {/* Gender column - commented out to hide gender */}
-                <p className="text-sm text-muted-foreground capitalize">
-                  {persona.config?.gender || "—"}
-                </p>
-                <p className="text-sm text-muted-foreground capitalize">
-                  {persona.config?.language || "—"}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {getInterruptionSensitivityLabel(
-                    persona.config?.interruption_sensitivity || "medium"
-                  )}
-                </p>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openDeleteDialog(persona);
-                  }}
-                  className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                    />
-                  </svg>
-                </button>
+                <div className="text-sm font-medium text-muted-foreground">
+                  Characteristics
+                </div>
+                {/* Gender column header - commented out to hide gender */}
+                <div className="text-sm font-medium text-muted-foreground">
+                  Gender
+                </div>
+                <div className="text-sm font-medium text-muted-foreground">
+                  Language
+                </div>
+                <div className="text-sm font-medium text-muted-foreground">
+                  Interruption
+                </div>
+                <div className="w-8"></div>
               </div>
-            ))}
-          </div>
+              {/* Table Rows */}
+              {filteredPersonas.map((persona) => (
+                <div
+                  key={persona.uuid}
+                  onClick={() => openEditPersona(persona.uuid)}
+                  className="grid grid-cols-[200px_1fr_100px_100px_120px_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer items-center"
+                >
+                  <div className="overflow-x-auto max-w-full">
+                    <p className="text-sm font-medium text-foreground whitespace-nowrap">
+                      {persona.name}
+                    </p>
+                  </div>
+                  <p className="text-sm text-muted-foreground line-clamp-1">
+                    {persona.description || "—"}
+                  </p>
+                  {/* Gender column - commented out to hide gender */}
+                  <p className="text-sm text-muted-foreground capitalize">
+                    {persona.config?.gender || "—"}
+                  </p>
+                  <p className="text-sm text-muted-foreground capitalize">
+                    {persona.config?.language || "—"}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {getInterruptionSensitivityLabel(
+                      persona.config?.interruption_sensitivity || "medium"
+                    )}
+                  </p>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openDeleteDialog(persona);
+                    }}
+                    className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-3">
+              {filteredPersonas.map((persona) => (
+                <div
+                  key={persona.uuid}
+                  className="border border-border rounded-lg overflow-hidden bg-background"
+                >
+                  <div
+                    onClick={() => openEditPersona(persona.uuid)}
+                    className="p-4 cursor-pointer"
+                  >
+                    <div className="font-medium text-sm text-foreground mb-2">
+                      {persona.name}
+                    </div>
+                    <div className="text-xs text-muted-foreground line-clamp-2 mb-3">
+                      {persona.description || "—"}
+                    </div>
+
+                    {/* Pills for Gender, Language, and Interruption Sensitivity */}
+                    <div className="flex flex-wrap gap-2">
+                      {/* Gender in Hindi */}
+                      {persona.config?.gender && (
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-muted text-foreground">
+                          {getGenderInHindi(persona.config.gender)}
+                        </span>
+                      )}
+
+                      {/* Language */}
+                      {persona.config?.language && (
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-muted text-foreground capitalize">
+                          {persona.config.language}
+                        </span>
+                      )}
+
+                      {/* Interruption Sensitivity */}
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-muted text-foreground">
+                        {getInterruptionSensitivityLabel(
+                          persona.config?.interruption_sensitivity || "medium"
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="px-4 pb-3 pt-0">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDeleteDialog(persona);
+                      }}
+                      className="w-full h-8 flex items-center justify-center gap-2 rounded-md text-xs font-medium text-red-500 bg-red-500/10 hover:bg-red-500/20 transition-colors"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                        />
+                      </svg>
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
 
@@ -608,9 +702,9 @@ export default function PersonasPage() {
             }}
           />
           {/* Sidebar */}
-          <div className="relative w-[40%] min-w-[500px] bg-background border-l border-border flex flex-col h-full shadow-2xl">
+          <div className="relative w-full md:w-[40%] md:min-w-[500px] bg-background md:border-l border-border flex flex-col h-full shadow-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+            <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-b border-border">
               <div className="flex items-center gap-3">
                 <svg
                   className="w-5 h-5 text-muted-foreground"
@@ -625,7 +719,7 @@ export default function PersonasPage() {
                     d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
                   />
                 </svg>
-                <h2 className="text-lg font-semibold">
+                <h2 className="text-base md:text-lg font-semibold">
                   {editingPersonaUuid ? "Edit persona" : "Add persona"}
                 </h2>
               </div>
@@ -653,7 +747,7 @@ export default function PersonasPage() {
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+            <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-3 md:space-y-4">
               {isLoadingPersona ? (
                 <div className="flex items-center justify-center py-12">
                   <svg
@@ -679,10 +773,10 @@ export default function PersonasPage() {
               ) : (
                 <>
                   {/* Configuration Section */}
-                  <div className="space-y-4">
+                  <div className="space-y-3 md:space-y-4">
                     {/* Label */}
                     <div>
-                      <label className="block text-sm font-medium mb-2">
+                      <label className="block text-xs md:text-sm font-medium mb-2">
                         Label <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -690,7 +784,7 @@ export default function PersonasPage() {
                         value={personaLabel}
                         onChange={(e) => setPersonaLabel(e.target.value)}
                         placeholder="e.g., Rural Farmer - Karnataka"
-                        className={`w-full h-10 px-4 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent ${
+                        className={`w-full h-9 md:h-10 px-3 md:px-4 rounded-md text-sm md:text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent ${
                           validationAttempted && !personaLabel.trim()
                             ? "border-red-500"
                             : "border-border"
@@ -708,8 +802,13 @@ export default function PersonasPage() {
                         details like their name, age, gender, etc.) and HOW they
                         behave (e.g. polite, friendly, impatient, speaks slowly,
                         etc.). Avoid task instructions here — use{" "}
-                        <span className="text-white">Scenarios</span> to define
-                        WHAT to do.
+                        <Link
+                          href="/scenarios"
+                          className="font-semibold text-foreground underline decoration-foreground/30 underline-offset-2 hover:decoration-foreground/60 transition-colors"
+                        >
+                          Scenarios
+                        </Link>{" "}
+                        to define WHAT to do.
                       </p>
                       <textarea
                         value={personaCharacteristics}

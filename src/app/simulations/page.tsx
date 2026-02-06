@@ -21,12 +21,18 @@ export default function SimulationsPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   // Set page title
   useEffect(() => {
     document.title = "Simulations | Calibrate";
+  }, []);
+
+  // Initialize sidebar state based on screen size
+  useEffect(() => {
+    const isDesktop = window.innerWidth >= 768;
+    setSidebarOpen(isDesktop);
   }, []);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -200,20 +206,22 @@ export default function SimulationsPage() {
       sidebarOpen={sidebarOpen}
       onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
     >
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6 py-4 md:py-6">
         {/* Header */}
-        <div>
-          <h1 className="text-2xl font-semibold">Simulations</h1>
-          <p className="text-muted-foreground text-base leading-relaxed mt-1">
-            Simulate agent-user conversations and evaluate the results
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+          <div>
+            <h1 className="text-xl md:text-2xl font-semibold">Simulations</h1>
+            <p className="text-muted-foreground text-sm md:text-base leading-relaxed mt-1">
+              Simulate agent-user conversations and evaluate the results
+            </p>
+          </div>
+          <button
+            onClick={() => setDialogOpen(true)}
+            className="h-9 md:h-10 px-4 rounded-md text-sm md:text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer flex-shrink-0"
+          >
+            Add simulation
+          </button>
         </div>
-        <button
-          onClick={() => setDialogOpen(true)}
-          className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
-        >
-          Add simulation
-        </button>
 
         {/* Search Input */}
         <div className="relative max-w-md">
@@ -237,7 +245,7 @@ export default function SimulationsPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search simulations"
-            className="w-full h-10 pl-10 pr-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+            className="w-full h-9 md:h-10 pl-10 pr-4 rounded-md text-sm md:text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
           />
         </div>
 
@@ -265,20 +273,22 @@ export default function SimulationsPage() {
             </svg>
           </div>
         ) : simulationsError ? (
-          <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-            <p className="text-base text-red-500 mb-2">{simulationsError}</p>
+          <div className="border border-border rounded-xl p-8 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+            <p className="text-sm md:text-base text-red-500 mb-2">
+              {simulationsError}
+            </p>
             <button
               onClick={() => window.location.reload()}
-              className="text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              className="text-sm md:text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             >
               Retry
             </button>
           </div>
         ) : sortedSimulations.length === 0 ? (
-          <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-            <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center mb-4">
+          <div className="border border-border rounded-xl p-8 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+            <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-muted flex items-center justify-center mb-3 md:mb-4">
               <svg
-                className="w-7 h-7 text-muted-foreground"
+                className="w-6 h-6 md:w-7 md:h-7 text-muted-foreground"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -291,101 +301,177 @@ export default function SimulationsPage() {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-1">
+            <h3 className="text-base md:text-lg font-semibold text-foreground mb-1">
               No simulations found
             </h3>
-            <p className="text-base text-muted-foreground mb-4">
+            <p className="text-sm md:text-base text-muted-foreground mb-3 md:mb-4 text-center">
               {searchQuery
                 ? "No simulations match your search"
                 : "You haven't created any simulations yet"}
             </p>
             <button
               onClick={() => setDialogOpen(true)}
-              className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
+              className="h-9 md:h-10 px-4 rounded-md text-sm md:text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
             >
               Add simulation
             </button>
           </div>
         ) : (
-          <div className="border border-border rounded-xl overflow-hidden">
-            {/* Table Header */}
-            <div className="grid grid-cols-[1fr_1fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
-              <div className="text-sm font-medium text-muted-foreground">
-                Name
-              </div>
-              <div className="text-sm font-medium text-muted-foreground">
-                <button
-                  onClick={toggleSort}
-                  className="flex items-center gap-2 hover:text-foreground transition-colors cursor-pointer"
-                >
-                  Last updated at
-                  <svg
-                    className={`w-4 h-4 transition-transform ${
-                      sortOrder === "asc" ? "rotate-180" : ""
-                    }`}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div className="w-8"></div>
-            </div>
-            {/* Table Rows */}
-            {sortedSimulations.map((simulation) => (
-              <div
-                key={simulation.uuid}
-                className="grid grid-cols-[1fr_1fr_auto] gap-4 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors items-center"
+          <>
+            {/* Mobile Sort Button */}
+            <div className="flex justify-end md:hidden mb-3">
+              <button
+                onClick={toggleSort}
+                className="flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50"
               >
-                <Link
-                  href={`/simulations/${simulation.uuid}`}
-                  className="min-w-0 px-4 py-2"
+                Sort by date
+                <svg
+                  className={`w-4 h-4 transition-transform ${
+                    sortOrder === "asc" ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
                 >
-                  <p className="text-sm font-medium text-foreground truncate">
-                    {simulation.name}
-                  </p>
-                </Link>
-                <Link
-                  href={`/simulations/${simulation.uuid}`}
-                  className="px-4 py-2"
-                >
-                  <p className="text-sm text-muted-foreground">
-                    {simulation.updated_at
-                      ? formatDate(simulation.updated_at)
-                      : "—"}
-                  </p>
-                </Link>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openDeleteDialog(simulation);
-                  }}
-                  className="w-8 h-8 mr-4 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden md:block border border-border rounded-xl overflow-hidden">
+              {/* Table Header */}
+              <div className="grid grid-cols-[1fr_1fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
+                <div className="text-sm font-medium text-muted-foreground">
+                  Name
+                </div>
+                <div className="text-sm font-medium text-muted-foreground">
+                  <button
+                    onClick={toggleSort}
+                    className="flex items-center gap-2 hover:text-foreground transition-colors cursor-pointer"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                    />
-                  </svg>
-                </button>
+                    Last updated at
+                    <svg
+                      className={`w-4 h-4 transition-transform ${
+                        sortOrder === "asc" ? "rotate-180" : ""
+                      }`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <div className="w-8"></div>
               </div>
-            ))}
-          </div>
+              {/* Table Rows */}
+              {sortedSimulations.map((simulation) => (
+                <div
+                  key={simulation.uuid}
+                  className="grid grid-cols-[1fr_1fr_auto] gap-4 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors items-center"
+                >
+                  <Link
+                    href={`/simulations/${simulation.uuid}`}
+                    className="min-w-0 px-4 py-2"
+                  >
+                    <p className="text-sm font-medium text-foreground truncate">
+                      {simulation.name}
+                    </p>
+                  </Link>
+                  <Link
+                    href={`/simulations/${simulation.uuid}`}
+                    className="px-4 py-2"
+                  >
+                    <p className="text-sm text-muted-foreground">
+                      {simulation.updated_at
+                        ? formatDate(simulation.updated_at)
+                        : "—"}
+                    </p>
+                  </Link>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openDeleteDialog(simulation);
+                    }}
+                    className="w-8 h-8 mr-4 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-3">
+              {sortedSimulations.map((simulation) => (
+                <div
+                  key={simulation.uuid}
+                  className="border border-border rounded-lg overflow-hidden bg-background"
+                >
+                  <Link
+                    href={`/simulations/${simulation.uuid}`}
+                    className="block p-4"
+                  >
+                    <div className="font-medium text-sm text-foreground mb-1">
+                      {simulation.name}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {simulation.updated_at
+                        ? formatDate(simulation.updated_at)
+                        : "—"}
+                    </div>
+                  </Link>
+                  <div className="px-4 pb-3 pt-0">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDeleteDialog(simulation);
+                      }}
+                      className="w-full h-8 flex items-center justify-center gap-2 rounded-md text-xs font-medium text-red-500 bg-red-500/10 hover:bg-red-500/20 transition-colors"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                        />
+                      </svg>
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
 

@@ -542,14 +542,14 @@ export function AgentDetail({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6 py-4 md:py-0">
       {/* Agent Header - only shown when not using external header */}
       {!onHeaderStateChange && (
-        <div className="flex items-center justify-between -mt-4">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between gap-3 -mt-2 md:-mt-4">
+          <div className="flex items-center gap-2 md:gap-3 min-w-0">
             <Link
               href="/agents"
-              className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted transition-colors cursor-pointer"
+              className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-muted transition-colors cursor-pointer flex-shrink-0"
               title="Back to agents"
             >
               <svg
@@ -567,7 +567,7 @@ export function AgentDetail({
               </svg>
             </Link>
             <h1
-              className="text-xl font-semibold cursor-pointer hover:opacity-70 transition-opacity"
+              className="text-lg md:text-xl font-semibold cursor-pointer hover:opacity-70 transition-opacity truncate"
               onClick={handleOpenEditNameDialog}
               title="Click to edit name"
             >
@@ -577,7 +577,7 @@ export function AgentDetail({
           <button
             onClick={() => saveRef.current()}
             disabled={isSaving}
-            className="h-9 px-6 rounded-md text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
+            className="h-8 md:h-9 px-4 md:px-6 rounded-md text-xs md:text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2 flex-shrink-0"
           >
             {isSaving && (
               <svg
@@ -606,10 +606,13 @@ export function AgentDetail({
       )}
 
       {/* Tabs Navigation */}
-      <div className="flex items-center gap-6 border-b border-border">
+      <div
+        className="hide-scrollbar flex items-center gap-3 md:gap-4 lg:gap-6 border-b border-border overflow-x-auto -mx-4 md:mx-0 px-4 md:px-0"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      >
         <button
           onClick={() => handleTabChange("agent")}
-          className={`pb-2 text-base font-medium transition-colors cursor-pointer ${
+          className={`pb-3 px-1 text-sm md:text-base font-medium transition-colors cursor-pointer whitespace-nowrap flex-shrink-0 ${
             activeTab === "agent"
               ? "text-foreground border-b-2 border-foreground"
               : "text-muted-foreground hover:text-foreground"
@@ -619,7 +622,7 @@ export function AgentDetail({
         </button>
         <button
           onClick={() => handleTabChange("tools")}
-          className={`pb-2 text-base font-medium transition-colors cursor-pointer ${
+          className={`pb-3 px-1 text-sm md:text-base font-medium transition-colors cursor-pointer whitespace-nowrap flex-shrink-0 ${
             activeTab === "tools"
               ? "text-foreground border-b-2 border-foreground"
               : "text-muted-foreground hover:text-foreground"
@@ -629,7 +632,7 @@ export function AgentDetail({
         </button>
         <button
           onClick={() => handleTabChange("data-extraction")}
-          className={`pb-2 text-base font-medium transition-colors cursor-pointer ${
+          className={`pb-3 px-1 text-sm md:text-base font-medium transition-colors cursor-pointer whitespace-nowrap flex-shrink-0 ${
             activeTab === "data-extraction"
               ? "text-foreground border-b-2 border-foreground"
               : "text-muted-foreground hover:text-foreground"
@@ -639,7 +642,7 @@ export function AgentDetail({
         </button>
         <button
           onClick={() => handleTabChange("tests")}
-          className={`pb-2 text-base font-medium transition-colors cursor-pointer ${
+          className={`pb-3 px-1 text-sm md:text-base font-medium transition-colors cursor-pointer whitespace-nowrap flex-shrink-0 ${
             activeTab === "tests"
               ? "text-foreground border-b-2 border-foreground"
               : "text-muted-foreground hover:text-foreground"
@@ -650,7 +653,7 @@ export function AgentDetail({
         {/* Settings tab button - commented out to hide the tab */}
         <button
           onClick={() => handleTabChange("settings")}
-          className={`pb-2 text-base font-medium transition-colors cursor-pointer ${
+          className={`pb-3 px-1 text-sm md:text-base font-medium transition-colors cursor-pointer whitespace-nowrap flex-shrink-0 ${
             activeTab === "settings"
               ? "text-foreground border-b-2 border-foreground"
               : "text-muted-foreground hover:text-foreground"
@@ -660,73 +663,78 @@ export function AgentDetail({
         </button>
       </div>
 
-      {/* Agent Tab Content */}
-      {activeTab === "agent" && (
-        <AgentTabContent
-          systemPrompt={systemPrompt}
-          setSystemPrompt={setSystemPrompt}
-          sttProvider={sttProvider}
-          setSttProvider={setSttProvider}
-          ttsProvider={ttsProvider}
-          setTtsProvider={setTtsProvider}
-          selectedLLM={selectedLLM}
-          setSelectedLLM={setSelectedLLM}
-        />
-      )}
+      {/* Tab Content Container */}
+      <div className="pt-4 md:pt-6">
+        {/* Agent Tab Content */}
+        {activeTab === "agent" && (
+          <AgentTabContent
+            systemPrompt={systemPrompt}
+            setSystemPrompt={setSystemPrompt}
+            sttProvider={sttProvider}
+            setSttProvider={setSttProvider}
+            ttsProvider={ttsProvider}
+            setTtsProvider={setTtsProvider}
+            selectedLLM={selectedLLM}
+            setSelectedLLM={setSelectedLLM}
+          />
+        )}
 
-      {/* Tools Tab Content */}
-      {activeTab === "tools" && (
-        <ToolsTabContent
-          agentUuid={agentUuid}
-          agentTools={agentTools}
-          setAgentTools={setAgentTools}
-          agentToolsLoading={agentToolsLoading}
-          agentToolsError={agentToolsError}
-          allTools={allTools}
-          allToolsLoading={allToolsLoading}
-          endConversationEnabled={endConversationEnabled}
-          setEndConversationEnabled={setEndConversationEnabled}
-        />
-      )}
+        {/* Tools Tab Content */}
+        {activeTab === "tools" && (
+          <ToolsTabContent
+            agentUuid={agentUuid}
+            agentTools={agentTools}
+            setAgentTools={setAgentTools}
+            agentToolsLoading={agentToolsLoading}
+            agentToolsError={agentToolsError}
+            allTools={allTools}
+            allToolsLoading={allToolsLoading}
+            endConversationEnabled={endConversationEnabled}
+            setEndConversationEnabled={setEndConversationEnabled}
+          />
+        )}
 
-      {/* Data Extraction Tab Content */}
-      {activeTab === "data-extraction" && (
-        <DataExtractionTabContent
-          agentUuid={agentUuid}
-          dataExtractionFields={dataExtractionFields}
-          setDataExtractionFields={setDataExtractionFields}
-          dataExtractionFieldsLoading={dataExtractionFieldsLoading}
-          dataExtractionFieldsError={dataExtractionFieldsError}
-          saveRef={saveRef}
-        />
-      )}
+        {/* Data Extraction Tab Content */}
+        {activeTab === "data-extraction" && (
+          <DataExtractionTabContent
+            agentUuid={agentUuid}
+            dataExtractionFields={dataExtractionFields}
+            setDataExtractionFields={setDataExtractionFields}
+            dataExtractionFieldsLoading={dataExtractionFieldsLoading}
+            dataExtractionFieldsError={dataExtractionFieldsError}
+            saveRef={saveRef}
+          />
+        )}
 
-      {/* Tests Tab Content */}
-      {activeTab === "tests" && (
-        <TestsTabContent agentUuid={agentUuid} agentName={agent.name} />
-      )}
+        {/* Tests Tab Content */}
+        {activeTab === "tests" && (
+          <TestsTabContent agentUuid={agentUuid} agentName={agent.name} />
+        )}
 
-      {/* Settings Tab Content - commented out to hide the tab */}
-      {activeTab === "settings" && (
-        <SettingsTabContent
-          agentSpeaksFirst={agentSpeaksFirst}
-          setAgentSpeaksFirst={setAgentSpeaksFirst}
-          maxAssistantTurns={maxAssistantTurns}
-          setMaxAssistantTurns={setMaxAssistantTurns}
-        />
-      )}
+        {/* Settings Tab Content - commented out to hide the tab */}
+        {activeTab === "settings" && (
+          <SettingsTabContent
+            agentSpeaksFirst={agentSpeaksFirst}
+            setAgentSpeaksFirst={setAgentSpeaksFirst}
+            maxAssistantTurns={maxAssistantTurns}
+            setMaxAssistantTurns={setMaxAssistantTurns}
+          />
+        )}
+      </div>
 
       {/* Edit Name Dialog */}
       {isEditNameDialogOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
           onClick={handleCancelEditName}
         >
           <div
-            className="bg-background border border-border rounded-xl p-6 max-w-md w-full mx-4 shadow-lg"
+            className="bg-background border border-border rounded-xl p-5 md:p-6 max-w-md w-full shadow-lg"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-lg font-semibold mb-4">Edit Agent Name</h2>
+            <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4">
+              Edit Agent Name
+            </h2>
             <input
               type="text"
               value={editedName}
@@ -738,21 +746,21 @@ export function AgentDetail({
                   handleCancelEditName();
                 }
               }}
-              className="w-full h-10 px-3 rounded-md text-sm border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent mb-4"
+              className="w-full h-9 md:h-10 px-3 rounded-md text-sm border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent mb-4"
               maxLength={50}
               autoFocus
             />
-            <div className="flex items-center justify-end gap-3">
+            <div className="flex items-center justify-end gap-2 md:gap-3">
               <button
                 onClick={handleCancelEditName}
-                className="h-10 px-4 rounded-md text-sm font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
+                className="h-9 md:h-10 px-4 rounded-md text-xs md:text-sm font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveName}
                 disabled={!editedName.trim()}
-                className="h-10 px-4 rounded-md text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="h-9 md:h-10 px-4 rounded-md text-xs md:text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Save
               </button>

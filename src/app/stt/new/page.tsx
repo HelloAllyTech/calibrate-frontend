@@ -8,11 +8,17 @@ import { SpeechToTextEvaluation } from "@/components/evaluations/SpeechToTextEva
 
 export default function NewSTTEvaluationPage() {
   const router = useRouter();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Set page title
   useEffect(() => {
     document.title = "New STT Evaluation | Calibrate";
+  }, []);
+
+  // Initialize sidebar state based on screen size
+  useEffect(() => {
+    const isDesktop = window.innerWidth >= 768;
+    setSidebarOpen(isDesktop);
   }, []);
 
   const customHeader = (

@@ -19,7 +19,7 @@ The platform addresses the challenge of quality assurance for voice agents by pr
 - **End-to-end simulation testing** (full conversations with simulated users)
 - **Benchmarking** across different AI providers to find the best configuration
 
-> **Note on naming**: The app is branded as "Calibrate" in all user-facing UI, page titles, and documentation. However, external URLs and infrastructure still reference "pense" (e.g., Discord: `https://discord.gg/xCJ55Ban`). Documentation links use `process.env.NEXT_PUBLIC_DOCS_URL` directly. The npm package name is `calibrate-frontend`.
+> **Note on naming**: The app is branded as "Calibrate" in all user-facing UI, page titles, and documentation. However, external URLs and infrastructure still reference "pense" (e.g., Discord: `https://discord.gg/9dQB4AngK2`). Documentation links use `process.env.NEXT_PUBLIC_DOCS_URL` directly. The npm package name is `calibrate-frontend`.
 
 ---
 
@@ -86,6 +86,7 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
 | **Settings**        | Toggle "Agent speaks first" behavior, set max assistant turns before call ends   |
 
 **Tools Tab** (`ToolsTabContent.tsx`):
+
 - Table columns: Name (1fr), Type (120px), Description (2fr), Delete button (auto)
 - Type column shows "Webhook" or "Structured Output" (`text-sm text-muted-foreground`)
 - Two-column layout: tools list (left 2/3), inbuilt tools panel (right 1/3)
@@ -229,6 +230,7 @@ Provider website links (external link icons) are shown only on the new evaluatio
 - **Search tools** by name or description
 
 **Tools Table Columns:**
+
 - **Name** (200px fixed) - Tool name with horizontal scroll for overflow
 - **Type** (150px fixed) - Plain text showing "Webhook" or "Structured Output" (`text-sm text-muted-foreground`) - matches tests page styling pattern
 - **Description** (1fr flexible) - Tool description, truncated with ellipsis
@@ -240,10 +242,16 @@ The page displays two buttons below the header:
 
 ```tsx
 <div className="flex gap-4">
-  <button onClick={() => openAddToolDialog("webhook")} className="h-10 px-4 rounded-xl ...">
+  <button
+    onClick={() => openAddToolDialog("webhook")}
+    className="h-10 px-4 rounded-xl ..."
+  >
     Add webhook tool
   </button>
-  <button onClick={() => openAddToolDialog("structured_output")} className="h-10 px-4 rounded-xl ...">
+  <button
+    onClick={() => openAddToolDialog("structured_output")}
+    className="h-10 px-4 rounded-xl ..."
+  >
     Add structured output tool
   </button>
 </div>
@@ -255,7 +263,10 @@ These buttons use standard `h-10 px-4` sizing (same height as other action butto
 
 A reusable sidebar dialog for creating and editing tools. Contains all form logic internally:
 
+- **Responsive Design**: Full-width sidebar on mobile (`w-full`), 40% width on desktop (`md:w-[40%] md:min-w-[500px]`). No left border on mobile (`md:border-l`). All padding, spacing, and button sizes are responsive. See "Comprehensive Dialog & Sidebar Responsive Patterns" section for complete patterns.
+
 - **Props**:
+
   - `isOpen: boolean` - Controls dialog visibility
   - `onClose: () => void` - Callback when dialog closes
   - `toolType: "structured_output" | "webhook"` - Determines header title, description text, and which fields/sections are shown
@@ -264,17 +275,20 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
   - `onToolsUpdated: (tools: ToolData[]) => void` - Callback with updated tools list after create/update
 
 - **Tool Type Configuration** (`TOOL_TYPE_CONFIG`):
+
   - `structured_output` type: Shows "Add/Edit structured output tool" header with description about producing data in defined formats
   - `webhook` type: Shows "Add/Edit webhook tool" header with description about calling external APIs/services
 
 - **Common fields** (both tool types): Name, Description (inside Configuration section)
 
 - **Structured Output Tool** (`toolType === "structured_output"`):
+
   - **Parameters section**: Uses `ParameterCard` component for defining output schema with full JSON Schema support
   - **Default parameter**: New structured output tools automatically start with one empty parameter (required, string type)
   - **Minimum parameter requirement**: Delete button is hidden when only one parameter exists (enforced via `hideDelete` prop)
 
 - **Webhook Tool** (`toolType === "webhook"`):
+
   - **Configuration section** contains:
     - **Method**: Dropdown for HTTP method (GET, POST, PUT, PATCH, DELETE) - default: POST
     - **URL**: Text input for webhook endpoint (required, validated as valid HTTP/HTTPS URL)
@@ -295,24 +309,28 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
 - **Section styling**: All section containers (Configuration, Parameters, Headers, Query parameters, Body parameters) use `bg-muted/50` background to visually distinguish them from the outer dialog background and inner form fields
 
 - **Internal state**:
+
   - Common: toolName, toolDescription, validationAttempted, isCreating, createError, isLoadingTool
   - Parameters: `parameters` array (for structured output), `queryParameters` array (for webhook - same `Parameter` type)
   - Webhook: webhookMethod, webhookUrl, responseTimeout, showTimeoutTooltip, webhookHeaders array (simplified: id, name, value only)
   - Body: `bodyDescription` string, `bodyParameters` array (same `Parameter` type)
 
 - **Parameter handlers** (all use the same helper functions but operate on different state):
+
   - Query: `handleQueryUpdateAtPath`, `handleQueryRemoveAtPath`, `handleQueryAddPropertyAtPath`, `handleQuerySetItemsAtPath`, `addQueryParameter`
   - Body: `handleBodyUpdateAtPath`, `handleBodyRemoveAtPath`, `handleBodyAddPropertyAtPath`, `handleBodySetItemsAtPath`, `addBodyParameter`
 
 - **Scroll behavior**: When adding a new query parameter via `addQueryParameter`, scrolls to the newly added parameter (using `scrollIntoView` with `block: "center"`) instead of scrolling to the bottom of the dialog. This is important because body parameters may exist below query parameters, and we want to keep focus on the section being edited. Uses `queryParamRefs` (a Map of param IDs to DOM elements) and `newlyAddedQueryParamId` state to track and scroll to the new element.
 
 - **URL Validation** (`isValidUrl` helper):
+
   - Uses JavaScript's `URL` constructor to validate format
   - Requires `http:` or `https:` protocol
   - Hostname must contain a `.` (domain.tld) or be `localhost`
   - Shows contextual error messages: "URL is required" (empty) or "Please enter a valid URL" (invalid format)
 
 - **Features**:
+
   - Loads existing tool data when `editingToolUuid` is provided (including webhook config, headers, query parameters, body parameters if present)
   - **Validation by tool type**:
     - **Structured output tools**: Validates `parameters` array via `hasInvalidParameters` helper
@@ -348,11 +366,24 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
 
 **List Page (`/stt`):**
 
-- **View all STT evaluations** in a sortable table (sorted by created date)
-- **Columns**: Providers (as pills with external link icons), Language, Status, Samples count, Created At
-- **Provider pills**: Each provider name has an external link icon that opens the provider's website in a new tab
-- **Click to view details** - opens the evaluation detail page
-- **"New STT evaluation" button** (below header) - navigates to the create page
+- **Responsive layout with separate desktop and mobile views**
+- **Desktop**: Sortable table (sorted by created date)
+  - **Columns**: Providers (as pills), Language, Status, Samples count, Created At
+  - **Click any row** to view evaluation details
+- **Mobile**: Enhanced card-based layout with visual hierarchy
+  - **Card design patterns**:
+    - Rounded-xl corners with border and hover effects (shadow + border color transition)
+    - Increased padding (p-5) for better touch targets
+    - Prominent provider pills with semibold text, subtle borders, and background
+    - Status badge given dedicated section for visibility
+    - Icon-based details with circular icon containers (w-8 h-8 rounded-lg bg-muted/50)
+    - Clear label/value distinction: labels are small + muted, values are medium weight
+    - Visual separation with subtle border-top before created date
+    - Smooth transitions (duration-200) on all interactive elements
+  - **Icons used**: Language (translation icon), Samples (document icon), Created (clock icon)
+- **Provider pills**: Display provider labels (e.g., "Cartesia", "ElevenLabs", "Google") without external link icons on list page
+- **Sort functionality**: Toggle button to sort by created date (ascending/descending)
+- **"New evaluation" button** in header - navigates to create page
 
 **Create Page (`/stt/new`):**
 
@@ -403,11 +434,24 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
 
 **List Page (`/tts`):**
 
-- **View all TTS evaluations** in a sortable table (sorted by created date)
-- **Columns**: Providers (as pills with external link icons), Language, Status, Samples count, Created At
-- **Provider pills**: Each provider name has an external link icon that opens the provider's website in a new tab
-- **Click to view details** - opens the evaluation detail page
-- **"New TTS evaluation" button** (below header) - navigates to the create page
+- **Responsive layout with separate desktop and mobile views**
+- **Desktop**: Sortable table (sorted by created date)
+  - **Columns**: Providers (as pills), Language, Status, Samples count, Created At
+  - **Click any row** to view evaluation details
+- **Mobile**: Enhanced card-based layout with visual hierarchy (same pattern as STT)
+  - **Card design patterns**:
+    - Rounded-xl corners with border and hover effects (shadow + border color transition)
+    - Increased padding (p-5) for better touch targets
+    - Prominent provider pills with semibold text, subtle borders, and background
+    - Status badge given dedicated section for visibility
+    - Icon-based details with circular icon containers (w-8 h-8 rounded-lg bg-muted/50)
+    - Clear label/value distinction: labels are small + muted, values are medium weight
+    - Visual separation with subtle border-top before created date
+    - Smooth transitions (duration-200) on all interactive elements
+  - **Icons used**: Language (translation icon), Samples (document icon), Created (clock icon)
+- **Provider pills**: Display provider labels (e.g., "Cartesia", "ElevenLabs", "Google") without external link icons on list page
+- **Sort functionality**: Toggle button to sort by created date (ascending/descending)
+- **"New evaluation" button** in header - navigates to create page
 
 **Create Page (`/tts/new`):**
 
@@ -502,6 +546,21 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
 - **Delete personas**
 - **Search personas**
 
+**UI Patterns:**
+
+- **List view**: Desktop table with mobile card view (see "List Page Structure" section)
+  - **Desktop table**: Shows Name, Description, Gender (capitalize), Language (capitalize), Interruption Sensitivity, and Delete button
+  - **Mobile cards**: Pill-based layout with visual hierarchy
+    - Name displayed as heading (text-sm font-medium)
+    - Description shown below name (text-xs text-muted-foreground line-clamp-2)
+    - Attributes displayed as pills (px-2.5 py-1 bg-muted rounded-md):
+      - **Gender in Hindi**: Male → पुरुष (purush), Female → महिला (mahila) - uses `getGenderInHindi()` helper function
+      - **Language**: Capitalized (English, Hindi, Kannada)
+      - **Interruption Sensitivity**: None, Low, Medium, or High
+    - Pills use consistent spacing (gap-2 flex-wrap)
+    - Delete button at bottom (full-width, red styling)
+- **Add/Edit sidebar**: Full-page responsive slide-in panel with form fields (full-width on mobile, 40% width on desktop). See "Comprehensive Dialog & Sidebar Responsive Patterns" section.
+
 ### 7. Scenarios Management (`/scenarios`)
 
 **What you can do:**
@@ -513,6 +572,11 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
 - **Delete scenarios**
 - **Search scenarios**
 
+**UI Patterns:**
+
+- **List view**: Desktop table with mobile card view (see "List Page Structure" section)
+- **Add/Edit sidebar**: Full-page responsive slide-in panel with form fields (full-width on mobile, 40% width on desktop). See "Comprehensive Dialog & Sidebar Responsive Patterns" section.
+
 ### 8. Metrics Management (`/metrics`)
 
 **What you can do:**
@@ -520,6 +584,13 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
 - **Define evaluation criteria** for simulations
 - **Configure pass/fail thresholds**
 - **Set up custom metrics**
+- **Duplicate existing metrics** with a new name
+
+**UI Patterns:**
+
+- **List view**: Desktop table with mobile card view showing duplicate and delete actions (see "List Page Structure" section)
+- **Add/Edit sidebar**: Full-page responsive slide-in panel with form fields (full-width on mobile, max-width on desktop). See "Comprehensive Dialog & Sidebar Responsive Patterns" section.
+- **Duplicate dialog**: Centered modal dialog for entering new metric name (fully responsive). See "Comprehensive Dialog & Sidebar Responsive Patterns" section.
 
 ### 9. Simulations (`/simulations`)
 
@@ -532,10 +603,10 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
 
 **Simulation Detail Page** (`/simulations/[uuid]`) has 2 tabs:
 
-| Tab        | Purpose                                                                                |
-| ---------- | -------------------------------------------------------------------------------------- |
-| **Config** | Select agent, personas (max 2), scenarios (max 5) for the simulation                   |
-| **Runs**   | View history of simulation runs (right-click or Cmd/Ctrl+click to open run in new tab) |
+| Tab        | Purpose                                                                                                                                                                                                               |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Config** | Select agent, personas (max 2), scenarios (max 5) for the simulation                                                                                                                                                  |
+| **Runs**   | View history of simulation runs (right-click or Cmd/Ctrl+click to open run in new tab). **Responsive**: Desktop table view (`hidden md:block`) with sortable columns, mobile card view with pills for status and type |
 
 **Selection Limits:**
 
@@ -548,9 +619,22 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
 - Runs are executed asynchronously with polling for status updates
 - Status flow: queued → in_progress → done (or failed)
 
+**Runs Tab UI** (`SimulationRunsTab` component):
+
+- **Desktop**: Table with columns (Name, Status, Type, Created At) with sortable created date
+- **Mobile**: Enhanced card layout with:
+  - Mobile sort button above cards
+  - Name as heading, status and type as prominent pills (px-3 py-1.5, semibold)
+  - Created date with clock icon in circular container
+  - Cards use enhanced styling: rounded-xl, hover effects (shadow-lg, border transition)
+  - Same sorting logic as desktop
+
 **Simulation Run Results** (`/simulations/[uuid]/runs/[runId]`):
 
+- **Responsive Design**: Page follows the standard detail page responsive patterns with `space-y-4 md:space-y-6` spacing, responsive section headings (`text-base md:text-lg`), and responsive page title (`text-xl md:text-2xl`). Performance/latency metric grids stack on mobile (`grid-cols-1 md:grid-cols-2`).
+
 - **Polling & Intermediate Results**:
+
   - Page polls API every 3 seconds while status is `in_progress`
   - Simulation results appear incrementally as each simulation completes
   - Overall metrics only shown after run completes (status === "done")
@@ -564,32 +648,59 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
     - **Metric column spinners**: Each metric cell shows `w-5 h-5 flex-shrink-0` spinner when `evaluation_results` is null; yellow when processing, gray when waiting
 
 - **Overall Metrics** (only shown when status is "done", aggregated across all simulations):
+
   - Tool calls accuracy (mean ± std)
   - Answer completeness
   - Assistant behavior
   - Question completeness
 
 - **Per-Simulation Results Table** (shows intermediate results as each simulation completes):
-  - Persona + Scenario combination
-  - Individual metric scores (Pass/Fail with tooltips showing reasoning)
-  - Metric columns derived from `runData.metrics` keys, or from `simulation_results[].evaluation_results` when metrics is null
-  - Latency metrics (stt/ttft, llm/ttft, etc.) are excluded from the table (shown in latency tab instead)
-  - `stt_llm_judge_score` displayed as percentage, other metrics as Pass/Fail
-  - View transcript button (only shown for rows with transcript history; available even while evaluation is pending)
-  - Audio playback (for voice simulations)
-  - **Processing state**: Rows with `evaluation_results: null` show spinners in metric cells (yellow if has transcript/processing, gray if waiting) and a spinner beside the play button
-  - **Row sorting** (for intermediate results): Rows are sorted by processing state priority:
+
+  - **Desktop** (`hidden md:block`): Table with columns for play button, persona, scenario, and metric columns
+
+    - Persona + Scenario combination
+    - Individual metric scores (Pass/Fail with tooltips showing reasoning)
+    - Metric columns derived from `runData.metrics` keys, or from `simulation_results[].evaluation_results` when metrics is null
+    - Latency metrics (stt/ttft, llm/ttft, etc.) are excluded from the table (shown in latency tab instead)
+    - `stt_llm_judge_score` displayed as percentage, other metrics as Pass/Fail
+    - View transcript button (only shown for rows with transcript history; available even while evaluation is pending)
+    - Audio playback (for voice simulations)
+    - **Processing state**: Rows with `evaluation_results: null` show spinners in metric cells (yellow if has transcript/processing, gray if waiting) and a spinner beside the play button
+
+  - **Mobile** (`md:hidden`): Card-based layout with clear label/value structure:
+
+    - **Persona section**: "Persona" label (text-xs muted) with value below (text-sm font-medium)
+    - **Scenario section**: "Scenario" label (text-xs muted) with value below (text-sm font-medium)
+    - Visual separator (border-bottom) between info sections and metrics
+    - **Metrics section**: "Metrics" heading (text-xs font-semibold) followed by metric list
+    - Each metric shows: spinner (if processing), percentage (for stt_llm_judge), or Pass/Fail badge with info icon
+    - Metrics displayed as list items with label/value pairs (border-bottom separators)
+    - "View Transcript" button at bottom (full-width, only shown when transcript exists)
+    - Processing state indicator: button text changes to "Processing..." when evaluation pending
+    - Cards use standard styling: p-5, rounded-xl borders, space-y-3 for sections
+
+  - **Row sorting** (same for desktop and mobile): Rows are sorted by processing state priority:
     1. Completed rows (have transcript and evaluation_results) - at the top
     2. Processing rows (have transcript but no evaluation_results - yellow spinner) - middle
     3. Waiting rows (no transcript - gray spinner) - at the bottom
 
 - **Transcript Dialog**:
+
+  - **Responsive Layout**:
+
+    - **Mobile**: Full-screen dialog (`w-full`), padding reduced to `px-4 py-4`, all message bubbles use `w-full` (simulation transcripts need full width due to audio players)
+    - **Desktop**: 40% width sidebar (`md:w-[40%] md:min-w-[500px]`), standard padding `md:px-6 md:py-4`, message bubbles use `md:w-1/2`
+    - Smooth transition between layouts as viewport changes
+    - **Note**: Simulation transcript bubbles use full width on mobile, unlike test runner messages which use 70% width for visual differentiation
+
   - **Live updates with freeze-on-complete**: Dialog stays in sync with polling while simulation is in progress, then freezes:
+
     - Stores `selectedSimulationKey` using `simulation_name` (unique identifier)
     - Uses `frozenSimulationRef` to store a stable copy once simulation has `evaluation_results`
     - `useMemo` logic: if frozen and complete → use frozen data; if just completed → freeze it; if in progress → use live data
     - Prevents audio reload when polling updates other rows while viewing a completed simulation
     - `frozenSimulationRef` is cleared when dialog closes
+
   - **Auto-scroll**: Transcript container scrolls to bottom only when new messages are added (tracks `prevTranscriptLengthRef` and only scrolls if `currentLength > previous`)
   - **Empty state**: Shows "No transcript available yet" when transcript is empty or undefined
   - **Processing indicator**: Shows a yellow spinner at the bottom of transcript while metrics are being fetched (when `evaluation_results` is null but transcript has content)
@@ -734,16 +845,78 @@ This enables:
 
 ## Architecture Patterns
 
+### Responsive Design Architecture
+
+The entire Calibrate application is fully responsive and works seamlessly across mobile, tablet, and desktop devices. This is a fundamental architectural decision that affects all pages and components.
+
+**Key principles:**
+
+1. **Mobile-First Approach**: All pages and components start with mobile styles and progressively enhance for larger screens using Tailwind's `md:` (768px) and `lg:` (1024px) breakpoints.
+
+2. **No Viewport Blocking**: Unlike earlier versions that used a `MobileGuard` component to block mobile access, the current app is fully functional on all screen sizes. The `MobileGuard` component has been removed.
+
+3. **AppLayout Responsive Behavior**:
+
+   - **Sidebar**: Hidden by default on mobile (appears as full-screen overlay), always visible on desktop
+   - **Header**: Shows hamburger menu on mobile, regular navigation on desktop
+   - **Content**: Responsive padding throughout (`px-4 md:px-6 lg:px-8`)
+
+4. **Adaptive Layouts**:
+
+   - **Desktop**: Tables, multi-column layouts, expanded spacing
+   - **Mobile**: Card-based layouts, stacked columns, compact spacing
+   - **Touch-Friendly**: Minimum button height of 36px (`h-9`) for mobile usability
+
+5. **Consistent Patterns**:
+   - Typography scales: `text-xl md:text-2xl` for headings, `text-base md:text-lg` for subheadings, `text-sm md:text-base` for body text
+   - Component sizing: `h-9 md:h-10` for buttons/inputs
+   - Spacing: **`space-y-4 md:space-y-6`** is the standard for all page containers and sections (never use fixed `space-y-6`), `gap-4 md:gap-6` for grid gaps, `mb-3 md:mb-4` for section margins
+   - Tables convert to cards on mobile using `hidden md:block` and `md:hidden` patterns
+   - Chart grids stack on mobile: `grid-cols-1 md:grid-cols-2`
+
+**All responsive patterns are documented in `.cursor/rules/design.md`** under the "App-Specific Responsive Patterns" section. Refer to this document for detailed implementation guidelines.
+
+**Dependencies affected:**
+
+- **Removed**: `src/components/MobileGuard.tsx` (no longer needed)
+- **Updated**: All page components, `AppLayout.tsx`, and all dialogs/sidebars for responsive behavior
+- **Pattern established**: List pages, detail pages, dialogs, sidebars, and empty states all follow consistent responsive patterns
+- **Dialog components updated**: `DeleteConfirmationDialog`, `NewSimulationDialog`, `RunTestDialog`, `AddToolDialog`, `AddTestDialog`, and all inline sidebars (personas, scenarios, metrics)
+
+**Gotchas:**
+
+- Always test both mobile and desktop views when making changes
+- Use `md:` breakpoint as the primary switch between mobile and desktop layouts
+- Preserve desktop UI while adding mobile optimizations (don't break existing desktop experience)
+- Tab navigation should use `overflow-x-auto` and `whitespace-nowrap` for mobile horizontal scrolling
+- Action buttons in headers should use `flex-shrink-0` to prevent squishing
+- **Overlay elements** (like mobile sidebar) must use solid backgrounds (`bg-background`), not semi-transparent ones (`bg-muted/30`), to prevent content showing through
+- **Mobile overlay navigation**: Navigation items in mobile overlays (like sidebar) should auto-close the overlay on click for better UX. Use `window.innerWidth < 768` check in `onClick` handlers to apply mobile-only behavior
+- **Sidebars must be full-width on mobile**: Always use `w-full md:w-[40%]` pattern, never use percentage width alone. Min-width constraints should only apply on desktop (`md:min-w-[500px]`)
+- **Border patterns for sidebars**: Left border should only appear on desktop (`md:border-l`), not on mobile where sidebar is full-width
+- **Dialog mobile margins**: Centered dialogs need `p-4` outer container or `mx-4` on dialog element for breathing room on mobile edges
+- **Never skip mobile variants**: Fixed sizes like `h-10`, `text-lg`, `p-6`, `space-y-6`, `gap-6` must always have mobile variants (`h-9 md:h-10`, `text-base md:text-lg`, `p-4 md:p-6` or `p-5 md:p-6`, `space-y-4 md:space-y-6`, `gap-4 md:gap-6`)
+- **Checkbox sizing in dialogs**: Use responsive sizing (`w-5 h-5 md:w-6 md:h-6` with matching icon sizes `w-3 h-3 md:w-4 md:h-4`)
+- **Info boxes in dialogs**: Use responsive padding (`px-3 md:px-4`, `py-2.5 md:py-3`) and gaps (`gap-2 md:gap-3`)
+- **Dialog content spacing**: Always use `space-y-3 md:space-y-4` or `space-y-4 md:space-y-6` for vertical spacing, never fixed `space-y-4` or `space-y-6`
+
 ### Shared Landing Components
 
 Both the login page and about page use shared header/footer components to avoid duplication:
 
 **`LandingHeader`** (`src/components/LandingHeader.tsx`):
+
 - Props: `showLogoLink` (boolean, whether logo links to /login), `talkToUsHref` (string, defaults to `#join-community`)
 - Contains: Logo, "Documentation" text link (tertiary), "Talk to us" button (outlined/secondary), "Get started" button (filled/primary)
 - Uses `signIn` from `next-auth/react` for Google authentication
+- **Responsive behavior**:
+  - Nav padding is responsive (`px-4 md:px-8`) so the header fits small screens without crowding
+  - Logo and brand text scale with breakpoints (smaller icon + `text-lg` on mobile, `text-xl` on desktop)
+  - "Documentation" link is **hidden on the smallest screens** (`hidden sm:inline-block`) to leave room for the CTAs
+  - "Talk to us" and "Login" buttons use smaller text/padding on mobile (`text-sm`, tighter `px`) and scale up on `md+`
 
 **`LandingFooter`** (`src/components/LandingFooter.tsx`):
+
 - No props - self-contained with all links and constants
 - Contains: 3-column layout (Company, Resources, Community), copyright
 - `WHATSAPP_INVITE_URL` constant is defined inside the component
@@ -755,7 +928,7 @@ The login page serves as a marketing-style landing page with a consistent light 
 **Layout (top to bottom):**
 
 1. **Navigation bar**: Uses `<LandingHeader />` component with "Continue with Google" as primary CTA
-2. **Hero section**: Large headline and subtitle (no CTA button - moved to header)
+2. **Hero section**: Large, responsive headline and subtitle (no CTA button - moved to header); heading scales from `text-4xl` on mobile to `text-6xl` on desktop, with matching responsive padding and margin
 3. **Feature Tabs section**: Tab switcher with feature previews
 4. **Integrations section**: Provider grid showing supported STT/TTS/LLM providers
 5. **Open Source section**: GitHub link and self-hosting info (`bg-gray-50`)
@@ -769,40 +942,43 @@ The login page serves as a marketing-style landing page with a consistent light 
 - Tabs: "Speech to text", "LLM Evaluation", "Text to speech", "Simulations"
 - State managed via `useState` with `activeTab` (default: "stt")
 - Tab data defined as array: `{ id, label, headingBold, headingLight, description, images }` where `images` is an array of image paths
+- **Desktop behavior** (`md+`): Tab switcher visible (`hidden md:flex`), clicking tabs switches content via state, two-column layout with sticky text
+- **Mobile behavior** (below `md`): Tabs completely hidden, all four sections rendered stacked in a single scrollable flow (`md:hidden space-y-12`), no tab state interaction needed
 
 **Constants:**
 
 - `WHATSAPP_INVITE_URL` - WhatsApp community invite link, used in Community section (login page) and `LandingFooter` component
 - `GITHUB_REPO_URL` - GitHub repo link, used in Open Source section
 
-**Two-Column Layout** (below tabs):
+**Feature Section Layout:**
 
-- **Container**: Full width with `px-12` padding (no max-width constraint to maximize image space)
-- **Tabs**: Centered with `max-w-7xl mx-auto`
-- **Grid**: `grid-cols-[400px_1fr] gap-8 max-w-7xl` - text column (400px), images in constrained width
-- **Left column**: Two-tone headline (bold dark + light gray) + description text, sticky on scroll
-- **Right column**: Images stacked vertically (`flex-col gap-4`), one per row, showing full height
+- **Container**: Full width with responsive padding (`px-6 md:px-8 lg:px-12`) - mobile uses `px-6` for comfortable margin from screen edges
+- **Desktop tabs** (`md+`): Centered with `max-w-7xl mx-auto`, pill buttons use `px-5 py-2.5 text-sm`, active tab has `bg-white shadow-sm`
+- **Desktop grid** (`md+`): `grid-cols-1 lg:grid-cols-[400px_1fr] gap-6 md:gap-8` - two-column on `lg+`
+  - **Left column**: Two-tone headline (`text-2xl md:text-3xl lg:text-4xl`) + description, sticky on scroll (`lg:sticky lg:top-8`)
+  - **Right column**: Images stacked vertically (`flex-col gap-4`)
+- **Mobile layout** (below `md`): All sections shown sequentially (`space-y-12`), each with heading (`text-2xl`), description (`text-sm`), and images
 - Static files in `public/`: `logo.svg` (app logo, uses `currentColor`), `logo-dark.svg` (white stroke for dark backgrounds), `stt_1.png` to `stt_4.png`, `tts_1.png` to `tts_4.png`, `llm-leaderboard.png`, `llm-output.png`, `simulation-all.png`, `simulation-run.png`
 
 **Integrations Section:**
 
-- **Background**: White (`bg-white`) with padding (`py-24 px-12`)
-- **Headline**: "Works with any voice agent stack" - same font as hero (`leading-[1.1] tracking-[-0.02em]`)
-- **Subtitle**: About Python SDK, CLI, and provider support
-- **Link buttons** (open in new tab with `target="_blank"`):
-  - "Integration overview" → `${process.env.NEXT_PUBLIC_DOCS_URL}/integrations`
-  - "Request new integration" → `https://forms.gle/AoGE6DMs7N4DNAK2A`
+- **Background**: White (`bg-white`) with responsive padding (`py-16 md:py-24 px-4 md:px-8 lg:px-12`)
+- **Headline**: `text-3xl md:text-4xl lg:text-5xl`
+- **Subtitle**: `text-base md:text-xl`
+- **CTA buttons** (`px-5 md:px-6 py-2.5 md:py-3 text-sm md:text-base`, open in new tab):
+  - "Integration overview" → Primary filled dark button (`bg-gray-900 text-white hover:bg-gray-800`), links to `${process.env.NEXT_PUBLIC_DOCS_URL}/integrations`
+  - "Request new integration" → Secondary outlined button (`border border-gray-300 text-gray-900 hover:bg-gray-50`), links to `https://forms.gle/AoGE6DMs7N4DNAK2A`
 - **Provider grid**: 5×4 bordered grid (text-only, no icons) showing 20 providers:
   - Row 1: Deepgram, ElevenLabs, OpenAI, Google
   - Row 2: Cartesia, Anthropic, Groq, DeepSeek
   - Row 3: Smallest AI, Claude, Gemini, Qwen
   - Row 4: Meta, Mistral, Cohere, Sarvam
   - Row 5: AI21, Baidu, NVIDIA, Amazon
-- **Grid styling**: `grid-cols-2 md:grid-cols-4`, `border border-gray-200 rounded-xl`, cells with `bg-gray-50 p-5`, `text-gray-900 text-sm font-medium` labels
+- **Grid styling**: `grid-cols-4` (4 columns at all breakpoints), `border border-gray-200 rounded-xl`, cells with responsive padding `p-3 md:p-5`, provider names use `text-xs md:text-sm font-medium text-center` for better fit on mobile
 
 **Open Source Section:**
 
-- **Background**: Light gray (`bg-gray-50`) with padding (`py-24 px-12`)
+- **Background**: Light gray (`bg-gray-50`) with responsive padding (`py-16 md:py-24 px-4 md:px-8 lg:px-12`)
 - **Headline**: "Proudly open source" - same font as hero (sentence case)
 - **Subtitle**: Links to run "locally" or "self-hosted" (underlined, `hover:text-gray-900`)
 - **GitHub button**: Dark button (`bg-gray-900`) using `GITHUB_REPO_URL` constant, with GitHub logo and star icon
@@ -810,22 +986,32 @@ The login page serves as a marketing-style landing page with a consistent light 
 **Community Section:**
 
 - **ID**: `id="join-community"` with `scroll-mt-20` for nav offset when scrolling
-- **Background**: White (`bg-white`) with padding (`py-24 px-12`)
-- **Headline**: "Join the community" - same font as hero
-- **Subtitle**: About talking to the team and shaping the roadmap
-- **Join buttons** (row 1, bordered style with icons):
+- **Background**: White (`bg-white`) with responsive padding (`py-16 md:py-24 px-4 md:px-8 lg:px-12`)
+- **Headline**: `text-3xl md:text-4xl lg:text-5xl`
+- **Subtitle**: `text-base md:text-xl`
+- **Join buttons** (row 1, bordered style with icons, `px-4 md:px-6 py-2.5 md:py-3 text-sm md:text-base`):
   - "WhatsApp" - uses `WHATSAPP_INVITE_URL` constant (green WhatsApp icon)
-  - "Discord" - opens `https://discord.gg/xCJ55Ban` (indigo Discord icon)
-- **Book a demo** (row 2, filled black style with calendar icon): Opens `https://cal.com/amandalmia/30min` in new tab
+  - "Discord" - opens `https://discord.gg/9dQB4AngK2` (indigo Discord icon)
+- **Book a demo** (row 2, filled black style with calendar icon, same responsive sizing): Opens `https://cal.com/amandalmia/30min` in new tab
 - **Social links** (row 3, text links): "Follow @artikiagents" and "Connect on LinkedIn"
 
 **Get Started Section:**
 
-- **Background**: Light gray (`bg-gray-50`) with padding (`py-20 px-12`) - alternates with Community section above
-- **Headline**: "Start testing with Calibrate today." with `tracking-[-0.02em]` for tight letter spacing
-- **Two-column grid**: "Evaluate your agent" (left) and "Learn more" (right)
-- **Card containers**: `bg-gray-50 rounded-2xl p-8 border border-gray-200`
-- **Link cards**: White background with subtle border, hover state adds shadow (`hover:border-gray-300 hover:shadow-sm`)
+- **Background**: Light gray (`bg-gray-50`) with responsive padding (`py-16 md:py-20 px-4 md:px-8 lg:px-12`) - alternates with Community section above
+- **Headline**: `text-3xl md:text-4xl lg:text-5xl` with `tracking-[-0.02em]` for tight letter spacing
+- **State management**: Uses `getStartedTab` state (`"evaluate" | "learn"`) to control which column is visible on mobile
+- **Mobile behavior** (below `md`):
+  - Segmented tab switcher (`md:hidden`) with "Evaluate your agent" / "Learn more" pills (same styling as Feature section tabs)
+  - Only one column visible at a time, controlled by `getStartedTab` state
+  - Hidden column uses `hidden md:block` to show on desktop
+- **Desktop behavior** (`md+`): Both columns shown side-by-side, tabs hidden
+- **Two-column grid**: `grid-cols-1 md:grid-cols-2 gap-6 md:gap-8` - "Evaluate your agent" (left) and "Learn more" (right)
+- **Card containers**: `bg-gray-50 rounded-2xl p-4 md:p-8 border border-gray-200`
+- **Section headings**: `text-lg md:text-xl font-semibold mb-4 md:mb-6`
+- **Link cards**:
+  - White background with subtle border, hover state adds shadow (`hover:border-gray-300 hover:shadow-sm`)
+  - Compact spacing on mobile: `gap-3 md:gap-4 p-3 md:p-4`
+  - Card spacing: `space-y-3 md:space-y-4` between cards
 - **Icons**: SVG icons (speaker, broadcast, checkmark for evaluation; play, book, calendar for learning)
 - **Links** (4 per column, sentence case, open in new tab):
   - Evaluate (links to quickstart docs via `NEXT_PUBLIC_DOCS_URL`):
@@ -837,10 +1023,10 @@ The login page serves as a marketing-style landing page with a consistent light 
 
 **Final CTA Section:**
 
-- **Background**: Dark (`bg-gray-900`) with padding (`py-24 px-12`)
-- **Headline**: "Ready to get started?" - white text, same font style as other headlines
-- **Subtitle**: "Join teams building better AI agents with Calibrate" - gray-400 text
-- **CTA button**: "Continue with Google" - white background, triggers `handleGoogleSignIn`
+- **Background**: Dark (`bg-gray-900`) with responsive padding (`py-16 md:py-24 px-4 md:px-8 lg:px-12`)
+- **Headline**: `text-3xl md:text-4xl lg:text-5xl` white text
+- **Subtitle**: `text-base md:text-xl` gray-400 text
+- **CTA button**: "Continue with Google" - `px-6 md:px-8 py-3 md:py-4 text-sm md:text-base` white background, triggers `handleGoogleSignIn`
 
 **Footer:**
 
@@ -852,17 +1038,38 @@ Uses `<LandingFooter />` component. See "Shared Landing Components" section abov
 - **DM Sans font** applied via inline style: `style={{ fontFamily: 'var(--font-dm-sans), system-ui, -apple-system, sans-serif' }}`
 - **All headlines**: `font-medium text-gray-900 leading-[1.1] tracking-[-0.02em]` for consistent typography
 - **Headline casing**: Sentence case - first letter of first word capitalized, rest lowercase except proper nouns (AI, LLM, STT, TTS, Calibrate, etc.)
-- **Subtitles**: `text-xl text-gray-500`
-- **Tabs container**: `inline-flex bg-gray-100 rounded-xl p-1` with active tab having white background and shadow
+- **Subtitles**: `text-base md:text-xl text-gray-500`
+- **Tabs container**: `inline-flex bg-gray-100 rounded-xl p-1` with active tab having white background and shadow; horizontally scrollable on small screens via `overflow-x-auto`
 - **Image containers**: `rounded-xl overflow-hidden shadow-xl` - simple container without fixed aspect ratio
 - **Image display**: `w-full h-auto` - images show at full width with natural height (no cropping)
 - **Grid borders**: `border-gray-200` for light theme consistency
+
+**Responsive Design (Landing Page):**
+
+The entire landing page is fully responsive. Every section uses a mobile-first approach with Tailwind breakpoints (`md:` at 768px, `lg:` at 1024px). The patterns below apply to all landing page sections and **must be followed for any future landing page changes**:
+
+- **Section padding**: Horizontal padding is context-dependent:
+  - Most sections: `px-4 md:px-8 lg:px-12`
+  - Feature sections (with images): `px-6 md:px-8 lg:px-12` for better margin from screen edges
+  - Vertical padding scales e.g. `py-16 md:py-24`
+- **Headlines**: Three-step responsive sizing `text-3xl md:text-4xl lg:text-5xl` (hero uses `text-4xl md:text-6xl`)
+- **Subtitles / body text**: `text-base md:text-xl`
+- **Buttons**: Smaller padding and font on mobile (`px-4 py-2 text-sm`) scaling to desktop (`md:px-6 md:py-3 md:text-base`)
+- **Margins / gaps**: Responsive e.g. `mb-4 md:mb-6`, `gap-3 md:gap-4`, `gap-6 md:gap-8`
+- **Line breaks (`<br>`)**: Use `<br className="hidden md:block" />` so text reflows naturally on mobile instead of forcing desktop-specific breaks
+- **Tab pills**: Smaller padding on mobile (`px-3 py-2 text-xs`) with `whitespace-nowrap`, container uses `overflow-x-auto` so tabs scroll horizontally on narrow screens
+- **Two-column grids**: Use `grid-cols-1 lg:grid-cols-[...]` so columns stack on mobile/tablet and go side-by-side on desktop
+- **Card padding**: `p-5 md:p-8` for content cards
+- **Footer**: `py-10 md:py-16 px-4 md:px-8 lg:px-12`, column left-padding `pl-6 md:pl-8`
+- **Icons**: Scale with breakpoints when needed e.g. `w-6 h-6 md:w-8 md:h-8`
+
+**Key rule**: Never use fixed large values (`px-12`, `py-24`, `text-5xl`) without a smaller mobile default. Always provide the mobile value first, then scale up with `md:` / `lg:`.
 
 **CTA Buttons:**
 
 - "Get started" - Primary action in header (filled/black style), triggers `signIn("google")`
 - "Continue with Google" - Primary action in final CTA section (white style on dark background), triggers `signIn("google")`
-- "Documentation" - Header text link (tertiary style, gray text), opens `process.env.NEXT_PUBLIC_DOCS_URL` in new tab
+- "Documentation" - Header text link (tertiary style, gray text), opens `process.env.NEXT_PUBLIC_DOCS_URL` in new tab; **hidden on very small screens** (`hidden sm:inline-block`)
 - "Talk to us" - Header button (outlined/secondary style), scrolls to `#join-community` section
 
 ### About Page (`/about`)
@@ -870,18 +1077,29 @@ Uses `<LandingFooter />` component. See "Shared Landing Components" section abov
 Public page (no auth required) with information about Calibrate and the team.
 
 **Structure:**
+
 - Uses `<LandingHeader showLogoLink talkToUsHref="/login#join-community" />` - logo links to /login, "Talk to us" button links to login page's community section
 - Uses `<LandingFooter />` - same footer as landing page
 
 **Content sections:**
+
 - Our Vision: Voice AI challenges and Calibrate's solution
 - Team: 2-column grid (`max-w-xl`, left-aligned) with clickable team member cards linking to LinkedIn. Profile images at `/team/aman.jpeg` and `/team/jigar.jpeg` with `bg-gray-200` fallback
+
+**Responsive Design:**
+
+- Container: Responsive padding `px-4 md:px-8 py-16 md:py-24` for comfortable spacing on mobile
+- Section margins: `mb-12 md:mb-16` between sections
+- Headings: `text-2xl md:text-3xl` for responsive scaling
+- Heading margins: `mb-4 md:mb-6` for proper spacing
+- Team grid gap: `gap-6 md:gap-8` for responsive card spacing
 
 ### Authentication Flow
 
 The app uses NextAuth.js v5 with middleware-based route protection and backend sync:
 
 1. **Middleware** (`src/middleware.ts`) protects all routes:
+
    - Unauthenticated users → redirected to `/login`
    - Authenticated users on `/login` → redirected to `/agents`
    - Auth API routes (`/api/auth/*`), debug routes (`/debug*`), and docs routes (`/docs*`) are always accessible
@@ -957,7 +1175,13 @@ All pages follow a consistent structure:
 ```tsx
 export default function ExamplePage() {
   const router = useRouter();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Initialize sidebar state based on screen size
+  useEffect(() => {
+    const isDesktop = window.innerWidth >= 768;
+    setSidebarOpen(isDesktop);
+  }, []);
 
   return (
     <AppLayout
@@ -980,47 +1204,191 @@ export default function ExamplePage() {
 - `customHeader`: Optional React node for custom header content (left side of header bar)
 - `headerActions`: Optional React node for action buttons beside user profile dropdown (right side of header bar)
 
+**Sidebar Initialization Pattern:**
+
+All pages must initialize the sidebar state responsively to prevent it from opening on mobile by default:
+
+1. Initialize state as `false` to prevent flash on mobile
+2. Use `useEffect` to check screen size on mount
+3. Automatically open sidebar on desktop (≥768px), keep closed on mobile
+
+This pattern is applied to all list pages, detail pages, and evaluation pages.
+
+**Responsive behavior (AppLayout):**
+
+The entire application is fully responsive and works on mobile, tablet, and desktop devices. AppLayout implements responsive behavior as follows:
+
+**Sidebar:**
+
+- **Mobile** (below 768px): Hidden by default, appears as full-screen overlay when toggled
+  - Uses `fixed md:relative z-40 h-full` for overlay positioning
+  - Semi-transparent backdrop (`bg-black/50 z-30 md:hidden`) appears when sidebar is open
+  - Clicking backdrop closes the sidebar
+  - **Auto-close on navigation**: Clicking any sidebar navigation item automatically closes the sidebar (checked via `window.innerWidth < 768`)
+  - Solid background (`bg-background`) ensures content behind overlay is not visible
+- **Desktop** (768px+): Visible by default, toggleable between expanded (260px) and collapsed (56px) states
+  - Standard sidebar behavior with smooth transitions
+  - Navigation clicks do NOT close the sidebar (desktop expected behavior)
+- **Styling**: Uses `bg-background` for solid, theme-aware background color
+  - Border: `border-r border-border` for right edge separation
+  - Transitions: `transition-all duration-200` for smooth width changes
+- **Navigation behavior**: All navigation items (`Link` components and external Documentation link) have `onClick` handlers that check viewport width and close sidebar on mobile
+
+**Header:**
+
+- **Mobile**: Shows hamburger menu button (left side) to toggle sidebar, hides `customHeader` content
+  - Hamburger button: `md:hidden` with menu icon
+- **Desktop**: Hides hamburger button, shows `customHeader` content normally
+  - Hamburger button: `hidden`
+- **Padding**: Responsive `px-4 md:px-6` for comfortable mobile spacing
+
+**Content Area:**
+
+- Responsive horizontal padding: `px-4 md:px-6 lg:px-8` for progressive spacing
+- Content is fully accessible and functional on all screen sizes
+- No viewport blocking or "use a laptop" messages - all features work on mobile
+
+**Key difference from landing page**: The `/login` marketing/landing page does not use `AppLayout`, so it has its own responsive behavior defined separately (see Landing Page section).
+
 ### List Page Content Structure
 
-List pages (Agents, Simulations, Personas, Scenarios, Tools, Tests, Metrics, STT, TTS) follow a consistent content structure inside `AppLayout`:
+List pages (Agents, Simulations, Personas, Scenarios, Tools, Tests, Metrics, STT, TTS) follow a consistent responsive structure inside `AppLayout`:
 
 ```tsx
-<div className="space-y-6">
-  {/* Header - title and description only */}
-  <div>
-    <h1 className="text-2xl font-semibold">Page Title</h1>
-    <p className="text-muted-foreground text-base leading-relaxed mt-1">
-      Description of what this page shows
-    </p>
+<div className="space-y-4 md:space-y-6 py-4 md:py-6">
+  {/* Header - responsive flex layout */}
+  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+    <div>
+      <h1 className="text-xl md:text-2xl font-semibold">Page Title</h1>
+      <p className="text-muted-foreground text-sm md:text-base leading-relaxed mt-1">
+        Description of what this page shows
+      </p>
+    </div>
+    <button
+      onClick={handleAdd}
+      className="h-9 md:h-10 px-4 rounded-md text-sm md:text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer flex-shrink-0"
+    >
+      Add item
+    </button>
   </div>
 
-  {/* Primary action button - below header, left-aligned */}
-  <button
-    onClick={handleAdd}
-    className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
-  >
-    Add item
-  </button>
-
-  {/* Search input */}
+  {/* Search input - responsive sizing */}
   <div className="relative max-w-md">
-    {/* Search icon + input */}
+    <input className="w-full h-9 md:h-10 pl-10 pr-4 rounded-md text-sm md:text-base..." />
   </div>
 
-  {/* Content: Loading / Error / Empty / Table */}
-  {isLoading ? <LoadingState /> : error ? <ErrorState /> : items.length === 0 ? <EmptyState /> : <Table />}
+  {/* Content: Loading / Error / Empty / Desktop Table / Mobile Cards */}
+  {isLoading ? (
+    <LoadingState />
+  ) : error ? (
+    <ErrorState /> {/* Responsive padding: p-8 md:p-12 */}
+  ) : items.length === 0 ? (
+    <EmptyState /> {/* Responsive padding: p-8 md:p-12 */}
+  ) : (
+    <>
+      {/* Desktop Table View */}
+      <div className="hidden md:block border border-border rounded-xl overflow-hidden">
+        {/* Table with header and rows */}
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="md:hidden space-y-3">
+        {items.map((item) => (
+          <div key={item.id} className="border border-border rounded-lg overflow-hidden bg-background">
+            <div className="p-4 cursor-pointer">{/* Item content */}</div>
+            <div className="flex items-center gap-2 px-4 pb-3 pt-0">{/* Action buttons */}</div>
+          </div>
+        ))}
+      </div>
+    </>
+  )}
 </div>
 ```
 
-**Key layout rules:**
+**Key responsive layout rules:**
 
-- Container uses `space-y-6` for consistent vertical spacing between sections
-- Header section contains only title (`h1`) and description (`p`) - no action button
-- Primary action button ("Add X", "New X") is a separate element below the header, left-aligned
-- Search input comes after the action button
-- Content area (loading/error/empty/table) comes last
+- **Container**: `space-y-4 md:space-y-6` for progressive vertical spacing, `py-4 md:py-6` for top/bottom padding
+- **Header layout**:
+  - Mobile: Stacks vertically (`flex-col`)
+  - Desktop: Horizontal with space-between (`sm:flex-row sm:justify-between`)
+  - Action button uses `flex-shrink-0` to prevent squishing
+- **Typography scaling**:
+  - Page title: `text-xl md:text-2xl`
+  - Description: `text-sm md:text-base`
+- **Component sizing**:
+  - Buttons: `h-9 md:h-10`, `text-sm md:text-base`
+  - Input fields: `h-9 md:h-10`, `text-sm md:text-base`
+- **Table vs Cards**:
+  - Desktop (768px+): Traditional table layout with `hidden md:block`
+  - Mobile (below 768px): Card-based layout with `md:hidden`, cards in `space-y-3`
+  - For pages with simpler lists (e.g., Agents), mobile sort button appears separately above cards
+- **Empty/Error states**: Responsive padding `p-8 md:p-12`, icon sizing `w-12 h-12 md:w-14 md:h-14`
 
-This pattern applies to: Agents, Simulations, Personas, Scenarios, Tools, Tests (LLM Evaluation), Metrics, STT, and TTS list pages.
+This responsive pattern applies to: Agents, Simulations, Personas, Scenarios, Tools, Tests (LLM Evaluation), Metrics, STT, and TTS list pages.
+
+**Mobile-specific patterns:**
+
+- Mobile cards include both content and action buttons in a single card
+- Action buttons in mobile cards use `flex-1` for equal width distribution
+- Sort controls (when needed) appear as a separate mobile-only button above the card list
+
+**Enhanced Mobile Card Design Pattern** (implemented in STT and TTS evaluations, can be adopted for other list pages):
+
+For pages where visual hierarchy and engagement are important, use this enhanced card pattern:
+
+```tsx
+<Link
+  href={`/path/${item.id}`}
+  className="block border border-border rounded-xl overflow-hidden bg-background hover:shadow-lg hover:border-foreground/20 transition-all duration-200"
+>
+  <div className="p-5">
+    {/* Header section with prominent badges */}
+    <div className="flex flex-wrap gap-2 mb-4">
+      <span className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold bg-foreground/5 text-foreground border border-foreground/10">
+        Badge Label
+      </span>
+    </div>
+
+    {/* Status or key indicator */}
+    <div className="mb-4">
+      <span className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold ...">
+        Status
+      </span>
+    </div>
+
+    {/* Icon-based detail rows */}
+    <div className="space-y-3">
+      <div className="flex items-center gap-3">
+        <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center">
+          {/* Icon SVG */}
+        </div>
+        <div className="flex-1">
+          <p className="text-xs text-muted-foreground mb-0.5">Label</p>
+          <p className="text-sm font-medium text-foreground">Value</p>
+        </div>
+      </div>
+      {/* Repeat for other details */}
+
+      {/* Optional: Last detail with visual separator */}
+      <div className="flex items-center gap-3 pt-2 border-t border-border/50">
+        {/* Same structure as above */}
+      </div>
+    </div>
+  </div>
+</Link>
+```
+
+**Enhanced card styling features:**
+
+- `rounded-xl` corners (more modern than `rounded-lg`)
+- `p-5` padding (more spacious than `p-4`)
+- Hover effects: `hover:shadow-lg` + `hover:border-foreground/20` for depth
+- `transition-all duration-200` for smooth interactions
+- Prominent badges with `px-3 py-1.5`, `font-semibold`, subtle borders and backgrounds
+- Icon containers: `w-8 h-8 rounded-lg bg-muted/50` with centered icons
+- Clear label/value hierarchy: labels are `text-xs text-muted-foreground`, values are `text-sm font-medium`
+- Optional visual separation with `pt-2 border-t border-border/50` for last item
+- `space-y-3` between detail rows for comfortable spacing
 
 ### Detail Page Header Pattern
 
@@ -1050,13 +1418,15 @@ const customHeader = (
     <button className="w-8 h-8 rounded-md hover:bg-muted ...">
       {/* Back arrow icon w-5 h-5 */}
     </button>
-    <span className="text-base font-semibold">{item.name}</span>
+    <span className="text-sm md:text-base font-semibold truncate">
+      {item.name}
+    </span>
   </div>
 );
 
 const headerActions = (
-  <div className="mr-2">  {/* mr-2 adds spacing from profile dropdown */}
-    <button className="h-8 px-4 rounded-md text-sm font-medium bg-foreground text-background ...">
+  <div className="mr-1 md:mr-2">  {/* Responsive margin */}
+    <button className="h-8 px-3 md:px-4 rounded-md text-xs md:text-sm font-medium bg-foreground text-background ...">
       Save / Launch
     </button>
   </div>
@@ -1064,6 +1434,12 @@ const headerActions = (
 
 <AppLayout customHeader={customHeader} headerActions={headerActions}>
 ```
+
+**Responsive header patterns:**
+
+- Agent name: `text-sm md:text-base` with `truncate` for long names
+- Action button: `px-3 md:px-4`, `text-xs md:text-sm`
+- Margin: `mr-1 md:mr-2` for tighter mobile spacing
 
 **Callback Pattern for Component-based Detail Pages:**
 
@@ -1101,12 +1477,326 @@ const handleHeaderStateChange = useCallback((state) => setHeaderState(state), []
 </AppLayout>
 ```
 
+### Detail Page Responsive Patterns
+
+Detail pages (AgentDetail, SimulationDetail, STT/TTS Evaluation, Simulation Runs) follow responsive patterns similar to list pages:
+
+**Container spacing:**
+
+```tsx
+<div className="space-y-4 md:space-y-6 py-4 md:py-0">
+  {/* py-4 on mobile for breathing room, py-0 on desktop where header provides space */}
+</div>
+```
+
+**Critical spacing rule:** All detail pages use `space-y-4 md:space-y-6` for consistent vertical spacing that adapts to mobile. Never use fixed `space-y-6` without the mobile variant.
+
+**Internal header (when not using AppLayout customHeader):**
+
+```tsx
+<div className="flex items-center justify-between gap-3 -mt-2 md:-mt-4">
+  <div className="flex items-center gap-2 md:gap-3 min-w-0">
+    <Link
+      href="/agents"
+      className="w-8 h-8 rounded-md hover:bg-muted flex-shrink-0"
+    >
+      {/* Back arrow */}
+    </Link>
+    <h1 className="text-lg md:text-xl font-semibold cursor-pointer truncate">
+      {agentName}
+    </h1>
+  </div>
+  <button className="h-8 md:h-9 px-4 md:px-6 rounded-md text-xs md:text-sm flex-shrink-0">
+    Save
+  </button>
+</div>
+```
+
+**Tab navigation:**
+
+```tsx
+<div className="flex items-center gap-4 md:gap-6 border-b border-border overflow-x-auto">
+  <button className="pb-2 text-sm md:text-base font-medium whitespace-nowrap">
+    Tab Label
+  </button>
+</div>
+```
+
+- **Horizontal scrolling on mobile** with hidden scrollbar (`overflow-x-auto` + hide scrollbar styles)
+- **Edge-to-edge on mobile**: `-mx-4 md:mx-0 px-4 md:px-0` extends tabs to screen edges for better touch access
+- **Responsive gaps**: `gap-3 md:gap-4 lg:gap-6` for comfortable spacing across breakpoints
+- **Better touch targets**: `pb-3 px-1` padding on each tab button
+- **Prevent wrapping/squishing**: `whitespace-nowrap flex-shrink-0` on tab buttons
+- **Hide scrollbar**: Use `.hide-scrollbar` class (webkit), `scrollbarWidth: 'none'` (Firefox), `msOverflowStyle: 'none'` (IE)
+- **Responsive text**: `text-sm md:text-base` for tab labels
+
+**Dialogs (Edit Name, etc.):**
+
+```tsx
+<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+  <div className="bg-background border border-border rounded-xl p-5 md:p-6 max-w-md w-full shadow-lg">
+    <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Title</h2>
+    <input className="w-full h-9 md:h-10 px-3 rounded-md text-sm..." />
+    <div className="flex items-center justify-end gap-2 md:gap-3">
+      <button className="h-9 md:h-10 px-4 rounded-md text-xs md:text-sm">
+        Cancel
+      </button>
+      <button className="h-9 md:h-10 px-4 rounded-md text-xs md:text-sm">
+        Save
+      </button>
+    </div>
+  </div>
+</div>
+```
+
+- Outer container has `p-4` for mobile margin
+- Dialog content uses responsive padding and gaps
+- Button and input sizing scales with screen size
+
 Key styling:
 
 - Back button: `w-8 h-8`, icon `w-5 h-5`
 - Title: `text-base font-semibold`
 - Action button: `h-8 px-4 text-sm`
 - Action wrapper: `mr-2` for spacing from profile dropdown
+
+### Comprehensive Dialog & Sidebar Responsive Patterns
+
+**All dialogs and sidebars are fully responsive.** This section documents the complete patterns.
+
+**Centered Modal Dialogs** (DeleteConfirmationDialog, NewSimulationDialog, RunTestDialog):
+
+```tsx
+// Outer container - adds mobile margin
+<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+  {/* Dialog */}
+  <div className="bg-background border border-border rounded-xl p-5 md:p-6 max-w-md w-full mx-4 shadow-lg">
+    {/* Header */}
+    <h2 className="text-base md:text-lg font-semibold mb-2">{title}</h2>
+
+    {/* Content */}
+    <p className="text-sm md:text-base text-muted-foreground mb-5 md:mb-6">
+      {message}
+    </p>
+
+    {/* Inputs (if any) */}
+    <input className="h-9 md:h-10 px-3 md:px-4 text-sm md:text-base" />
+
+    {/* Actions */}
+    <div className="flex items-center justify-end gap-2 md:gap-3">
+      <button className="h-9 md:h-10 px-4 text-xs md:text-sm">Cancel</button>
+      <button className="h-9 md:h-10 px-4 text-xs md:text-sm">Confirm</button>
+    </div>
+  </div>
+</div>
+```
+
+**Key patterns:**
+
+- Outer `p-4` for mobile breathing room
+- Dialog padding: `p-5 md:p-6`
+- Title: `text-base md:text-lg` (never fixed `text-lg`)
+- Body text: `text-sm md:text-base`
+- Buttons: `h-9 md:h-10`, `text-xs md:text-sm`
+- Gaps: `gap-2 md:gap-3`
+- Margins: `mb-5 md:mb-6` for sections
+
+**Full-Page Slide-In Sidebars** (Personas, Scenarios, Metrics, Tools sidebars):
+
+```tsx
+<div className="fixed inset-0 z-50 flex justify-end">
+  {/* Backdrop */}
+  <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+
+  {/* Sidebar */}
+  <div className="relative w-full md:w-[40%] md:min-w-[500px] bg-background md:border-l border-border flex flex-col h-full shadow-2xl">
+    {/* Header */}
+    <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-b border-border">
+      <h2 className="text-base md:text-lg font-semibold">{title}</h2>
+      <button className="w-8 h-8">✕</button>
+    </div>
+
+    {/* Content - scrollable */}
+    <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-3 md:space-y-4">
+      {/* Form fields */}
+      <div>
+        <label className="text-xs md:text-sm font-medium mb-2">Label</label>
+        <input className="h-9 md:h-10 px-3 md:px-4 text-sm md:text-base" />
+      </div>
+    </div>
+
+    {/* Footer */}
+    <div className="px-4 md:px-6 py-3 md:py-4 border-t border-border">
+      <div className="flex items-center justify-end gap-2 md:gap-3">
+        <button className="h-9 md:h-10 px-3 md:px-4 text-xs md:text-base">
+          Cancel
+        </button>
+        <button className="h-9 md:h-10 px-3 md:px-4 text-xs md:text-base">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+**Key patterns:**
+
+- **Mobile**: Full-width (`w-full`), no left border, occupies entire screen
+- **Desktop**: Percentage width (`w-[40%]`), minimum width (`min-w-[500px]`), left border (`md:border-l`)
+- Header padding: `px-4 md:px-6`, `py-3 md:py-4`
+- Content padding: `p-4 md:p-6`
+- Content spacing: `space-y-3 md:space-y-4`
+- Labels: `text-xs md:text-sm`
+- Inputs: `h-9 md:h-10`, `px-3 md:px-4`, `text-sm md:text-base`
+- Buttons: `h-9 md:h-10`, `px-3 md:px-4`, `text-xs md:text-base`
+- Footer gaps: `gap-2 md:gap-3`
+
+**Large Form Dialogs** (AddTestDialog, TestRunnerDialog):
+
+```tsx
+// AddTestDialog - Two-column layout (form + preview)
+<div className="fixed inset-0 z-50 flex items-center justify-center">
+  <div className="relative w-full max-w-7xl h-[95vh] md:h-[85vh] mx-2 md:mx-4 bg-background rounded-xl md:rounded-2xl flex flex-col md:flex-row">
+    {/* Left panel - full width on mobile, 2/5 on desktop */}
+    <div className="w-full md:w-2/5 flex flex-col">
+      {/* Tabs */}
+      <div className="flex border-b">
+        <button className="flex-1 py-3 md:py-4 text-sm md:text-base">Tab 1</button>
+      </div>
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto p-4 md:p-6"></div>
+      {/* Footer */}
+      <div className="px-4 md:px-6 py-3 md:py-4">
+        <button className="h-9 md:h-10 px-4 md:px-5 text-sm md:text-base">Save</button>
+      </div>
+    </div>
+    {/* Right panel - full width on mobile, 3/5 on desktop */}
+    <div className="w-full md:w-3/5 p-4 md:p-6"></div>
+  </div>
+</div>
+
+// TestRunnerDialog - Two-panel with mobile navigation
+<div className="fixed inset-0 z-50 flex items-center p-0 md:p-4">
+  <div className="w-full max-w-5xl h-full md:h-[80vh] rounded-none md:rounded-xl flex flex-col">
+    {/* Header with stats (desktop only) */}
+    <div className="px-4 md:px-6 py-3 md:py-4 border-b">
+      <h2>Test Status</h2>
+      {/* Stats - desktop only in header */}
+      <div className="hidden md:block">
+        <TestStats passedCount={5} failedCount={2} />
+      </div>
+    </div>
+
+    <div className="flex-1 flex overflow-hidden">
+      {/* Left panel - test list, hidden when test selected on mobile */}
+      <div className={`w-full md:w-80 ${selectedTest ? 'hidden md:flex' : 'flex'} flex-col`}>
+        {/* Test list (no mobile stats - cleaner UI) */}
+        {/* Uses button elements for list items with onTouchEnd for mobile support */}
+      </div>
+
+      {/* Right panel - test details, hidden when no test selected on mobile */}
+      <div className={`flex-1 ${selectedTest ? 'flex' : 'hidden md:flex'} flex-col overflow-hidden`}>
+        {/* Mobile back button - flex-shrink-0 to prevent squishing */}
+        <div className="md:hidden px-4 py-3 border-b flex-shrink-0">
+          <button onClick={() => setSelectedTest(null)}>Back to tests</button>
+        </div>
+        {/* Test details - flex-1 for remaining space */}
+        {/* Message bubbles use w-[70%] md:w-1/2 for better visual differentiation on mobile */}
+        <div className="flex-1 overflow-y-auto">
+          <TestDetailView />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+**Key patterns:**
+
+- **Dialog height**: `h-[95vh]` on mobile (more space), `h-[85vh]` on desktop
+- **Dialog margin**: `mx-2` on mobile (tight), `mx-4` on desktop
+- **Border radius**: `rounded-xl` on mobile, `rounded-2xl` on desktop
+- **Layout direction**: `flex-col` on mobile (vertical), `flex-row` on desktop (horizontal)
+- **Panel widths**: `w-full` on mobile, fractional widths on desktop (`w-2/5`, `w-3/5`)
+- **Padding**: `p-4 md:p-6` throughout
+- **Button sizing**: `h-9 md:h-10`, `px-4 md:px-5`
+- **Text sizing**: `text-sm md:text-base`
+- **Mobile navigation**: Hide/show panels with conditional classes and back buttons
+- **Stats display**: Show in header on desktop (`hidden md:block`), at top of list on mobile (`md:hidden`)
+- **Right panel structure**: Use `flex-col overflow-hidden` parent with `flex-shrink-0` back button and `flex-1 overflow-y-auto` content
+
+**Components using these patterns:**
+
+- **DeleteConfirmationDialog**: Used across all list pages for delete confirmation
+- **NewSimulationDialog**: Create simulation modal on simulations list page
+- **RunTestDialog**: Run test modal on tests list page (already responsive)
+- **Personas sidebar**: Full-page slide-in for add/edit personas
+- **Scenarios sidebar**: Full-page slide-in for add/edit scenarios
+- **Metrics sidebar**: Full-page slide-in for add/edit metrics
+- **AddToolDialog**: Full-page slide-in for add/edit tools
+- **AddTestDialog**: Large centered modal for add/edit tests (fully responsive)
+- **TestRunnerDialog**: Test results viewer with two-panel layout (fully responsive with mobile navigation)
+
+**Gotchas:**
+
+- Never use fixed padding (`p-6`) without mobile variant (`p-4 md:p-6`)
+- Never use fixed text sizes (`text-lg`) without mobile variant (`text-base md:text-lg`)
+- Sidebars must be `w-full` on mobile to prevent awkward half-screen display
+- Left border should only show on desktop (`md:border-l`) for sidebars
+- Always include `mx-2 md:mx-4` on centered dialogs for mobile edge spacing
+- Input/button heights must be `h-9` on mobile for proper touch targets (not `h-8`)
+- Two-column layouts must stack vertically on mobile (`flex-col md:flex-row`)
+- Dialog heights need more space on mobile (`h-[95vh] md:h-[85vh]`)
+- For two-panel views, implement mobile navigation with hide/show panels and back buttons
+- Stats/summary info should show in header on desktop only (mobile stats removed for cleaner UI in TestRunnerDialog)
+- Right panel in two-panel layouts needs proper flex structure: `flex-col overflow-hidden` parent, `flex-shrink-0` for fixed sections, `flex-1 overflow-y-auto` for scrollable content
+- Initialize sidebar state as `false` then set based on screen size in `useEffect` to prevent mobile flash
+- **Mobile touch handling for interactive lists**: Use `<button>` elements instead of `<div>` with `onClick` for list items to ensure reliable touch events on mobile. Add both `onClick` and `onTouchEnd` handlers for maximum compatibility. Include `type="button"` to prevent form submission and `w-full` to make entire area tappable. Example: TestRunnerDialog's TestListItem component
+
+**Evaluation & Simulation Pages Responsive Spacing:**
+
+STT/TTS evaluation detail pages and simulation run detail pages use these responsive patterns:
+
+```tsx
+// Main container - always responsive spacing
+<div className="space-y-4 md:space-y-6">
+  {/* All tab content */}
+</div>
+
+// Nested sections within tabs
+<div className="space-y-4 md:space-y-6">
+  {/* Section content */}
+</div>
+
+// Chart grids (leaderboard charts)
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+  {/* Charts stack on mobile, side-by-side on desktop */}
+</div>
+
+// Full-width sections (for leaderboard tables/charts)
+<div className="space-y-4 md:space-y-6 -mx-4 md:-mx-8 px-4 md:px-8 w-[calc(100vw-32px)] md:w-[calc(100vw-260px)] ml-[calc((32px-100vw)/2+50%)] md:ml-[calc((260px-100vw)/2+50%)] relative">
+  {/* Extends to viewport edges on mobile, respects sidebar on desktop */}
+</div>
+
+// Section headings
+<h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4">
+  Section Title
+</h2>
+
+// Page titles (in custom headers)
+<h1 className="text-xl md:text-2xl font-semibold">
+  Page Title
+</h1>
+```
+
+**Key patterns:**
+
+- All vertical spacing uses `space-y-4 md:space-y-6` (mobile has less breathing room)
+- Chart grids stack on mobile: `grid-cols-1 md:grid-cols-2`
+- Full-width sections account for mobile margins (32px) vs desktop sidebar (260px)
+- Text sizes scale: `text-base md:text-lg` for headings, `text-xl md:text-2xl` for titles
+- Margins scale: `mb-3 md:mb-4` for consistent spacing
 
 ### Evaluation Page Pattern (TTS/STT)
 
@@ -1159,6 +1849,7 @@ Both TTS and STT evaluation pages follow the same list → new → detail patter
 - Uses `StatusBadge` component with `showSpinner` for status display
 - Results are at **top level** (`provider_results`, `leaderboard_summary`) - different from `/jobs` API!
 - Displays results in tabs (Leaderboard, Outputs, About) when done
+- **Responsive design**: Uses `space-y-4 md:space-y-6` throughout, chart grids are `grid-cols-1 md:grid-cols-2`, leaderboard sections use full-width responsive containers (see "Evaluation & Simulation Pages Responsive Spacing" section above)
 
 **Key differences between TTS and STT:**
 
@@ -1260,7 +1951,7 @@ const getFilteredProviders = (language: LanguageOption) => {
   return providers.filter(
     (provider) =>
       !provider.supportedLanguages ||
-      provider.supportedLanguages.includes(langName),
+      provider.supportedLanguages.includes(langName)
   );
 };
 ```
@@ -1281,20 +1972,43 @@ const getFilteredProviders = (language: LanguageOption) => {
    - Tabs sync with URL query param (`?tab=agent`, `?tab=tools`, etc.)
    - Use `useSearchParams` to read initial tab value
    - Use `window.history.replaceState` to update URL without navigation side effects (avoids title reset issues caused by `router.push`)
+   - **Responsive tab bar implementation**:
+     ```tsx
+     <div
+       className="hide-scrollbar flex items-center gap-3 md:gap-4 lg:gap-6 border-b border-border overflow-x-auto -mx-4 md:mx-0 px-4 md:px-0"
+       style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+     >
+       <button className="pb-3 px-1 text-sm md:text-base font-medium whitespace-nowrap flex-shrink-0 ...">
+         Tab Label
+       </button>
+     </div>
+     ```
+   - Scrollbar hidden via `.hide-scrollbar::-webkit-scrollbar { display: none; }` in globals.css plus inline styles for cross-browser support
+   - **Tab content container**: Wrap all tab content in a container with `pt-4 md:pt-6` for consistent spacing below the tab bar
+   - **Responsive tab content patterns** (e.g., `AgentTabContent`):
+     - Two-column layouts use `flex flex-col md:grid md:grid-cols-2` to stack on mobile
+     - Fixed heights become flexible: `md:h-[calc(100vh-200px)]` (no fixed height on mobile)
+     - Text sizes scale: `text-sm md:text-base` for labels and inputs
+     - Input heights scale: `h-9 md:h-10` for selects and buttons
+     - Spacing scales: `gap-6 md:gap-8`, `space-y-6 md:space-y-8`, `mt-2 md:mt-3`
+     - Textareas need `min-h-[200px] md:min-h-0` to ensure usable height on mobile when not in grid
 2. **Sidebar Panels**: Slide-in panels for create/edit forms
    - **Preferred**: Use `SlidePanel` and `SlidePanelFooter` from `@/components/ui`
    - Width: 40% of viewport, min 500px (customizable via `width` prop)
    - Backdrop click closes panel
    - Used for: Tools, Personas, Scenarios creation/editing
+   - **Fully responsive**: Full-width on mobile (`w-full`), percentage width on desktop (`md:w-[40%]`), no left border on mobile (`md:border-l`). See "Comprehensive Dialog & Sidebar Responsive Patterns" section for complete implementation details.
 3. **Modal Dialogs**: Centered overlays for confirmations and simple forms
    - Simple dialogs: Backdrop click closes dialog directly
    - Form dialogs with unsaved data: Backdrop click shows confirmation before closing (e.g., AddTestDialog)
    - Used for: New agent, New simulation, Delete confirmations, Add/Edit test
    - **Large form dialogs** (like AddTestDialog): Use a header bar with name input and save button, flex-col layout with main content area below
+   - **Fully responsive**: All dialogs scale from mobile to desktop with responsive padding (`p-4 outer, p-5 md:p-6 dialog`), text sizes (`text-base md:text-lg`), and button heights (`h-9 md:h-10`). See "Comprehensive Dialog & Sidebar Responsive Patterns" section for complete patterns.
 4. **Delete Confirmation**: Reusable `DeleteConfirmationDialog` component
    - Props: `isOpen`, `onClose`, `onConfirm`, `title`, `message`, `confirmText`, `isDeleting`
    - Shows loading spinner during deletion
    - **Skip confirmation for empty items**: When deleting empty rows (e.g., in TTS/STT evaluation input), call `deleteRow()` directly instead of showing confirmation dialog
+   - **Fully responsive**: Uses mobile-first sizing with `p-4` outer margin, `p-5 md:p-6` dialog padding, `h-9 md:h-10` buttons, `text-base md:text-lg` title, `gap-2 md:gap-3` between actions
 5. **Toast Notifications**: Bottom-right success toasts
    - Auto-dismiss after 3 seconds
    - Manual dismiss button
@@ -1586,6 +2300,29 @@ The app supports three theme modes (all add a class to `<html>`):
 
 **Avoid hardcoded colors** like `bg-black`, `bg-[#1a1a1a]`, `text-white`, `border-[#333]` - these break in light mode.
 
+### Utility Classes (globals.css)
+
+**Hide Scrollbar (for horizontal scroll containers):**
+
+```css
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+```
+
+Combine with inline styles for cross-browser support:
+
+```tsx
+<div
+  className="hide-scrollbar overflow-x-auto"
+  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+>
+  {/* Scrollable content */}
+</div>
+```
+
+Used for: Tab navigation, horizontal card lists where scrollbar should be hidden
+
 ### Component Sizing
 
 - **Standard heights**: `h-8` (32px), `h-9` (36px), `h-10` (40px), `h-11` (44px)
@@ -1689,12 +2426,32 @@ import { SearchInput } from "@/components/ui";
 
 **Standard input classes:**
 
+Desktop-only (non-responsive):
+
 ```tsx
 className =
   "w-full h-10 px-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent";
 ```
 
+Responsive (dialogs, sidebars, list pages):
+
+```tsx
+className =
+  "w-full h-9 md:h-10 px-3 md:px-4 rounded-md text-sm md:text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent";
+```
+
+**Form field labels (responsive):**
+
+```tsx
+// In dialogs and sidebars
+<label className="block text-xs md:text-sm font-medium mb-2">
+  Field Label <span className="text-red-500">*</span>
+</label>
+```
+
 ### Custom Checkbox (Button-based)
+
+Desktop-only:
 
 ```tsx
 // Checkbox using button element with visible borders in both themes
@@ -1709,6 +2466,36 @@ className =
   {checked && (
     <svg
       className="w-3 h-3 text-background"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={3}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M4.5 12.75l6 6 9-13.5"
+      />
+    </svg>
+  )}
+</button>
+```
+
+Responsive (in dialogs):
+
+```tsx
+// Checkbox with responsive sizing
+<button
+  onClick={() => setChecked(!checked)}
+  className={`w-5 h-5 md:w-6 md:h-6 rounded-md border-2 flex-shrink-0 flex items-center justify-center transition-colors cursor-pointer ${
+    checked
+      ? "bg-foreground border-foreground"
+      : "border-muted-foreground hover:border-foreground"
+  }`}
+>
+  {checked && (
+    <svg
+      className="w-3 h-3 md:w-4 md:h-4 text-background"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
@@ -1758,12 +2545,16 @@ Simulated user characteristics:
 - **Language**: english | hindi | kannada
 - **Interruption Sensitivity**: none | low | medium | high
 
+**Cross-page navigation**: The Add/Edit Persona dialog includes a clickable link to "Scenarios" in the characteristics help text, allowing users to quickly navigate between related concepts.
+
 ### Scenarios
 
 Test scenarios defining WHAT the persona should do:
 
 - **Label**: Scenario name
 - **Description**: Task or conversation goal
+
+**Cross-page navigation**: The Add/Edit Scenario dialog includes a clickable link to "Personas" in the description help text, allowing users to quickly navigate between related concepts.
 
 ### Simulations
 
@@ -2240,10 +3031,15 @@ import {
 <ToolCallCard toolName="get_weather" args={{ body: { city: "London" }, query: { units: "metric" } }} />
 // Shows "body" field with JSON content, "query" field with JSON content
 
-// Full test conversation view
+// Full test conversation view (fully responsive)
+// - Padding: `p-4 md:p-6`
+// - Message bubbles: `w-[70%] md:w-1/2` (70% width on mobile for visual differentiation, half on desktop)
+// - User messages aligned right, agent messages aligned left for clear visual distinction
+// - Status indicators: responsive padding `pl-2 md:pl-3`
 <TestDetailView history={history} output={output} passed={passed} />
 
-// Stats bar
+// Stats bar - shows passed/failed counts
+// In TestRunnerDialog: show in header on desktop, at top of list on mobile
 <TestStats passedCount={5} failedCount={2} />
 ```
 
@@ -2337,14 +3133,14 @@ import { SpinnerIcon, ToolIcon } from "@/components/icons";
 
 **Standard Grid Column Patterns:**
 
-| Page Type                     | Grid Columns                              | Description                                                   |
-| ----------------------------- | ----------------------------------------- | ------------------------------------------------------------- |
-| **Agents, Simulations**       | `[1fr_1fr_auto]` or `[1fr_1fr_auto_auto]` | Equal-width data columns, auto action buttons                 |
-| **Tools**                     | `[200px_150px_1fr_auto]`                  | Fixed name, fixed type badge, flexible description, auto actions |
-| **Scenarios, Metrics**        | `[200px_1fr_auto]`                        | Fixed 200px name column, flexible description, auto actions   |
-| **Personas**                  | `[200px_1fr_100px_100px_120px_auto]`      | Fixed name, flexible characteristics, fixed attribute columns |
-| **Simulation Runs**           | `[1fr_1fr_1fr_1fr]`                       | Four equal columns (Name, Status, Type, Created At)           |
-| **Tests**                     | `[1fr_1fr_auto]`                          | Equal-width name and type columns                             |
+| Page Type               | Grid Columns                              | Description                                                      |
+| ----------------------- | ----------------------------------------- | ---------------------------------------------------------------- |
+| **Agents, Simulations** | `[1fr_1fr_auto]` or `[1fr_1fr_auto_auto]` | Equal-width data columns, auto action buttons                    |
+| **Tools**               | `[200px_150px_1fr_auto]`                  | Fixed name, fixed type badge, flexible description, auto actions |
+| **Scenarios, Metrics**  | `[200px_1fr_auto]`                        | Fixed 200px name column, flexible description, auto actions      |
+| **Personas**            | `[200px_1fr_100px_100px_120px_auto]`      | Fixed name, flexible characteristics, fixed attribute columns    |
+| **Simulation Runs**     | `[1fr_1fr_1fr_1fr]`                       | Four equal columns (Name, Status, Type, Created At)              |
+| **Tests**               | `[1fr_1fr_auto]`                          | Equal-width name and type columns                                |
 
 The pattern is: use fixed widths (e.g., `200px`) for short columns like Name/Label, `1fr` for flexible content columns like Description/Characteristics, and `auto` for action buttons.
 
@@ -2520,7 +3316,7 @@ toast.error(
       Contact us
     </a>{" "}
     to extend your limits.
-  </span>,
+  </span>
 );
 ```
 
@@ -2557,7 +3353,7 @@ const getAudioDuration = (file: File): Promise<number> => {
 const duration = await getAudioDuration(file);
 if (duration > LIMITS.STT_MAX_AUDIO_DURATION_SECONDS) {
   toast.error(
-    `Audio file must be less than ${LIMITS.STT_MAX_AUDIO_DURATION_SECONDS} seconds...`,
+    `Audio file must be less than ${LIMITS.STT_MAX_AUDIO_DURATION_SECONDS} seconds...`
   );
   return;
 }
@@ -2680,15 +3476,18 @@ This pattern ensures textareas grow with content on: typing, pasting, and initia
 ### Sidebar Sections
 
 1. **Main**
+
    - Agents
    - Tools
 
 2. **Unit Tests**
+
    - LLM Evaluation (route: `/tests`) - formerly "Text to Text"
    - Text-to-Speech (TTS)
    - Speech-to-Text (STT)
 
 3. **End-to-End Tests**
+
    - Personas
    - Scenarios
    - Metrics
@@ -2700,6 +3499,18 @@ This pattern ensures textareas grow with content on: typing, pasting, and initia
 ### External Links in Sidebar
 
 The sidebar navigation handles external links differently from internal routes. In `AppLayout.tsx`, items with `id === "docs"` render as `<a>` tags with `target="_blank"` instead of Next.js `<Link>` components. External links include a small arrow icon (↗) to indicate they open in a new tab.
+
+**Mobile behavior**: Both internal navigation links and external links (like Documentation) include `onClick` handlers that automatically close the sidebar on mobile devices (viewport < 768px). This provides a cleaner mobile UX by immediately showing the content after navigation without requiring a manual sidebar close.
+
+### Cross-Page Links in Forms
+
+Related pages include clickable links in their form dialogs to help users navigate between related concepts:
+
+- **Personas ↔ Scenarios**: The Add/Edit Persona dialog links to "Scenarios" (explains WHAT to do), and the Add/Edit Scenario dialog links to "Personas" (explains HOW to behave)
+- **Styling**: Use Mintlify-style underlines with `font-semibold text-foreground underline decoration-foreground/30 underline-offset-2 hover:decoration-foreground/60 transition-colors`
+- **Implementation**: Use Next.js `Link` component from `next/link` for client-side navigation
+
+This pattern helps users understand the relationship between features and provides quick navigation when creating related resources.
 
 ---
 
@@ -2788,6 +3599,7 @@ Set `MAINTENANCE_MODE=true` in `.env.local` to show a maintenance page. When ena
   - Example: `TestsTabContent` uses `pastRunsRef` instead of having `pastRuns` in the polling useEffect dependencies
 - **Functional setState for conditional updates in polling**: When you only need to conditionally set state (not read it for logic), use functional setState: `setState((current) => current || newValue)`. This avoids stale closures because React provides the current state value. Example: `setActiveProviderTab((current) => current || result.provider_results[0].provider)`
 - **Polling cleanup pattern**: Clear intervals at THREE points to prevent accumulating multiple intervals:
+
   1. **At the start of the effect** - before setting up a new interval, clear any existing one
   2. **When the triggering condition becomes false** - e.g., when `isOpen` becomes false, clear in an `else` branch
   3. **In the cleanup function** - return a cleanup that clears the interval
@@ -2844,18 +3656,35 @@ Set `MAINTENANCE_MODE=true` in `.env.local` to show a maintenance page. When ena
   - `failed` → "Failed" (red badge)
   - Pass `showSpinner` prop to show spinner for active statuses (`queued`/`in_progress`)
   - Badge classes use dark mode variants: `dark:bg-{color}-500/20 dark:text-{color}-400`
+- **Pill-based attribute display**: For displaying multiple attributes in mobile cards or compact layouts, use pill styling for better visual hierarchy:
+  - Standard pill classes: `inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-muted text-foreground`
+  - Container: `flex flex-wrap gap-2` for consistent spacing
+  - **Localization pattern** (e.g., Personas gender in Hindi): Create helper functions like `getGenderInHindi()` to map English values to localized display text:
+    ```tsx
+    const getGenderInHindi = (gender: string) => {
+      const genderMap: Record<string, string> = {
+        male: "पुरुष",
+        female: "महिला",
+      };
+      return genderMap[gender.toLowerCase()] || gender;
+    };
+    ```
+  - Use case: Personas mobile cards display gender in Hindi, language capitalized, and interruption sensitivity as separate pills
 - **Stable keys for media elements**: When rendering audio/video in components that re-render during polling, use stable keys (`key={src}`) to prevent React from remounting the element and restarting playback
 - **Range slider with filled track and tooltip**: For sliders that show progress from start to current value with a hover tooltip:
+
   ```tsx
   const [showTooltip, setShowTooltip] = useState(false);
   const percentage = ((value - min) / (max - min)) * 100;
-  
+
   <div className="relative pt-6">
     {/* Tooltip - positioned above thumb */}
     {showTooltip && (
       <div
         className="absolute -top-1 transform -translate-x-1/2 pointer-events-none"
-        style={{ left: `calc(${percentage}% + ${8 - (percentage / 100) * 16}px)` }}
+        style={{
+          left: `calc(${percentage}% + ${8 - (percentage / 100) * 16}px)`,
+        }}
       >
         <div className="bg-foreground text-background text-xs font-medium px-2 py-1 rounded-md">
           {value} secs
@@ -2878,9 +3707,11 @@ Set `MAINTENANCE_MODE=true` in `.env.local` to show a maintenance page. When ena
         background: `linear-gradient(to right, white 0%, white ${percentage}%, hsl(var(--muted)) ${percentage}%, hsl(var(--muted)) 100%)`,
       }}
     />
-  </div>
+  </div>;
   ```
+
   **Gotchas**: Use `white` directly instead of `hsl(var(--foreground))` for the filled track color - CSS variables in inline styles may not render correctly. Add explicit track styling (`-webkit-slider-runnable-track`, `-moz-range-track`) with `bg-transparent` to let the gradient show through. The tooltip position formula `calc(${percentage}% + ${8 - (percentage / 100) * 16}px)` accounts for thumb width offset at edges
+
 - **Ref-based previous value tracking**: To only trigger effects when values actually change (not just when references change), use a ref to track the previous value:
   ```tsx
   const prevLengthRef = useRef(0);
@@ -2909,16 +3740,44 @@ Set `MAINTENANCE_MODE=true` in `.env.local` to show a maintenance page. When ena
     </button>
   </Link>
   ```
+- **Interactive list items with mobile touch support**: For list items that trigger actions (not navigation), use `<button>` elements instead of `<div>` with `onClick` to ensure reliable touch event handling on mobile devices:
+
+  ```tsx
+  {
+    /* DON'T: div with only onClick */
+  }
+  <div onClick={handleSelect}>List item</div>;
+
+  {
+    /* DO: button with onClick and onTouchEnd */
+  }
+  <button
+    type="button"
+    onClick={handleSelect}
+    onTouchEnd={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      handleSelect();
+    }}
+    className="w-full text-left"
+  >
+    List item content
+  </button>;
+  ```
+
+  **Why**: `div` elements with `onClick` can have inconsistent touch event handling on mobile browsers. Using semantic `<button>` elements with both `onClick` and `onTouchEnd` ensures reliable tap recognition across all devices. Add `type="button"` to prevent form submission and `w-full text-left` for full clickable area with left-aligned text.
+  **Example**: TestRunnerDialog's TestListItem component uses this pattern for reliable mobile test selection.
 
 ### Styling
 
 - **Never use hardcoded colors** like `bg-black`, `bg-[#1a1a1a]`, `text-white`, `border-[#333]`, `text-gray-300`, `text-gray-400` - these break light mode
 - **Always use CSS variable classes**: `bg-background`, `text-foreground`, `border-border`, `bg-muted`, `text-muted-foreground`, `bg-accent`
 - **Do NOT use `bg-popover`** - it causes transparent backgrounds due to Tailwind v4 theme mapping issues; use `bg-background` instead for dropdowns and popovers
+- **Links in descriptions (Mintlify-style)**: For links within `text-muted-foreground` descriptions, use `font-semibold text-foreground underline decoration-foreground/30 underline-offset-2 hover:decoration-foreground/60 transition-colors`. This creates a subtle underline that becomes more prominent on hover. Example: `<Link href="/scenarios" className="font-semibold text-foreground underline decoration-foreground/30 underline-offset-2 hover:decoration-foreground/60 transition-colors">Scenarios</Link>` in persona form descriptions
 - **Checkboxes need visible borders**: Use `border-muted-foreground` (not `border-border`) and `border-2` for custom checkbox buttons to ensure visibility in both light and dark modes
 - **Spinners in flex containers**: Always add `flex-shrink-0` to spinner SVGs to prevent them from shrinking. Standard spinner class: `w-5 h-5 flex-shrink-0 animate-spin`
 - **Icon action buttons** (play, edit, etc.): Use `bg-foreground/90 text-background hover:bg-foreground` for solid icon buttons that need to be visible in both light and dark modes. Never use `text-white` alone as icons become invisible on light backgrounds. **Avoid `hover:opacity-*`** on buttons with child tooltips - opacity affects all children including tooltips, making them translucent. Use `bg-foreground/90 hover:bg-foreground` instead to only affect the background
-- **Chat message bubbles**: Consistent styling across AddTestDialog and TestDetailView (test results). User messages use `bg-muted border border-border text-foreground` (gray background, right-aligned). Agent messages use `bg-background border border-border text-foreground` (white/light background, left-aligned). Tool call cards use `bg-muted border border-border`. All use `rounded-xl` and `w-1/2` width. See `@/components/test-results/shared.tsx` for the pattern
+- **Chat message bubbles**: Consistent styling across AddTestDialog and TestDetailView (test results). User messages use `bg-muted border border-border text-foreground` (gray background, right-aligned). Agent messages use `bg-background border border-border text-foreground` (white/light background, left-aligned). Tool call cards use `bg-muted border border-border`. All use `rounded-xl` corners. **Width pattern**: `w-[70%] md:w-1/2` (70% width on mobile for better visual differentiation between user/agent messages, 50% on desktop). This prevents full-width message bubbles on mobile that look monotonous. See `@/components/test-results/shared.tsx` for the pattern
 
 ### Forms
 
@@ -2982,8 +3841,8 @@ export default function ToolsLayout({
 
 **Route layout hierarchy:**
 
-| Route                      | Layout Title                                              |
-| -------------------------- | --------------------------------------------------------- |
+| Route                      | Layout Title                                                  |
+| -------------------------- | ------------------------------------------------------------- |
 | `/agents`                  | "Agents \| Calibrate"                                         |
 | `/agents/[uuid]`           | "Agent \| Calibrate"                                          |
 | `/tools`                   | "Tools \| Calibrate"                                          |
@@ -3018,11 +3877,11 @@ useEffect(() => {
 
 Pages with tabs (agent detail, simulation detail) include the active tab name in the title:
 
-| Page                               | Title Format                                                                 |
-| ---------------------------------- | ---------------------------------------------------------------------------- |
+| Page                               | Title Format                                                                         |
+| ---------------------------------- | ------------------------------------------------------------------------------------ |
 | `/agents/[uuid]`                   | `<Agent Name> - <Tab Name> \| Calibrate` (e.g., "My Agent - Tests \| Calibrate")     |
 | `/simulations/[uuid]`              | `<Simulation Name> - <Tab Name> \| Calibrate` (e.g., "My Sim - Config \| Calibrate") |
-| `/simulations/[uuid]/runs/[runId]` | `<Run Name> \| <Simulation Name> \| Calibrate`                                   |
+| `/simulations/[uuid]/runs/[runId]` | `<Run Name> \| <Simulation Name> \| Calibrate`                                       |
 
 **Simulation run page fetches parent simulation name:**
 
