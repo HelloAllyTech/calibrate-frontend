@@ -70,7 +70,7 @@ export function ToolsTabContent({
           <div className="relative">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
               <svg
-                className="w-5 h-5 text-muted-foreground"
+                className="w-4 md:w-5 h-4 md:h-5 text-muted-foreground"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -88,7 +88,7 @@ export function ToolsTabContent({
               value={toolsSearchQuery}
               onChange={(e) => setToolsSearchQuery(e.target.value)}
               placeholder="Search tools"
-              className="w-full h-10 pl-10 pr-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+              className="w-full h-9 md:h-10 pl-9 md:pl-10 pr-4 rounded-md text-sm md:text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
             />
           </div>
 
@@ -128,8 +128,8 @@ export function ToolsTabContent({
               </button>
             </div>
           ) : filteredTools.length === 0 ? (
-            <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-              <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center mb-4">
+            <div className="border border-border rounded-xl p-6 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+              <div className="w-12 md:w-14 h-12 md:h-14 rounded-xl bg-muted flex items-center justify-center mb-3 md:mb-4">
                 <svg
                   className="w-7 h-7 text-muted-foreground"
                   fill="none"
@@ -144,88 +144,138 @@ export function ToolsTabContent({
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-foreground mb-1">
+              <h3 className="text-base md:text-lg font-semibold text-foreground mb-1">
                 No tools found
               </h3>
-              <p className="text-base text-muted-foreground mb-4">
+              <p className="text-sm md:text-base text-muted-foreground mb-3 md:mb-4 text-center">
                 {toolsSearchQuery
                   ? "No tools match your search"
                   : "No tools have been added to this agent yet"}
               </p>
               <button
                 onClick={() => setAddToolDialogOpen(true)}
-                className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
+                className="h-9 md:h-10 px-3 md:px-4 rounded-md text-sm md:text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
               >
                 Add tool
               </button>
             </div>
           ) : (
-            <div className="border border-border rounded-xl overflow-hidden">
-              {/* Table Header */}
-              <div className="grid grid-cols-[1fr_120px_2fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
-                <div className="text-sm font-medium text-muted-foreground">
-                  Name
+            <>
+              {/* Desktop Table */}
+              <div className="hidden md:block border border-border rounded-xl overflow-hidden">
+                {/* Table Header */}
+                <div className="grid grid-cols-[1fr_120px_2fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
+                  <div className="text-sm font-medium text-muted-foreground">
+                    Name
+                  </div>
+                  <div className="text-sm font-medium text-muted-foreground">
+                    Type
+                  </div>
+                  <div className="text-sm font-medium text-muted-foreground">
+                    Description
+                  </div>
+                  <div className="w-8"></div>
                 </div>
-                <div className="text-sm font-medium text-muted-foreground">
-                  Type
-                </div>
-                <div className="text-sm font-medium text-muted-foreground">
-                  Description
-                </div>
-                <div className="w-8"></div>
-              </div>
-              {/* Table Body */}
-              {filteredTools.map((tool) => (
-                <div
-                  key={tool.uuid}
-                  className="grid grid-cols-[1fr_120px_2fr_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors"
-                >
-                  {/* Name Column */}
-                  <div className="flex items-center">
-                    <div className="text-sm font-medium text-foreground">
-                      {tool.name}
+                {/* Table Body */}
+                {filteredTools.map((tool) => (
+                  <div
+                    key={tool.uuid}
+                    className="grid grid-cols-[1fr_120px_2fr_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors"
+                  >
+                    {/* Name Column */}
+                    <div className="flex items-center">
+                      <div className="text-sm font-medium text-foreground">
+                        {tool.name}
+                      </div>
+                    </div>
+                    {/* Type Column */}
+                    <div className="flex items-center">
+                      <p className="text-sm text-muted-foreground">
+                        {tool.config?.type === "webhook" ? "Webhook" : "Structured Output"}
+                      </p>
+                    </div>
+                    {/* Description Column */}
+                    <div className="flex items-center">
+                      <p className="text-sm text-muted-foreground line-clamp-1">
+                        {tool.description || tool.config?.description || "—"}
+                      </p>
+                    </div>
+                    {/* Delete Button */}
+                    <div className="flex items-center">
+                      <button
+                        onClick={() => {
+                          setToolToDelete(tool);
+                          setDeleteToolDialogOpen(true);
+                        }}
+                        className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+                        title="Remove tool from agent"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={1.5}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                          />
+                        </svg>
+                      </button>
                     </div>
                   </div>
-                  {/* Type Column */}
-                  <div className="flex items-center">
-                    <p className="text-sm text-muted-foreground">
-                      {tool.config?.type === "webhook" ? "Webhook" : "Structured Output"}
-                    </p>
-                  </div>
-                  {/* Description Column */}
-                  <div className="flex items-center">
-                    <p className="text-sm text-muted-foreground line-clamp-1">
-                      {tool.description || tool.config?.description || "—"}
-                    </p>
-                  </div>
-                  {/* Delete Button */}
-                  <div className="flex items-center">
-                    <button
-                      onClick={() => {
-                        setToolToDelete(tool);
-                        setDeleteToolDialogOpen(true);
-                      }}
-                      className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
-                      title="Remove tool from agent"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={1.5}
+                ))}
+              </div>
+              {/* Mobile Cards */}
+              <div className="md:hidden space-y-3">
+                {filteredTools.map((tool) => (
+                  <div
+                    key={tool.uuid}
+                    className="border border-border rounded-xl p-4 bg-background"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-sm font-medium text-foreground truncate">
+                          {tool.name}
+                        </h4>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {tool.config?.type === "webhook" ? "Webhook" : "Structured Output"}
+                        </p>
+                        {(tool.description || tool.config?.description) && (
+                          <p className="text-xs text-muted-foreground mt-2 line-clamp-2">
+                            {tool.description || tool.config?.description}
+                          </p>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => {
+                          setToolToDelete(tool);
+                          setDeleteToolDialogOpen(true);
+                        }}
+                        className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+                        title="Remove tool from agent"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                        />
-                      </svg>
-                    </button>
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={1.5}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </>
           )}
         </div>
 

@@ -254,7 +254,7 @@ export function TestRunnerDialog({
 
         // If we're viewing a past run and have no previous results, build from API response
         if (prev.length === 0 && result.results && result.results.length > 0) {
-          return result.results.map((apiResult) => {
+          return result.results.map((apiResult, index) => {
             const testStatus = getTestStatus(apiResult);
             // Get test name from name (in-progress), test_case.name, or test_name field
             const testName =
@@ -262,9 +262,12 @@ export function TestRunnerDialog({
               apiResult.test_case?.name ||
               apiResult.test_name ||
               "Unknown Test";
+            // Generate a unique fallback UUID using index if test_uuid is missing
+            const testUuid =
+              apiResult.test_uuid || `generated-${index}-${testName}`;
             return {
               test: {
-                uuid: apiResult.test_uuid || "",
+                uuid: testUuid,
                 name: testName,
                 description: "",
                 type: "response" as const,

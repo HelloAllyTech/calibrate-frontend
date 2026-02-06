@@ -13,20 +13,20 @@ export function InbuiltToolsPanel({
   setEndConversationEnabled,
 }: InbuiltToolsPanelProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 md:space-y-4 order-1 lg:order-2">
       <div>
-        <h3 className="text-base font-medium text-foreground">
+        <h3 className="text-sm md:text-base font-medium text-foreground">
           In-built tools
         </h3>
-        <p className="text-base text-muted-foreground mt-0.5">
+        <p className="text-sm md:text-base text-muted-foreground mt-0.5">
           Allow the agent to perform built-in actions.
         </p>
       </div>
 
       <div className="border border-border rounded-xl overflow-hidden">
         {/* Active tools counter */}
-        <div className="px-4 py-3 bg-muted/30 border-b border-border">
-          <span className="text-base text-foreground">
+        <div className="px-3 md:px-4 py-2 md:py-3 bg-muted/30 border-b border-border">
+          <span className="text-sm md:text-base text-foreground">
             {endConversationEnabled ? "1 active tool" : "0 active tools"}
           </span>
         </div>
@@ -35,11 +35,11 @@ export function InbuiltToolsPanel({
         {INBUILT_TOOLS.map((tool) => (
           <div
             key={tool.id}
-            className="px-4 py-3 flex items-center justify-between border-b border-border last:border-b-0"
+            className="px-3 md:px-4 py-2 md:py-3 flex items-center justify-between border-b border-border last:border-b-0"
           >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 md:gap-3">
               <svg
-                className="w-5 h-5 text-muted-foreground"
+                className="w-4 md:w-5 h-4 md:h-5 text-muted-foreground"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -51,7 +51,7 @@ export function InbuiltToolsPanel({
                   d={getInbuiltToolIcon(tool.icon)}
                 />
               </svg>
-              <span className="text-base font-medium text-foreground">
+              <span className="text-sm md:text-base font-medium text-foreground">
                 {tool.name}
               </span>
             </div>

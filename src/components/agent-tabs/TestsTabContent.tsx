@@ -442,7 +442,11 @@ export function TestsTabContent({
           setPastRuns((prev) =>
             prev.map((r) =>
               r.uuid === run.uuid
-                ? { ...r, status: "failed", updated_at: new Date().toISOString() }
+                ? {
+                    ...r,
+                    status: "failed",
+                    updated_at: new Date().toISOString(),
+                  }
                 : r
             )
           );
@@ -673,12 +677,12 @@ export function TestsTabContent({
     <div className="flex flex-col">
       {/* Header with Add button - only show when there are tests */}
       {agentTests.length > 0 && (
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <div className="flex flex-wrap items-center gap-2 md:gap-3">
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setShowTestDropdown(!showTestDropdown)}
-                className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
+                className="h-9 md:h-10 px-3 md:px-4 rounded-md text-sm md:text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
               >
                 Add test
               </button>
@@ -801,7 +805,7 @@ export function TestsTabContent({
                 setTestsToRun(agentTests);
                 setTestRunnerOpen(true);
               }}
-              className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer flex items-center gap-2"
+              className="h-9 md:h-10 px-3 md:px-4 rounded-md text-sm md:text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer flex items-center gap-2"
             >
               <svg
                 className="w-4 h-4"
@@ -816,11 +820,12 @@ export function TestsTabContent({
                   d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
                 />
               </svg>
-              Run all tests
+              <span className="hidden sm:inline">Run all tests</span>
+              <span className="sm:hidden">Run all</span>
             </button>
             <button
               onClick={() => setBenchmarkDialogOpen(true)}
-              className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer flex items-center gap-2"
+              className="h-9 md:h-10 px-3 md:px-4 rounded-md text-sm md:text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer flex items-center gap-2"
             >
               <svg
                 className="w-4 h-4"
@@ -835,7 +840,8 @@ export function TestsTabContent({
                   d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605"
                 />
               </svg>
-              Compare models
+              <span className="hidden sm:inline">Compare models</span>
+              <span className="sm:hidden">Compare</span>
             </button>
           </div>
         </div>
@@ -843,7 +849,7 @@ export function TestsTabContent({
 
       {/* Tests List / Loading / Error / Empty State */}
       {agentTestsLoading ? (
-        <div className="flex-1 border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
+        <div className="flex-1 border border-border rounded-xl p-6 md:p-12 flex flex-col items-center justify-center bg-muted/20">
           <div className="flex items-center gap-3">
             <svg
               className="w-5 h-5 animate-spin"
@@ -867,18 +873,20 @@ export function TestsTabContent({
           </div>
         </div>
       ) : agentTestsError ? (
-        <div className="flex-1 border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-          <p className="text-base text-red-500 mb-2">{agentTestsError}</p>
+        <div className="flex-1 border border-border rounded-xl p-6 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+          <p className="text-sm md:text-base text-red-500 mb-2">
+            {agentTestsError}
+          </p>
           <button
             onClick={() => window.location.reload()}
-            className="text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            className="text-sm md:text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
           >
             Retry
           </button>
         </div>
       ) : agentTests.length === 0 ? (
-        <div className="flex-1 border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-          <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center mb-4">
+        <div className="flex-1 border border-border rounded-xl p-6 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+          <div className="w-12 md:w-14 h-12 md:h-14 rounded-xl bg-muted flex items-center justify-center mb-3 md:mb-4">
             <svg
               className="w-7 h-7 text-muted-foreground"
               viewBox="0 0 24 24"
@@ -887,17 +895,17 @@ export function TestsTabContent({
               <path d="M9 3h6v2h-1v4.5l4.5 7.5c.5.83.5 1.5-.17 2.17-.67.67-1.34.83-2.33.83H8c-1 0-1.67-.17-2.33-.83-.67-.67-.67-1.34-.17-2.17L10 9.5V5H9V3zm3 8.5L8.5 17h7L12 11.5z" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-foreground mb-1">
+          <h3 className="text-base md:text-lg font-semibold text-foreground mb-1">
             No tests attached
           </h3>
-          <p className="text-base text-muted-foreground mb-4 text-center max-w-md">
+          <p className="text-sm md:text-base text-muted-foreground mb-3 md:mb-4 text-center max-w-md">
             This agent doesn&apos;t have any tests attached to it.
           </p>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3">
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setShowTestDropdown(!showTestDropdown)}
-                className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
+                className="h-9 md:h-10 px-3 md:px-4 rounded-md text-sm md:text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
               >
                 Add test
               </button>
@@ -996,14 +1004,14 @@ export function TestsTabContent({
           </div>
         </div>
       ) : (
-        <div className="flex-1 flex gap-6">
+        <div className="flex-1 flex flex-col lg:flex-row gap-4 md:gap-6">
           {/* Left Panel - Tests Table */}
           <div className="flex-1 flex flex-col min-w-0">
             {/* Search Input */}
-            <div className="relative mb-4">
+            <div className="relative mb-3 md:mb-4">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <svg
-                  className="w-5 h-5 text-muted-foreground"
+                  className="w-4 md:w-5 h-4 md:h-5 text-muted-foreground"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -1021,156 +1029,226 @@ export function TestsTabContent({
                 value={testsSearchQuery}
                 onChange={(e) => setTestsSearchQuery(e.target.value)}
                 placeholder="Search tests"
-                className="w-full h-10 pl-10 pr-4 rounded-md text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                className="w-full h-9 md:h-10 pl-9 md:pl-10 pr-4 rounded-md text-sm md:text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
               />
             </div>
 
             {/* Tests Table */}
             {filteredAgentTests.length === 0 ? (
-              <div className="flex-1 border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-                <p className="text-base text-muted-foreground">
+              <div className="flex-1 border border-border rounded-xl p-6 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+                <p className="text-sm md:text-base text-muted-foreground">
                   No tests match your search
                 </p>
               </div>
             ) : (
-              <div className="border border-border rounded-xl overflow-hidden">
-                {/* Table Header */}
-                <div className="grid grid-cols-[1fr_1fr_auto_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
-                  <div className="text-sm font-medium text-muted-foreground">
-                    Name
+              <>
+                {/* Desktop Table */}
+                <div className="hidden md:block border border-border rounded-xl overflow-hidden">
+                  {/* Table Header */}
+                  <div className="grid grid-cols-[1fr_1fr_auto_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
+                    <div className="text-sm font-medium text-muted-foreground">
+                      Name
+                    </div>
+                    <div className="text-sm font-medium text-muted-foreground">
+                      Type
+                    </div>
+                    <div className="w-8"></div>
+                    <div className="w-8"></div>
                   </div>
-                  <div className="text-sm font-medium text-muted-foreground">
-                    Type
-                  </div>
-                  <div className="w-8"></div>
-                  <div className="w-8"></div>
+                  {/* Table Body */}
+                  {filteredAgentTests.map((test) => (
+                    <div
+                      key={test.uuid}
+                      className="grid grid-cols-[1fr_1fr_auto_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors"
+                    >
+                      {/* Name Column with Edit Icon */}
+                      <div className="flex items-center gap-2">
+                        <svg
+                          className="w-4 h-4 text-muted-foreground flex-shrink-0"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={1.5}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+                          />
+                        </svg>
+                        <span className="text-sm font-medium text-foreground truncate">
+                          {test.name}
+                        </span>
+                      </div>
+                      {/* Type Column with Icon */}
+                      <div className="flex items-center gap-2">
+                        {test.type === "tool_call" ? (
+                          <svg
+                            className="w-4 h-4 text-muted-foreground flex-shrink-0"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={1.5}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"
+                            />
+                          </svg>
+                        ) : (
+                          <svg
+                            className="w-4 h-4 text-muted-foreground flex-shrink-0"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={1.5}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                        )}
+                        <span className="text-sm text-muted-foreground">
+                          {test.type === "tool_call"
+                            ? "Tool Call"
+                            : "Next Reply"}
+                        </span>
+                      </div>
+                      {/* Run Button */}
+                      <div className="flex items-center">
+                        <button
+                          onClick={() => {
+                            setTestsToRun([test]);
+                            setTestRunnerOpen(true);
+                          }}
+                          className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-pointer"
+                          title="Run test"
+                        >
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={1.5}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                      {/* Delete Button */}
+                      <div className="flex items-center">
+                        <button
+                          onClick={() => openDeleteDialog(test)}
+                          className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+                          title="Remove test from agent"
+                        >
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={1.5}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                {/* Table Body */}
-                {filteredAgentTests.map((test) => (
-                  <div
-                    key={test.uuid}
-                    className="grid grid-cols-[1fr_1fr_auto_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors"
-                  >
-                    {/* Name Column with Edit Icon */}
-                    <div className="flex items-center gap-2">
-                      <svg
-                        className="w-4 h-4 text-muted-foreground flex-shrink-0"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={1.5}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
-                        />
-                      </svg>
-                      <span className="text-sm font-medium text-foreground truncate">
-                        {test.name}
-                      </span>
+                {/* Mobile Cards */}
+                <div className="md:hidden space-y-3">
+                  {filteredAgentTests.map((test) => (
+                    <div
+                      key={test.uuid}
+                      className="border border-border rounded-xl p-3 bg-background"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-sm font-medium text-foreground truncate">
+                            {test.name}
+                          </h4>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {test.type === "tool_call"
+                              ? "Tool Call"
+                              : "Next Reply"}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          <button
+                            onClick={() => {
+                              setTestsToRun([test]);
+                              setTestRunnerOpen(true);
+                            }}
+                            className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-pointer"
+                            title="Run test"
+                          >
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={1.5}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"
+                              />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => openDeleteDialog(test)}
+                            className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+                            title="Remove test"
+                          >
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={1.5}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                    {/* Type Column with Icon */}
-                    <div className="flex items-center gap-2">
-                      {test.type === "tool_call" ? (
-                        <svg
-                          className="w-4 h-4 text-muted-foreground flex-shrink-0"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={1.5}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"
-                          />
-                        </svg>
-                      ) : (
-                        <svg
-                          className="w-4 h-4 text-muted-foreground flex-shrink-0"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={1.5}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                      )}
-                      <span className="text-sm text-muted-foreground">
-                        {test.type === "tool_call" ? "Tool Call" : "Next Reply"}
-                      </span>
-                    </div>
-                    {/* Run Button */}
-                    <div className="flex items-center">
-                      <button
-                        onClick={() => {
-                          setTestsToRun([test]);
-                          setTestRunnerOpen(true);
-                        }}
-                        className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-pointer"
-                        title="Run test"
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={1.5}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                    {/* Delete Button */}
-                    <div className="flex items-center">
-                      <button
-                        onClick={() => openDeleteDialog(test)}
-                        className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
-                        title="Remove test from agent"
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={1.5}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              </>
             )}
           </div>
 
           {/* Right Panel - Past Runs */}
-          <div className="w-[560px] flex-shrink-0 border border-border rounded-xl overflow-hidden bg-muted/30">
+          <div className="w-full lg:w-[400px] xl:w-[560px] flex-shrink-0 border border-border rounded-xl overflow-hidden bg-muted/30">
             {/* Past Runs Title */}
-            <div className="px-4 py-3">
-              <h3 className="text-base font-semibold text-foreground">
+            <div className="px-3 md:px-4 py-2 md:py-3">
+              <h3 className="text-sm md:text-base font-semibold text-foreground">
                 Past runs
               </h3>
             </div>
 
             {/* Past Runs List */}
-            <div className="overflow-y-auto max-h-[500px]">
+            <div className="overflow-y-auto max-h-[300px] lg:max-h-[500px]">
               {pastRunsLoading ? (
-                <div className="flex items-center justify-center py-8">
+                <div className="flex items-center justify-center py-6 md:py-8">
                   <svg
                     className="w-5 h-5 animate-spin text-muted-foreground"
                     fill="none"
@@ -1192,8 +1270,8 @@ export function TestsTabContent({
                   </svg>
                 </div>
               ) : pastRuns.length === 0 ? (
-                <div className="py-8 text-center">
-                  <p className="text-sm text-muted-foreground">
+                <div className="py-6 md:py-8 text-center">
+                  <p className="text-xs md:text-sm text-muted-foreground">
                     No test runs yet
                   </p>
                 </div>
@@ -1202,13 +1280,18 @@ export function TestsTabContent({
                   <div
                     key={run.uuid}
                     onClick={() => handlePastRunClick(run)}
-                    className="grid grid-cols-[1fr_auto_auto_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors items-center cursor-pointer"
+                    className="flex flex-col sm:grid sm:grid-cols-[1fr_auto_auto_auto] gap-2 sm:gap-4 px-3 md:px-4 py-2 md:py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer"
                   >
-                    <span className="text-sm font-medium text-foreground truncate">
-                      {getTestRunDisplayName(run)}
-                    </span>
+                    <div className="flex items-center justify-between sm:block">
+                      <span className="text-xs md:text-sm font-medium text-foreground truncate">
+                        {getTestRunDisplayName(run)}
+                      </span>
+                      <span className="sm:hidden text-xs text-muted-foreground">
+                        {formatRelativeTime(run.updated_at)}
+                      </span>
+                    </div>
                     <span
-                      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                      className={`hidden sm:inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
                         run.type === "llm-unit-test"
                           ? "bg-blue-500/20 text-blue-400"
                           : "bg-purple-500/20 text-purple-400"
@@ -1216,10 +1299,10 @@ export function TestsTabContent({
                     >
                       {run.type === "llm-unit-test" ? "Test" : "Benchmark"}
                     </span>
-                    <span className="text-sm text-muted-foreground w-24 text-right">
+                    <span className="hidden sm:block text-sm text-muted-foreground w-24 text-right">
                       {formatRelativeTime(run.updated_at)}
                     </span>
-                    <div className="flex items-center justify-end gap-2 w-32">
+                    <div className="flex items-center sm:justify-end gap-2 sm:w-32">
                       {run.status === "pending" ||
                       run.status === "queued" ||
                       run.status === "in_progress" ? (

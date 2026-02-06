@@ -367,12 +367,12 @@ export function BenchmarkResultsDialog({
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-background rounded-xl w-full max-w-5xl h-[80vh] flex flex-col shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-4 bg-black/50">
+      <div className="bg-background rounded-none md:rounded-xl w-full max-w-5xl h-full md:h-[80vh] flex flex-col shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
-            <h2 className="text-lg font-semibold text-foreground">
+        <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-b border-border">
+          <div className="flex items-center gap-2 md:gap-3 min-w-0">
+            <h2 className="text-base md:text-lg font-semibold text-foreground truncate">
               Benchmark for {agentName}
             </h2>
             {!isDone && !isInitialLoading && (
@@ -384,7 +384,7 @@ export function BenchmarkResultsDialog({
             {isDone && !error && onGoBack && (
               <button
                 onClick={onGoBack}
-                className="flex items-center gap-2 h-8 px-3 rounded-md text-sm font-medium border border-border hover:bg-muted/50 transition-colors cursor-pointer"
+                className="flex items-center gap-2 h-8 px-2 md:px-3 rounded-md text-xs md:text-sm font-medium border border-border hover:bg-muted/50 transition-colors cursor-pointer"
               >
                 <svg
                   className="w-4 h-4"
@@ -416,19 +416,15 @@ export function BenchmarkResultsDialog({
           <div className="flex-1 flex items-center justify-center">
             <div className="flex flex-col items-center gap-4">
               <SpinnerIcon className="w-8 h-8 animate-spin text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">
-                {taskStatus === "queued"
-                  ? "Benchmark queued"
-                  : "Starting benchmark"}
-              </p>
+              <p className="text-sm text-muted-foreground">Loading...</p>
             </div>
           </div>
         )}
 
         {/* Error State */}
         {!isInitialLoading && error && (
-          <div className="flex-1 flex items-center justify-center p-6">
-            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-6 max-w-md">
+          <div className="flex-1 flex items-center justify-center p-4 md:p-6">
+            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 md:p-6 max-w-md w-full mx-4">
               <div className="flex items-center gap-2 mb-2">
                 <svg
                   className="w-5 h-5 text-red-500"
@@ -449,7 +445,7 @@ export function BenchmarkResultsDialog({
               {onGoBack && (
                 <button
                   onClick={onGoBack}
-                  className="w-full h-10 px-4 rounded-md text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full h-9 md:h-10 px-4 rounded-md text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer flex items-center justify-center gap-2"
                 >
                   <svg
                     className="w-4 h-4"
@@ -473,11 +469,11 @@ export function BenchmarkResultsDialog({
 
         {/* Tab Navigation - Only show when done */}
         {!isInitialLoading && !error && isDone && (
-          <div className="px-6 border-b border-border">
-            <div className="flex gap-2">
+          <div className="border-b border-border -mx-4 md:mx-0 px-4 md:px-6 overflow-x-auto hide-scrollbar">
+            <div className="flex gap-3 md:gap-4 lg:gap-6">
               <button
                 onClick={() => setActiveTab("leaderboard")}
-                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer ${
+                className={`pb-3 px-1 text-sm md:text-base font-medium border-b-2 transition-colors cursor-pointer whitespace-nowrap flex-shrink-0 ${
                   activeTab === "leaderboard"
                     ? "border-foreground text-foreground"
                     : "border-transparent text-muted-foreground hover:text-foreground"
@@ -487,7 +483,7 @@ export function BenchmarkResultsDialog({
               </button>
               <button
                 onClick={() => setActiveTab("outputs")}
-                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer ${
+                className={`pb-3 px-1 text-sm md:text-base font-medium border-b-2 transition-colors cursor-pointer whitespace-nowrap flex-shrink-0 ${
                   activeTab === "outputs"
                     ? "border-foreground text-foreground"
                     : "border-transparent text-muted-foreground hover:text-foreground"
@@ -504,7 +500,7 @@ export function BenchmarkResultsDialog({
           <div className="flex-1 overflow-hidden">
             {/* Leaderboard Tab - Only when done */}
             {isDone && activeTab === "leaderboard" && (
-              <div className="p-6 space-y-6 overflow-y-auto h-full">
+              <div className="p-4 md:p-6 space-y-4 md:space-y-6 overflow-y-auto h-full">
                 {/* Leaderboard Table */}
                 {leaderboardSummary && leaderboardSummary.length > 0 && (
                   <DownloadableTable
@@ -552,9 +548,13 @@ export function BenchmarkResultsDialog({
 
             {/* Outputs Tab - Show during progress and when outputs tab is active when done */}
             {(!isDone || activeTab === "outputs") && (
-              <div className="flex h-full">
+              <div className="flex h-full overflow-hidden">
                 {/* Left Panel - Provider Toggles with Tests */}
-                <div className="w-96 border-r border-border flex flex-col overflow-hidden">
+                <div
+                  className={`w-full md:w-80 border-r border-border flex flex-col overflow-hidden ${
+                    selectedTest ? "hidden md:flex" : "flex"
+                  }`}
+                >
                   <div className="flex-1 overflow-y-auto">
                     {providersToDisplay.length > 0 ? (
                       providersToDisplay.map((modelResult) => (
@@ -579,27 +579,59 @@ export function BenchmarkResultsDialog({
                 </div>
 
                 {/* Right Panel - Test Details */}
-                <div className="flex-1 overflow-y-auto">
-                  {selectedTestResult ? (
-                    selectedTestResult.passed === null ? (
-                      <div className="flex items-center justify-center h-full">
-                        <div className="flex items-center gap-3">
-                          <SpinnerIcon className="w-5 h-5 animate-spin text-muted-foreground" />
-                          <p className="text-muted-foreground">
-                            Running test...
-                          </p>
-                        </div>
-                      </div>
-                    ) : (
-                      <TestDetailView
-                        history={selectedTestResult.test_case?.history || []}
-                        output={selectedTestResult.output}
-                        passed={selectedTestResult.passed}
-                      />
-                    )
-                  ) : (
-                    <EmptyStateView message="Select a test to view details" />
+                <div
+                  className={`flex-1 ${
+                    selectedTest ? "flex" : "hidden md:flex"
+                  } flex-col overflow-hidden`}
+                >
+                  {/* Mobile Back Button */}
+                  {selectedTest && (
+                    <div className="md:hidden px-4 md:px-6 py-3 md:py-4 border-b border-border flex-shrink-0">
+                      <button
+                        onClick={() => setSelectedTest(null)}
+                        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                          />
+                        </svg>
+                        Back to models
+                      </button>
+                    </div>
                   )}
+
+                  {/* Test Details Content */}
+                  <div className="flex-1 overflow-y-auto">
+                    {selectedTestResult ? (
+                      selectedTestResult.passed === null ? (
+                        <div className="flex items-center justify-center h-full">
+                          <div className="flex items-center gap-3">
+                            <SpinnerIcon className="w-5 h-5 animate-spin text-muted-foreground" />
+                            <p className="text-muted-foreground">
+                              Running test...
+                            </p>
+                          </div>
+                        </div>
+                      ) : (
+                        <TestDetailView
+                          history={selectedTestResult.test_case?.history || []}
+                          output={selectedTestResult.output}
+                          passed={selectedTestResult.passed}
+                        />
+                      )
+                    ) : (
+                      <EmptyStateView message="Select a test to view details" />
+                    )}
+                  </div>
                 </div>
               </div>
             )}
@@ -697,10 +729,11 @@ function ProviderSection({
                   `Test ${index + 1}`;
 
                 return (
-                  <div
+                  <button
                     key={index}
+                    type="button"
                     onClick={() => onTestSelect(index)}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
+                    className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
                       isSelected ? "bg-muted" : "hover:bg-muted/50"
                     }`}
                   >
@@ -716,7 +749,7 @@ function ProviderSection({
                     <span className="text-sm text-foreground truncate">
                       {testName}
                     </span>
-                  </div>
+                  </button>
                 );
               })}
             </div>

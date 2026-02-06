@@ -87,9 +87,11 @@ Organizations building voice agents (customer support bots, IVR systems, voice a
 
 **Tools Tab** (`ToolsTabContent.tsx`):
 
-- Table columns: Name (1fr), Type (120px), Description (2fr), Delete button (auto)
-- Type column shows "Webhook" or "Structured Output" (`text-sm text-muted-foreground`)
-- Two-column layout: tools list (left 2/3), inbuilt tools panel (right 1/3)
+- **Desktop**: Three-column grid layout - tools list (2 columns), in-built tools panel (1 column)
+- **Mobile/Tablet**: Single-column stacked layout with in-built tools first (`order-1 lg:order-2`), then search/tools
+- **Desktop table** columns: Name (1fr), Type (120px), Description (2fr), Delete button (auto)
+- **Mobile card** view: Name, type, description stacked with delete button
+- Type shows "Webhook" or "Structured Output" (`text-xs` on mobile, `text-sm` on desktop)
 
 **Default Agent Configuration** (when creating new agent):
 
@@ -1737,6 +1739,7 @@ Key styling:
 - **AddToolDialog**: Full-page slide-in for add/edit tools
 - **AddTestDialog**: Large centered modal for add/edit tests (fully responsive)
 - **TestRunnerDialog**: Test results viewer with two-panel layout (fully responsive with mobile navigation)
+- **BenchmarkResultsDialog**: Benchmark results viewer with two-panel layout (fully responsive with mobile navigation, same patterns as TestRunnerDialog)
 
 **Gotchas:**
 
@@ -1984,14 +1987,20 @@ const getFilteredProviders = (language: LanguageOption) => {
      </div>
      ```
    - Scrollbar hidden via `.hide-scrollbar::-webkit-scrollbar { display: none; }` in globals.css plus inline styles for cross-browser support
-   - **Tab content container**: Wrap all tab content in a container with `pt-4 md:pt-6` for consistent spacing below the tab bar
-   - **Responsive tab content patterns** (e.g., `AgentTabContent`):
-     - Two-column layouts use `flex flex-col md:grid md:grid-cols-2` to stack on mobile
-     - Fixed heights become flexible: `md:h-[calc(100vh-200px)]` (no fixed height on mobile)
+   - **Tab content container**: Wrap all tab content in a container with `pt-2 md:pt-4` for tight spacing below the tab bar (avoids excessive whitespace)
+   - **Responsive tab content patterns** (all agent detail tabs are responsive):
+     - **AgentTabContent**: Two-column layouts use `flex flex-col md:grid md:grid-cols-2` to stack on mobile. System prompt textarea uses `md:flex-1 h-[350px] md:h-auto` - explicit 350px height on mobile for balanced editing space without dominating screen, `flex-1` only on desktop to fill available vertical space
+     - **ToolsTabContent**: Uses `flex flex-col lg:grid lg:grid-cols-3` to stack on mobile/tablet. In-built tools panel shows first on mobile via `order-1 lg:order-2`. Uses mobile card view alongside desktop table view
+     - **DataExtractionTabContent**: Uses mobile card view alongside desktop table view. Add/Edit sidebar is full-width on mobile (`w-full md:w-[40%]`)
+     - **TestsTabContent**: Uses `flex flex-col lg:flex-row` to stack tests list above past runs on mobile. Past runs panel is `w-full lg:w-[400px] xl:w-[560px]` (not fixed width). Mobile card view for tests list
+     - **SettingsTabContent**: Toggle/input controls stack below labels on mobile via `flex-col-reverse md:flex-row`
+   - **Common responsive patterns across all tabs**:
      - Text sizes scale: `text-sm md:text-base` for labels and inputs
      - Input heights scale: `h-9 md:h-10` for selects and buttons
-     - Spacing scales: `gap-6 md:gap-8`, `space-y-6 md:space-y-8`, `mt-2 md:mt-3`
-     - Textareas need `min-h-[200px] md:min-h-0` to ensure usable height on mobile when not in grid
+     - Spacing scales: `gap-4 md:gap-6`, `space-y-4 md:space-y-6`, `mt-2 md:mt-3`
+     - Padding scales: `p-3 md:p-4`, `px-3 md:px-4`, `py-2 md:py-3`
+     - Empty states use: `p-6 md:p-12` padding, `w-12 md:w-14 h-12 md:h-14` icons
+     - Tables have desktop view (`hidden md:block`) and mobile card view (`md:hidden`)
 2. **Sidebar Panels**: Slide-in panels for create/edit forms
    - **Preferred**: Use `SlidePanel` and `SlidePanelFooter` from `@/components/ui`
    - Width: 40% of viewport, min 500px (customizable via `width` prop)
@@ -2031,12 +2040,19 @@ const getFilteredProviders = (language: LanguageOption) => {
    - Props: `isOpen`, `onClose`, `selectedLLM`, `onSelect`, `availableProviders?`
    - Optional `availableProviders` prop for filtering available models (used in BenchmarkDialog)
    - Used in: AgentTabContent (settings), BenchmarkDialog (model comparison)
-10. **Tool Picker**: `ToolPicker` from `@/components/ToolPicker`
+10. **Benchmark Dialog**: `BenchmarkDialog` from `@/components/BenchmarkDialog`
+    - Model selection dialog for running benchmarks comparing multiple LLM models
+    - Props: `isOpen`, `onClose`, `agentUuid`, `agentName`, `tests`, `onBenchmarkCreated?`
+    - Allows selecting up to 5 models for comparison
+    - Uses `LLMSelectorModal` for model selection with filtered available models (prevents selecting same model twice)
+    - Opens `BenchmarkResultsDialog` when "Run comparison" is clicked
+    - **Theme-aware**: Uses `bg-background` for proper light/dark mode support
+11. **Tool Picker**: `ToolPicker` from `@/components/ToolPicker`
     - Props: `availableTools`, `isLoading`, `onSelectInbuiltTool`, `onSelectCustomTool`, `selectedToolIds?`
     - Dropdown with search, divided into "In-built tools" and "User defined tools" sections
     - User defined tools show tool type below name (`text-xs text-muted-foreground`): "Webhook" or "Structured Output"
     - Used in: AddTestDialog (tool invocation test type)
-11. **Parameter Card**: `ParameterCard` from `@/components/ParameterCard`
+12. **Parameter Card**: `ParameterCard` from `@/components/ParameterCard`
     - Recursive component for rendering parameter/property cards with full JSON Schema support
     - Props: `param`, `path`, `onUpdate`, `onRemove`, `onAddProperty`, `onSetItems`, `validationAttempted`, `isProperty?`, `isArrayItem?`, `siblingNames?`, `hideDelete?`, `showRequired?`
     - `hideDelete` prop: When true, hides the delete button (used when only one parameter exists to enforce minimum)
@@ -2045,17 +2061,17 @@ const getFilteredProviders = (language: LanguageOption) => {
     - Uses `NestedContainer` for nested object properties and array items
     - Used in: AddToolDialog (structured output parameters, webhook query/body parameters), AddTestDialog, DataExtractionTabContent
     - **Note**: `DataFieldPropertyCard` is deprecated and now wraps `ParameterCard` with `showRequired={false}`
-12. **Nested Container**: `NestedContainer` from `@/components/ui/NestedContainer`
+13. **Nested Container**: `NestedContainer` from `@/components/ui/NestedContainer`
     - Theme-aware container for nested properties/items sections
     - Uses `bg-muted` for proper light/dark mode support (replaces hardcoded `bg-[#1b1b1b]`)
     - Props: `children`, `onAddProperty?`, `addButtonText?`, `showAddButton?`, `showValidationError?`
     - Includes optional "Add property" button with validation error styling
     - Used in: ParameterCard, AddToolDialog (body parameters), DataExtractionTabContent
-13. **Native Link Navigation**: List items use Next.js `<Link>` components for browser-native right-click support
+14. **Native Link Navigation**: List items use Next.js `<Link>` components for browser-native right-click support
     - Enables "Open in new tab" via browser's native context menu
     - Supports Cmd/Ctrl+click to open in new tab
     - Applied to: Agents list, Simulations list, Simulation runs list
-14. **View Mode Dialogs**: `TestRunnerDialog` and `BenchmarkResultsDialog` support dual modes:
+15. **View Mode Dialogs**: `TestRunnerDialog` and `BenchmarkResultsDialog` support dual modes:
     - **Run mode** (default): Opens dialog and starts a new run/benchmark
     - **View mode**: Pass `taskId` prop to view existing run results without starting a new run
     - **TestRunnerDialog behavior based on `initialRunStatus`**:
@@ -2064,6 +2080,10 @@ const getFilteredProviders = (language: LanguageOption) => {
     - **BenchmarkResultsDialog intermediate results**:
       - **When in progress**: Shows Outputs view directly (no tabs visible), all providers displayed immediately
       - **When done**: Shows both Leaderboard and Outputs tabs, auto-switches to Leaderboard tab
+      - **Fully responsive**: Two-panel layout with mobile navigation (same pattern as TestRunnerDialog)
+        - Mobile: Left panel (providers) and right panel (test details) toggle visibility, back button to return to provider list
+        - Desktop: Both panels always visible side-by-side
+        - Uses `w-full md:w-80` for left panel, conditional hiding with `${selectedTest ? 'hidden md:flex' : 'flex'}`
       - Uses expandable provider toggles (not a dropdown) in the left panel
       - Each provider section shows: provider name, processing spinner (if still running), passed/failed counts (when complete)
       - Provider sections are expandable to show individual test results underneath
@@ -2074,6 +2094,8 @@ const getFilteredProviders = (language: LanguageOption) => {
       - **Merged providers**: `getProvidersToDisplay()` function merges `modelResults` from API with placeholders for any models that don't have results yet
       - Types support null values: `success: boolean | null`, `test_results: BenchmarkTestResult[] | null`, `passed: boolean | null`
       - **Header status badge**: Uses `StatusBadge` component (same as STT/TTS evaluation pages) to show task status ("Queued" with gray badge, "Running" with yellow badge) plus spinner while benchmark is in progress
+      - **Loading state**: Shows simple "Loading..." spinner until first API response (doesn't try to guess status)
+      - **Interactive list items**: Test items use `<button type="button">` with `w-full` for proper mobile touch support
     - **Props for viewing past runs**:
       - `taskId`: The run UUID to fetch results for
       - `tests`: Array converted from `pastRun.results` to show test names while loading (TestRunnerDialog only)
@@ -2098,6 +2120,10 @@ const getFilteredProviders = (language: LanguageOption) => {
       - Includes `backendAccessToken` in useEffect dependency array
       - This ensures polling re-attempts when session loads (token becomes available)
       - Without this guard, API calls fail silently with `Authorization: Bearer undefined`
+    - **Fallback UUID generation** (TestRunnerDialog): When viewing past runs, the API response may not include `test_uuid` for each test result
+      - Without proper UUIDs, React's key prop receives empty strings, causing "duplicate key" console errors
+      - Solution: Generate a unique fallback key using the array index and test name: `apiResult.test_uuid || \`generated-${index}-${testName}\``
+      - This ensures unique keys even when the backend doesn't provide UUIDs, while preserving real UUIDs when available
     - Used for: clicking past run rows in Tests tab to view historical results
 
 ### Data Fetching Pattern
@@ -3656,6 +3682,13 @@ Set `MAINTENANCE_MODE=true` in `.env.local` to show a maintenance page. When ena
   - `failed` → "Failed" (red badge)
   - Pass `showSpinner` prop to show spinner for active statuses (`queued`/`in_progress`)
   - Badge classes use dark mode variants: `dark:bg-{color}-500/20 dark:text-{color}-400`
+- **Theme-aware styling**: ALWAYS use CSS variable classes for colors to support both light and dark modes:
+  - ✅ Use: `bg-background`, `bg-muted`, `bg-card`, `bg-foreground`
+  - ✅ Use: `text-foreground`, `text-muted-foreground`, `text-background`
+  - ✅ Use: `border-border`
+  - ❌ NEVER use: `bg-black`, `bg-white`, `bg-gray-900`, `text-black`, `text-white` (hardcoded colors)
+  - Exception: Landing page (`/login`) intentionally uses hardcoded light theme (`bg-white`, `bg-gray-50`, `text-gray-900`) as it's marketing-focused
+  - **Recent fixes**: BenchmarkDialog (changed `bg-black` → `bg-background`), NestedContainer (changed `bg-[#1b1b1b]` → `bg-muted`)
 - **Pill-based attribute display**: For displaying multiple attributes in mobile cards or compact layouts, use pill styling for better visual hierarchy:
   - Standard pill classes: `inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-muted text-foreground`
   - Container: `flex flex-wrap gap-2` for consistent spacing
@@ -3766,7 +3799,35 @@ Set `MAINTENANCE_MODE=true` in `.env.local` to show a maintenance page. When ena
   ```
 
   **Why**: `div` elements with `onClick` can have inconsistent touch event handling on mobile browsers. Using semantic `<button>` elements with both `onClick` and `onTouchEnd` ensures reliable tap recognition across all devices. Add `type="button"` to prevent form submission and `w-full text-left` for full clickable area with left-aligned text.
-  **Example**: TestRunnerDialog's TestListItem component uses this pattern for reliable mobile test selection.
+  **Example**: TestRunnerDialog's TestListItem component and BenchmarkResultsDialog's test items use this pattern for reliable mobile test selection.
+
+- **Simple loading states**: When showing initial loading spinners, use generic "Loading..." text. Don't try to guess or display the status before the API responds. Once data is fetched, show the actual status in the appropriate UI element (e.g., status badge in header).
+
+  ```tsx
+  {
+    /* DON'T: Try to display status before fetching */
+  }
+  {
+    isInitialLoading && <p>Benchmark queued</p>;
+  }
+
+  {
+    /* DO: Generic loading message */
+  }
+  {
+    isInitialLoading && <p>Loading...</p>;
+  }
+
+  {
+    /* Status shows in header after data loads */
+  }
+  {
+    !isInitialLoading && <StatusBadge status={actualStatus} showSpinner />;
+  }
+  ```
+
+  **Why**: The initial state is unknown until the API responds. Showing "queued" or other status text before fetching is misleading and creates confusion. Let the API response determine what to display.
+  **Example**: BenchmarkResultsDialog uses simple "Loading..." message during initial fetch, then displays actual status in header badge once data arrives.
 
 ### Styling
 

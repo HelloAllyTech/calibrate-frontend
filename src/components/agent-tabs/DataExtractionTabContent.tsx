@@ -614,24 +614,24 @@ export function DataExtractionTabContent({
 
   return (
     <>
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6">
         {/* Header with Add button and Bulk Delete */}
         {dataExtractionFields.length > 0 && (
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-2 md:gap-3">
               <button
                 onClick={() => {
                   resetDataFieldForm();
                   setAddDataFieldSidebarOpen(true);
                 }}
-                className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
+                className="h-9 md:h-10 px-3 md:px-4 rounded-md text-sm md:text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer"
               >
                 Add field
               </button>
               {selectedFieldUuids.size > 0 && (
                 <button
                   onClick={openBulkDeleteDialog}
-                  className="h-10 px-4 rounded-md text-base font-medium border border-red-500 text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+                  className="h-9 md:h-10 px-3 md:px-4 rounded-md text-sm md:text-base font-medium border border-red-500 text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
                 >
                   Delete selected ({selectedFieldUuids.size})
                 </button>
@@ -642,7 +642,7 @@ export function DataExtractionTabContent({
 
         {/* Loading State */}
         {dataExtractionFieldsLoading ? (
-          <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
+          <div className="border border-border rounded-xl p-6 md:p-12 flex flex-col items-center justify-center bg-muted/20">
             <div className="flex items-center gap-3">
               <svg
                 className="w-5 h-5 animate-spin"
@@ -667,21 +667,21 @@ export function DataExtractionTabContent({
           </div>
         ) : dataExtractionFieldsError ? (
           /* Error State */
-          <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-            <p className="text-base text-red-500 mb-2">
+          <div className="border border-border rounded-xl p-6 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+            <p className="text-sm md:text-base text-red-500 mb-2">
               {dataExtractionFieldsError}
             </p>
             <button
               onClick={() => window.location.reload()}
-              className="text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              className="text-sm md:text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             >
               Retry
             </button>
           </div>
         ) : dataExtractionFields.length === 0 ? (
           /* Empty State */
-          <div className="border border-border rounded-xl p-12 flex flex-col items-center justify-center bg-muted/20">
-            <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center mb-4">
+          <div className="border border-border rounded-xl p-6 md:p-12 flex flex-col items-center justify-center bg-muted/20">
+            <div className="w-12 md:w-14 h-12 md:h-14 rounded-xl bg-muted flex items-center justify-center mb-3 md:mb-4">
               <svg
                 className="w-7 h-7 text-muted-foreground"
                 fill="none"
@@ -696,10 +696,10 @@ export function DataExtractionTabContent({
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-1">
+            <h3 className="text-base md:text-lg font-semibold text-foreground mb-1">
               No extraction fields defined
             </h3>
-            <p className="text-base text-muted-foreground mb-4 text-center max-w-2xl">
+            <p className="text-sm md:text-base text-muted-foreground mb-3 md:mb-4 text-center max-w-2xl">
               Define custom data specifications to extract from conversation
               transcripts
             </p>
@@ -708,151 +708,237 @@ export function DataExtractionTabContent({
                 resetDataFieldForm();
                 setAddDataFieldSidebarOpen(true);
               }}
-              className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
+              className="h-9 md:h-10 px-3 md:px-4 rounded-md text-sm md:text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
             >
               Add field
             </button>
           </div>
         ) : (
           /* Fields List */
-          <div className="border border-border rounded-xl overflow-hidden">
-            {/* Table Header */}
-            <div className="grid grid-cols-[40px_80px_1fr_2fr_70px_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
-              <div className="flex items-center">
-                <button
-                  type="button"
-                  onClick={toggleSelectAll}
-                  className={`w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors cursor-pointer ${
-                    selectedFieldUuids.size === dataExtractionFields.length &&
-                    dataExtractionFields.length > 0
-                      ? "bg-foreground border-foreground"
-                      : "border-border hover:border-muted-foreground"
-                  }`}
-                  title="Select all"
-                >
-                  {selectedFieldUuids.size === dataExtractionFields.length &&
-                    dataExtractionFields.length > 0 && (
-                      <svg
-                        className="w-3 h-3 text-background"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={3}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M4.5 12.75l6 6 9-13.5"
-                        />
-                      </svg>
-                    )}
-                </button>
-              </div>
-              <div className="text-sm font-medium text-muted-foreground">
-                Type
-              </div>
-              <div className="text-sm font-medium text-muted-foreground">
-                Name
-              </div>
-              <div className="text-sm font-medium text-muted-foreground">
-                Description
-              </div>
-              <div className="text-sm font-medium text-muted-foreground">
-                Required
-              </div>
-              <div className="w-8"></div>
-            </div>
-            {/* Table Body */}
-            {dataExtractionFields.map((field) => (
-              <div
-                key={field.uuid}
-                onClick={() => openEditField(field)}
-                className="grid grid-cols-[40px_80px_1fr_2fr_70px_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer"
-              >
-                {/* Checkbox Column */}
+          <>
+            {/* Desktop Table */}
+            <div className="hidden md:block border border-border rounded-xl overflow-hidden">
+              {/* Table Header */}
+              <div className="grid grid-cols-[40px_80px_1fr_2fr_70px_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
                 <div className="flex items-center">
                   <button
                     type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleFieldSelection(field.uuid);
-                    }}
+                    onClick={toggleSelectAll}
                     className={`w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors cursor-pointer ${
-                      selectedFieldUuids.has(field.uuid)
+                      selectedFieldUuids.size === dataExtractionFields.length &&
+                      dataExtractionFields.length > 0
                         ? "bg-foreground border-foreground"
                         : "border-border hover:border-muted-foreground"
                     }`}
-                    title="Select field"
+                    title="Select all"
                   >
-                    {selectedFieldUuids.has(field.uuid) && (
+                    {selectedFieldUuids.size === dataExtractionFields.length &&
+                      dataExtractionFields.length > 0 && (
+                        <svg
+                          className="w-3 h-3 text-background"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={3}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M4.5 12.75l6 6 9-13.5"
+                          />
+                        </svg>
+                      )}
+                  </button>
+                </div>
+                <div className="text-sm font-medium text-muted-foreground">
+                  Type
+                </div>
+                <div className="text-sm font-medium text-muted-foreground">
+                  Name
+                </div>
+                <div className="text-sm font-medium text-muted-foreground">
+                  Description
+                </div>
+                <div className="text-sm font-medium text-muted-foreground">
+                  Required
+                </div>
+                <div className="w-8"></div>
+              </div>
+              {/* Table Body */}
+              {dataExtractionFields.map((field) => (
+                <div
+                  key={field.uuid}
+                  onClick={() => openEditField(field)}
+                  className="grid grid-cols-[40px_80px_1fr_2fr_70px_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer"
+                >
+                  {/* Checkbox Column */}
+                  <div className="flex items-center">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFieldSelection(field.uuid);
+                      }}
+                      className={`w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors cursor-pointer ${
+                        selectedFieldUuids.has(field.uuid)
+                          ? "bg-foreground border-foreground"
+                          : "border-border hover:border-muted-foreground"
+                      }`}
+                      title="Select field"
+                    >
+                      {selectedFieldUuids.has(field.uuid) && (
+                        <svg
+                          className="w-3 h-3 text-background"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={3}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M4.5 12.75l6 6 9-13.5"
+                          />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                  {/* Type Column */}
+                  <div className="flex items-center">
+                    <span className="text-sm text-muted-foreground capitalize">
+                      {field.type}
+                    </span>
+                  </div>
+                  {/* Name Column */}
+                  <div className="flex items-center">
+                    <div className="text-sm font-medium text-foreground">
+                      {field.name}
+                    </div>
+                  </div>
+                  {/* Description Column */}
+                  <div className="flex items-center">
+                    <p className="text-sm text-muted-foreground line-clamp-1">
+                      {field.description || "—"}
+                    </p>
+                  </div>
+                  {/* Required Column */}
+                  <div className="flex items-center">
+                    <span className="text-sm text-muted-foreground">
+                      {field.required ? "Yes" : "No"}
+                    </span>
+                  </div>
+                  {/* Delete Button */}
+                  <div className="flex items-center">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDeleteDialog(field);
+                      }}
+                      className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+                      title="Delete field"
+                    >
                       <svg
-                        className="w-3 h-3 text-background"
+                        className="w-4 h-4"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
-                        strokeWidth={3}
+                        strokeWidth={1.5}
                       >
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          d="M4.5 12.75l6 6 9-13.5"
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
                         />
                       </svg>
-                    )}
-                  </button>
-                </div>
-                {/* Type Column */}
-                <div className="flex items-center">
-                  <span className="text-sm text-muted-foreground capitalize">
-                    {field.type}
-                  </span>
-                </div>
-                {/* Name Column */}
-                <div className="flex items-center">
-                  <div className="text-sm font-medium text-foreground">
-                    {field.name}
+                    </button>
                   </div>
                 </div>
-                {/* Description Column */}
-                <div className="flex items-center">
-                  <p className="text-sm text-muted-foreground line-clamp-1">
-                    {field.description || "—"}
-                  </p>
-                </div>
-                {/* Required Column */}
-                <div className="flex items-center">
-                  <span className="text-sm text-muted-foreground">
-                    {field.required ? "Yes" : "No"}
-                  </span>
-                </div>
-                {/* Delete Button */}
-                <div className="flex items-center">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openDeleteDialog(field);
-                    }}
-                    className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
-                    title="Delete field"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={1.5}
+              ))}
+            </div>
+            {/* Mobile Cards */}
+            <div className="md:hidden space-y-3">
+              {dataExtractionFields.map((field) => (
+                <div
+                  key={field.uuid}
+                  onClick={() => openEditField(field)}
+                  className="border border-border rounded-xl p-4 bg-background cursor-pointer hover:bg-muted/20 transition-colors"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start gap-3 flex-1 min-w-0">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFieldSelection(field.uuid);
+                        }}
+                        className={`w-5 h-5 mt-0.5 rounded border flex-shrink-0 flex items-center justify-center transition-colors cursor-pointer ${
+                          selectedFieldUuids.has(field.uuid)
+                            ? "bg-foreground border-foreground"
+                            : "border-border hover:border-muted-foreground"
+                        }`}
+                      >
+                        {selectedFieldUuids.has(field.uuid) && (
+                          <svg
+                            className="w-3 h-3 text-background"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={3}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M4.5 12.75l6 6 9-13.5"
+                            />
+                          </svg>
+                        )}
+                      </button>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-sm font-medium text-foreground truncate">
+                          {field.name}
+                        </h4>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-xs text-muted-foreground capitalize">
+                            {field.type}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {field.required ? "Required" : "Optional"}
+                          </span>
+                        </div>
+                        {field.description && (
+                          <p className="text-xs text-muted-foreground mt-2 line-clamp-2">
+                            {field.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDeleteDialog(field);
+                      }}
+                      className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+                      title="Delete field"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                      />
-                    </svg>
-                  </button>
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
 
@@ -868,9 +954,9 @@ export function DataExtractionTabContent({
             }}
           />
           {/* Sidebar */}
-          <div className="relative w-[40%] min-w-[500px] bg-background border-l border-border flex flex-col h-full shadow-2xl">
+          <div className="relative w-full md:w-[40%] md:min-w-[500px] bg-background md:border-l border-border flex flex-col h-full shadow-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+            <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-b border-border">
               <div className="flex items-center gap-3">
                 <svg
                   className="w-5 h-5 text-muted-foreground"
@@ -885,7 +971,7 @@ export function DataExtractionTabContent({
                     d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0112 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125M13.125 12h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125M20.625 12c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5M12 14.625v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 14.625c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m0 0v1.5c0 .621-.504 1.125-1.125 1.125M12 18.375h-7.5"
                   />
                 </svg>
-                <h2 className="text-lg font-semibold">
+                <h2 className="text-base md:text-lg font-semibold">
                   {editingFieldUuid ? "Edit data field" : "Add data field"}
                 </h2>
               </div>
@@ -894,7 +980,7 @@ export function DataExtractionTabContent({
                   resetDataFieldForm();
                   setAddDataFieldSidebarOpen(false);
                 }}
-                className="flex items-center justify-center w-8 h-8 rounded-full border border-border hover:bg-muted transition-colors cursor-pointer"
+                className="flex items-center justify-center w-8 h-8 rounded-full border border-border hover:bg-muted transition-colors cursor-pointer flex-shrink-0"
               >
                 <svg
                   className="w-5 h-5"
@@ -915,12 +1001,12 @@ export function DataExtractionTabContent({
             {/* Content */}
             <div
               ref={dataFieldSidebarContentRef}
-              className="flex-1 overflow-y-auto p-6 flex flex-col gap-6"
+              className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col gap-4 md:gap-6"
             >
               {/* Data type and Identifier */}
-              <div className="flex gap-4">
-                <div className="w-40">
-                  <label className="block text-sm font-medium mb-2">
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+                <div className="w-full sm:w-40">
+                  <label className="block text-xs md:text-sm font-medium mb-1.5 md:mb-2">
                     Data type
                   </label>
                   <div className="relative">
@@ -946,7 +1032,7 @@ export function DataExtractionTabContent({
                           });
                         }
                       }}
-                      className="w-full h-10 pl-4 pr-10 rounded-md text-base border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent cursor-pointer appearance-none"
+                      className="w-full h-9 md:h-10 pl-3 md:pl-4 pr-10 rounded-md text-sm md:text-base border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent cursor-pointer appearance-none"
                     >
                       <option value="boolean">Boolean</option>
                       <option value="integer">Integer</option>
@@ -973,14 +1059,14 @@ export function DataExtractionTabContent({
                   </div>
                 </div>
                 <div className="flex-1">
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-xs md:text-sm font-medium mb-1.5 md:mb-2">
                     Name <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={dataFieldIdentifier}
                     onChange={(e) => setDataFieldIdentifier(e.target.value)}
-                    className={`w-full h-10 px-4 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent ${
+                    className={`w-full h-9 md:h-10 px-3 md:px-4 rounded-md text-sm md:text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent ${
                       dataFieldValidationAttempted &&
                       (!dataFieldIdentifier.trim() ||
                         isNameDuplicate(dataFieldIdentifier))
@@ -998,7 +1084,7 @@ export function DataExtractionTabContent({
               </div>
 
               {/* Required checkbox */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 md:gap-3">
                 <button
                   type="button"
                   onClick={() => setDataFieldRequired(!dataFieldRequired)}
@@ -1024,7 +1110,7 @@ export function DataExtractionTabContent({
                     </svg>
                   )}
                 </button>
-                <span className="text-sm font-medium">Required</span>
+                <span className="text-xs md:text-sm font-medium">Required</span>
               </div>
 
               {/* Description */}
@@ -1036,13 +1122,13 @@ export function DataExtractionTabContent({
                     : ""
                 }`}
               >
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-xs md:text-sm font-medium mb-1.5 md:mb-2">
                   Description <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   value={dataFieldDescription}
                   onChange={(e) => setDataFieldDescription(e.target.value)}
-                  className={`w-full px-4 py-3 rounded-md text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none ${
+                  className={`w-full px-3 md:px-4 py-2 md:py-3 rounded-md text-sm md:text-base border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none ${
                     dataFieldDataType !== "object" &&
                     dataFieldDataType !== "array"
                       ? "flex-1"
@@ -1059,7 +1145,7 @@ export function DataExtractionTabContent({
               {/* Properties section for object type */}
               {dataFieldDataType === "object" && (
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-xs md:text-sm font-medium mb-1.5 md:mb-2">
                     Properties <span className="text-red-500">*</span>
                   </label>
                   <NestedContainer
@@ -1131,7 +1217,7 @@ export function DataExtractionTabContent({
               {/* Item section for array type */}
               {dataFieldDataType === "array" && (
                 <div>
-                  <label className="block text-sm font-medium mb-2">Item</label>
+                  <label className="block text-xs md:text-sm font-medium mb-1.5 md:mb-2">Item</label>
                   <NestedContainer showAddButton={false}>
                     <ParameterCard
                       param={
@@ -1169,18 +1255,18 @@ export function DataExtractionTabContent({
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-4 border-t border-border space-y-3">
+            <div className="px-4 md:px-6 py-3 md:py-4 border-t border-border space-y-2 md:space-y-3">
               {createDataFieldError && (
-                <p className="text-sm text-red-500">{createDataFieldError}</p>
+                <p className="text-xs md:text-sm text-red-500">{createDataFieldError}</p>
               )}
-              <div className="flex items-center justify-end gap-3">
+              <div className="flex items-center justify-end gap-2 md:gap-3">
                 <button
                   onClick={() => {
                     resetDataFieldForm();
                     setAddDataFieldSidebarOpen(false);
                   }}
                   disabled={isCreatingDataField}
-                  className="h-10 px-4 rounded-md text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="h-9 md:h-10 px-3 md:px-4 rounded-md text-sm md:text-base font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Cancel
                 </button>
@@ -1230,7 +1316,7 @@ export function DataExtractionTabContent({
                     setTimeout(() => saveRef.current(), 0);
                   }}
                   disabled={isCreatingDataField}
-                  className="h-10 px-4 rounded-md text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  className="h-9 md:h-10 px-3 md:px-4 rounded-md text-sm md:text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
                   {isCreatingDataField ? (
                     <>

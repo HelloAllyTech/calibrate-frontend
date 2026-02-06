@@ -66,7 +66,7 @@ export function AgentTabContent({
               </div>
             </div>
           </div>
-          <div className="bg-muted/30 rounded-xl overflow-hidden border border-border flex-1 h-[250px] md:h-auto">
+          <div className="bg-muted/30 rounded-xl overflow-hidden border border-border md:flex-1 h-[350px] md:h-auto">
             <textarea
               value={systemPrompt}
               onChange={(e) => setSystemPrompt(e.target.value)}

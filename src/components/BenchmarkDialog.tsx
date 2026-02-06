@@ -126,7 +126,7 @@ export function BenchmarkDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-300/20">
-      <div className="bg-black rounded-xl w-full max-w-lg max-h-[80vh] flex flex-col shadow-2xl">
+      <div className="bg-background rounded-xl w-full max-w-lg max-h-[80vh] flex flex-col shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4">
           <div>

@@ -664,7 +664,7 @@ export function AgentDetail({
       </div>
 
       {/* Tab Content Container */}
-      <div className="pt-4 md:pt-6">
+      <div className="pt-2 md:pt-4">
         {/* Agent Tab Content */}
         {activeTab === "agent" && (
           <AgentTabContent
