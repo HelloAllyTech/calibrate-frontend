@@ -63,14 +63,6 @@ export function LandingFooter() {
               </li>
               <li>
                 <a
-                  href={`${process.env.NEXT_PUBLIC_DOCS_URL}/python-sdk/overview`}
-                  className="hover:text-gray-900 transition-colors"
-                >
-                  Python SDK
-                </a>
-              </li>
-              <li>
-                <a
                   href={`${process.env.NEXT_PUBLIC_DOCS_URL}/cli/overview`}
                   className="hover:text-gray-900 transition-colors"
                 >

@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     default: "Calibrate",
     template: "%s",
   },
-  description: "Evaluate and test voice agent components",
+  description: "Open-source evaluation framework for voice agents",
 };
 
 export default function RootLayout({

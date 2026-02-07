@@ -215,9 +215,7 @@ export default function LoginPage() {
             voice agent stack
           </h2>
           <p className="text-base md:text-xl text-gray-500 mb-8 md:mb-10 max-w-2xl mx-auto">
-            Python SDK and CLI for seamless integration,
-            <br className="hidden md:block" /> supports all major STT, TTS, and
-            LLM providers
+            Supports all major STT, TTS, and LLM providers
             <br className="hidden md:block" /> with more coming soon
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 mb-10 md:mb-16">
