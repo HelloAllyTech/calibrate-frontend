@@ -371,7 +371,8 @@ export default function STTEvaluationDetailPage() {
                   {/* About Tab */}
                   {activeTab === "about" && (
                     <div className="space-y-4 md:space-y-6">
-                      <div className="border rounded-xl overflow-hidden">
+                      {/* Desktop: Table layout */}
+                      <div className="hidden md:block border rounded-xl overflow-hidden">
                         <table className="w-full">
                           <thead className="bg-muted/50 border-b border-border">
                             <tr>
@@ -429,9 +430,9 @@ export default function STTEvaluationDetailPage() {
                               <td className="px-4 py-3 text-[13px] text-foreground">
                                 This metric is used because WER and string
                                 similarity may not provide an accurate picture.
-                                For example, when a transcript says "9" but the
-                                model predicts "nine", both might be considered
-                                correct for the agent's specific use case. The
+                                For example, when a transcript says &quot;9&quot; but the
+                                model predicts &quot;nine&quot;, both might be considered
+                                correct for the agent&apos;s specific use case. The
                                 LLM judge evaluates semantic equivalence rather
                                 than exact string matching, returning Pass if
                                 the transcription is semantically correct.
@@ -477,6 +478,57 @@ export default function STTEvaluationDetailPage() {
                           </tbody>
                         </table>
                       </div>
+
+                      {/* Mobile: Card layout */}
+                      <div className="md:hidden space-y-3">
+                        {[
+                          {
+                            metric: "WER (Word Error Rate)",
+                            description: "Word error rate measures the percentage of words that differ between the reference transcription and the predicted transcription.",
+                            preference: "Lower is better",
+                            range: "0 - ∞",
+                          },
+                          {
+                            metric: "String Similarity",
+                            description: "Measures the similarity between the reference and predicted strings using string matching algorithms.",
+                            preference: "Higher is better",
+                            range: "0 - 1",
+                          },
+                          {
+                            metric: "LLM Judge",
+                            description: "This metric is used because WER and string similarity may not provide an accurate picture. The LLM judge evaluates semantic equivalence rather than exact string matching, returning Pass if the transcription is semantically correct.",
+                            preference: "Pass is better",
+                            range: "Pass / Fail",
+                          },
+                          {
+                            metric: "TTFB (Time To First Byte)",
+                            description: "Time to first byte measures the latency from when a request is sent until the first byte of the response is received.",
+                            preference: "Lower is better",
+                            range: "0 - ∞",
+                          },
+                          {
+                            metric: "Processing Time",
+                            description: "Total time taken to process the audio and generate the transcription.",
+                            preference: "Lower is better",
+                            range: "0 - ∞",
+                          },
+                        ].map((item) => (
+                          <div key={item.metric} className="border border-border rounded-xl p-4 space-y-2">
+                            <h4 className="text-[13px] font-semibold text-foreground">{item.metric}</h4>
+                            <p className="text-[13px] text-muted-foreground">{item.description}</p>
+                            <div className="flex gap-4 pt-1">
+                              <div>
+                                <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Preference</span>
+                                <p className="text-[13px] text-foreground">{item.preference}</p>
+                              </div>
+                              <div>
+                                <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Range</span>
+                                <p className="text-[13px] text-foreground">{item.range}</p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
 
@@ -519,9 +571,9 @@ export default function STTEvaluationDetailPage() {
                                 );
                               const colorMap = getColorMap(providerNames);
                               return (
-                                <div className="space-y-6">
+                                <div className="space-y-4 md:space-y-6">
                                   {/* Row 1: WER and String Similarity */}
-                                  <div className="grid grid-cols-2 gap-6">
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                                     <LeaderboardBarChart
                                       title="WER"
                                       data={evaluationResult.leaderboard_summary.map(
@@ -570,13 +622,13 @@ export default function STTEvaluationDetailPage() {
                     </div>
                   )}
 
-                  {/* Outputs Tab - Two Panel Layout */}
+                  {/* Outputs Tab */}
                   {activeTab === "outputs" && (
-                    <div className="flex border border-border rounded-xl overflow-hidden h-[calc(100vh-220px)]">
-                      {/* Left Panel - Provider List */}
-                      <div className="w-64 border-r border-border flex flex-col overflow-hidden bg-muted/10">
-                        <div className="flex-1 overflow-y-auto p-2">
-                          <div className="space-y-1">
+                    <div className="flex flex-col md:flex-row border border-border rounded-xl overflow-hidden md:h-[calc(100vh-220px)]">
+                      {/* Provider List - Horizontal scroll on mobile, vertical sidebar on desktop */}
+                      <div className="md:w-64 border-b md:border-b-0 md:border-r border-border flex flex-col overflow-hidden bg-muted/10">
+                        <div className="overflow-x-auto md:overflow-x-visible md:overflow-y-auto md:flex-1 p-2">
+                          <div className="flex md:flex-col gap-1 md:gap-1 min-w-max md:min-w-0">
                             {evaluationResult.provider_results!.map(
                               (providerResult) => {
                                 const isSelected =
@@ -613,7 +665,7 @@ export default function STTEvaluationDetailPage() {
                                         }, 100);
                                       }
                                     }}
-                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
+                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors whitespace-nowrap ${
                                       isSelected
                                         ? "bg-muted"
                                         : "hover:bg-muted/50"
@@ -673,7 +725,7 @@ export default function STTEvaluationDetailPage() {
                       </div>
 
                       {/* Right Panel - Provider Details */}
-                      <div className="flex-1 overflow-y-auto p-6">
+                      <div className="flex-1 overflow-y-auto p-4 md:p-6">
                         {(() => {
                           const selectedProvider =
                             activeProviderTab ||
@@ -700,7 +752,7 @@ export default function STTEvaluationDetailPage() {
                               providerResult.results.length === 0)
                           ) {
                             return (
-                              <div className="flex items-center justify-center h-full">
+                              <div className="flex items-center justify-center h-full min-h-[200px]">
                                 <div className="flex items-center gap-3">
                                   <svg
                                     className="w-5 h-5 animate-spin text-muted-foreground"
@@ -729,7 +781,7 @@ export default function STTEvaluationDetailPage() {
                           // Show error banner if provider failed
                           if (providerResult.success === false) {
                             return (
-                              <div className="flex items-center justify-center h-full">
+                              <div className="flex items-center justify-center h-full min-h-[200px]">
                                 <div className="border border-red-500/50 bg-red-500/10 rounded-lg p-4 max-w-md text-center">
                                   <div className="text-red-500 text-[14px] font-medium mb-1">
                                     There was an error running this provider.
@@ -755,7 +807,7 @@ export default function STTEvaluationDetailPage() {
                                         <div className="text-[12px] text-muted-foreground mb-1">
                                           WER
                                         </div>
-                                        <div className="text-[18px] font-semibold text-foreground">
+                                        <div className="text-base md:text-[18px] font-semibold text-foreground">
                                           {providerResult.metrics.wer != null
                                             ? parseFloat(
                                                 providerResult.metrics.wer.toFixed(
@@ -769,7 +821,7 @@ export default function STTEvaluationDetailPage() {
                                         <div className="text-[12px] text-muted-foreground mb-1">
                                           String Similarity
                                         </div>
-                                        <div className="text-[18px] font-semibold text-foreground">
+                                        <div className="text-base md:text-[18px] font-semibold text-foreground">
                                           {providerResult.metrics
                                             .string_similarity != null
                                             ? parseFloat(
@@ -784,7 +836,7 @@ export default function STTEvaluationDetailPage() {
                                         <div className="text-[12px] text-muted-foreground mb-1">
                                           LLM Judge Score
                                         </div>
-                                        <div className="text-[18px] font-semibold text-foreground">
+                                        <div className="text-base md:text-[18px] font-semibold text-foreground">
                                           {providerResult.metrics
                                             .llm_judge_score ?? "-"}
                                         </div>
@@ -813,162 +865,234 @@ export default function STTEvaluationDetailPage() {
                                     allRowsHaveMetrics;
 
                                   return (
-                                    <div
-                                      className="border rounded-xl overflow-visible"
-                                      ref={tableContainerRef}
-                                    >
-                                      <div className="overflow-x-auto rounded-xl">
-                                        <table className="w-full table-fixed">
-                                          <thead className="bg-muted/50 border-b border-border">
-                                            <tr>
-                                              <th className="w-12 px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                                ID
-                                              </th>
-                                              <th className="w-[30%] px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                                Ground Truth
-                                              </th>
-                                              <th className="w-[30%] px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                                Prediction
-                                              </th>
-                                              {showMetrics && (
-                                                <>
-                                                  <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                                    WER
-                                                  </th>
-                                                  <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                                    String Similarity
-                                                  </th>
-                                                  <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                                    LLM Judge
-                                                  </th>
-                                                </>
-                                              )}
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            {providerResult.results.map(
-                                              (result, index) => {
-                                                const isEmptyPrediction =
-                                                  !result.pred ||
-                                                  result.pred.trim() === "";
-                                                return (
-                                                  <tr
-                                                    key={index}
-                                                    data-row-index={index}
-                                                    className={`border-b border-border last:border-b-0 ${
-                                                      isEmptyPrediction
-                                                        ? "bg-red-500/10"
-                                                        : ""
-                                                    }`}
-                                                  >
-                                                    <td className="px-4 py-3 text-[13px] text-foreground">
-                                                      {index + 1}
-                                                    </td>
-                                                    <td className="px-4 py-3 text-[13px] text-foreground break-words">
-                                                      {result.gt}
-                                                    </td>
-                                                    <td className="px-4 py-3 text-[13px] break-words">
-                                                      {isEmptyPrediction ? (
-                                                        <span className="text-muted-foreground">
-                                                          No transcript
-                                                          generated
-                                                        </span>
-                                                      ) : (
-                                                        <span className="text-foreground">
-                                                          {result.pred}
-                                                        </span>
-                                                      )}
-                                                    </td>
-                                                    {showMetrics && (
-                                                      <>
-                                                        <td className="px-4 py-3 text-[13px] text-foreground">
-                                                          {result.wer != null
-                                                            ? parseFloat(
-                                                                parseFloat(
-                                                                  result.wer
-                                                                ).toFixed(4)
-                                                              )
-                                                            : "-"}
-                                                        </td>
-                                                        <td className="px-4 py-3 text-[13px] text-foreground">
-                                                          {result.string_similarity !=
-                                                          null
-                                                            ? parseFloat(
-                                                                parseFloat(
-                                                                  result.string_similarity
-                                                                ).toFixed(4)
-                                                              )
-                                                            : "-"}
-                                                        </td>
-                                                        <td className="px-4 py-3">
-                                                          {(() => {
-                                                            const scoreStr =
-                                                              String(
-                                                                result.llm_judge_score ||
-                                                                  ""
-                                                              ).toLowerCase();
-                                                            const passed =
-                                                              scoreStr ===
-                                                                "true" ||
-                                                              scoreStr === "1";
-                                                            const tooltipContent =
-                                                              result.llm_judge_reasoning
-                                                                ? result.llm_judge_reasoning
-                                                                : `Score: ${result.llm_judge_score}`;
-                                                            return (
-                                                              <div className="flex items-center gap-1.5">
-                                                                <span
-                                                                  className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
-                                                                    passed
-                                                                      ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400"
-                                                                      : "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400"
-                                                                  }`}
-                                                                >
-                                                                  {passed
-                                                                    ? "Pass"
-                                                                    : "Fail"}
-                                                                </span>
-                                                                <Tooltip
-                                                                  content={
-                                                                    tooltipContent
-                                                                  }
-                                                                >
-                                                                  <button
-                                                                    type="button"
-                                                                    className="p-1 rounded-md hover:bg-muted transition-colors cursor-pointer"
-                                                                    aria-label="View reasoning"
+                                    <>
+                                      {/* Desktop: Table layout */}
+                                      <div
+                                        className="hidden md:block border rounded-xl overflow-visible"
+                                        ref={tableContainerRef}
+                                      >
+                                        <div className="overflow-x-auto rounded-xl">
+                                          <table className="w-full table-fixed">
+                                            <thead className="bg-muted/50 border-b border-border">
+                                              <tr>
+                                                <th className="w-12 px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                  ID
+                                                </th>
+                                                <th className="w-[30%] px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                  Ground Truth
+                                                </th>
+                                                <th className="w-[30%] px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                  Prediction
+                                                </th>
+                                                {showMetrics && (
+                                                  <>
+                                                    <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                      WER
+                                                    </th>
+                                                    <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                      String Similarity
+                                                    </th>
+                                                    <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                      LLM Judge
+                                                    </th>
+                                                  </>
+                                                )}
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              {providerResult.results.map(
+                                                (result, index) => {
+                                                  const isEmptyPrediction =
+                                                    !result.pred ||
+                                                    result.pred.trim() === "";
+                                                  return (
+                                                    <tr
+                                                      key={index}
+                                                      data-row-index={index}
+                                                      className={`border-b border-border last:border-b-0 ${
+                                                        isEmptyPrediction
+                                                          ? "bg-red-500/10"
+                                                          : ""
+                                                      }`}
+                                                    >
+                                                      <td className="px-4 py-3 text-[13px] text-foreground">
+                                                        {index + 1}
+                                                      </td>
+                                                      <td className="px-4 py-3 text-[13px] text-foreground break-words">
+                                                        {result.gt}
+                                                      </td>
+                                                      <td className="px-4 py-3 text-[13px] break-words">
+                                                        {isEmptyPrediction ? (
+                                                          <span className="text-muted-foreground">
+                                                            No transcript
+                                                            generated
+                                                          </span>
+                                                        ) : (
+                                                          <span className="text-foreground">
+                                                            {result.pred}
+                                                          </span>
+                                                        )}
+                                                      </td>
+                                                      {showMetrics && (
+                                                        <>
+                                                          <td className="px-4 py-3 text-[13px] text-foreground">
+                                                            {result.wer != null
+                                                              ? parseFloat(
+                                                                  parseFloat(
+                                                                    result.wer
+                                                                  ).toFixed(4)
+                                                                )
+                                                              : "-"}
+                                                          </td>
+                                                          <td className="px-4 py-3 text-[13px] text-foreground">
+                                                            {result.string_similarity !=
+                                                            null
+                                                              ? parseFloat(
+                                                                  parseFloat(
+                                                                    result.string_similarity
+                                                                  ).toFixed(4)
+                                                                )
+                                                              : "-"}
+                                                          </td>
+                                                          <td className="px-4 py-3">
+                                                            {(() => {
+                                                              const scoreStr =
+                                                                String(
+                                                                  result.llm_judge_score ||
+                                                                    ""
+                                                                ).toLowerCase();
+                                                              const passed =
+                                                                scoreStr ===
+                                                                  "true" ||
+                                                                scoreStr === "1";
+                                                              const tooltipContent =
+                                                                result.llm_judge_reasoning
+                                                                  ? result.llm_judge_reasoning
+                                                                  : `Score: ${result.llm_judge_score}`;
+                                                              return (
+                                                                <div className="flex items-center gap-1.5">
+                                                                  <span
+                                                                    className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
+                                                                      passed
+                                                                        ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400"
+                                                                        : "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400"
+                                                                    }`}
                                                                   >
-                                                                    <svg
-                                                                      className="w-4 h-4 text-muted-foreground"
-                                                                      fill="none"
-                                                                      viewBox="0 0 24 24"
-                                                                      stroke="currentColor"
-                                                                      strokeWidth={
-                                                                        2
-                                                                      }
+                                                                    {passed
+                                                                      ? "Pass"
+                                                                      : "Fail"}
+                                                                  </span>
+                                                                  <Tooltip
+                                                                    content={
+                                                                      tooltipContent
+                                                                    }
+                                                                  >
+                                                                    <button
+                                                                      type="button"
+                                                                      className="p-1 rounded-md hover:bg-muted transition-colors cursor-pointer"
+                                                                      aria-label="View reasoning"
                                                                     >
-                                                                      <path
-                                                                        strokeLinecap="round"
-                                                                        strokeLinejoin="round"
-                                                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                                                      />
-                                                                    </svg>
-                                                                  </button>
-                                                                </Tooltip>
-                                                              </div>
-                                                            );
-                                                          })()}
-                                                        </td>
-                                                      </>
-                                                    )}
-                                                  </tr>
-                                                );
-                                              }
-                                            )}
-                                          </tbody>
-                                        </table>
+                                                                      <svg
+                                                                        className="w-4 h-4 text-muted-foreground"
+                                                                        fill="none"
+                                                                        viewBox="0 0 24 24"
+                                                                        stroke="currentColor"
+                                                                        strokeWidth={
+                                                                          2
+                                                                        }
+                                                                      >
+                                                                        <path
+                                                                          strokeLinecap="round"
+                                                                          strokeLinejoin="round"
+                                                                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                                        />
+                                                                      </svg>
+                                                                    </button>
+                                                                  </Tooltip>
+                                                                </div>
+                                                              );
+                                                            })()}
+                                                          </td>
+                                                        </>
+                                                      )}
+                                                    </tr>
+                                                  );
+                                                }
+                                              )}
+                                            </tbody>
+                                          </table>
+                                        </div>
                                       </div>
-                                    </div>
+
+                                      {/* Mobile: Card layout */}
+                                      <div className="md:hidden space-y-3" ref={tableContainerRef}>
+                                        {providerResult.results.map(
+                                          (result, index) => {
+                                            const isEmptyPrediction =
+                                              !result.pred ||
+                                              result.pred.trim() === "";
+                                            return (
+                                              <div
+                                                key={index}
+                                                data-row-index={index}
+                                                className={`border border-border rounded-xl p-4 space-y-3 ${
+                                                  isEmptyPrediction ? "bg-red-500/10" : ""
+                                                }`}
+                                              >
+                                                <div className="flex items-center justify-between">
+                                                  <span className="text-[12px] text-muted-foreground font-medium">#{index + 1}</span>
+                                                  {showMetrics && (() => {
+                                                    const scoreStr = String(result.llm_judge_score || "").toLowerCase();
+                                                    const passed = scoreStr === "true" || scoreStr === "1";
+                                                    return (
+                                                      <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
+                                                        passed
+                                                          ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400"
+                                                          : "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400"
+                                                      }`}>
+                                                        {passed ? "Pass" : "Fail"}
+                                                      </span>
+                                                    );
+                                                  })()}
+                                                </div>
+                                                <div>
+                                                  <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Ground Truth</span>
+                                                  <p className="text-[13px] text-foreground mt-0.5">{result.gt}</p>
+                                                </div>
+                                                <div>
+                                                  <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Prediction</span>
+                                                  {isEmptyPrediction ? (
+                                                    <p className="text-[13px] text-muted-foreground mt-0.5">No transcript generated</p>
+                                                  ) : (
+                                                    <p className="text-[13px] text-foreground mt-0.5">{result.pred}</p>
+                                                  )}
+                                                </div>
+                                                {showMetrics && (
+                                                  <div className="space-y-2 pt-1 border-t border-border">
+                                                    <div className="flex gap-4">
+                                                      <div>
+                                                        <span className="text-[11px] text-muted-foreground uppercase tracking-wide">WER</span>
+                                                        <p className="text-[13px] text-foreground">{result.wer != null ? parseFloat(parseFloat(result.wer).toFixed(4)) : "-"}</p>
+                                                      </div>
+                                                      <div>
+                                                        <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Similarity</span>
+                                                        <p className="text-[13px] text-foreground">{result.string_similarity != null ? parseFloat(parseFloat(result.string_similarity).toFixed(4)) : "-"}</p>
+                                                      </div>
+                                                    </div>
+                                                    {result.llm_judge_reasoning && (
+                                                      <div>
+                                                        <span className="text-[11px] text-muted-foreground uppercase tracking-wide">LLM Judge Reasoning</span>
+                                                        <p className="text-[12px] text-muted-foreground mt-0.5">{result.llm_judge_reasoning}</p>
+                                                      </div>
+                                                    )}
+                                                  </div>
+                                                )}
+                                              </div>
+                                            );
+                                          }
+                                        )}
+                                      </div>
+                                    </>
                                   );
                                 })()}
                             </div>

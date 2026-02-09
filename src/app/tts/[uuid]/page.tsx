@@ -358,7 +358,8 @@ export default function TTSEvaluationDetailPage() {
                   {/* About Tab */}
                   {activeTab === "about" && (
                     <div className="space-y-4 md:space-y-6">
-                      <div className="border rounded-xl overflow-hidden">
+                      {/* Desktop: Table layout */}
+                      <div className="hidden md:block border rounded-xl overflow-hidden">
                         <table className="w-full">
                           <thead className="bg-muted/50 border-b border-border">
                             <tr>
@@ -413,6 +414,39 @@ export default function TTSEvaluationDetailPage() {
                             </tr>
                           </tbody>
                         </table>
+                      </div>
+
+                      {/* Mobile: Card layout */}
+                      <div className="md:hidden space-y-3">
+                        {[
+                          {
+                            metric: "LLM Judge",
+                            description: "The LLM judge evaluates whether the synthesized audio accurately matches the reference text. It checks for semantic equivalence and pronunciation accuracy, returning Pass if the audio correctly represents the input text.",
+                            preference: "Pass is better",
+                            range: "Pass / Fail",
+                          },
+                          {
+                            metric: "TTFB (Time To First Byte)",
+                            description: "Time to first byte measures the latency from when a request is sent until the first byte of the response is received.",
+                            preference: "Lower is better",
+                            range: "0 - ∞",
+                          },
+                        ].map((item) => (
+                          <div key={item.metric} className="border border-border rounded-xl p-4 space-y-2">
+                            <h4 className="text-[13px] font-semibold text-foreground">{item.metric}</h4>
+                            <p className="text-[13px] text-muted-foreground">{item.description}</p>
+                            <div className="flex gap-4 pt-1">
+                              <div>
+                                <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Preference</span>
+                                <p className="text-[13px] text-foreground">{item.preference}</p>
+                              </div>
+                              <div>
+                                <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Range</span>
+                                <p className="text-[13px] text-foreground">{item.range}</p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   )}
@@ -490,13 +524,13 @@ export default function TTSEvaluationDetailPage() {
                     </div>
                   )}
 
-                  {/* Outputs Tab - Two Panel Layout */}
+                  {/* Outputs Tab */}
                   {activeTab === "outputs" && (
-                    <div className="flex border border-border rounded-xl overflow-hidden h-[calc(100vh-220px)]">
-                      {/* Left Panel - Provider List */}
-                      <div className="w-64 border-r border-border flex flex-col overflow-hidden bg-muted/10">
-                        <div className="flex-1 overflow-y-auto p-2">
-                          <div className="space-y-1">
+                    <div className="flex flex-col md:flex-row border border-border rounded-xl overflow-hidden md:h-[calc(100vh-220px)]">
+                      {/* Provider List - Horizontal scroll on mobile, vertical sidebar on desktop */}
+                      <div className="md:w-64 border-b md:border-b-0 md:border-r border-border flex flex-col overflow-hidden bg-muted/10">
+                        <div className="overflow-x-auto md:overflow-x-visible md:overflow-y-auto md:flex-1 p-2">
+                          <div className="flex md:flex-col gap-1 md:gap-1 min-w-max md:min-w-0">
                             {evaluationResult.provider_results!.map(
                               (providerResult) => {
                                 const isSelected =
@@ -511,7 +545,7 @@ export default function TTSEvaluationDetailPage() {
                                         providerResult.provider
                                       )
                                     }
-                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
+                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors whitespace-nowrap ${
                                       isSelected
                                         ? "bg-muted"
                                         : "hover:bg-muted/50"
@@ -570,7 +604,7 @@ export default function TTSEvaluationDetailPage() {
                       </div>
 
                       {/* Right Panel - Provider Details */}
-                      <div className="flex-1 overflow-y-auto p-6">
+                      <div className="flex-1 overflow-y-auto p-4 md:p-6">
                         {(() => {
                           const selectedProvider =
                             activeProviderTab ||
@@ -597,7 +631,7 @@ export default function TTSEvaluationDetailPage() {
                               providerResult.results.length === 0)
                           ) {
                             return (
-                              <div className="flex items-center justify-center h-full">
+                              <div className="flex items-center justify-center h-full min-h-[200px]">
                                 <div className="flex items-center gap-3">
                                   <svg
                                     className="w-5 h-5 animate-spin text-muted-foreground"
@@ -626,7 +660,7 @@ export default function TTSEvaluationDetailPage() {
                           // Show error banner if provider failed
                           if (providerResult.success === false) {
                             return (
-                              <div className="flex items-center justify-center h-full">
+                              <div className="flex items-center justify-center h-full min-h-[200px]">
                                 <div className="border border-red-500/50 bg-red-500/10 rounded-lg p-4 max-w-md text-center">
                                   <div className="text-red-500 text-[14px] font-medium mb-1">
                                     There was an error running this provider.
@@ -652,7 +686,7 @@ export default function TTSEvaluationDetailPage() {
                                         <div className="text-[12px] text-muted-foreground mb-1">
                                           LLM Judge Score
                                         </div>
-                                        <div className="text-[18px] font-semibold text-foreground">
+                                        <div className="text-base md:text-[18px] font-semibold text-foreground">
                                           {providerResult.metrics
                                             .llm_judge_score ?? "-"}
                                         </div>
@@ -661,7 +695,7 @@ export default function TTSEvaluationDetailPage() {
                                         <div className="text-[12px] text-muted-foreground mb-1">
                                           TTFB (s)
                                         </div>
-                                        <div className="text-[18px] font-semibold text-foreground">
+                                        <div className="text-base md:text-[18px] font-semibold text-foreground">
                                           {providerResult.metrics.ttfb?.mean !=
                                           null
                                             ? parseFloat(
@@ -676,7 +710,7 @@ export default function TTSEvaluationDetailPage() {
                                   </div>
                                 )}
 
-                              {/* Results Table */}
+                              {/* Results - Desktop: Table, Mobile: Cards */}
                               {providerResult.results &&
                                 providerResult.results.length > 0 &&
                                 (() => {
@@ -692,116 +726,168 @@ export default function TTSEvaluationDetailPage() {
                                     allRowsHaveMetrics;
 
                                   return (
-                                    <div className="border rounded-xl overflow-visible">
-                                      <div className="overflow-hidden rounded-xl">
-                                        <table className="w-full">
-                                          <thead className="bg-muted/50 border-b border-border">
-                                            <tr>
-                                              <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                                ID
-                                              </th>
-                                              <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground max-w-[200px]">
-                                                Text
-                                              </th>
-                                              <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                                Audio
-                                              </th>
-                                              {showMetrics && (
+                                    <>
+                                      {/* Desktop: Table layout */}
+                                      <div className="hidden md:block border rounded-xl overflow-visible">
+                                        <div className="overflow-hidden rounded-xl">
+                                          <table className="w-full">
+                                            <thead className="bg-muted/50 border-b border-border">
+                                              <tr>
                                                 <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
-                                                  LLM Judge
+                                                  ID
                                                 </th>
-                                              )}
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            {providerResult.results.map(
-                                              (result, index) => (
-                                                <tr
-                                                  key={index}
-                                                  className="border-b border-border last:border-b-0"
-                                                >
-                                                  <td className="px-4 py-3 text-[13px] text-foreground">
-                                                    {index + 1}
-                                                  </td>
-                                                  <td className="px-4 py-3 text-[13px] text-foreground max-w-[200px] break-words">
-                                                    {result.text}
-                                                  </td>
-                                                  <td className="px-4 py-3 text-[13px] text-foreground">
-                                                    <audio
-                                                      controls
-                                                      className="w-full min-w-[280px]"
-                                                      src={result.audio_path}
-                                                    >
-                                                      Your browser does not
-                                                      support the audio element.
-                                                    </audio>
-                                                  </td>
-                                                  {showMetrics && (
-                                                    <td className="px-4 py-3">
-                                                      {(() => {
-                                                        const scoreStr = String(
-                                                          result.llm_judge_score ||
-                                                            ""
-                                                        ).toLowerCase();
-                                                        const passed =
-                                                          scoreStr === "true" ||
-                                                          scoreStr === "1";
-                                                        const tooltipContent =
-                                                          result.llm_judge_reasoning
-                                                            ? result.llm_judge_reasoning
-                                                            : `Score: ${result.llm_judge_score}`;
-                                                        return (
-                                                          <div className="flex items-center gap-1.5">
-                                                            <span
-                                                              className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
-                                                                passed
-                                                                  ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400"
-                                                                  : "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400"
-                                                              }`}
-                                                            >
-                                                              {passed
-                                                                ? "Pass"
-                                                                : "Fail"}
-                                                            </span>
-                                                            <Tooltip
-                                                              content={
-                                                                tooltipContent
-                                                              }
-                                                            >
-                                                              <button
-                                                                type="button"
-                                                                className="p-1 rounded-md hover:bg-muted transition-colors cursor-pointer"
-                                                                aria-label="View reasoning"
-                                                              >
-                                                                <svg
-                                                                  className="w-4 h-4 text-muted-foreground"
-                                                                  fill="none"
-                                                                  viewBox="0 0 24 24"
-                                                                  stroke="currentColor"
-                                                                  strokeWidth={
-                                                                    2
-                                                                  }
-                                                                >
-                                                                  <path
-                                                                    strokeLinecap="round"
-                                                                    strokeLinejoin="round"
-                                                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                                                  />
-                                                                </svg>
-                                                              </button>
-                                                            </Tooltip>
-                                                          </div>
-                                                        );
-                                                      })()}
+                                                <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground max-w-[200px]">
+                                                  Text
+                                                </th>
+                                                <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                  Audio
+                                                </th>
+                                                {showMetrics && (
+                                                  <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                    LLM Judge
+                                                  </th>
+                                                )}
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              {providerResult.results.map(
+                                                (result, index) => (
+                                                  <tr
+                                                    key={index}
+                                                    className="border-b border-border last:border-b-0"
+                                                  >
+                                                    <td className="px-4 py-3 text-[13px] text-foreground">
+                                                      {index + 1}
                                                     </td>
-                                                  )}
-                                                </tr>
-                                              )
-                                            )}
-                                          </tbody>
-                                        </table>
+                                                    <td className="px-4 py-3 text-[13px] text-foreground max-w-[200px] break-words">
+                                                      {result.text}
+                                                    </td>
+                                                    <td className="px-4 py-3 text-[13px] text-foreground">
+                                                      <audio
+                                                        controls
+                                                        className="w-full min-w-[280px]"
+                                                        src={result.audio_path}
+                                                      >
+                                                        Your browser does not
+                                                        support the audio element.
+                                                      </audio>
+                                                    </td>
+                                                    {showMetrics && (
+                                                      <td className="px-4 py-3">
+                                                        {(() => {
+                                                          const scoreStr = String(
+                                                            result.llm_judge_score ||
+                                                              ""
+                                                          ).toLowerCase();
+                                                          const passed =
+                                                            scoreStr === "true" ||
+                                                            scoreStr === "1";
+                                                          const tooltipContent =
+                                                            result.llm_judge_reasoning
+                                                              ? result.llm_judge_reasoning
+                                                              : `Score: ${result.llm_judge_score}`;
+                                                          return (
+                                                            <div className="flex items-center gap-1.5">
+                                                              <span
+                                                                className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
+                                                                  passed
+                                                                    ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400"
+                                                                    : "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400"
+                                                                }`}
+                                                              >
+                                                                {passed
+                                                                  ? "Pass"
+                                                                  : "Fail"}
+                                                              </span>
+                                                              <Tooltip
+                                                                content={
+                                                                  tooltipContent
+                                                                }
+                                                              >
+                                                                <button
+                                                                  type="button"
+                                                                  className="p-1 rounded-md hover:bg-muted transition-colors cursor-pointer"
+                                                                  aria-label="View reasoning"
+                                                                >
+                                                                  <svg
+                                                                    className="w-4 h-4 text-muted-foreground"
+                                                                    fill="none"
+                                                                    viewBox="0 0 24 24"
+                                                                    stroke="currentColor"
+                                                                    strokeWidth={
+                                                                      2
+                                                                    }
+                                                                  >
+                                                                    <path
+                                                                      strokeLinecap="round"
+                                                                      strokeLinejoin="round"
+                                                                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                                    />
+                                                                  </svg>
+                                                                </button>
+                                                              </Tooltip>
+                                                            </div>
+                                                          );
+                                                        })()}
+                                                      </td>
+                                                    )}
+                                                  </tr>
+                                                )
+                                              )}
+                                            </tbody>
+                                          </table>
+                                        </div>
                                       </div>
-                                    </div>
+
+                                      {/* Mobile: Card layout */}
+                                      <div className="md:hidden space-y-3">
+                                        {providerResult.results.map(
+                                          (result, index) => {
+                                            const scoreStr = String(result.llm_judge_score || "").toLowerCase();
+                                            const passed = scoreStr === "true" || scoreStr === "1";
+                                            return (
+                                              <div
+                                                key={index}
+                                                className="border border-border rounded-xl p-4 space-y-3"
+                                              >
+                                                <div className="flex items-center justify-between">
+                                                  <span className="text-[12px] text-muted-foreground font-medium">#{index + 1}</span>
+                                                  {showMetrics && (
+                                                    <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
+                                                      passed
+                                                        ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400"
+                                                        : "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400"
+                                                    }`}>
+                                                      {passed ? "Pass" : "Fail"}
+                                                    </span>
+                                                  )}
+                                                </div>
+                                                <div>
+                                                  <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Text</span>
+                                                  <p className="text-[13px] text-foreground mt-0.5">{result.text}</p>
+                                                </div>
+                                                <div>
+                                                  <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Audio</span>
+                                                  <audio
+                                                    controls
+                                                    className="w-full mt-1"
+                                                    src={result.audio_path}
+                                                  >
+                                                    Your browser does not support the audio element.
+                                                  </audio>
+                                                </div>
+                                                {showMetrics && result.llm_judge_reasoning && (
+                                                  <div className="pt-1 border-t border-border">
+                                                    <span className="text-[11px] text-muted-foreground uppercase tracking-wide">LLM Judge Reasoning</span>
+                                                    <p className="text-[12px] text-muted-foreground mt-0.5">{result.llm_judge_reasoning}</p>
+                                                  </div>
+                                                )}
+                                              </div>
+                                            );
+                                          }
+                                        )}
+                                      </div>
+                                    </>
                                   );
                                 })()}
                             </div>

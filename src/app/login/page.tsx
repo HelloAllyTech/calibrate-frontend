@@ -45,8 +45,8 @@ const tabs = [
   },
 ];
 
-const WHATSAPP_INVITE_URL =
-  "https://chat.whatsapp.com/JygDNcZ943a3VmZDXYMg5Z?mode=gi_t";
+import { WHATSAPP_INVITE_URL, DISCORD_INVITE_URL } from "@/constants/links";
+
 const GITHUB_REPO_URL = "https://github.com/artpark-sahai-org/calibrate";
 
 export default function LoginPage() {
@@ -425,7 +425,7 @@ export default function LoginPage() {
                 WhatsApp
               </a>
               <a
-                href="https://discord.gg/9dQB4AngK2"
+                href={DISCORD_INVITE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 text-sm md:text-base border border-gray-300 rounded-lg text-gray-900 hover:bg-gray-50 transition-colors"

@@ -1,7 +1,6 @@
 "use client";
 
-const WHATSAPP_INVITE_URL =
-  "https://chat.whatsapp.com/JygDNcZ943a3VmZDXYMg5Z?mode=gi_t";
+import { WHATSAPP_INVITE_URL, DISCORD_INVITE_URL } from "@/constants/links";
 
 export function LandingFooter() {
   return (
@@ -99,7 +98,7 @@ export function LandingFooter() {
               </li>
               <li>
                 <a
-                  href="https://discord.gg/9dQB4AngK2"
+                  href={DISCORD_INVITE_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-gray-900 transition-colors"

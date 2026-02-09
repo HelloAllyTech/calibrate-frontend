@@ -21,7 +21,7 @@ The platform addresses the challenge of quality assurance for voice agents by pr
 
 > **Note on naming**: The app is branded as "Calibrate" in all user-facing UI, page titles, and documentation. However, external URLs and infrastructure still reference "pense" (e.g., Discord: `https://discord.gg/9dQB4AngK2`). Documentation links use `process.env.NEXT_PUBLIC_DOCS_URL` directly. The npm package name is `calibrate-frontend`.
 >
-> **Community links**: WhatsApp and Discord invite URLs appear in two places with different links — the landing page (`/login` community section + `LandingFooter`) and the in-app "Talk to Us" FAB (`AppLayout`). The landing page uses `WHATSAPP_INVITE_URL` constant and `https://discord.gg/9dQB4AngK2`. The in-app FAB uses `https://chat.whatsapp.com/LNLIcaXVdOdJqjMPuPeTpS` and `https://discord.gg/SAkPaHfn9Q`. These are hardcoded in their respective components.
+> **Community links**: WhatsApp and Discord invite URLs are defined once in `src/constants/links.ts` (`WHATSAPP_INVITE_URL`, `DISCORD_INVITE_URL`) and imported wherever needed: `AppLayout.tsx` (Talk to Us FAB), `login/page.tsx` (Community section), and `LandingFooter.tsx`. Always import from `@/constants/links` — never hardcode these URLs.
 
 ---
 
@@ -414,18 +414,23 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
 - **Status badge**: Shows "Running" or "Queued" badge with spinner to the right of language pill when evaluation is not done
 - **Tabs only appear when at least one provider result exists**:
   - **Leaderboard**: Only visible when status is `done` (needs all providers to compare)
-  - **Outputs**: Two-panel layout similar to TestRunnerDialog
-  - **About**: Metric descriptions
-- **Outputs tab layout** (two-panel, similar to TestRunnerDialog):
-  - **Left panel** (w-64): Provider list with status icons:
+  - **Outputs**: Responsive layout — side-by-side panels on desktop, stacked on mobile
+  - **About**: Desktop table / mobile card layout for metric descriptions
+- **Outputs tab layout** (responsive):
+  - **Desktop** (`md+`): Two-panel side-by-side layout (`flex-row`) with fixed height `h-[calc(100vh-220px)]`
+    - **Left panel** (`md:w-64`): Vertical provider list with status icons
+    - **Right panel** (`p-6`): Selected provider's overall metrics + results table (ground truth vs predictions)
+  - **Mobile** (below `md`): Stacked layout (`flex-col`) with no fixed height
+    - **Provider list**: Horizontal scrollable row (`overflow-x-auto`, `flex` with `min-w-max`) with `whitespace-nowrap` items, separated by bottom border
+    - **Details panel** (`p-4`): Full-width below providers
+    - **Results**: Card layout instead of table — each row is a bordered card showing Ground Truth, Prediction, WER, Similarity, and LLM Judge reasoning inline
+  - **Provider status icons** (both layouts):
     - Yellow pulsing dot when `success === null` (in progress)
     - Green checkmark when `success === true` AND no empty predictions
     - Red X when `success === false` OR any row has empty prediction
-  - **Right panel**: Selected provider's overall metrics + results table (ground truth vs predictions)
-    - **Loading state**: Shows centered spinner when provider is in progress (`success === null`) and has no results yet
-    - **Error state**: Shows centered error banner when `success === false` with "Error running this provider" heading and error message
   - First provider is selected by default
   - **Auto-scroll**: Clicking a provider with empty predictions scrolls to the first empty row
+- **About tab responsive**: Desktop shows 4-column table (Metric, Description, Preference, Range). Mobile shows stacked cards with metric name, description, and Preference/Range side by side
 - **Metrics**: WER, String Similarity, LLM Judge (Pass/Fail)
 
 ### 4. Text-to-Speech Evaluation (`/tts`)
@@ -480,18 +485,14 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
 - **Status badge**: Shows "Running" or "Queued" badge with spinner to the right of language pill when evaluation is not done
 - **Tabs**:
   - **Leaderboard**: Only visible when status is `done` - comparative table and charts
-  - **Outputs**: Two-panel layout similar to STT - provider list on left, details on right
-  - **About**: Metric descriptions
-- **Outputs tab layout** (two-panel, similar to TestRunnerDialog):
-  - **Left panel** (w-64): Provider list with status icons based on `success` field:
-    - Yellow pulsing dot when `success === null` (in progress)
-    - Green checkmark when `success === true` (completed successfully)
-    - Red X when `success === false` (failed)
-  - **Right panel**: Selected provider's overall metrics + results table with audio playback
-    - **Loading state**: Shows centered spinner when provider is in progress (`success === null`) and has no results yet
-    - **Error state**: Shows centered error banner when `success === false` with "Error running this provider" heading and error message
+  - **Outputs**: Responsive layout — side-by-side panels on desktop, stacked on mobile (same pattern as STT)
+  - **About**: Desktop table / mobile card layout for metric descriptions
+- **Outputs tab layout** (responsive, same structure as STT):
+  - **Desktop** (`md+`): Two-panel side-by-side layout with vertical provider sidebar (`md:w-64`) + details panel with results table and audio players
+  - **Mobile** (below `md`): Stacked — horizontal scrollable provider row on top, then card-based results below. Each card shows Text, Audio player (full-width), and LLM Judge reasoning inline
+  - **Provider status icons**: Yellow dot (in progress), green checkmark (success), red X (failed)
   - First provider is selected by default
-  - Clicking a provider shows its details on the right
+  - Clicking a provider shows its details
 - **Metrics**: LLM Judge (Pass/Fail), TTFB
 - **Intermediate results structure**: `results` array contains `id`, `text`, `audio_path`; `llm_judge_score` and `llm_judge_reasoning` are only present when complete
 
@@ -946,7 +947,7 @@ Both the login page and about page use shared header/footer components to avoid 
 
 - No props - self-contained with all links and constants
 - Contains: 3-column layout (Company, Resources, Community), copyright
-- `WHATSAPP_INVITE_URL` constant is defined inside the component
+- Imports `WHATSAPP_INVITE_URL` and `DISCORD_INVITE_URL` from `@/constants/links`
 
 ### Landing Page (`/login`)
 
@@ -1913,7 +1914,7 @@ Both TTS and STT evaluation pages follow the same list → new → detail patter
 - Uses `StatusBadge` component with `showSpinner` for status display
 - Results are at **top level** (`provider_results`, `leaderboard_summary`) - different from `/jobs` API!
 - Displays results in tabs (Leaderboard, Outputs, About) when done
-- **Responsive design**: Uses `space-y-4 md:space-y-6` throughout, chart grids are `grid-cols-1 md:grid-cols-2`, leaderboard sections use full-width responsive containers (see "Evaluation & Simulation Pages Responsive Spacing" section above)
+- **Responsive design**: Uses `space-y-4 md:space-y-6` throughout, chart grids are `grid-cols-1 md:grid-cols-2`, leaderboard sections use full-width responsive containers (see "Evaluation & Simulation Pages Responsive Spacing" section above). Outputs tab uses `flex-col md:flex-row` for stacked-on-mobile / side-by-side-on-desktop. About tab uses `hidden md:block` table + `md:hidden` card layout. Results use desktop table (`hidden md:block`) + mobile cards (`md:hidden`) pattern
 
 **Key differences between TTS and STT:**
 
@@ -1922,11 +1923,17 @@ Both TTS and STT evaluation pages follow the same list → new → detail patter
 - **STT metrics**: WER, String Similarity, LLM Judge (NO latency metrics)
 - **TTS metrics**: LLM Judge, TTFB (latency metrics are objects with `mean`, `std`, `values`; Processing Time removed from UI)
 - **Null-safe metric rendering**: Numeric metrics (string_similarity, wer, llm_judge_score, ttfb.mean) can be null. Always check before formatting: `value != null ? parseFloat(value.toFixed(4)) : "-"`. Use `parseFloat()` wrapper to remove trailing zeros. Max 4 decimal places for all metrics to prevent column overflow
-- **STT Outputs tab**: Shows Ground Truth vs Prediction text; metrics columns (WER, String Similarity, LLM Judge) shown when status is "done" OR when all rows have metrics available. Rows with empty predictions are highlighted with `bg-red-500/10` and show "_No transcript produced_" in italicized muted text
-  - **Table layout**: Uses `table-fixed` with explicit column widths (ID: `w-12`, Ground Truth/Prediction: `w-[30%]` each) to prevent long text from overflowing. Text columns use `break-words` for wrapping. Container uses `overflow-x-auto` for horizontal scroll fallback
+- **STT Outputs tab**: Shows Ground Truth vs Prediction text; metrics columns (WER, String Similarity, LLM Judge) shown when status is "done" OR when all rows have metrics available. Rows with empty predictions are highlighted with `bg-red-500/10` and show "No transcript generated" in muted text
+  - **Desktop table layout**: Uses `table-fixed` with explicit column widths (ID: `w-12`, Ground Truth/Prediction: `w-[30%]` each) to prevent long text from overflowing. Text columns use `break-words` for wrapping. Wrapped in `hidden md:block`
+  - **Mobile card layout**: `md:hidden` card list — each result is a bordered `rounded-xl` card showing: row number + Pass/Fail badge header, Ground Truth section, Prediction section, then WER/Similarity metrics and LLM Judge reasoning below a border separator
   - **Empty prediction detection**: Helper functions `hasEmptyPredictions()` and `getFirstEmptyPredictionIndex()` check for rows without transcripts. Provider status shows red X if any empty, and clicking scrolls to first empty row via `data-row-index` attribute
 - **TTS Outputs tab**: Shows text input with audio playback; LLM Judge column shown when status is "done" OR when all rows have metrics available
-- **LLM Judge column display**: Shows Pass/Fail badges (green/red) as static indicators. Backend returns `"True"`/`"False"` strings (or `"1"`/`"0"`). Parsing: convert to lowercase string, Pass when value is `"true"` or `"1"`. A small info icon button (ⓘ) next to the badge shows the reasoning tooltip on hover (falls back to "Score: X" if no reasoning). The info icon uses Heroicons-style info-circle SVG with `hover:bg-muted` for interactivity feedback. This makes it intuitive that users can view the reasoning rather than requiring them to guess they should hover over the badge
+  - **Desktop table layout**: Standard table with ID, Text (`max-w-[200px] break-words`), Audio (`min-w-[280px]`), LLM Judge columns. Wrapped in `hidden md:block`
+  - **Mobile card layout**: `md:hidden` card list — each result card shows: row number + Pass/Fail badge header, Text section, Audio player (full-width, no min-width constraint), and LLM Judge reasoning inline
+- **LLM Judge display**:
+  - **Desktop**: Pass/Fail badges (green/red) with info icon button (ⓘ) that shows reasoning via `Tooltip` component on hover (falls back to "Score: X" if no reasoning)
+  - **Mobile**: Pass/Fail badge shown in card header (top-right). LLM Judge reasoning is displayed directly as inline text below the metrics/audio in each card (labeled "LLM Judge Reasoning"), since hover tooltips don't work on touch devices. Only shown when `llm_judge_reasoning` exists
+  - **Parsing**: Backend returns `"True"`/`"False"` strings (or `"1"`/`"0"`). Convert to lowercase, Pass when value is `"true"` or `"1"`
 
 **Metrics Data Structure:**
 

@@ -48,7 +48,7 @@ Additional data:
 ```json
 {
   "status": "success",
-  "composerData": "{\"_v\":13,\"composerId\":\"task-toolu_015Pnr61gYHLDdHXmnYrLCTY\",\"richText\":\"\",\"hasLoaded\":true,\"text\":\"\",\"fullConversationHeadersOnly\":[{\"bubbleId\":\"c1ce4334-15b9-463e-abd5-84d94b7cbaa6\",\"type\":2},{\"bubbleId\":\"53fc33f6-f49b-4f5a-871e-c4e5ff4d3648\",\"type\":2},{\"bubbleId\":\"05197dd8-9008-4413-917f-cf26c7e1586d\",\"type\":2},{\"bubbleId\":\"acce7d7f-aed7-49dd-b3b4-720906b536c4\",\"type\":2},{\"bubbleId\":\"58cd7929-8922-4452-921a-e73bfb4ad511\",\"type\":2},{\"bubbleId\":\"73f6e61f-d9a5-4649-84c1-953d5a2273e7\",\"type\":2},{\"bubbleId\":\"f57e51e5-585b-4d2d-8ef2-2610a80e0171\",\"type\":2},{\"bubbleId\":\"a1374792-6de1-4cf9-8fb3-6544f81f7faf\",\"type\":2},{\"bubbleId\":\"5473c966-5ab9-4a5b-9cf8-812f6071c201\",\"type\":2},{\"bubbleId\":\"cade6d01-aacc-4f2b-8eba-a4ecf8c0ecfe\",\"type\":2},{\"bubbleId\":\"880c8394-7cc6-4ced-8afd-c8faff5e357a\",\"type\":2},{\"bubbleId\":\"ea810955-58a1-45e6-ad50-b5a3636256a1\",\"type\":2},{\"bubbleId\":\"e7b3b409-8f1d-4926-b3d7-2ff6597b5c21\",\"type\":2},{\"bubbleId\":\"a6ffde11-e1e6-4f9a-a57a-aacf0ff099ed\",\"type\":2},{\"bubbleId\":\"f3ca19df-45cf-4b4a-a7ea-70bd87090a26\",\"type\":2},{\"bubbleId\":\"37f9db5c-9a5b-4e04-a677-162b864700dc\",\"type\":2},{\"bubbleId\":\"ffd514b0-d8e1-44d0-9490-2d624df295c6\",\"type\":2},{\"bubbleId\":\"f395e0d6-f3da-4404-adaf-e79e02278b2f\",\"type\":2},{\"bubbleId\":\"ea6c0b56-6e83-4815-9001-6f34747aaf6e\",\"type\":2},{\"bubbleId\":\"7fe041fe-5054-4e24-841e-bad323b4f673\",\"type\":2}],\"conversationMap\":{\"c1ce4334-15b9-463e-abd5-84d94b7cbaa6\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"fda23618-dae9-4e01-815f-ca4b3497b6a3\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.126Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"thinking\\\":{\\\"text\\\":\\\"Let me explore the codebase to understand the project structure, routing, authentication, and layout components.\\\",\\\"signature\\\":\\\"\\\"},\\\"capabilityType\\\":30}\",\"53fc33f6-f49b-4f5a-871e-c4e5ff4d3648\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"47e9dbad-cf18-411d-80f8-b463b8a7c12d\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.126Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01JTUSh64DhxXMExhJ1Z2DCZ\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01JTUSh64DhxXMExhJ1Z2DCZ\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"list_dir_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"ignore\\\\\\\":[],\\\\\\\"toolCallId\\\\\\\":\\\\\\\"toolu_01JTUSh64DhxXMExhJ1Z2DCZ\\\\\\\"}\\\",\\\"tool\\\":39,\\\"params\\\":\\\"{\\\\\\\"targetDirectory\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"directoryTreeRoot\\\\\\\":{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/about\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/agents\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/agents/[uuid]\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/api\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/api/auth\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/api/auth/[...nextauth]\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"route.ts\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/api/debug-env\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"route.ts\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/api/sentry-example-api\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"route.ts\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/debug-client\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/login\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/metrics\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/personas\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/scenarios\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/sentry-example-page\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/new\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tests\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tools\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/new\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"favicon.ico\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"global-error.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"globals.css\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/constants\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"providers.ts\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"AddToolDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"AgentTabContent.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"DataExtractionTabContent.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"DeleteToolDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"EvaluationTabContent.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"InbuiltToolsPanel.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"index.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"LLMSelectorModal.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"SettingsTabContent.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"TestsTabContent.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"ToolsTabContent.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/charts\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"LeaderboardBarChart.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"ContentPlaceholder.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"LLMEvaluation.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"SpeechToTextEvaluation.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"TextToSpeechEvaluation.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/icons\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"index.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/providers\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"SessionProvider.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/simulation-tabs\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"index.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"SimulationConfigTab.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"SimulationRunsTab.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/test-results\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"shared.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/ui\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"BackHeader.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"Button.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"index.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"LoadingState.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"NestedContainer.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"SearchInput.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"SlidePanel.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"StatusBadge.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"AddTestDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"AddToolDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"AgentDetail.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"AgentPicker.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"Agents.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"AppLayout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"BenchmarkDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"BenchmarkResultsDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"DataFieldPropertyCard.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"DeleteConfirmationDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"DownloadableTable.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"LandingFooter.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"LandingHeader.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"MultiSelectPicker.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"NewAgent.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"NewSimulationDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"ParameterCard.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"RunTestDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"TestRunnerDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"ToolPicker.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"Tooltip.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/constants\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"inbuilt-tools.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"limits.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"polling.ts\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/hooks\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"index.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"useCrudResource.ts\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/lib\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"api.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"sidebar.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"status.ts\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"auth.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"instrumentation-client.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"instrumentation.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"middleware.ts\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}}\\\"},\\\"capabilityType\\\":15}\",\"05197dd8-9008-4413-917f-cf26c7e1586d\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"7664e885-7991-4c99-abb9-7b34f3680d9c\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.127Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01AvSyoNLxbFEN4ancUfxUgD\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01AvSyoNLxbFEN4ancUfxUgD\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"glob_file_search\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"targetDirectory\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend\\\\\\\",\\\\\\\"globPattern\\\\\\\":\\\\\\\"**/App.{tsx,jsx,ts,js}\\\\\\\"}\\\",\\\"tool\\\":42,\\\"params\\\":\\\"{\\\\\\\"targetDirectory\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend\\\\\\\",\\\\\\\"globPattern\\\\\\\":\\\\\\\"**/App.{tsx,jsx,ts,js}\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"directories\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend\\\\\\\"}]}\\\"},\\\"capabilityType\\\":15}\",\"acce7d7f-aed7-49dd-b3b4-720906b536c4\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"89b9de11-eec8-4d9e-9f31-d5f48d253f2e\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.127Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_019S5NmPcQNydwNxrqsuHRVa\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_019S5NmPcQNydwNxrqsuHRVa\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"glob_file_search\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"targetDirectory\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"globPattern\\\\\\\":\\\\\\\"**/*auth*\\\\\\\"}\\\",\\\"tool\\\":42,\\\"params\\\":\\\"{\\\\\\\"targetDirectory\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"globPattern\\\\\\\":\\\\\\\"**/*auth*\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"directories\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"files\\\\\\\":[{\\\\\\\"relPath\\\\\\\":\\\\\\\"auth.ts\\\\\\\"}],\\\\\\\"totalFiles\\\\\\\":1}]}\\\"},\\\"capabilityType\\\":15}\",\"58cd7929-8922-4452-921a-e73bfb4ad511\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"d8fecc8e-d0d4-4003-83cb-3ff2a07cba8f\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.127Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_012732H6ZoE88C1eNGfjtJjZ\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_012732H6ZoE88C1eNGfjtJjZ\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"glob_file_search\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"targetDirectory\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"globPattern\\\\\\\":\\\\\\\"**/*layout*\\\\\\\"}\\\",\\\"tool\\\":42,\\\"params\\\":\\\"{\\\\\\\"targetDirectory\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"globPattern\\\\\\\":\\\\\\\"**/*layout*\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"directories\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"files\\\\\\\":[{\\\\\\\"relPath\\\\\\\":\\\\\\\"components/AppLayout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/scenarios/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/metrics/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/tts/new/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/agents/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/stt/[uuid]/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/stt/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/tests/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/tools/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/simulations/[uuid]/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/simulations/[uuid]/runs/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/login/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/personas/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/agents/[uuid]/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/tts/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/stt/new/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/simulations/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/tts/[uuid]/layout.tsx\\\\\\\"}],\\\\\\\"totalFiles\\\\\\\":19}]}\\\"},\\\"capabilityType\\\":15}\",\"73f6e61f-d9a5-4649-84c1-953d5a2273e7\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"147156ec-6d3d-4ab8-a84f-d4b00cdf1bac\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.127Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01GHfuX5oqHFAjmb5kheSwB4\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01GHfuX5oqHFAjmb5kheSwB4\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"glob_file_search\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"targetDirectory\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"globPattern\\\\\\\":\\\\\\\"**/*route*\\\\\\\"}\\\",\\\"tool\\\":42,\\\"params\\\":\\\"{\\\\\\\"targetDirectory\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"globPattern\\\\\\\":\\\\\\\"**/*route*\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"directories\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"files\\\\\\\":[{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/api/auth/[...nextauth]/route.ts\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/api/sentry-example-api/route.ts\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/api/debug-env/route.ts\\\\\\\"}],\\\\\\\"totalFiles\\\\\\\":3}]}\\\"},\\\"capabilityType\\\":15}\",\"f57e51e5-585b-4d2d-8ef2-2610a80e0171\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"1d6ed840-732e-4839-9c2b-b3cf6d738daa\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.127Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"This is a **Next.js App Router** project, so there's no single &#96;App.tsx&#96; — routing is file-system based. Let me read the key files now.\\\"}\",\"a1374792-6de1-4cf9-8fb3-6544f81f7faf\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"432f6453-646a-482a-9561-1cad8fc7375b\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.127Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_011qNPgzF9wZRniLQ6Dmw3ec\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_011qNPgzF9wZRniLQ6Dmw3ec\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/layout.tsx\\\\\\\"}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/layout.tsx\\\\\\\",\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/layout.tsx\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"import type { Metadata } from \\\\\\\\\\\\\\\"next\\\\\\\\\\\\\\\";\\\\\\\\nimport { Geist, Geist_Mono, Inter, DM_Sans } from \\\\\\\\\\\\\\\"next/font/google\\\\\\\\\\\\\\\";\\\\\\\\nimport \\\\\\\\\\\\\\\"./globals.css\\\\\\\\\\\\\\\";\\\\\\\\nimport { SessionProvider } from \\\\\\\\\\\\\\\"@/components/providers/SessionProvider\\\\\\\\\\\\\\\";\\\\\\\\nimport { Analytics } from \\\\\\\\\\\\\\\"@vercel/analytics/next\\\\\\\\\\\\\\\";\\\\\\\\nimport { GoogleAnalytics } from \\\\\\\\\\\\\\\"@next/third-parties/google\\\\\\\\\\\\\\\";\\\\\\\\nimport { Toaster } from \\\\\\\\\\\\\\\"sonner\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\nconst geistSans = Geist({\\\\\\\\n  variable: \\\\\\\\\\\\\\\"--font-geist-sans\\\\\\\\\\\\\\\",\\\\\\\\n  subsets: [\\\\\\\\\\\\\\\"latin\\\\\\\\\\\\\\\"],\\\\\\\\n});\\\\\\\\n\\\\\\\\nconst geistMono = Geist_Mono({\\\\\\\\n  variable: \\\\\\\\\\\\\\\"--font-geist-mono\\\\\\\\\\\\\\\",\\\\\\\\n  subsets: [\\\\\\\\\\\\\\\"latin\\\\\\\\\\\\\\\"],\\\\\\\\n});\\\\\\\\n\\\\\\\\nconst inter = Inter({\\\\\\\\n  variable: \\\\\\\\\\\\\\\"--font-inter\\\\\\\\\\\\\\\",\\\\\\\\n  subsets: [\\\\\\\\\\\\\\\"latin\\\\\\\\\\\\\\\"],\\\\\\\\n});\\\\\\\\n\\\\\\\\nconst dmSans = DM_Sans({\\\\\\\\n  variable: \\\\\\\\\\\\\\\"--font-dm-sans\\\\\\\\\\\\\\\",\\\\\\\\n  subsets: [\\\\\\\\\\\\\\\"latin\\\\\\\\\\\\\\\"],\\\\\\\\n  weight: [\\\\\\\\\\\\\\\"400\\\\\\\\\\\\\\\", \\\\\\\\\\\\\\\"500\\\\\\\\\\\\\\\", \\\\\\\\\\\\\\\"600\\\\\\\\\\\\\\\", \\\\\\\\\\\\\\\"700\\\\\\\\\\\\\\\"],\\\\\\\\n});\\\\\\\\n\\\\\\\\nexport const metadata: Metadata = {\\\\\\\\n  title: {\\\\\\\\n    default: \\\\\\\\\\\\\\\"Calibrate\\\\\\\\\\\\\\\",\\\\\\\\n    template: \\\\\\\\\\\\\\\"%s\\\\\\\\\\\\\\\",\\\\\\\\n  },\\\\\\\\n  description: \\\\\\\\\\\\\\\"Open-source evaluation framework for voice agents\\\\\\\\\\\\\\\",\\\\\\\\n};\\\\\\\\n\\\\\\\\nexport default function RootLayout({\\\\\\\\n  children,\\\\\\\\n}: Readonly&lt;{\\\\\\\\n  children: React.ReactNode;\\\\\\\\n}&gt;) {\\\\\\\\n  return (\\\\\\\\n    &lt;html lang=\\\\\\\\\\\\\\\"en\\\\\\\\\\\\\\\"&gt;\\\\\\\\n      &lt;body\\\\\\\\n        className={&#96;${geistSans.variable} ${geistMono.variable} ${inter.variable} ${dmSans.variable} antialiased&#96;}\\\\\\\\n      &gt;\\\\\\\\n        &lt;SessionProvider&gt;{children}&lt;/SessionProvider&gt;\\\\\\\\n        &lt;Toaster richColors position=\\\\\\\\\\\\\\\"top-right\\\\\\\\\\\\\\\" /&gt;\\\\\\\\n        &lt;Analytics /&gt;\\\\\\\\n        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID &amp;&amp; (\\\\\\\\n          &lt;GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} /&gt;\\\\\\\\n        )}\\\\\\\\n      &lt;/body&gt;\\\\\\\\n    &lt;/html&gt;\\\\\\\\n  );\\\\\\\\n}\\\\\\\\n\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":58}\\\"},\\\"capabilityType\\\":15}\",\"5473c966-5ab9-4a5b-9cf8-812f6071c201\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"8c853dee-68cc-4396-b383-0d7bbe382d83\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.127Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01DgqKn6xH2S3oqDQgC36uHk\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01DgqKn6xH2S3oqDQgC36uHk\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/auth.ts\\\\\\\"}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/auth.ts\\\\\\\",\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/auth.ts\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"import NextAuth from \\\\\\\\\\\\\\\"next-auth\\\\\\\\\\\\\\\";\\\\\\\\nimport Google from \\\\\\\\\\\\\\\"next-auth/providers/google\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\nexport const { handlers, signIn, signOut, auth } = NextAuth({\\\\\\\\n  providers: [\\\\\\\\n    Google({\\\\\\\\n      clientId: process.env.GOOGLE_CLIENT_ID!,\\\\\\\\n      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,\\\\\\\\n      authorization: {\\\\\\\\n        params: {\\\\\\\\n          prompt: \\\\\\\\\\\\\\\"select_account\\\\\\\\\\\\\\\", // Always show account selection, no auto-login\\\\\\\\n        },\\\\\\\\n      },\\\\\\\\n    }),\\\\\\\\n  ],\\\\\\\\n  pages: {\\\\\\\\n    signIn: \\\\\\\\\\\\\\\"/login\\\\\\\\\\\\\\\",\\\\\\\\n  },\\\\\\\\n  callbacks: {\\\\\\\\n    async jwt({ token, account }) {\\\\\\\\n      // On initial sign in, sync user with backend and persist tokens\\\\\\\\n      if (account) {\\\\\\\\n        token.googleAccessToken = account.access_token;\\\\\\\\n        token.idToken = account.id_token;\\\\\\\\n\\\\\\\\n        // Call backend to create/retrieve user and get JWT\\\\\\\\n        try {\\\\\\\\n          const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;\\\\\\\\n          if (backendUrl &amp;&amp; account.id_token) {\\\\\\\\n            const response = await fetch(&#96;${backendUrl}/auth/google&#96;, {\\\\\\\\n              method: \\\\\\\\\\\\\\\"POST\\\\\\\\\\\\\\\",\\\\\\\\n              headers: {\\\\\\\\n                \\\\\\\\\\\\\\\"Content-Type\\\\\\\\\\\\\\\": \\\\\\\\\\\\\\\"application/json\\\\\\\\\\\\\\\",\\\\\\\\n                accept: \\\\\\\\\\\\\\\"application/json\\\\\\\\\\\\\\\",\\\\\\\\n              },\\\\\\\\n              body: JSON.stringify({ id_token: account.id_token }),\\\\\\\\n            });\\\\\\\\n\\\\\\\\n            if (response.ok) {\\\\\\\\n              const data = await response.json();\\\\\\\\n              // Store backend JWT access_token and user data\\\\\\\\n              token.backendAccessToken = data.access_token;\\\\\\\\n              token.backendUser = data.user;\\\\\\\\n            }\\\\\\\\n          }\\\\\\\\n        } catch (error) {\\\\\\\\n          console.error(\\\\\\\\\\\\\\\"Failed to sync user with backend:\\\\\\\\\\\\\\\", error);\\\\\\\\n        }\\\\\\\\n      }\\\\\\\\n      return token;\\\\\\\\n    },\\\\\\\\n    async session({ session, token }) {\\\\\\\\n      // Send properties to the client\\\\\\\\n      // @ts-expect-error - extending session type\\\\\\\\n      session.googleAccessToken = token.googleAccessToken;\\\\\\\\n      // @ts-expect-error - extending session type\\\\\\\\n      session.idToken = token.idToken;\\\\\\\\n      // @ts-expect-error - extending session type\\\\\\\\n      session.backendAccessToken = token.backendAccessToken;\\\\\\\\n      // @ts-expect-error - extending session type\\\\\\\\n      session.backendUser = token.backendUser;\\\\\\\\n      return session;\\\\\\\\n    },\\\\\\\\n  },\\\\\\\\n});\\\\\\\\n\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":66}\\\"},\\\"capabilityType\\\":15}\",\"cade6d01-aacc-4f2b-8eba-a4ecf8c0ecfe\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"ff312a00-9c41-43b8-87f1-07d740954c0b\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.127Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01VcCyVfqET3gQVb9QiQkYUa\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01VcCyVfqET3gQVb9QiQkYUa\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/middleware.ts\\\\\\\"}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/middleware.ts\\\\\\\",\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/middleware.ts\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"import { auth } from \\\\\\\\\\\\\\\"@/auth\\\\\\\\\\\\\\\";\\\\\\\\nimport { NextResponse } from \\\\\\\\\\\\\\\"next/server\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\n// Set MAINTENANCE_MODE=true in .env.local to show maintenance page at /\\\\\\\\nconst MAINTENANCE_MODE = process.env.MAINTENANCE_MODE === \\\\\\\\\\\\\\\"true\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\nexport default auth((req) =&gt; {\\\\\\\\n  const isHomePage = req.nextUrl.pathname === \\\\\\\\\\\\\\\"/\\\\\\\\\\\\\\\";\\\\\\\\n  const isApiRoute = req.nextUrl.pathname.startsWith(\\\\\\\\\\\\\\\"/api/\\\\\\\\\\\\\\\");\\\\\\\\n\\\\\\\\n  // Maintenance mode: redirect all non-API routes to /\\\\\\\\n  if (MAINTENANCE_MODE) {\\\\\\\\n    if (isHomePage || isApiRoute) {\\\\\\\\n      return NextResponse.next();\\\\\\\\n    }\\\\\\\\n    return NextResponse.redirect(new URL(\\\\\\\\\\\\\\\"/\\\\\\\\\\\\\\\", req.url));\\\\\\\\n  }\\\\\\\\n\\\\\\\\n  const isAuthRoute = req.nextUrl.pathname.startsWith(\\\\\\\\\\\\\\\"/api/auth\\\\\\\\\\\\\\\");\\\\\\\\n  const isDebugRoute =\\\\\\\\n    req.nextUrl.pathname.startsWith(\\\\\\\\\\\\\\\"/debug\\\\\\\\\\\\\\\") ||\\\\\\\\n    req.nextUrl.pathname.startsWith(\\\\\\\\\\\\\\\"/api/debug\\\\\\\\\\\\\\\");\\\\\\\\n  const isDocsRoute = req.nextUrl.pathname.startsWith(\\\\\\\\\\\\\\\"/docs\\\\\\\\\\\\\\\");\\\\\\\\n  const isAboutPage = req.nextUrl.pathname === \\\\\\\\\\\\\\\"/about\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\n  // Allow auth API routes, debug routes, docs routes, and about page\\\\\\\\n  if (isAuthRoute || isDebugRoute || isDocsRoute || isAboutPage) {\\\\\\\\n    return NextResponse.next();\\\\\\\\n  }\\\\\\\\n\\\\\\\\n  const isLoggedIn = !!req.auth;\\\\\\\\n  const isLoginPage = req.nextUrl.pathname === \\\\\\\\\\\\\\\"/login\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\n  // Redirect logged-in users away from login page\\\\\\\\n  if (isLoginPage &amp;&amp; isLoggedIn) {\\\\\\\\n    return NextResponse.redirect(new URL(\\\\\\\\\\\\\\\"/agents\\\\\\\\\\\\\\\", req.url));\\\\\\\\n  }\\\\\\\\n\\\\\\\\n  // Redirect unauthenticated users to login page\\\\\\\\n  if (!isLoginPage &amp;&amp; !isLoggedIn) {\\\\\\\\n    return NextResponse.redirect(new URL(\\\\\\\\\\\\\\\"/login\\\\\\\\\\\\\\\", req.url));\\\\\\\\n  }\\\\\\\\n\\\\\\\\n  return NextResponse.next();\\\\\\\\n});\\\\\\\\n\\\\\\\\nexport const config = {\\\\\\\\n  matcher: [\\\\\\\\\\\\\\\"/((?!_next/static|_next/image|favicon.ico|.*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)\\\\\\\\\\\\\\\"],\\\\\\\\n};\\\\\\\\n\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":50}\\\"},\\\"capabilityType\\\":15}\",\"880c8394-7cc6-4ced-8afd-c8faff5e357a\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"9dedf4f4-4b98-4661-b684-e9db734c60ed\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.127Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01Qrxw9GSoDGcL4H4s8ottXw\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01Qrxw9GSoDGcL4H4s8ottXw\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/AppLayout.tsx\\\\\\\"}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/AppLayout.tsx\\\\\\\",\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/AppLayout.tsx\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":621}\\\"},\\\"capabilityType\\\":15}\",\"ea810955-58a1-45e6-ad50-b5a3636256a1\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"381fad8c-d4d2-48f4-8c65-c2b5b1c934a0\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.127Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01EPYXi2J9hzdn1MLK4brrRf\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01EPYXi2J9hzdn1MLK4brrRf\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/providers/SessionProvider.tsx\\\\\\\"}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/providers/SessionProvider.tsx\\\\\\\",\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/providers/SessionProvider.tsx\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"\\\\\\\\\\\\\\\"use client\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\nimport { SessionProvider as NextAuthSessionProvider } from \\\\\\\\\\\\\\\"next-auth/react\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\ntype Props = {\\\\\\\\n  children: React.ReactNode;\\\\\\\\n};\\\\\\\\n\\\\\\\\nexport function SessionProvider({ children }: Props) {\\\\\\\\n  return (\\\\\\\\n    &lt;NextAuthSessionProvider\\\\\\\\n      refetchInterval={0} // Disable automatic session polling\\\\\\\\n      refetchOnWindowFocus={false} // Don't refetch when window regains focus\\\\\\\\n    &gt;\\\\\\\\n      {children}\\\\\\\\n    &lt;/NextAuthSessionProvider&gt;\\\\\\\\n  );\\\\\\\\n}\\\\\\\\n\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":19}\\\"},\\\"capabilityType\\\":15}\",\"e7b3b409-8f1d-4926-b3d7-2ff6597b5c21\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"00d361df-6088-435b-b0a6-fd334df158b7\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.127Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_014ecto2zZUXgC7oFvWaCjNs\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_014ecto2zZUXgC7oFvWaCjNs\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/api/auth/[...nextauth]/route.ts\\\\\\\"}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/api/auth/[...nextauth]/route.ts\\\\\\\",\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/api/auth/[...nextauth]/route.ts\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"import { handlers } from \\\\\\\\\\\\\\\"@/auth\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\nexport const { GET, POST } = handlers;\\\\\\\\n\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":4}\\\"},\\\"capabilityType\\\":15}\",\"a6ffde11-e1e6-4f9a-a57a-aacf0ff099ed\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"99a79751-5863-4e3b-b32b-107824d9a935\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.127Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01AdALZHAvmJdheHuwk2Y1pW\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01AdALZHAvmJdheHuwk2Y1pW\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/agents/layout.tsx\\\\\\\"}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/agents/layout.tsx\\\\\\\",\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/agents/layout.tsx\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"import { Metadata } from \\\\\\\\\\\\\\\"next\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\nexport const metadata: Metadata = {\\\\\\\\n  title: \\\\\\\\\\\\\\\"Agents | Calibrate\\\\\\\\\\\\\\\",\\\\\\\\n};\\\\\\\\n\\\\\\\\nexport default function AgentsLayout({\\\\\\\\n  children,\\\\\\\\n}: {\\\\\\\\n  children: React.ReactNode;\\\\\\\\n}) {\\\\\\\\n  return children;\\\\\\\\n}\\\\\\\\n\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":14}\\\"},\\\"capabilityType\\\":15}\",\"f3ca19df-45cf-4b4a-a7ea-70bd87090a26\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"589fead2-3dbc-4768-9e66-fb6845ab1a09\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.127Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_019FLVVFyVNir44yiHZvWzKy\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_019FLVVFyVNir44yiHZvWzKy\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/login/layout.tsx\\\\\\\"}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/login/layout.tsx\\\\\\\",\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/login/layout.tsx\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"import { Metadata } from \\\\\\\\\\\\\\\"next\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\nexport const metadata: Metadata = {\\\\\\\\n  title: \\\\\\\\\\\\\\\"Login | Calibrate\\\\\\\\\\\\\\\",\\\\\\\\n};\\\\\\\\n\\\\\\\\nexport default function LoginLayout({\\\\\\\\n  children,\\\\\\\\n}: {\\\\\\\\n  children: React.ReactNode;\\\\\\\\n}) {\\\\\\\\n  return children;\\\\\\\\n}\\\\\\\\n\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":14}\\\"},\\\"capabilityType\\\":15}\",\"37f9db5c-9a5b-4e04-a677-162b864700dc\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"5bbd8860-5900-4212-9701-c501bd647976\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.127Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01XLqmUfkswNd3jQRYrJvmt4\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01XLqmUfkswNd3jQRYrJvmt4\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/login/page.tsx\\\\\\\"}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/login/page.tsx\\\\\\\",\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/login/page.tsx\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":843}\\\"},\\\"capabilityType\\\":15}\",\"ffd514b0-d8e1-44d0-9490-2d624df295c6\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"0797684c-92cc-463a-bb97-e8d4677fa44f\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.127Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"Now let me check how &#96;AppLayout&#96; is used in the authenticated page layouts.\\\"}\",\"f395e0d6-f3da-4404-adaf-e79e02278b2f\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"af189d15-3bbd-47f6-b761-15ad476e926d\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.127Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_018GbS7eJfaWMZjDfCZjhNGx\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_018GbS7eJfaWMZjDfCZjhNGx\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"ripgrep_raw_search\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"pattern\\\\\\\":\\\\\\\"AppLayout\\\\\\\",\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"outputMode\\\\\\\":\\\\\\\"files_with_matches\\\\\\\",\\\\\\\"caseInsensitive\\\\\\\":false,\\\\\\\"multiline\\\\\\\":false,\\\\\\\"toolCallId\\\\\\\":\\\\\\\"toolu_018GbS7eJfaWMZjDfCZjhNGx\\\\\\\"}\\\",\\\"tool\\\":41,\\\"params\\\":\\\"{\\\\\\\"pattern\\\\\\\":\\\\\\\"AppLayout\\\\\\\",\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"outputMode\\\\\\\":\\\\\\\"files_with_matches\\\\\\\",\\\\\\\"caseInsensitive\\\\\\\":false}\\\",\\\"result\\\":\\\"{\\\\\\\"success\\\\\\\":{\\\\\\\"pattern\\\\\\\":\\\\\\\"AppLayout\\\\\\\",\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"outputMode\\\\\\\":\\\\\\\"files_with_matches\\\\\\\",\\\\\\\"workspaceResults\\\\\\\":{\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend\\\\\\\":{\\\\\\\"files\\\\\\\":{\\\\\\\"files\\\\\\\":[\\\\\\\"src/components/AppLayout.tsx\\\\\\\",\\\\\\\"src/app/agents/[uuid]/page.tsx\\\\\\\",\\\\\\\"src/app/stt/page.tsx\\\\\\\",\\\\\\\"src/app/tts/page.tsx\\\\\\\",\\\\\\\"src/app/simulations/[uuid]/page.tsx\\\\\\\",\\\\\\\"src/app/tests/page.tsx\\\\\\\",\\\\\\\"src/app/simulations/page.tsx\\\\\\\",\\\\\\\"src/app/simulations/[uuid]/runs/[runId]/page.tsx\\\\\\\",\\\\\\\"src/app/scenarios/page.tsx\\\\\\\",\\\\\\\"src/app/stt/new/page.tsx\\\\\\\",\\\\\\\"src/app/tts/new/page.tsx\\\\\\\",\\\\\\\"src/components/ui/BackHeader.tsx\\\\\\\",\\\\\\\"src/app/agents/page.tsx\\\\\\\",\\\\\\\"src/app/tts/[uuid]/page.tsx\\\\\\\",\\\\\\\"src/app/tools/page.tsx\\\\\\\",\\\\\\\"src/app/stt/[uuid]/page.tsx\\\\\\\",\\\\\\\"src/app/personas/page.tsx\\\\\\\",\\\\\\\"src/app/metrics/page.tsx\\\\\\\"],\\\\\\\"totalFiles\\\\\\\":18}}}}}\\\"},\\\"capabilityType\\\":15}\",\"ea6c0b56-6e83-4815-9001-6f34747aaf6e\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"89f312b3-6179-4303-9104-14cc32e8c6f5\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.127Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01HsiujZesJKMQotoGDEkKot\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01HsiujZesJKMQotoGDEkKot\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/agents/page.tsx\\\\\\\",\\\\\\\"limit\\\\\\\":30}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/agents/page.tsx\\\\\\\",\\\\\\\"limit\\\\\\\":30,\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/agents/page.tsx\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"\\\\\\\\\\\\\\\"use client\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\nimport React, { useState, useEffect } from \\\\\\\\\\\\\\\"react\\\\\\\\\\\\\\\";\\\\\\\\nimport { useRouter } from \\\\\\\\\\\\\\\"next/navigation\\\\\\\\\\\\\\\";\\\\\\\\nimport { AppLayout } from \\\\\\\\\\\\\\\"@/components/AppLayout\\\\\\\\\\\\\\\";\\\\\\\\nimport { Agents } from \\\\\\\\\\\\\\\"@/components/Agents\\\\\\\\\\\\\\\";\\\\\\\\nimport { useSidebarState } from \\\\\\\\\\\\\\\"@/lib/sidebar\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\nexport default function AgentsPage() {\\\\\\\\n  const router = useRouter();\\\\\\\\n  const [sidebarOpen, setSidebarOpen] = useSidebarState();\\\\\\\\n\\\\\\\\n  // Set page title\\\\\\\\n  useEffect(() =&gt; {\\\\\\\\n    document.title = \\\\\\\\\\\\\\\"Agents | Calibrate\\\\\\\\\\\\\\\";\\\\\\\\n  }, []);\\\\\\\\n\\\\\\\\n  return (\\\\\\\\n    &lt;AppLayout\\\\\\\\n      activeItem=\\\\\\\\\\\\\\\"agents\\\\\\\\\\\\\\\"\\\\\\\\n      onItemChange={(itemId) =&gt; router.push(&#96;/${itemId}&#96;)}\\\\\\\\n      sidebarOpen={sidebarOpen}\\\\\\\\n      onSidebarToggle={() =&gt; setSidebarOpen(!sidebarOpen)}\\\\\\\\n    &gt;\\\\\\\\n      &lt;Agents\\\\\\\\n        onNavigateToAgent={(agentUuid) =&gt; router.push(&#96;/agents/${agentUuid}&#96;)}\\\\\\\\n      /&gt;\\\\\\\\n    &lt;/AppLayout&gt;\\\\\\\\n  );\\\\\\\\n}\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":31}\\\"},\\\"capabilityType\\\":15}\",\"7fe041fe-5054-4e24-841e-bad323b4f673\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"721bd337-f7e9-4896-9808-b6c6467e13c0\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:25:42.127Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"Here is a complete summary of the architecture:\\\\n\\\\n---\\\\n\\\\n## 1. Overall Project Structure\\\\n\\\\nThis is a **Next.js 14+ App Router** project (file-system routing under &#96;src/app/&#96;). The &#96;src/&#96; directory contains:\\\\n\\\\n| Directory | Purpose |\\\\n|---|---|\\\\n| &#96;src/app/&#96; | All routes (pages + layouts + API routes) |\\\\n| &#96;src/components/&#96; | Reusable UI components, including &#96;AppLayout&#96;, dialogs, tabs, charts, providers |\\\\n| &#96;src/hooks/&#96; | Custom hooks (&#96;useCrudResource&#96;) |\\\\n| &#96;src/lib/&#96; | Utilities (&#96;api.ts&#96;, &#96;sidebar.ts&#96;, &#96;status.ts&#96;) |\\\\n| &#96;src/constants/&#96; | Shared constants |\\\\n| &#96;src/auth.ts&#96; | NextAuth v5 config (root-level) |\\\\n| &#96;src/middleware.ts&#96; | Edge middleware for auth guards |\\\\n\\\\n---\\\\n\\\\n## 2. Routing\\\\n\\\\nThere is **no single router file**. Routing is entirely **file-system based** via Next.js App Router. Each folder under &#96;src/app/&#96; with a &#96;page.tsx&#96; becomes a route:\\\\n\\\\n- &#96;/login&#96; -- &#96;src/app/login/page.tsx&#96;\\\\n- &#96;/agents&#96; -- &#96;src/app/agents/page.tsx&#96;\\\\n- &#96;/agents/[uuid]&#96; -- &#96;src/app/agents/[uuid]/page.tsx&#96;\\\\n- &#96;/simulations&#96;, &#96;/simulations/[uuid]&#96;, &#96;/simulations/[uuid]/runs/[runId]&#96;\\\\n- &#96;/stt&#96;, &#96;/stt/new&#96;, &#96;/stt/[uuid]&#96;\\\\n- &#96;/tts&#96;, &#96;/tts/new&#96;, &#96;/tts/[uuid]&#96;\\\\n- &#96;/tools&#96;, &#96;/tests&#96;, &#96;/personas&#96;, &#96;/scenarios&#96;, &#96;/metrics&#96;\\\\n\\\\nThe **root layout** at &#96;src/app/layout.tsx&#96; is the closest equivalent to an &#96;App&#96; component -- it wraps the entire app in the &#96;SessionProvider&#96;:\\\\n\\\\n&#96;&#96;&#96;1:57:src/app/layout.tsx\\\\nimport type { Metadata } from \\\\\\\"next\\\\\\\";\\\\nimport { Geist, Geist_Mono, Inter, DM_Sans } from \\\\\\\"next/font/google\\\\\\\";\\\\nimport \\\\\\\"./globals.css\\\\\\\";\\\\nimport { SessionProvider } from \\\\\\\"@/components/providers/SessionProvider\\\\\\\";\\\\n// ...\\\\nexport default function RootLayout({\\\\n  children,\\\\n}: Readonly&lt;{\\\\n  children: React.ReactNode;\\\\n}&gt;) {\\\\n  return (\\\\n    &lt;html lang=\\\\\\\"en\\\\\\\"&gt;\\\\n      &lt;body\\\\n        className={&#96;${geistSans.variable} ${geistMono.variable} ${inter.variable} ${dmSans.variable} antialiased&#96;}\\\\n      &gt;\\\\n        &lt;SessionProvider&gt;{children}&lt;/SessionProvider&gt;\\\\n        &lt;Toaster richColors position=\\\\\\\"top-right\\\\\\\" /&gt;\\\\n        &lt;Analytics /&gt;\\\\n        {/* ... */}\\\\n      &lt;/body&gt;\\\\n    &lt;/html&gt;\\\\n  );\\\\n}\\\\n&#96;&#96;&#96;\\\\n\\\\n---\\\\n\\\\n## 3. Authentication State Management\\\\n\\\\nAuthentication uses **NextAuth v5** (Auth.js). There is no custom auth context or hook -- it's all NextAuth's built-in system:\\\\n\\\\n**a) Server-side config** -- &#96;src/auth.ts&#96;:\\\\n\\\\n&#96;&#96;&#96;4:65:src/auth.ts\\\\nexport const { handlers, signIn, signOut, auth } = NextAuth({\\\\n  providers: [\\\\n    Google({\\\\n      clientId: process.env.GOOGLE_CLIENT_ID!,\\\\n      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,\\\\n      authorization: {\\\\n        params: {\\\\n          prompt: \\\\\\\"select_account\\\\\\\",\\\\n        },\\\\n      },\\\\n    }),\\\\n  ],\\\\n  pages: {\\\\n    signIn: \\\\\\\"/login\\\\\\\",\\\\n  },\\\\n  callbacks: {\\\\n    async jwt({ token, account }) {\\\\n      // On initial sign in, sync user with backend and get JWT\\\\n      if (account) {\\\\n        token.googleAccessToken = account.access_token;\\\\n        token.idToken = account.id_token;\\\\n        // ... calls backend /auth/google to get backendAccessToken\\\\n      }\\\\n      return token;\\\\n    },\\\\n    async session({ session, token }) {\\\\n      session.backendAccessToken = token.backendAccessToken;\\\\n      session.backendUser = token.backendUser;\\\\n      return session;\\\\n    },\\\\n  },\\\\n});\\\\n&#96;&#96;&#96;\\\\n\\\\n**b) API route handler** -- &#96;src/app/api/auth/[...nextauth]/route.ts&#96; exports the GET/POST handlers from &#96;auth.ts&#96;.\\\\n\\\\n**c) Client-side provider** -- &#96;src/components/providers/SessionProvider.tsx&#96; wraps the app in NextAuth's &#96;SessionProvider&#96;:\\\\n\\\\n&#96;&#96;&#96;1:18:src/components/providers/SessionProvider.tsx\\\\n\\\\\\\"use client\\\\\\\";\\\\n\\\\nimport { SessionProvider as NextAuthSessionProvider } from \\\\\\\"next-auth/react\\\\\\\";\\\\n\\\\ntype Props = {\\\\n  children: React.ReactNode;\\\\n};\\\\n\\\\nexport function SessionProvider({ children }: Props) {\\\\n  return (\\\\n    &lt;NextAuthSessionProvider\\\\n      refetchInterval={0}\\\\n      refetchOnWindowFocus={false}\\\\n    &gt;\\\\n      {children}\\\\n    &lt;/NextAuthSessionProvider&gt;\\\\n  );\\\\n}\\\\n&#96;&#96;&#96;\\\\n\\\\n**d) Middleware for route protection** -- &#96;src/middleware.ts&#96;:\\\\n\\\\n&#96;&#96;&#96;1:49:src/middleware.ts\\\\nimport { auth } from \\\\\\\"@/auth\\\\\\\";\\\\nimport { NextResponse } from \\\\\\\"next/server\\\\\\\";\\\\n\\\\nexport default auth((req) =&gt; {\\\\n  // ...\\\\n  const isLoggedIn = !!req.auth;\\\\n  const isLoginPage = req.nextUrl.pathname === \\\\\\\"/login\\\\\\\";\\\\n\\\\n  // Redirect logged-in users away from login page\\\\n  if (isLoginPage &amp;&amp; isLoggedIn) {\\\\n    return NextResponse.redirect(new URL(\\\\\\\"/agents\\\\\\\", req.url));\\\\n  }\\\\n\\\\n  // Redirect unauthenticated users to login page\\\\n  if (!isLoginPage &amp;&amp; !isLoggedIn) {\\\\n    return NextResponse.redirect(new URL(\\\\\\\"/login\\\\\\\", req.url));\\\\n  }\\\\n\\\\n  return NextResponse.next();\\\\n});\\\\n&#96;&#96;&#96;\\\\n\\\\nClient components access the session via the standard &#96;useSession()&#96; hook from &#96;next-auth/react&#96;.\\\\n\\\\n---\\\\n\\\\n## 4. Layout for Authenticated Pages\\\\n\\\\nThere is **no** nested Next.js layout that wraps all authenticated routes. Instead, the sidebar + header layout is handled by a **client component** that every authenticated page imports directly:\\\\n\\\\n**&#96;src/components/AppLayout.tsx&#96;**\\\\n\\\\nThis provides a sidebar with navigation, a header with user profile/theme switcher, and a content area. It accepts &#96;activeItem&#96;, &#96;sidebarOpen&#96;, &#96;onSidebarToggle&#96;, and &#96;children&#96; as props.\\\\n\\\\nEvery authenticated page uses it the same way. For example:\\\\n\\\\n&#96;&#96;&#96;1:30:src/app/agents/page.tsx\\\\n\\\\\\\"use client\\\\\\\";\\\\n\\\\nimport React, { useState, useEffect } from \\\\\\\"react\\\\\\\";\\\\nimport { useRouter } from \\\\\\\"next/navigation\\\\\\\";\\\\nimport { AppLayout } from \\\\\\\"@/components/AppLayout\\\\\\\";\\\\nimport { Agents } from \\\\\\\"@/components/Agents\\\\\\\";\\\\nimport { useSidebarState } from \\\\\\\"@/lib/sidebar\\\\\\\";\\\\n\\\\nexport default function AgentsPage() {\\\\n  const router = useRouter();\\\\n  const [sidebarOpen, setSidebarOpen] = useSidebarState();\\\\n\\\\n  return (\\\\n    &lt;AppLayout\\\\n      activeItem=\\\\\\\"agents\\\\\\\"\\\\n      onItemChange={(itemId) =&gt; router.push(&#96;/${itemId}&#96;)}\\\\n      sidebarOpen={sidebarOpen}\\\\n      onSidebarToggle={() =&gt; setSidebarOpen(!sidebarOpen)}\\\\n    &gt;\\\\n      &lt;Agents\\\\n        onNavigateToAgent={(agentUuid) =&gt; router.push(&#96;/agents/${agentUuid}&#96;)}\\\\n      /&gt;\\\\n    &lt;/AppLayout&gt;\\\\n  );\\\\n}\\\\n&#96;&#96;&#96;\\\\n\\\\nThe sub-route &#96;layout.tsx&#96; files (e.g., &#96;src/app/agents/layout.tsx&#96;) are lightweight -- they only set metadata (page titles) and pass &#96;children&#96; through.\\\\n\\\\n---\\\\n\\\\n## Summary of Key Files\\\\n\\\\n| Concern | File |\\\\n|---|---|\\\\n| Root \\\\\\\"App\\\\\\\" / Router setup | &#96;src/app/layout.tsx&#96; |\\\\n| Auth config (NextAuth v5) | &#96;src/auth.ts&#96; |\\\\n| Auth API route | &#96;src/app/api/auth/[...nextauth]/route.ts&#96; |\\\\n| Auth middleware (route guard) | &#96;src/middleware.ts&#96; |\\\\n| Session context provider | &#96;src/components/providers/SessionProvider.tsx&#96; |\\\\n| Authenticated page layout (sidebar + header) | &#96;src/components/AppLayout.tsx&#96; |\\\\n| Example of usage | &#96;src/app/agents/page.tsx&#96; (and every other authenticated page) |\\\"}\"},\"status\":\"completed\",\"context\":{\"composers\":[],\"selectedCommits\":[],\"selectedPullRequests\":[],\"selectedImages\":[],\"folderSelections\":[],\"fileSelections\":[],\"selections\":[],\"terminalSelections\":[],\"selectedDocs\":[],\"externalLinks\":[],\"cursorRules\":[],\"cursorCommands\":[],\"gitPRDiffSelections\":[],\"subagentSelections\":[],\"browserSelections\":[],\"mentions\":{\"composers\":{},\"selectedCommits\":{},\"selectedPullRequests\":{},\"gitDiff\":[],\"gitDiffFromBranchToMain\":[],\"selectedImages\":{},\"folderSelections\":{},\"fileSelections\":{},\"terminalFiles\":{},\"selections\":{},\"terminalSelections\":{},\"selectedDocs\":{},\"externalLinks\":{},\"diffHistory\":[],\"cursorRules\":{},\"cursorCommands\":{},\"uiElementSelections\":[],\"consoleLogs\":[],\"ideEditorsState\":[],\"gitPRDiffSelections\":{},\"subagentSelections\":{},\"browserSelections\":{}}},\"generatingBubbleIds\":[],\"isReadingLongFile\":false,\"codeBlockData\":{},\"originalFileStates\":{},\"newlyCreatedFiles\":[],\"newlyCreatedFolders\":[],\"createdAt\":1770646578263,\"hasChangedContext\":false,\"activeTabsShouldBeReactive\":true,\"capabilities\":[{\"type\":30,\"data\":{}},{\"type\":15,\"data\":{\"bubbleDataMap\":\"{}\"}}],\"name\":\"Explore app structure and auth\",\"isFileListExpanded\":false,\"browserChipManuallyDisabled\":false,\"browserChipManuallyEnabled\":false,\"unifiedMode\":\"agent\",\"forceMode\":\"edit\",\"usageData\":{},\"allAttachedFileCodeChunksUris\":[],\"modelConfig\":{\"modelName\":\"claude-4.6-opus-high-thinking\",\"maxMode\":false},\"subComposerIds\":[],\"capabilityContexts\":[],\"todos\":[],\"isQueueExpanded\":true,\"hasUnreadMessages\":false,\"gitHubPromptDismissed\":false,\"totalLinesAdded\":0,\"totalLinesRemoved\":0,\"addedFiles\":0,\"removedFiles\":0,\"isDraft\":false,\"isCreatingWorktree\":false,\"isApplyingWorktree\":false,\"isUndoingWorktree\":false,\"applied\":false,\"pendingCreateWorktree\":false,\"isBestOfNSubcomposer\":false,\"isBestOfNParent\":false,\"bestOfNJudgeWinner\":false,\"isSpec\":false,\"isProject\":false,\"isSpecSubagentDone\":false,\"stopHookLoopCount\":0,\"speculativeSummarizationEncryptionKey\":\"MOPbuywmw7+Zs31mKcrdvyiRGh3cplSLQ0A5gmqNCSs=\",\"isNAL\":true,\"planModeSuggestionUsed\":false,\"debugModeSuggestionUsed\":false,\"conversationState\":\"~\",\"queueItems\":[],\"isAgentic\":true}"
+  "composerData": "{\"_v\":13,\"composerId\":\"task-toolu_015Pnr61gYHLDdHXmnYrLCTY\",\"richText\":\"\",\"hasLoaded\":true,\"text\":\"\",\"fullConversationHeadersOnly\":[{\"bubbleId\":\"c1ce4334-15b9-463e-abd5-84d94b7cbaa6\",\"type\":2},{\"bubbleId\":\"53fc33f6-f49b-4f5a-871e-c4e5ff4d3648\",\"type\":2},{\"bubbleId\":\"05197dd8-9008-4413-917f-cf26c7e1586d\",\"type\":2},{\"bubbleId\":\"acce7d7f-aed7-49dd-b3b4-720906b536c4\",\"type\":2},{\"bubbleId\":\"58cd7929-8922-4452-921a-e73bfb4ad511\",\"type\":2},{\"bubbleId\":\"73f6e61f-d9a5-4649-84c1-953d5a2273e7\",\"type\":2},{\"bubbleId\":\"f57e51e5-585b-4d2d-8ef2-2610a80e0171\",\"type\":2},{\"bubbleId\":\"a1374792-6de1-4cf9-8fb3-6544f81f7faf\",\"type\":2},{\"bubbleId\":\"5473c966-5ab9-4a5b-9cf8-812f6071c201\",\"type\":2},{\"bubbleId\":\"cade6d01-aacc-4f2b-8eba-a4ecf8c0ecfe\",\"type\":2},{\"bubbleId\":\"880c8394-7cc6-4ced-8afd-c8faff5e357a\",\"type\":2},{\"bubbleId\":\"ea810955-58a1-45e6-ad50-b5a3636256a1\",\"type\":2},{\"bubbleId\":\"e7b3b409-8f1d-4926-b3d7-2ff6597b5c21\",\"type\":2},{\"bubbleId\":\"a6ffde11-e1e6-4f9a-a57a-aacf0ff099ed\",\"type\":2},{\"bubbleId\":\"f3ca19df-45cf-4b4a-a7ea-70bd87090a26\",\"type\":2},{\"bubbleId\":\"37f9db5c-9a5b-4e04-a677-162b864700dc\",\"type\":2},{\"bubbleId\":\"ffd514b0-d8e1-44d0-9490-2d624df295c6\",\"type\":2},{\"bubbleId\":\"f395e0d6-f3da-4404-adaf-e79e02278b2f\",\"type\":2},{\"bubbleId\":\"ea6c0b56-6e83-4815-9001-6f34747aaf6e\",\"type\":2},{\"bubbleId\":\"7fe041fe-5054-4e24-841e-bad323b4f673\",\"type\":2}],\"conversationMap\":{\"c1ce4334-15b9-463e-abd5-84d94b7cbaa6\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"82739731-bab1-48a1-a011-8573a78ff3a6\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.363Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"thinking\\\":{\\\"text\\\":\\\"Let me explore the codebase to understand the project structure, routing, authentication, and layout components.\\\",\\\"signature\\\":\\\"\\\"},\\\"capabilityType\\\":30}\",\"53fc33f6-f49b-4f5a-871e-c4e5ff4d3648\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"2afdf80c-d054-4fb8-a6c4-33a953521296\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.363Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01JTUSh64DhxXMExhJ1Z2DCZ\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01JTUSh64DhxXMExhJ1Z2DCZ\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"list_dir_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"ignore\\\\\\\":[],\\\\\\\"toolCallId\\\\\\\":\\\\\\\"toolu_01JTUSh64DhxXMExhJ1Z2DCZ\\\\\\\"}\\\",\\\"tool\\\":39,\\\"params\\\":\\\"{\\\\\\\"targetDirectory\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"directoryTreeRoot\\\\\\\":{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/about\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/agents\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/agents/[uuid]\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/api\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/api/auth\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/api/auth/[...nextauth]\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"route.ts\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/api/debug-env\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"route.ts\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/api/sentry-example-api\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"route.ts\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/debug-client\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/login\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/metrics\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/personas\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/scenarios\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/sentry-example-page\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/new\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tests\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tools\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/new\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"favicon.ico\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"global-error.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"globals.css\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"layout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"page.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs\\\\\\\",\\\\\\\"childrenDirs\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/constants\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"providers.ts\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"AddToolDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"AgentTabContent.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"DataExtractionTabContent.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"DeleteToolDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"EvaluationTabContent.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"InbuiltToolsPanel.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"index.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"LLMSelectorModal.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"SettingsTabContent.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"TestsTabContent.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"ToolsTabContent.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/charts\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"LeaderboardBarChart.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"ContentPlaceholder.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"LLMEvaluation.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"SpeechToTextEvaluation.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"TextToSpeechEvaluation.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/icons\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"index.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/providers\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"SessionProvider.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/simulation-tabs\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"index.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"SimulationConfigTab.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"SimulationRunsTab.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/test-results\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"shared.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/ui\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"BackHeader.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"Button.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"index.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"LoadingState.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"NestedContainer.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"SearchInput.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"SlidePanel.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"StatusBadge.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"AddTestDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"AddToolDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"AgentDetail.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"AgentPicker.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"Agents.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"AppLayout.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"BenchmarkDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"BenchmarkResultsDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"DataFieldPropertyCard.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"DeleteConfirmationDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"DownloadableTable.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"LandingFooter.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"LandingHeader.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"MultiSelectPicker.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"NewAgent.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"NewSimulationDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"ParameterCard.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"RunTestDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"TestRunnerDialog.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"ToolPicker.tsx\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"Tooltip.tsx\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/constants\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"inbuilt-tools.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"limits.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"polling.ts\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/hooks\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"index.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"useCrudResource.ts\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true},{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/lib\\\\\\\",\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"api.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"sidebar.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"status.ts\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}],\\\\\\\"childrenFiles\\\\\\\":[{\\\\\\\"name\\\\\\\":\\\\\\\"auth.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"instrumentation-client.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"instrumentation.ts\\\\\\\"},{\\\\\\\"name\\\\\\\":\\\\\\\"middleware.ts\\\\\\\"}],\\\\\\\"childrenWereProcessed\\\\\\\":true}}\\\"},\\\"capabilityType\\\":15}\",\"05197dd8-9008-4413-917f-cf26c7e1586d\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"4e158683-f411-4348-8787-010622531571\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.363Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01AvSyoNLxbFEN4ancUfxUgD\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01AvSyoNLxbFEN4ancUfxUgD\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"glob_file_search\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"targetDirectory\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend\\\\\\\",\\\\\\\"globPattern\\\\\\\":\\\\\\\"**/App.{tsx,jsx,ts,js}\\\\\\\"}\\\",\\\"tool\\\":42,\\\"params\\\":\\\"{\\\\\\\"targetDirectory\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend\\\\\\\",\\\\\\\"globPattern\\\\\\\":\\\\\\\"**/App.{tsx,jsx,ts,js}\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"directories\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend\\\\\\\"}]}\\\"},\\\"capabilityType\\\":15}\",\"acce7d7f-aed7-49dd-b3b4-720906b536c4\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"f18064b6-861a-4de5-9dce-9d3471560501\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.363Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_019S5NmPcQNydwNxrqsuHRVa\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_019S5NmPcQNydwNxrqsuHRVa\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"glob_file_search\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"targetDirectory\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"globPattern\\\\\\\":\\\\\\\"**/*auth*\\\\\\\"}\\\",\\\"tool\\\":42,\\\"params\\\":\\\"{\\\\\\\"targetDirectory\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"globPattern\\\\\\\":\\\\\\\"**/*auth*\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"directories\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"files\\\\\\\":[{\\\\\\\"relPath\\\\\\\":\\\\\\\"auth.ts\\\\\\\"}],\\\\\\\"totalFiles\\\\\\\":1}]}\\\"},\\\"capabilityType\\\":15}\",\"58cd7929-8922-4452-921a-e73bfb4ad511\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"1a2c1683-6554-4cba-bca0-55a8923f113c\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.363Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_012732H6ZoE88C1eNGfjtJjZ\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_012732H6ZoE88C1eNGfjtJjZ\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"glob_file_search\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"targetDirectory\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"globPattern\\\\\\\":\\\\\\\"**/*layout*\\\\\\\"}\\\",\\\"tool\\\":42,\\\"params\\\":\\\"{\\\\\\\"targetDirectory\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"globPattern\\\\\\\":\\\\\\\"**/*layout*\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"directories\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"files\\\\\\\":[{\\\\\\\"relPath\\\\\\\":\\\\\\\"components/AppLayout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/scenarios/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/metrics/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/tts/new/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/agents/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/stt/[uuid]/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/stt/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/tests/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/tools/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/simulations/[uuid]/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/simulations/[uuid]/runs/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/login/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/personas/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/agents/[uuid]/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/tts/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/stt/new/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/simulations/layout.tsx\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/tts/[uuid]/layout.tsx\\\\\\\"}],\\\\\\\"totalFiles\\\\\\\":19}]}\\\"},\\\"capabilityType\\\":15}\",\"73f6e61f-d9a5-4649-84c1-953d5a2273e7\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"2e08cbee-c138-4d45-84b6-afb6bb7f751b\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.363Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01GHfuX5oqHFAjmb5kheSwB4\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01GHfuX5oqHFAjmb5kheSwB4\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"glob_file_search\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"targetDirectory\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"globPattern\\\\\\\":\\\\\\\"**/*route*\\\\\\\"}\\\",\\\"tool\\\":42,\\\"params\\\":\\\"{\\\\\\\"targetDirectory\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"globPattern\\\\\\\":\\\\\\\"**/*route*\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"directories\\\\\\\":[{\\\\\\\"absPath\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"files\\\\\\\":[{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/api/auth/[...nextauth]/route.ts\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/api/sentry-example-api/route.ts\\\\\\\"},{\\\\\\\"relPath\\\\\\\":\\\\\\\"app/api/debug-env/route.ts\\\\\\\"}],\\\\\\\"totalFiles\\\\\\\":3}]}\\\"},\\\"capabilityType\\\":15}\",\"f57e51e5-585b-4d2d-8ef2-2610a80e0171\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"bff54aa5-c5a2-4315-9387-30356c1e6d7c\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.363Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"This is a **Next.js App Router** project, so there's no single &#96;App.tsx&#96; — routing is file-system based. Let me read the key files now.\\\"}\",\"a1374792-6de1-4cf9-8fb3-6544f81f7faf\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"b1ef536d-efb2-44c9-8c94-a686cf1dd727\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.363Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_011qNPgzF9wZRniLQ6Dmw3ec\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_011qNPgzF9wZRniLQ6Dmw3ec\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/layout.tsx\\\\\\\"}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/layout.tsx\\\\\\\",\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/layout.tsx\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"import type { Metadata } from \\\\\\\\\\\\\\\"next\\\\\\\\\\\\\\\";\\\\\\\\nimport { Geist, Geist_Mono, Inter, DM_Sans } from \\\\\\\\\\\\\\\"next/font/google\\\\\\\\\\\\\\\";\\\\\\\\nimport \\\\\\\\\\\\\\\"./globals.css\\\\\\\\\\\\\\\";\\\\\\\\nimport { SessionProvider } from \\\\\\\\\\\\\\\"@/components/providers/SessionProvider\\\\\\\\\\\\\\\";\\\\\\\\nimport { Analytics } from \\\\\\\\\\\\\\\"@vercel/analytics/next\\\\\\\\\\\\\\\";\\\\\\\\nimport { GoogleAnalytics } from \\\\\\\\\\\\\\\"@next/third-parties/google\\\\\\\\\\\\\\\";\\\\\\\\nimport { Toaster } from \\\\\\\\\\\\\\\"sonner\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\nconst geistSans = Geist({\\\\\\\\n  variable: \\\\\\\\\\\\\\\"--font-geist-sans\\\\\\\\\\\\\\\",\\\\\\\\n  subsets: [\\\\\\\\\\\\\\\"latin\\\\\\\\\\\\\\\"],\\\\\\\\n});\\\\\\\\n\\\\\\\\nconst geistMono = Geist_Mono({\\\\\\\\n  variable: \\\\\\\\\\\\\\\"--font-geist-mono\\\\\\\\\\\\\\\",\\\\\\\\n  subsets: [\\\\\\\\\\\\\\\"latin\\\\\\\\\\\\\\\"],\\\\\\\\n});\\\\\\\\n\\\\\\\\nconst inter = Inter({\\\\\\\\n  variable: \\\\\\\\\\\\\\\"--font-inter\\\\\\\\\\\\\\\",\\\\\\\\n  subsets: [\\\\\\\\\\\\\\\"latin\\\\\\\\\\\\\\\"],\\\\\\\\n});\\\\\\\\n\\\\\\\\nconst dmSans = DM_Sans({\\\\\\\\n  variable: \\\\\\\\\\\\\\\"--font-dm-sans\\\\\\\\\\\\\\\",\\\\\\\\n  subsets: [\\\\\\\\\\\\\\\"latin\\\\\\\\\\\\\\\"],\\\\\\\\n  weight: [\\\\\\\\\\\\\\\"400\\\\\\\\\\\\\\\", \\\\\\\\\\\\\\\"500\\\\\\\\\\\\\\\", \\\\\\\\\\\\\\\"600\\\\\\\\\\\\\\\", \\\\\\\\\\\\\\\"700\\\\\\\\\\\\\\\"],\\\\\\\\n});\\\\\\\\n\\\\\\\\nexport const metadata: Metadata = {\\\\\\\\n  title: {\\\\\\\\n    default: \\\\\\\\\\\\\\\"Calibrate\\\\\\\\\\\\\\\",\\\\\\\\n    template: \\\\\\\\\\\\\\\"%s\\\\\\\\\\\\\\\",\\\\\\\\n  },\\\\\\\\n  description: \\\\\\\\\\\\\\\"Open-source evaluation framework for voice agents\\\\\\\\\\\\\\\",\\\\\\\\n};\\\\\\\\n\\\\\\\\nexport default function RootLayout({\\\\\\\\n  children,\\\\\\\\n}: Readonly&lt;{\\\\\\\\n  children: React.ReactNode;\\\\\\\\n}&gt;) {\\\\\\\\n  return (\\\\\\\\n    &lt;html lang=\\\\\\\\\\\\\\\"en\\\\\\\\\\\\\\\"&gt;\\\\\\\\n      &lt;body\\\\\\\\n        className={&#96;${geistSans.variable} ${geistMono.variable} ${inter.variable} ${dmSans.variable} antialiased&#96;}\\\\\\\\n      &gt;\\\\\\\\n        &lt;SessionProvider&gt;{children}&lt;/SessionProvider&gt;\\\\\\\\n        &lt;Toaster richColors position=\\\\\\\\\\\\\\\"top-right\\\\\\\\\\\\\\\" /&gt;\\\\\\\\n        &lt;Analytics /&gt;\\\\\\\\n        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID &amp;&amp; (\\\\\\\\n          &lt;GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} /&gt;\\\\\\\\n        )}\\\\\\\\n      &lt;/body&gt;\\\\\\\\n    &lt;/html&gt;\\\\\\\\n  );\\\\\\\\n}\\\\\\\\n\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":58}\\\"},\\\"capabilityType\\\":15}\",\"5473c966-5ab9-4a5b-9cf8-812f6071c201\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"8fac5fd2-ed33-46d1-88bd-24bfb52211b7\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.363Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01DgqKn6xH2S3oqDQgC36uHk\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01DgqKn6xH2S3oqDQgC36uHk\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/auth.ts\\\\\\\"}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/auth.ts\\\\\\\",\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/auth.ts\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"import NextAuth from \\\\\\\\\\\\\\\"next-auth\\\\\\\\\\\\\\\";\\\\\\\\nimport Google from \\\\\\\\\\\\\\\"next-auth/providers/google\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\nexport const { handlers, signIn, signOut, auth } = NextAuth({\\\\\\\\n  providers: [\\\\\\\\n    Google({\\\\\\\\n      clientId: process.env.GOOGLE_CLIENT_ID!,\\\\\\\\n      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,\\\\\\\\n      authorization: {\\\\\\\\n        params: {\\\\\\\\n          prompt: \\\\\\\\\\\\\\\"select_account\\\\\\\\\\\\\\\", // Always show account selection, no auto-login\\\\\\\\n        },\\\\\\\\n      },\\\\\\\\n    }),\\\\\\\\n  ],\\\\\\\\n  pages: {\\\\\\\\n    signIn: \\\\\\\\\\\\\\\"/login\\\\\\\\\\\\\\\",\\\\\\\\n  },\\\\\\\\n  callbacks: {\\\\\\\\n    async jwt({ token, account }) {\\\\\\\\n      // On initial sign in, sync user with backend and persist tokens\\\\\\\\n      if (account) {\\\\\\\\n        token.googleAccessToken = account.access_token;\\\\\\\\n        token.idToken = account.id_token;\\\\\\\\n\\\\\\\\n        // Call backend to create/retrieve user and get JWT\\\\\\\\n        try {\\\\\\\\n          const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;\\\\\\\\n          if (backendUrl &amp;&amp; account.id_token) {\\\\\\\\n            const response = await fetch(&#96;${backendUrl}/auth/google&#96;, {\\\\\\\\n              method: \\\\\\\\\\\\\\\"POST\\\\\\\\\\\\\\\",\\\\\\\\n              headers: {\\\\\\\\n                \\\\\\\\\\\\\\\"Content-Type\\\\\\\\\\\\\\\": \\\\\\\\\\\\\\\"application/json\\\\\\\\\\\\\\\",\\\\\\\\n                accept: \\\\\\\\\\\\\\\"application/json\\\\\\\\\\\\\\\",\\\\\\\\n              },\\\\\\\\n              body: JSON.stringify({ id_token: account.id_token }),\\\\\\\\n            });\\\\\\\\n\\\\\\\\n            if (response.ok) {\\\\\\\\n              const data = await response.json();\\\\\\\\n              // Store backend JWT access_token and user data\\\\\\\\n              token.backendAccessToken = data.access_token;\\\\\\\\n              token.backendUser = data.user;\\\\\\\\n            }\\\\\\\\n          }\\\\\\\\n        } catch (error) {\\\\\\\\n          console.error(\\\\\\\\\\\\\\\"Failed to sync user with backend:\\\\\\\\\\\\\\\", error);\\\\\\\\n        }\\\\\\\\n      }\\\\\\\\n      return token;\\\\\\\\n    },\\\\\\\\n    async session({ session, token }) {\\\\\\\\n      // Send properties to the client\\\\\\\\n      // @ts-expect-error - extending session type\\\\\\\\n      session.googleAccessToken = token.googleAccessToken;\\\\\\\\n      // @ts-expect-error - extending session type\\\\\\\\n      session.idToken = token.idToken;\\\\\\\\n      // @ts-expect-error - extending session type\\\\\\\\n      session.backendAccessToken = token.backendAccessToken;\\\\\\\\n      // @ts-expect-error - extending session type\\\\\\\\n      session.backendUser = token.backendUser;\\\\\\\\n      return session;\\\\\\\\n    },\\\\\\\\n  },\\\\\\\\n});\\\\\\\\n\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":66}\\\"},\\\"capabilityType\\\":15}\",\"cade6d01-aacc-4f2b-8eba-a4ecf8c0ecfe\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"2245f92e-c3e3-4638-8902-f18bb643391e\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.363Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01VcCyVfqET3gQVb9QiQkYUa\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01VcCyVfqET3gQVb9QiQkYUa\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/middleware.ts\\\\\\\"}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/middleware.ts\\\\\\\",\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/middleware.ts\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"import { auth } from \\\\\\\\\\\\\\\"@/auth\\\\\\\\\\\\\\\";\\\\\\\\nimport { NextResponse } from \\\\\\\\\\\\\\\"next/server\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\n// Set MAINTENANCE_MODE=true in .env.local to show maintenance page at /\\\\\\\\nconst MAINTENANCE_MODE = process.env.MAINTENANCE_MODE === \\\\\\\\\\\\\\\"true\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\nexport default auth((req) =&gt; {\\\\\\\\n  const isHomePage = req.nextUrl.pathname === \\\\\\\\\\\\\\\"/\\\\\\\\\\\\\\\";\\\\\\\\n  const isApiRoute = req.nextUrl.pathname.startsWith(\\\\\\\\\\\\\\\"/api/\\\\\\\\\\\\\\\");\\\\\\\\n\\\\\\\\n  // Maintenance mode: redirect all non-API routes to /\\\\\\\\n  if (MAINTENANCE_MODE) {\\\\\\\\n    if (isHomePage || isApiRoute) {\\\\\\\\n      return NextResponse.next();\\\\\\\\n    }\\\\\\\\n    return NextResponse.redirect(new URL(\\\\\\\\\\\\\\\"/\\\\\\\\\\\\\\\", req.url));\\\\\\\\n  }\\\\\\\\n\\\\\\\\n  const isAuthRoute = req.nextUrl.pathname.startsWith(\\\\\\\\\\\\\\\"/api/auth\\\\\\\\\\\\\\\");\\\\\\\\n  const isDebugRoute =\\\\\\\\n    req.nextUrl.pathname.startsWith(\\\\\\\\\\\\\\\"/debug\\\\\\\\\\\\\\\") ||\\\\\\\\n    req.nextUrl.pathname.startsWith(\\\\\\\\\\\\\\\"/api/debug\\\\\\\\\\\\\\\");\\\\\\\\n  const isDocsRoute = req.nextUrl.pathname.startsWith(\\\\\\\\\\\\\\\"/docs\\\\\\\\\\\\\\\");\\\\\\\\n  const isAboutPage = req.nextUrl.pathname === \\\\\\\\\\\\\\\"/about\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\n  // Allow auth API routes, debug routes, docs routes, and about page\\\\\\\\n  if (isAuthRoute || isDebugRoute || isDocsRoute || isAboutPage) {\\\\\\\\n    return NextResponse.next();\\\\\\\\n  }\\\\\\\\n\\\\\\\\n  const isLoggedIn = !!req.auth;\\\\\\\\n  const isLoginPage = req.nextUrl.pathname === \\\\\\\\\\\\\\\"/login\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\n  // Redirect logged-in users away from login page\\\\\\\\n  if (isLoginPage &amp;&amp; isLoggedIn) {\\\\\\\\n    return NextResponse.redirect(new URL(\\\\\\\\\\\\\\\"/agents\\\\\\\\\\\\\\\", req.url));\\\\\\\\n  }\\\\\\\\n\\\\\\\\n  // Redirect unauthenticated users to login page\\\\\\\\n  if (!isLoginPage &amp;&amp; !isLoggedIn) {\\\\\\\\n    return NextResponse.redirect(new URL(\\\\\\\\\\\\\\\"/login\\\\\\\\\\\\\\\", req.url));\\\\\\\\n  }\\\\\\\\n\\\\\\\\n  return NextResponse.next();\\\\\\\\n});\\\\\\\\n\\\\\\\\nexport const config = {\\\\\\\\n  matcher: [\\\\\\\\\\\\\\\"/((?!_next/static|_next/image|favicon.ico|.*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)\\\\\\\\\\\\\\\"],\\\\\\\\n};\\\\\\\\n\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":50}\\\"},\\\"capabilityType\\\":15}\",\"880c8394-7cc6-4ced-8afd-c8faff5e357a\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"ed9bc5de-467e-485a-adf7-288f4f5c2401\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.363Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01Qrxw9GSoDGcL4H4s8ottXw\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01Qrxw9GSoDGcL4H4s8ottXw\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/AppLayout.tsx\\\\\\\"}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/AppLayout.tsx\\\\\\\",\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/AppLayout.tsx\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":621}\\\"},\\\"capabilityType\\\":15}\",\"ea810955-58a1-45e6-ad50-b5a3636256a1\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"b5cd501a-f359-4657-af11-1ea26ccfee68\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.363Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01EPYXi2J9hzdn1MLK4brrRf\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01EPYXi2J9hzdn1MLK4brrRf\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/providers/SessionProvider.tsx\\\\\\\"}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/providers/SessionProvider.tsx\\\\\\\",\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/components/providers/SessionProvider.tsx\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"\\\\\\\\\\\\\\\"use client\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\nimport { SessionProvider as NextAuthSessionProvider } from \\\\\\\\\\\\\\\"next-auth/react\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\ntype Props = {\\\\\\\\n  children: React.ReactNode;\\\\\\\\n};\\\\\\\\n\\\\\\\\nexport function SessionProvider({ children }: Props) {\\\\\\\\n  return (\\\\\\\\n    &lt;NextAuthSessionProvider\\\\\\\\n      refetchInterval={0} // Disable automatic session polling\\\\\\\\n      refetchOnWindowFocus={false} // Don't refetch when window regains focus\\\\\\\\n    &gt;\\\\\\\\n      {children}\\\\\\\\n    &lt;/NextAuthSessionProvider&gt;\\\\\\\\n  );\\\\\\\\n}\\\\\\\\n\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":19}\\\"},\\\"capabilityType\\\":15}\",\"e7b3b409-8f1d-4926-b3d7-2ff6597b5c21\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"f2a4e8df-3919-4131-9d31-0044f6058186\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.363Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_014ecto2zZUXgC7oFvWaCjNs\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_014ecto2zZUXgC7oFvWaCjNs\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/api/auth/[...nextauth]/route.ts\\\\\\\"}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/api/auth/[...nextauth]/route.ts\\\\\\\",\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/api/auth/[...nextauth]/route.ts\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"import { handlers } from \\\\\\\\\\\\\\\"@/auth\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\nexport const { GET, POST } = handlers;\\\\\\\\n\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":4}\\\"},\\\"capabilityType\\\":15}\",\"a6ffde11-e1e6-4f9a-a57a-aacf0ff099ed\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"f84245f1-4b7d-4e68-9e52-95c9cc281d59\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.363Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01AdALZHAvmJdheHuwk2Y1pW\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01AdALZHAvmJdheHuwk2Y1pW\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/agents/layout.tsx\\\\\\\"}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/agents/layout.tsx\\\\\\\",\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/agents/layout.tsx\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"import { Metadata } from \\\\\\\\\\\\\\\"next\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\nexport const metadata: Metadata = {\\\\\\\\n  title: \\\\\\\\\\\\\\\"Agents | Calibrate\\\\\\\\\\\\\\\",\\\\\\\\n};\\\\\\\\n\\\\\\\\nexport default function AgentsLayout({\\\\\\\\n  children,\\\\\\\\n}: {\\\\\\\\n  children: React.ReactNode;\\\\\\\\n}) {\\\\\\\\n  return children;\\\\\\\\n}\\\\\\\\n\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":14}\\\"},\\\"capabilityType\\\":15}\",\"f3ca19df-45cf-4b4a-a7ea-70bd87090a26\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"0b188859-2709-46c4-ae4e-f7689f160398\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.364Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_019FLVVFyVNir44yiHZvWzKy\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_019FLVVFyVNir44yiHZvWzKy\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/login/layout.tsx\\\\\\\"}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/login/layout.tsx\\\\\\\",\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/login/layout.tsx\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"import { Metadata } from \\\\\\\\\\\\\\\"next\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\nexport const metadata: Metadata = {\\\\\\\\n  title: \\\\\\\\\\\\\\\"Login | Calibrate\\\\\\\\\\\\\\\",\\\\\\\\n};\\\\\\\\n\\\\\\\\nexport default function LoginLayout({\\\\\\\\n  children,\\\\\\\\n}: {\\\\\\\\n  children: React.ReactNode;\\\\\\\\n}) {\\\\\\\\n  return children;\\\\\\\\n}\\\\\\\\n\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":14}\\\"},\\\"capabilityType\\\":15}\",\"37f9db5c-9a5b-4e04-a677-162b864700dc\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"392d50d0-8b9a-49db-a42e-92b1c7dbc3f8\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.364Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01XLqmUfkswNd3jQRYrJvmt4\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01XLqmUfkswNd3jQRYrJvmt4\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/login/page.tsx\\\\\\\"}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/login/page.tsx\\\\\\\",\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/login/page.tsx\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":843}\\\"},\\\"capabilityType\\\":15}\",\"ffd514b0-d8e1-44d0-9490-2d624df295c6\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"0dc1f824-9eb0-4788-816f-ab198525a88c\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.364Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"Now let me check how &#96;AppLayout&#96; is used in the authenticated page layouts.\\\"}\",\"f395e0d6-f3da-4404-adaf-e79e02278b2f\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"d965129c-7530-43c0-b57c-45cfe0ba3b7a\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.364Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_018GbS7eJfaWMZjDfCZjhNGx\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_018GbS7eJfaWMZjDfCZjhNGx\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"ripgrep_raw_search\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"pattern\\\\\\\":\\\\\\\"AppLayout\\\\\\\",\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"outputMode\\\\\\\":\\\\\\\"files_with_matches\\\\\\\",\\\\\\\"caseInsensitive\\\\\\\":false,\\\\\\\"multiline\\\\\\\":false,\\\\\\\"toolCallId\\\\\\\":\\\\\\\"toolu_018GbS7eJfaWMZjDfCZjhNGx\\\\\\\"}\\\",\\\"tool\\\":41,\\\"params\\\":\\\"{\\\\\\\"pattern\\\\\\\":\\\\\\\"AppLayout\\\\\\\",\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"outputMode\\\\\\\":\\\\\\\"files_with_matches\\\\\\\",\\\\\\\"caseInsensitive\\\\\\\":false}\\\",\\\"result\\\":\\\"{\\\\\\\"success\\\\\\\":{\\\\\\\"pattern\\\\\\\":\\\\\\\"AppLayout\\\\\\\",\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src\\\\\\\",\\\\\\\"outputMode\\\\\\\":\\\\\\\"files_with_matches\\\\\\\",\\\\\\\"workspaceResults\\\\\\\":{\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend\\\\\\\":{\\\\\\\"files\\\\\\\":{\\\\\\\"files\\\\\\\":[\\\\\\\"src/components/AppLayout.tsx\\\\\\\",\\\\\\\"src/app/agents/[uuid]/page.tsx\\\\\\\",\\\\\\\"src/app/stt/page.tsx\\\\\\\",\\\\\\\"src/app/tts/page.tsx\\\\\\\",\\\\\\\"src/app/simulations/[uuid]/page.tsx\\\\\\\",\\\\\\\"src/app/tests/page.tsx\\\\\\\",\\\\\\\"src/app/simulations/page.tsx\\\\\\\",\\\\\\\"src/app/simulations/[uuid]/runs/[runId]/page.tsx\\\\\\\",\\\\\\\"src/app/scenarios/page.tsx\\\\\\\",\\\\\\\"src/app/stt/new/page.tsx\\\\\\\",\\\\\\\"src/app/tts/new/page.tsx\\\\\\\",\\\\\\\"src/components/ui/BackHeader.tsx\\\\\\\",\\\\\\\"src/app/agents/page.tsx\\\\\\\",\\\\\\\"src/app/tts/[uuid]/page.tsx\\\\\\\",\\\\\\\"src/app/tools/page.tsx\\\\\\\",\\\\\\\"src/app/stt/[uuid]/page.tsx\\\\\\\",\\\\\\\"src/app/personas/page.tsx\\\\\\\",\\\\\\\"src/app/metrics/page.tsx\\\\\\\"],\\\\\\\"totalFiles\\\\\\\":18}}}}}\\\"},\\\"capabilityType\\\":15}\",\"ea6c0b56-6e83-4815-9001-6f34747aaf6e\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"a9900df4-bc4d-42e5-9036-9b21d5bbaaa6\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.364Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"\\\",\\\"toolFormerData\\\":{\\\"toolCallId\\\":\\\"toolu_01HsiujZesJKMQotoGDEkKot\\\",\\\"toolIndex\\\":0,\\\"modelCallId\\\":\\\"toolu_01HsiujZesJKMQotoGDEkKot\\\",\\\"status\\\":\\\"completed\\\",\\\"name\\\":\\\"read_file_v2\\\",\\\"rawArgs\\\":\\\"{\\\\\\\"path\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/agents/page.tsx\\\\\\\",\\\\\\\"limit\\\\\\\":30}\\\",\\\"tool\\\":40,\\\"params\\\":\\\"{\\\\\\\"targetFile\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/agents/page.tsx\\\\\\\",\\\\\\\"limit\\\\\\\":30,\\\\\\\"charsLimit\\\\\\\":1000000,\\\\\\\"effectiveUri\\\\\\\":\\\\\\\"/Users/aman/Documents/repos/artpark/pense-frontend/src/app/agents/page.tsx\\\\\\\"}\\\",\\\"result\\\":\\\"{\\\\\\\"contents\\\\\\\":\\\\\\\"\\\\\\\\\\\\\\\"use client\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\nimport React, { useState, useEffect } from \\\\\\\\\\\\\\\"react\\\\\\\\\\\\\\\";\\\\\\\\nimport { useRouter } from \\\\\\\\\\\\\\\"next/navigation\\\\\\\\\\\\\\\";\\\\\\\\nimport { AppLayout } from \\\\\\\\\\\\\\\"@/components/AppLayout\\\\\\\\\\\\\\\";\\\\\\\\nimport { Agents } from \\\\\\\\\\\\\\\"@/components/Agents\\\\\\\\\\\\\\\";\\\\\\\\nimport { useSidebarState } from \\\\\\\\\\\\\\\"@/lib/sidebar\\\\\\\\\\\\\\\";\\\\\\\\n\\\\\\\\nexport default function AgentsPage() {\\\\\\\\n  const router = useRouter();\\\\\\\\n  const [sidebarOpen, setSidebarOpen] = useSidebarState();\\\\\\\\n\\\\\\\\n  // Set page title\\\\\\\\n  useEffect(() =&gt; {\\\\\\\\n    document.title = \\\\\\\\\\\\\\\"Agents | Calibrate\\\\\\\\\\\\\\\";\\\\\\\\n  }, []);\\\\\\\\n\\\\\\\\n  return (\\\\\\\\n    &lt;AppLayout\\\\\\\\n      activeItem=\\\\\\\\\\\\\\\"agents\\\\\\\\\\\\\\\"\\\\\\\\n      onItemChange={(itemId) =&gt; router.push(&#96;/${itemId}&#96;)}\\\\\\\\n      sidebarOpen={sidebarOpen}\\\\\\\\n      onSidebarToggle={() =&gt; setSidebarOpen(!sidebarOpen)}\\\\\\\\n    &gt;\\\\\\\\n      &lt;Agents\\\\\\\\n        onNavigateToAgent={(agentUuid) =&gt; router.push(&#96;/agents/${agentUuid}&#96;)}\\\\\\\\n      /&gt;\\\\\\\\n    &lt;/AppLayout&gt;\\\\\\\\n  );\\\\\\\\n}\\\\\\\",\\\\\\\"totalLinesInFile\\\\\\\":31}\\\"},\\\"capabilityType\\\":15}\",\"7fe041fe-5054-4e24-841e-bad323b4f673\":\"{\\\"_v\\\":3,\\\"type\\\":2,\\\"approximateLintErrors\\\":[],\\\"lints\\\":[],\\\"codebaseContextChunks\\\":[],\\\"commits\\\":[],\\\"pullRequests\\\":[],\\\"attachedCodeChunks\\\":[],\\\"assistantSuggestedDiffs\\\":[],\\\"gitDiffs\\\":[],\\\"interpreterResults\\\":[],\\\"images\\\":[],\\\"attachedFolders\\\":[],\\\"attachedFoldersNew\\\":[],\\\"bubbleId\\\":\\\"1551400e-1c04-4f2c-a47a-973e656d329f\\\",\\\"userResponsesToSuggestedCodeBlocks\\\":[],\\\"suggestedCodeBlocks\\\":[],\\\"diffsForCompressingFiles\\\":[],\\\"relevantFiles\\\":[],\\\"toolResults\\\":[],\\\"notepads\\\":[],\\\"capabilities\\\":[],\\\"multiFileLinterErrors\\\":[],\\\"diffHistories\\\":[],\\\"recentLocationsHistory\\\":[],\\\"recentlyViewedFiles\\\":[],\\\"isAgentic\\\":false,\\\"fileDiffTrajectories\\\":[],\\\"existedSubsequentTerminalCommand\\\":false,\\\"existedPreviousTerminalCommand\\\":false,\\\"docsReferences\\\":[],\\\"webReferences\\\":[],\\\"aiWebSearchResults\\\":[],\\\"requestId\\\":\\\"\\\",\\\"attachedFoldersListDirResults\\\":[],\\\"humanChanges\\\":[],\\\"attachedHumanChanges\\\":false,\\\"summarizedComposers\\\":[],\\\"cursorRules\\\":[],\\\"contextPieces\\\":[],\\\"editTrailContexts\\\":[],\\\"allThinkingBlocks\\\":[],\\\"diffsSinceLastApply\\\":[],\\\"deletedFiles\\\":[],\\\"supportedTools\\\":[],\\\"tokenCount\\\":{\\\"inputTokens\\\":0,\\\"outputTokens\\\":0},\\\"attachedFileCodeChunksMetadataOnly\\\":[],\\\"consoleLogs\\\":[],\\\"uiElementPicked\\\":[],\\\"isRefunded\\\":false,\\\"knowledgeItems\\\":[],\\\"documentationSelections\\\":[],\\\"externalLinks\\\":[],\\\"projectLayouts\\\":[],\\\"unifiedMode\\\":2,\\\"capabilityContexts\\\":[],\\\"todos\\\":[],\\\"createdAt\\\":\\\"2026-02-09T14:32:12.364Z\\\",\\\"mcpDescriptors\\\":[],\\\"workspaceUris\\\":[],\\\"conversationState\\\":{\\\"rootPromptMessagesJson\\\":[],\\\"turnsOld\\\":[],\\\"todos\\\":[],\\\"pendingToolCalls\\\":[],\\\"turns\\\":[],\\\"previousWorkspaceUris\\\":[],\\\"fileStates\\\":{},\\\"summaryArchives\\\":[],\\\"turnTimings\\\":[],\\\"fileStatesV2\\\":{},\\\"subagentStates\\\":{},\\\"selfSummaryCount\\\":0,\\\"readPaths\\\":[]},\\\"text\\\":\\\"Here is a complete summary of the architecture:\\\\n\\\\n---\\\\n\\\\n## 1. Overall Project Structure\\\\n\\\\nThis is a **Next.js 14+ App Router** project (file-system routing under &#96;src/app/&#96;). The &#96;src/&#96; directory contains:\\\\n\\\\n| Directory | Purpose |\\\\n|---|---|\\\\n| &#96;src/app/&#96; | All routes (pages + layouts + API routes) |\\\\n| &#96;src/components/&#96; | Reusable UI components, including &#96;AppLayout&#96;, dialogs, tabs, charts, providers |\\\\n| &#96;src/hooks/&#96; | Custom hooks (&#96;useCrudResource&#96;) |\\\\n| &#96;src/lib/&#96; | Utilities (&#96;api.ts&#96;, &#96;sidebar.ts&#96;, &#96;status.ts&#96;) |\\\\n| &#96;src/constants/&#96; | Shared constants |\\\\n| &#96;src/auth.ts&#96; | NextAuth v5 config (root-level) |\\\\n| &#96;src/middleware.ts&#96; | Edge middleware for auth guards |\\\\n\\\\n---\\\\n\\\\n## 2. Routing\\\\n\\\\nThere is **no single router file**. Routing is entirely **file-system based** via Next.js App Router. Each folder under &#96;src/app/&#96; with a &#96;page.tsx&#96; becomes a route:\\\\n\\\\n- &#96;/login&#96; -- &#96;src/app/login/page.tsx&#96;\\\\n- &#96;/agents&#96; -- &#96;src/app/agents/page.tsx&#96;\\\\n- &#96;/agents/[uuid]&#96; -- &#96;src/app/agents/[uuid]/page.tsx&#96;\\\\n- &#96;/simulations&#96;, &#96;/simulations/[uuid]&#96;, &#96;/simulations/[uuid]/runs/[runId]&#96;\\\\n- &#96;/stt&#96;, &#96;/stt/new&#96;, &#96;/stt/[uuid]&#96;\\\\n- &#96;/tts&#96;, &#96;/tts/new&#96;, &#96;/tts/[uuid]&#96;\\\\n- &#96;/tools&#96;, &#96;/tests&#96;, &#96;/personas&#96;, &#96;/scenarios&#96;, &#96;/metrics&#96;\\\\n\\\\nThe **root layout** at &#96;src/app/layout.tsx&#96; is the closest equivalent to an &#96;App&#96; component -- it wraps the entire app in the &#96;SessionProvider&#96;:\\\\n\\\\n&#96;&#96;&#96;1:57:src/app/layout.tsx\\\\nimport type { Metadata } from \\\\\\\"next\\\\\\\";\\\\nimport { Geist, Geist_Mono, Inter, DM_Sans } from \\\\\\\"next/font/google\\\\\\\";\\\\nimport \\\\\\\"./globals.css\\\\\\\";\\\\nimport { SessionProvider } from \\\\\\\"@/components/providers/SessionProvider\\\\\\\";\\\\n// ...\\\\nexport default function RootLayout({\\\\n  children,\\\\n}: Readonly&lt;{\\\\n  children: React.ReactNode;\\\\n}&gt;) {\\\\n  return (\\\\n    &lt;html lang=\\\\\\\"en\\\\\\\"&gt;\\\\n      &lt;body\\\\n        className={&#96;${geistSans.variable} ${geistMono.variable} ${inter.variable} ${dmSans.variable} antialiased&#96;}\\\\n      &gt;\\\\n        &lt;SessionProvider&gt;{children}&lt;/SessionProvider&gt;\\\\n        &lt;Toaster richColors position=\\\\\\\"top-right\\\\\\\" /&gt;\\\\n        &lt;Analytics /&gt;\\\\n        {/* ... */}\\\\n      &lt;/body&gt;\\\\n    &lt;/html&gt;\\\\n  );\\\\n}\\\\n&#96;&#96;&#96;\\\\n\\\\n---\\\\n\\\\n## 3. Authentication State Management\\\\n\\\\nAuthentication uses **NextAuth v5** (Auth.js). There is no custom auth context or hook -- it's all NextAuth's built-in system:\\\\n\\\\n**a) Server-side config** -- &#96;src/auth.ts&#96;:\\\\n\\\\n&#96;&#96;&#96;4:65:src/auth.ts\\\\nexport const { handlers, signIn, signOut, auth } = NextAuth({\\\\n  providers: [\\\\n    Google({\\\\n      clientId: process.env.GOOGLE_CLIENT_ID!,\\\\n      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,\\\\n      authorization: {\\\\n        params: {\\\\n          prompt: \\\\\\\"select_account\\\\\\\",\\\\n        },\\\\n      },\\\\n    }),\\\\n  ],\\\\n  pages: {\\\\n    signIn: \\\\\\\"/login\\\\\\\",\\\\n  },\\\\n  callbacks: {\\\\n    async jwt({ token, account }) {\\\\n      // On initial sign in, sync user with backend and get JWT\\\\n      if (account) {\\\\n        token.googleAccessToken = account.access_token;\\\\n        token.idToken = account.id_token;\\\\n        // ... calls backend /auth/google to get backendAccessToken\\\\n      }\\\\n      return token;\\\\n    },\\\\n    async session({ session, token }) {\\\\n      session.backendAccessToken = token.backendAccessToken;\\\\n      session.backendUser = token.backendUser;\\\\n      return session;\\\\n    },\\\\n  },\\\\n});\\\\n&#96;&#96;&#96;\\\\n\\\\n**b) API route handler** -- &#96;src/app/api/auth/[...nextauth]/route.ts&#96; exports the GET/POST handlers from &#96;auth.ts&#96;.\\\\n\\\\n**c) Client-side provider** -- &#96;src/components/providers/SessionProvider.tsx&#96; wraps the app in NextAuth's &#96;SessionProvider&#96;:\\\\n\\\\n&#96;&#96;&#96;1:18:src/components/providers/SessionProvider.tsx\\\\n\\\\\\\"use client\\\\\\\";\\\\n\\\\nimport { SessionProvider as NextAuthSessionProvider } from \\\\\\\"next-auth/react\\\\\\\";\\\\n\\\\ntype Props = {\\\\n  children: React.ReactNode;\\\\n};\\\\n\\\\nexport function SessionProvider({ children }: Props) {\\\\n  return (\\\\n    &lt;NextAuthSessionProvider\\\\n      refetchInterval={0}\\\\n      refetchOnWindowFocus={false}\\\\n    &gt;\\\\n      {children}\\\\n    &lt;/NextAuthSessionProvider&gt;\\\\n  );\\\\n}\\\\n&#96;&#96;&#96;\\\\n\\\\n**d) Middleware for route protection** -- &#96;src/middleware.ts&#96;:\\\\n\\\\n&#96;&#96;&#96;1:49:src/middleware.ts\\\\nimport { auth } from \\\\\\\"@/auth\\\\\\\";\\\\nimport { NextResponse } from \\\\\\\"next/server\\\\\\\";\\\\n\\\\nexport default auth((req) =&gt; {\\\\n  // ...\\\\n  const isLoggedIn = !!req.auth;\\\\n  const isLoginPage = req.nextUrl.pathname === \\\\\\\"/login\\\\\\\";\\\\n\\\\n  // Redirect logged-in users away from login page\\\\n  if (isLoginPage &amp;&amp; isLoggedIn) {\\\\n    return NextResponse.redirect(new URL(\\\\\\\"/agents\\\\\\\", req.url));\\\\n  }\\\\n\\\\n  // Redirect unauthenticated users to login page\\\\n  if (!isLoginPage &amp;&amp; !isLoggedIn) {\\\\n    return NextResponse.redirect(new URL(\\\\\\\"/login\\\\\\\", req.url));\\\\n  }\\\\n\\\\n  return NextResponse.next();\\\\n});\\\\n&#96;&#96;&#96;\\\\n\\\\nClient components access the session via the standard &#96;useSession()&#96; hook from &#96;next-auth/react&#96;.\\\\n\\\\n---\\\\n\\\\n## 4. Layout for Authenticated Pages\\\\n\\\\nThere is **no** nested Next.js layout that wraps all authenticated routes. Instead, the sidebar + header layout is handled by a **client component** that every authenticated page imports directly:\\\\n\\\\n**&#96;src/components/AppLayout.tsx&#96;**\\\\n\\\\nThis provides a sidebar with navigation, a header with user profile/theme switcher, and a content area. It accepts &#96;activeItem&#96;, &#96;sidebarOpen&#96;, &#96;onSidebarToggle&#96;, and &#96;children&#96; as props.\\\\n\\\\nEvery authenticated page uses it the same way. For example:\\\\n\\\\n&#96;&#96;&#96;1:30:src/app/agents/page.tsx\\\\n\\\\\\\"use client\\\\\\\";\\\\n\\\\nimport React, { useState, useEffect } from \\\\\\\"react\\\\\\\";\\\\nimport { useRouter } from \\\\\\\"next/navigation\\\\\\\";\\\\nimport { AppLayout } from \\\\\\\"@/components/AppLayout\\\\\\\";\\\\nimport { Agents } from \\\\\\\"@/components/Agents\\\\\\\";\\\\nimport { useSidebarState } from \\\\\\\"@/lib/sidebar\\\\\\\";\\\\n\\\\nexport default function AgentsPage() {\\\\n  const router = useRouter();\\\\n  const [sidebarOpen, setSidebarOpen] = useSidebarState();\\\\n\\\\n  return (\\\\n    &lt;AppLayout\\\\n      activeItem=\\\\\\\"agents\\\\\\\"\\\\n      onItemChange={(itemId) =&gt; router.push(&#96;/${itemId}&#96;)}\\\\n      sidebarOpen={sidebarOpen}\\\\n      onSidebarToggle={() =&gt; setSidebarOpen(!sidebarOpen)}\\\\n    &gt;\\\\n      &lt;Agents\\\\n        onNavigateToAgent={(agentUuid) =&gt; router.push(&#96;/agents/${agentUuid}&#96;)}\\\\n      /&gt;\\\\n    &lt;/AppLayout&gt;\\\\n  );\\\\n}\\\\n&#96;&#96;&#96;\\\\n\\\\nThe sub-route &#96;layout.tsx&#96; files (e.g., &#96;src/app/agents/layout.tsx&#96;) are lightweight -- they only set metadata (page titles) and pass &#96;children&#96; through.\\\\n\\\\n---\\\\n\\\\n## Summary of Key Files\\\\n\\\\n| Concern | File |\\\\n|---|---|\\\\n| Root \\\\\\\"App\\\\\\\" / Router setup | &#96;src/app/layout.tsx&#96; |\\\\n| Auth config (NextAuth v5) | &#96;src/auth.ts&#96; |\\\\n| Auth API route | &#96;src/app/api/auth/[...nextauth]/route.ts&#96; |\\\\n| Auth middleware (route guard) | &#96;src/middleware.ts&#96; |\\\\n| Session context provider | &#96;src/components/providers/SessionProvider.tsx&#96; |\\\\n| Authenticated page layout (sidebar + header) | &#96;src/components/AppLayout.tsx&#96; |\\\\n| Example of usage | &#96;src/app/agents/page.tsx&#96; (and every other authenticated page) |\\\"}\"},\"status\":\"completed\",\"context\":{\"composers\":[],\"selectedCommits\":[],\"selectedPullRequests\":[],\"selectedImages\":[],\"folderSelections\":[],\"fileSelections\":[],\"selections\":[],\"terminalSelections\":[],\"selectedDocs\":[],\"externalLinks\":[],\"cursorRules\":[],\"cursorCommands\":[],\"gitPRDiffSelections\":[],\"subagentSelections\":[],\"browserSelections\":[],\"mentions\":{\"composers\":{},\"selectedCommits\":{},\"selectedPullRequests\":{},\"gitDiff\":[],\"gitDiffFromBranchToMain\":[],\"selectedImages\":{},\"folderSelections\":{},\"fileSelections\":{},\"terminalFiles\":{},\"selections\":{},\"terminalSelections\":{},\"selectedDocs\":{},\"externalLinks\":{},\"diffHistory\":[],\"cursorRules\":{},\"cursorCommands\":{},\"uiElementSelections\":[],\"consoleLogs\":[],\"ideEditorsState\":[],\"gitPRDiffSelections\":{},\"subagentSelections\":{},\"browserSelections\":{}}},\"generatingBubbleIds\":[],\"isReadingLongFile\":false,\"codeBlockData\":{},\"originalFileStates\":{},\"newlyCreatedFiles\":[],\"newlyCreatedFolders\":[],\"createdAt\":1770646578263,\"hasChangedContext\":false,\"activeTabsShouldBeReactive\":true,\"capabilities\":[{\"type\":30,\"data\":{}},{\"type\":15,\"data\":{\"bubbleDataMap\":\"{}\"}}],\"name\":\"Explore app structure and auth\",\"isFileListExpanded\":false,\"browserChipManuallyDisabled\":false,\"browserChipManuallyEnabled\":false,\"unifiedMode\":\"agent\",\"forceMode\":\"edit\",\"usageData\":{},\"allAttachedFileCodeChunksUris\":[],\"modelConfig\":{\"modelName\":\"claude-4.6-opus-high-thinking\",\"maxMode\":false},\"subComposerIds\":[],\"capabilityContexts\":[],\"todos\":[],\"isQueueExpanded\":true,\"hasUnreadMessages\":false,\"gitHubPromptDismissed\":false,\"totalLinesAdded\":0,\"totalLinesRemoved\":0,\"addedFiles\":0,\"removedFiles\":0,\"isDraft\":false,\"isCreatingWorktree\":false,\"isApplyingWorktree\":false,\"isUndoingWorktree\":false,\"applied\":false,\"pendingCreateWorktree\":false,\"isBestOfNSubcomposer\":false,\"isBestOfNParent\":false,\"bestOfNJudgeWinner\":false,\"isSpec\":false,\"isProject\":false,\"isSpecSubagentDone\":false,\"stopHookLoopCount\":0,\"speculativeSummarizationEncryptionKey\":\"MOPbuywmw7+Zs31mKcrdvyiRGh3cplSLQ0A5gmqNCSs=\",\"isNAL\":true,\"planModeSuggestionUsed\":false,\"debugModeSuggestionUsed\":false,\"conversationState\":\"~\",\"queueItems\":[],\"isAgentic\":true}"
 }
 ```
 Result:
@@ -628,7 +628,2689 @@ _**Agent (model claude-4.6-opus-high-thinking, mode Agent)**_
 
 ---
 
-I'll replace the icon-
+I'll replace the icon-only button with one that shows "Talk to Us" text alongside the icon.
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/AppLayout.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+The button now explicitly says "Talk to us" with the chat icon beside it, and switches to "Close" with an X icon when the popup is open. Changed from a round icon-only circle to a pill-shaped button with text.
+
+---
+
+_**User**_
+
+tts and stt output pages are not responsive - each of the tabs need to be made responsive for both
+
+---
+
+_**Agent (model claude-4.6-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants me to make the TTS and STT output pages responsive. Let me first understand the structure of these pages and their tabs.</details></think>
+
+---
+
+Let me explore the STT and TTS page components to understand their structure.
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="glob_file_search">
+<details>
+<summary>Tool use: **glob_file_search** • Searched codebase "undefined" • **6** results in **1** directory</summary>
+
+Directory: **undefined** (6 files)
+
+| File |
+|------|
+| `./src/app/stt/page.tsx` |
+| `./src/app/stt/[uuid]/layout.tsx` |
+| `./src/app/stt/layout.tsx` |
+| `./src/app/stt/new/page.tsx` |
+| `./src/app/stt/new/layout.tsx` |
+| `./src/app/stt/[uuid]/page.tsx` |
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="glob_file_search">
+<details>
+<summary>Tool use: **glob_file_search** • Searched codebase "undefined" • **6** results in **1** directory</summary>
+
+Directory: **undefined** (6 files)
+
+| File |
+|------|
+| `./src/app/tts/new/layout.tsx` |
+| `./src/app/tts/page.tsx` |
+| `./src/app/tts/layout.tsx` |
+| `./src/app/tts/new/page.tsx` |
+| `./src/app/tts/[uuid]/layout.tsx` |
+| `./src/app/tts/[uuid]/page.tsx` |
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="glob_file_search">
+<details>
+<summary>Tool use: **glob_file_search** • Searched codebase "undefined" • **0** result in **1** directory</summary>
+
+Directory: **undefined** (0 file)
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="glob_file_search">
+<details>
+<summary>Tool use: **glob_file_search** • Searched codebase "undefined" • **0** result in **1** directory</summary>
+
+Directory: **undefined** (0 file)
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="glob_file_search">
+<details>
+<summary>Tool use: **glob_file_search** • Searched codebase "undefined" • **0** result in **1** directory</summary>
+
+Directory: **undefined** (0 file)
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="glob_file_search">
+<details>
+<summary>Tool use: **glob_file_search** • Searched codebase "undefined" • **0** result in **1** directory</summary>
+
+Directory: **undefined** (0 file)
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "import.*from.*@/components",
+  "path": "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "import.*from.*@/components",
+    "path": "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx",
+    "outputMode": "content",
+    "workspaceResults": {
+      "/Users/aman/Documents/repos/artpark/pense-frontend": {
+        "content": {
+          "matches": [
+            {
+              "file": "src/app/stt/[uuid]/page.tsx",
+              "matches": [
+                {
+                  "lineNumber": 6,
+                  "content": "import { AppLayout } from \"@/components/AppLayout\";"
+                },
+                {
+                  "lineNumber": 7,
+                  "content": "import { BackHeader, StatusBadge, NotFoundState } from \"@/components/ui\";"
+                },
+                {
+                  "lineNumber": 8,
+                  "content": "import { Tooltip } from \"@/components/Tooltip\";"
+                },
+                {
+                  "lineNumber": 9,
+                  "content": "import { sttProviders } from \"@/components/agent-tabs/constants/providers\";"
+                },
+                {
+                  "lineNumber": 14,
+                  "content": "import { DownloadableTable } from \"@/components/DownloadableTable\";"
+                }
+              ]
+            }
+          ],
+          "totalLines": 5,
+          "totalMatchedLines": 5
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "import.*from.*@/components",
+  "path": "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "import.*from.*@/components",
+    "path": "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx",
+    "outputMode": "content",
+    "workspaceResults": {
+      "/Users/aman/Documents/repos/artpark/pense-frontend": {
+        "content": {
+          "matches": [
+            {
+              "file": "src/app/tts/[uuid]/page.tsx",
+              "matches": [
+                {
+                  "lineNumber": 6,
+                  "content": "import { AppLayout } from \"@/components/AppLayout\";"
+                },
+                {
+                  "lineNumber": 7,
+                  "content": "import { BackHeader, StatusBadge, NotFoundState } from \"@/components/ui\";"
+                },
+                {
+                  "lineNumber": 8,
+                  "content": "import { Tooltip } from \"@/components/Tooltip\";"
+                },
+                {
+                  "lineNumber": 9,
+                  "content": "import { ttsProviders } from \"@/components/agent-tabs/constants/providers\";"
+                },
+                {
+                  "lineNumber": 14,
+                  "content": "import { DownloadableTable } from \"@/components/DownloadableTable\";"
+                }
+              ]
+            }
+          ],
+          "totalLines": 5,
+          "totalMatchedLines": 5
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+These are the detail/output pages. Let me read both of them fully.
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I have a clear picture of both pages. Let me identify the responsive issues in each tab for both STT and TTS:
+
+**Common issues across both STT and TTS:**
+
+1. **About Tab**: The table has 4 columns (Metric, Description, Preference, Range) with no responsive handling. On mobile, this will overflow or be cramped.
+
+2. **Leaderboard Tab**: 
+   - STT: Has `grid-cols-2` (line 524) for charts without responsive breakpoint — should be `grid-cols-1 md:grid-cols-2`
+   - The full-width container uses complex calc with `md:w-[calc(100vw-260px)]` which assumes sidebar is always 260px — this is correct for desktop but mobile calc `w-[calc(100vw-32px)]` seems okay
+   
+3. **Outputs Tab** is where the major issues are. The side-by-side flex layout with a fixed-width left panel and flexible right panel completely breaks on mobile, and the fixed height calculation doesn't account for smaller screens. For STT, the results table uses fixed widths across 6 columns which becomes unreadable on mobile, while TTS has an audio element with a minimum width that forces horizontal scrolling.
+
+Now I'm planning the responsive fixes: I'll convert the About tab's tables to stacked card layouts on mobile while keeping the desktop table view, adjust the Leaderboard grid to be single-column on mobile and two-column on desktop, and restructure the Outputs tab to stack vertically on mobile with horizontal scrollable provider tabs at the top instead of a fixed side panel. The desktop layout stays mostly the same, but mobile gets a completely different arrangement that actually works with smaller screens. Now I'm ready to start making the fixes—I'll work through the Outputs tab first by making the provider list horizontally scrollable on mobile and stacking the layout, then handle the About tab with a scrollable table wrapper, and finally adjust the Leaderboard grid for STT.</details></think>
+
+---
+
+Now I have a clear picture of both pages. Let me identify the responsive problems in each tab and fix them.
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [-] STT About tab: 4-column table needs horizontal scroll on mobile
+- [ ] STT Leaderboard tab: chart grid-cols-2 not responsive
+- [ ] STT Outputs tab: side-by-side layout breaks on mobile, table too wide
+- [ ] TTS About tab: 4-column table needs horizontal scroll on mobile
+- [ ] TTS Leaderboard tab: check responsiveness
+- [ ] TTS Outputs tab: side-by-side layout breaks on mobile, audio min-width issue
+
+</details>
+</tool-use>
+
+---
+
+Starting with the STT page. I'll fix all three tabs.
+
+**STT - About Tab**: Wrap the table in a scrollable container on mobile, and convert to card layout.
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+**STT - Leaderboard Tab**: Fix the chart grid that's hardcoded `grid-cols-2`.
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] STT About tab: 4-column table needs horizontal scroll on mobile
+- [-] STT Leaderboard tab: chart grid-cols-2 not responsive
+- [ ] STT Outputs tab: side-by-side layout breaks on mobile, table too wide
+- [ ] TTS About tab: 4-column table needs horizontal scroll on mobile
+- [ ] TTS Leaderboard tab: check responsiveness
+- [ ] TTS Outputs tab: side-by-side layout breaks on mobile, audio min-width issue
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+**STT - Outputs Tab**: Convert side-by-side layout to stacked on mobile with horizontal scrollable provider tabs.
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] STT About tab: 4-column table needs horizontal scroll on mobile
+- [x] STT Leaderboard tab: chart grid-cols-2 not responsive
+- [-] STT Outputs tab: side-by-side layout breaks on mobile, table too wide
+- [ ] TTS About tab: 4-column table needs horizontal scroll on mobile
+- [ ] TTS Leaderboard tab: check responsiveness
+- [ ] TTS Outputs tab: side-by-side layout breaks on mobile, audio min-width issue
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+Now the TTS page. Let me do all three tabs.
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] STT About tab: 4-column table needs horizontal scroll on mobile
+- [x] STT Leaderboard tab: chart grid-cols-2 not responsive
+- [x] STT Outputs tab: side-by-side layout breaks on mobile, table too wide
+- [-] TTS About tab: 4-column table needs horizontal scroll on mobile
+- [ ] TTS Leaderboard tab: check responsiveness
+- [ ] TTS Outputs tab: side-by-side layout breaks on mobile, audio min-width issue
+
+</details>
+</tool-use>
+
+---
+
+**TTS - About Tab**: Same approach — desktop table + mobile card layout.
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+**TTS - Leaderboard Tab**: Already has `grid-cols-1 md:grid-cols-2`, so it's fine. Marking complete.
+
+**TTS - Outputs Tab**: Fix the side-by-side layout and audio player responsiveness.
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] STT About tab: 4-column table needs horizontal scroll on mobile
+- [x] STT Leaderboard tab: chart grid-cols-2 not responsive
+- [x] STT Outputs tab: side-by-side layout breaks on mobile, table too wide
+- [x] TTS About tab: 4-column table needs horizontal scroll on mobile
+- [x] TTS Leaderboard tab: check responsiveness
+- [-] TTS Outputs tab: side-by-side layout breaks on mobile, audio min-width issue
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+Now let me check for lint errors on both files.
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx",
+    "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx"
+    },
+    {
+      "relativeWorkspacePath": "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] STT About tab: 4-column table needs horizontal scroll on mobile
+- [x] STT Leaderboard tab: chart grid-cols-2 not responsive
+- [x] STT Outputs tab: side-by-side layout breaks on mobile, table too wide
+- [x] TTS About tab: 4-column table needs horizontal scroll on mobile
+- [x] TTS Leaderboard tab: check responsiveness
+- [x] TTS Outputs tab: side-by-side layout breaks on mobile, audio min-width issue
+
+</details>
+</tool-use>
+
+---
+
+All done. Here's a summary of the responsive changes made to both STT and TTS output pages:
+
+**About Tab** (both STT and TTS):
+- Desktop (`md+`): Keeps the original 4-column table layout
+- Mobile: Converts to a stacked card layout with each metric as its own card showing name, description, preference, and range
+
+**Leaderboard Tab** (STT):
+- Fixed the chart grid from hardcoded `grid-cols-2` to `grid-cols-1 md:grid-cols-2` so charts stack vertically on mobile
+- TTS leaderboard was already responsive
+
+**Outputs Tab** (both STT and TTS):
+-
+
+---
+
+_**User**_
+
+LLM judge reasoning is not visible in phone and no way to see it
+
+---
+
+_**Agent (model claude-4.6-opus-high-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user is saying that on mobile, the LLM judge reasoning (which is shown via a Tooltip on desktop) is not accessible. On desktop, there's a tooltip with an info icon that shows the reasoning, but on mobile cards, I only show the Pass/Fail badge without the reasoning tooltip.
+
+Let me check both STT and TTS mobile card layouts that I just created.
+
+For STT mobile cards, I show:
+- Pass/Fail badge
+- But no tooltip or reasoning
+
+For TTS mobile cards, same issue:
+- Pass/Fail badge
+- No tooltip or reasoning
+
+I need to add the reasoning to the mobile card layouts for both STT and TTS. On mobile, tooltips don't work well (hover-based). 
+
+I think the best approach is to display the reasoning text directly below the Pass/Fail badge in a smaller, muted style rather than trying to make tooltips work on touch devices. Let me check the current mobile card implementations in both files.</details></think>
+
+---
+
+You're right — in the mobile card layouts I created, the LLM Judge reasoning is only shown via a hover tooltip (which doesn't work on touch devices). I need to surface the reasoning directly in the mobile cards for both STT and TTS.
+
+Let me read the current mobile card sections to make precise edits.
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "Mobile: Card layout",
+  "path": "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx",
+  "contextAfter": 50,
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "Mobile: Card layout",
+    "path": "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx",
+    "outputMode": "content",
+    "workspaceResults": {
+      "/Users/aman/Documents/repos/artpark/pense-frontend": {
+        "content": {
+          "matches": [
+            {
+              "file": "src/app/stt/[uuid]/page.tsx",
+              "matches": [
+                {
+                  "lineNumber": 482,
+                  "content": "                      {/* Mobile: Card layout */}"
+                },
+                {
+                  "lineNumber": 483,
+                  "content": "                      &lt;div className=\"md:hidden space-y-3\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 484,
+                  "content": "                        {[",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 485,
+                  "content": "                          {",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 486,
+                  "content": "                            metric: \"WER (Word Error Rate)\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 487,
+                  "content": "                            description: \"Word error rate measures the percentage of words that differ between the reference transcription and the predicted transcription.\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 488,
+                  "content": "                            preference: \"Lower is better\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 489,
+                  "content": "                            range: \"0 - ∞\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 490,
+                  "content": "                          },",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 491,
+                  "content": "                          {",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 492,
+                  "content": "                            metric: \"String Similarity\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 493,
+                  "content": "                            description: \"Measures the similarity between the reference and predicted strings using string matching algorithms.\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 494,
+                  "content": "                            preference: \"Higher is better\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 495,
+                  "content": "                            range: \"0 - 1\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 496,
+                  "content": "                          },",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 497,
+                  "content": "                          {",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 498,
+                  "content": "                            metric: \"LLM Judge\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 499,
+                  "content": "                            description: \"This metric is used because WER and string similarity may not provide an accurate picture. The LLM judge evaluates semantic equivalence rather than exact string matching, returning Pass if the transcription is semantically correct.\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 500,
+                  "content": "                            preference: \"Pass is better\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 501,
+                  "content": "                            range: \"Pass / Fail\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 502,
+                  "content": "                          },",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 503,
+                  "content": "                          {",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 504,
+                  "content": "                            metric: \"TTFB (Time To First Byte)\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 505,
+                  "content": "                            description: \"Time to first byte measures the latency from when a request is sent until the first byte of the response is received.\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 506,
+                  "content": "                            preference: \"Lower is better\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 507,
+                  "content": "                            range: \"0 - ∞\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 508,
+                  "content": "                          },",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 509,
+                  "content": "                          {",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 510,
+                  "content": "                            metric: \"Processing Time\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 511,
+                  "content": "                            description: \"Total time taken to process the audio and generate the transcription.\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 512,
+                  "content": "                            preference: \"Lower is better\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 513,
+                  "content": "                            range: \"0 - ∞\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 514,
+                  "content": "                          },",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 515,
+                  "content": "                        ].map((item) =&gt; (",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 516,
+                  "content": "                          &lt;div key={item.metric} className=\"border border-border rounded-xl p-4 space-y-2\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 517,
+                  "content": "                            &lt;h4 className=\"text-[13px] font-semibold text-foreground\"&gt;{item.metric}&lt;/h4&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 518,
+                  "content": "                            &lt;p className=\"text-[13px] text-muted-foreground\"&gt;{item.description}&lt;/p&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 519,
+                  "content": "                            &lt;div className=\"flex gap-4 pt-1\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 520,
+                  "content": "                              &lt;div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 521,
+                  "content": "                                &lt;span className=\"text-[11px] text-muted-foreground uppercase tracking-wide\"&gt;Preference&lt;/span&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 522,
+                  "content": "                                &lt;p className=\"text-[13px] text-foreground\"&gt;{item.preference}&lt;/p&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 523,
+                  "content": "                              &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 524,
+                  "content": "                              &lt;div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 525,
+                  "content": "                                &lt;span className=\"text-[11px] text-muted-foreground uppercase tracking-wide\"&gt;Range&lt;/span&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 526,
+                  "content": "                                &lt;p className=\"text-[13px] text-foreground\"&gt;{item.range}&lt;/p&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 527,
+                  "content": "                              &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 528,
+                  "content": "                            &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 529,
+                  "content": "                          &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 530,
+                  "content": "                        ))}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 531,
+                  "content": "                      &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 532,
+                  "content": "                    &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1027,
+                  "content": "                                      {/* Mobile: Card layout */}"
+                },
+                {
+                  "lineNumber": 1028,
+                  "content": "                                      &lt;div className=\"md:hidden space-y-3\" ref={tableContainerRef}&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1029,
+                  "content": "                                        {providerResult.results.map(",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1030,
+                  "content": "                                          (result, index) =&gt; {",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1031,
+                  "content": "                                            const isEmptyPrediction =",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1032,
+                  "content": "                                              !result.pred ||",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1033,
+                  "content": "                                              result.pred.trim() === \"\";",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1034,
+                  "content": "                                            return (",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1035,
+                  "content": "                                              &lt;div",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1036,
+                  "content": "                                                key={index}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1037,
+                  "content": "                                                data-row-index={index}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1038,
+                  "content": "                                                className={&#96;border border-border rounded-xl p-4 space-y-3 ${",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1039,
+                  "content": "                                                  isEmptyPrediction ? \"bg-red-500/10\" : \"\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1040,
+                  "content": "                                                }&#96;}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1041,
+                  "content": "                                              &gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1042,
+                  "content": "                                                &lt;div className=\"flex items-center justify-between\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1043,
+                  "content": "                                                  &lt;span className=\"text-[12px] text-muted-foreground font-medium\"&gt;#{index + 1}&lt;/span&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1044,
+                  "content": "                                                  {showMetrics &amp;&amp; (() =&gt; {",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1045,
+                  "content": "                                                    const scoreStr = String(result.llm_judge_score || \"\").toLowerCase();",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1046,
+                  "content": "                                                    const passed = scoreStr === \"true\" || scoreStr === \"1\";",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1047,
+                  "content": "                                                    return (",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1048,
+                  "content": "                                                      &lt;span className={&#96;inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1049,
+                  "content": "                                                        passed",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1050,
+                  "content": "                                                          ? \"bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1051,
+                  "content": "                                                          : \"bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1052,
+                  "content": "                                                      }&#96;}&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1053,
+                  "content": "                                                        {passed ? \"Pass\" : \"Fail\"}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1054,
+                  "content": "                                                      &lt;/span&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1055,
+                  "content": "                                                    );",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1056,
+                  "content": "                                                  })()}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1057,
+                  "content": "                                                &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1058,
+                  "content": "                                                &lt;div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1059,
+                  "content": "                                                  &lt;span className=\"text-[11px] text-muted-foreground uppercase tracking-wide\"&gt;Ground Truth&lt;/span&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1060,
+                  "content": "                                                  &lt;p className=\"text-[13px] text-foreground mt-0.5\"&gt;{result.gt}&lt;/p&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1061,
+                  "content": "                                                &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1062,
+                  "content": "                                                &lt;div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1063,
+                  "content": "                                                  &lt;span className=\"text-[11px] text-muted-foreground uppercase tracking-wide\"&gt;Prediction&lt;/span&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1064,
+                  "content": "                                                  {isEmptyPrediction ? (",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1065,
+                  "content": "                                                    &lt;p className=\"text-[13px] text-muted-foreground mt-0.5\"&gt;No transcript generated&lt;/p&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1066,
+                  "content": "                                                  ) : (",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1067,
+                  "content": "                                                    &lt;p className=\"text-[13px] text-foreground mt-0.5\"&gt;{result.pred}&lt;/p&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1068,
+                  "content": "                                                  )}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1069,
+                  "content": "                                                &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1070,
+                  "content": "                                                {showMetrics &amp;&amp; (",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1071,
+                  "content": "                                                  &lt;div className=\"flex gap-4 pt-1 border-t border-border\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1072,
+                  "content": "                                                    &lt;div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1073,
+                  "content": "                                                      &lt;span className=\"text-[11px] text-muted-foreground uppercase tracking-wide\"&gt;WER&lt;/span&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1074,
+                  "content": "                                                      &lt;p className=\"text-[13px] text-foreground\"&gt;{result.wer != null ? parseFloat(parseFloat(result.wer).toFixed(4)) : \"-\"}&lt;/p&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1075,
+                  "content": "                                                    &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1076,
+                  "content": "                                                    &lt;div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1077,
+                  "content": "                                                      &lt;span className=\"text-[11px] text-muted-foreground uppercase tracking-wide\"&gt;Similarity&lt;/span&gt;",
+                  "isContextLine": true
+                }
+              ]
+            }
+          ],
+          "totalLines": 102,
+          "totalMatchedLines": 2
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "Mobile: Card layout",
+  "path": "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx",
+  "contextAfter": 40,
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "Mobile: Card layout",
+    "path": "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx",
+    "outputMode": "content",
+    "workspaceResults": {
+      "/Users/aman/Documents/repos/artpark/pense-frontend": {
+        "content": {
+          "matches": [
+            {
+              "file": "src/app/tts/[uuid]/page.tsx",
+              "matches": [
+                {
+                  "lineNumber": 419,
+                  "content": "                      {/* Mobile: Card layout */}"
+                },
+                {
+                  "lineNumber": 420,
+                  "content": "                      &lt;div className=\"md:hidden space-y-3\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 421,
+                  "content": "                        {[",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 422,
+                  "content": "                          {",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 423,
+                  "content": "                            metric: \"LLM Judge\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 424,
+                  "content": "                            description: \"The LLM judge evaluates whether the synthesized audio accurately matches the reference text. It checks for semantic equivalence and pronunciation accuracy, returning Pass if the audio correctly represents the input text.\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 425,
+                  "content": "                            preference: \"Pass is better\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 426,
+                  "content": "                            range: \"Pass / Fail\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 427,
+                  "content": "                          },",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 428,
+                  "content": "                          {",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 429,
+                  "content": "                            metric: \"TTFB (Time To First Byte)\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 430,
+                  "content": "                            description: \"Time to first byte measures the latency from when a request is sent until the first byte of the response is received.\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 431,
+                  "content": "                            preference: \"Lower is better\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 432,
+                  "content": "                            range: \"0 - ∞\",",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 433,
+                  "content": "                          },",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 434,
+                  "content": "                        ].map((item) =&gt; (",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 435,
+                  "content": "                          &lt;div key={item.metric} className=\"border border-border rounded-xl p-4 space-y-2\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 436,
+                  "content": "                            &lt;h4 className=\"text-[13px] font-semibold text-foreground\"&gt;{item.metric}&lt;/h4&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 437,
+                  "content": "                            &lt;p className=\"text-[13px] text-muted-foreground\"&gt;{item.description}&lt;/p&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 438,
+                  "content": "                            &lt;div className=\"flex gap-4 pt-1\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 439,
+                  "content": "                              &lt;div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 440,
+                  "content": "                                &lt;span className=\"text-[11px] text-muted-foreground uppercase tracking-wide\"&gt;Preference&lt;/span&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 441,
+                  "content": "                                &lt;p className=\"text-[13px] text-foreground\"&gt;{item.preference}&lt;/p&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 442,
+                  "content": "                              &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 443,
+                  "content": "                              &lt;div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 444,
+                  "content": "                                &lt;span className=\"text-[11px] text-muted-foreground uppercase tracking-wide\"&gt;Range&lt;/span&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 445,
+                  "content": "                                &lt;p className=\"text-[13px] text-foreground\"&gt;{item.range}&lt;/p&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 446,
+                  "content": "                              &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 447,
+                  "content": "                            &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 448,
+                  "content": "                          &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 449,
+                  "content": "                        ))}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 450,
+                  "content": "                      &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 451,
+                  "content": "                    &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 452,
+                  "content": "                  )}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 453,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 454,
+                  "content": "                  {/* Leaderboard Tab */}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 455,
+                  "content": "                  {activeTab === \"leaderboard\" &amp;&amp; (",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 456,
+                  "content": "                    &lt;div className=\"space-y-4 md:space-y-6 -mx-4 md:-mx-8 px-4 md:px-8 w-[calc(100vw-32px)] md:w-[calc(100vw-260px)] ml-[calc((32px-100vw)/2+50%)] md:ml-[calc((260px-100vw)/2+50%)] relative\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 457,
+                  "content": "                      {evaluationResult.leaderboard_summary &amp;&amp;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 458,
+                  "content": "                        evaluationResult.leaderboard_summary.length &gt; 0 &amp;&amp; (",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 459,
+                  "content": "                          &lt;&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 842,
+                  "content": "                                      {/* Mobile: Card layout */}"
+                },
+                {
+                  "lineNumber": 843,
+                  "content": "                                      &lt;div className=\"md:hidden space-y-3\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 844,
+                  "content": "                                        {providerResult.results.map(",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 845,
+                  "content": "                                          (result, index) =&gt; {",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 846,
+                  "content": "                                            const scoreStr = String(result.llm_judge_score || \"\").toLowerCase();",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 847,
+                  "content": "                                            const passed = scoreStr === \"true\" || scoreStr === \"1\";",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 848,
+                  "content": "                                            return (",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 849,
+                  "content": "                                              &lt;div",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 850,
+                  "content": "                                                key={index}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 851,
+                  "content": "                                                className=\"border border-border rounded-xl p-4 space-y-3\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 852,
+                  "content": "                                              &gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 853,
+                  "content": "                                                &lt;div className=\"flex items-center justify-between\"&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 854,
+                  "content": "                                                  &lt;span className=\"text-[12px] text-muted-foreground font-medium\"&gt;#{index + 1}&lt;/span&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 855,
+                  "content": "                                                  {showMetrics &amp;&amp; (",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 856,
+                  "content": "                                                    &lt;span className={&#96;inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 857,
+                  "content": "                                                      passed",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 858,
+                  "content": "                                                        ? \"bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 859,
+                  "content": "                                                        : \"bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 860,
+                  "content": "                                                    }&#96;}&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 861,
+                  "content": "                                                      {passed ? \"Pass\" : \"Fail\"}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 862,
+                  "content": "                                                    &lt;/span&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 863,
+                  "content": "                                                  )}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 864,
+                  "content": "                                                &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 865,
+                  "content": "                                                &lt;div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 866,
+                  "content": "                                                  &lt;span className=\"text-[11px] text-muted-foreground uppercase tracking-wide\"&gt;Text&lt;/span&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 867,
+                  "content": "                                                  &lt;p className=\"text-[13px] text-foreground mt-0.5\"&gt;{result.text}&lt;/p&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 868,
+                  "content": "                                                &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 869,
+                  "content": "                                                &lt;div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 870,
+                  "content": "                                                  &lt;span className=\"text-[11px] text-muted-foreground uppercase tracking-wide\"&gt;Audio&lt;/span&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 871,
+                  "content": "                                                  &lt;audio",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 872,
+                  "content": "                                                    controls",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 873,
+                  "content": "                                                    className=\"w-full mt-1\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 874,
+                  "content": "                                                    src={result.audio_path}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 875,
+                  "content": "                                                  &gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 876,
+                  "content": "                                                    Your browser does not support the audio element.",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 877,
+                  "content": "                                                  &lt;/audio&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 878,
+                  "content": "                                                &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 879,
+                  "content": "                                              &lt;/div&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 880,
+                  "content": "                                            );",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 881,
+                  "content": "                                          }",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 882,
+                  "content": "                                        )}",
+                  "isContextLine": true
+                }
+              ]
+            }
+          ],
+          "totalLines": 82,
+          "totalMatchedLines": 2
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+Now I can see the exact code. I need to add the LLM judge reasoning text directly in the mobile cards for both files. Let me fix both.
+
+**STT mobile cards** — add reasoning below the metrics row:
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+**TTS mobile cards** — add reasoning below the audio player:
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx",
+    "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx"
+    },
+    {
+      "relativeWorkspacePath": "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+No lint errors. Here's what I fixed:
+
+- **STT mobile cards**: Added an "LLM Judge Reasoning" section below the WER/Similarity metrics row. The reasoning text is displayed directly in the card when available, so there's no need to hover.
+- **TTS mobile cards**: Added an "LLM Judge Reasoning" section below the audio player, separated by a border. Same approach — reasoning is shown inline when available.
+
+On desktop, the tooltip with the info icon still works as before. On mobile, the reasoning is now visible directly in each card without any hover interaction needed.
+
+---
+
+_**User**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.6-opus-high-thinking, mode Agent)**_
+
+I did make code changes (STT and TTS detail pages responsive). Let me find the relevant sections in the rules file to update.
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "STT.*detail|STT.*output|STT.*evaluation|stt/\\[uuid\\]|TTS.*detail|TTS.*output|TTS.*evaluation|tts/\\[uuid\\]",
+  "path": "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md",
+  "context": 2,
+  "caseInsensitive": true
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "STT.*detail|STT.*output|STT.*evaluation|stt/\\[uuid\\]|TTS.*detail|TTS.*output|TTS.*evaluation|tts/\\[uuid\\]",
+    "path": "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md",
+    "outputMode": "content",
+    "workspaceResults": {
+      "/Users/aman/Documents/repos/artpark/pense-frontend": {
+        "content": {
+          "matches": [
+            {
+              "file": ".cursor/rules/app-details.md",
+              "matches": [
+                {
+                  "lineNumber": 48,
+                  "content": "│                                                                         │",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 49,
+                  "content": "│   2. UNIT TEST (Optional)                                               │",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 50,
+                  "content": "│      ├── STT Evaluation: Compare speech-to-text providers               │"
+                },
+                {
+                  "lineNumber": 51,
+                  "content": "│      └── TTS Evaluation: Compare text-to-speech providers               │"
+                },
+                {
+                  "lineNumber": 52,
+                  "content": "│                                                                         │",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 53,
+                  "content": "│   3. SETUP END-TO-END TESTS                                             │",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 365,
+                  "content": "**Page Structure:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 366,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 367,
+                  "content": "- &#96;/stt&#96; - List page showing all STT evaluation jobs"
+                },
+                {
+                  "lineNumber": 368,
+                  "content": "- &#96;/stt/new&#96; - Create a new STT evaluation"
+                },
+                {
+                  "lineNumber": 369,
+                  "content": "- &#96;/stt/[uuid]&#96; - View evaluation details and results"
+                },
+                {
+                  "lineNumber": 370,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 371,
+                  "content": "**List Page (&#96;/stt&#96;):**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 403,
+                  "content": "- **Audio file size limit**: Each audio file must be under 5 MB. Validated client-side before upload. Shows toast error with \"Contact Us\" link if exceeded",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 404,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 405,
+                  "content": "**Detail Page (&#96;/stt/[uuid]&#96;):**"
+                },
+                {
+                  "lineNumber": 406,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 407,
+                  "content": "- **Polls for results** while status is &#96;queued&#96; or &#96;in_progress&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 433,
+                  "content": "**Page Structure:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 434,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 435,
+                  "content": "- &#96;/tts&#96; - List page showing all TTS evaluation jobs"
+                },
+                {
+                  "lineNumber": 436,
+                  "content": "- &#96;/tts/new&#96; - Create a new TTS evaluation"
+                },
+                {
+                  "lineNumber": 437,
+                  "content": "- &#96;/tts/[uuid]&#96; - View evaluation details and results"
+                },
+                {
+                  "lineNumber": 438,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 439,
+                  "content": "**List Page (&#96;/tts&#96;):**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 469,
+                  "content": "- **Text length limit**: Each text input must be 200 characters or less. Validated on CSV upload and before evaluation. Shows toast error with \"Contact Us\" link if exceeded",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 470,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 471,
+                  "content": "**Detail Page (&#96;/tts/[uuid]&#96;):**"
+                },
+                {
+                  "lineNumber": 472,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 473,
+                  "content": "- **Polls for results** while status is &#96;queued&#96; or &#96;in_progress&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 481,
+                  "content": "- **Tabs**:",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 482,
+                  "content": "  - **Leaderboard**: Only visible when status is &#96;done&#96; - comparative table and charts",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 483,
+                  "content": "  - **Outputs**: Two-panel layout similar to STT - provider list on left, details on right"
+                },
+                {
+                  "lineNumber": 484,
+                  "content": "  - **About**: Metric descriptions",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 485,
+                  "content": "- **Outputs tab layout** (two-panel, similar to TestRunnerDialog):",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 815,
+                  "content": "│   ├── introduction.mdx      # Welcome page with platform overview and workflow guide",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 816,
+                  "content": "│   ├── guides/               # Feature guides (4 pages)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 817,
+                  "content": "│   │   ├── stt.mdx          # STT evaluation"
+                },
+                {
+                  "lineNumber": 818,
+                  "content": "│   │   ├── tts.mdx          # TTS evaluation"
+                },
+                {
+                  "lineNumber": 819,
+                  "content": "│   │   ├── llm-testing.mdx  # LLM testing (agent, tools, tests, benchmarks)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 820,
+                  "content": "│   │   └── simulations.mdx  # End-to-end simulations (text + voice in one page)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 821,
+                  "content": "│   └── images/               # Documentation screenshots",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 822,
+                  "content": "│       ├── stt_overview.png     # STT evaluations list page"
+                },
+                {
+                  "lineNumber": 823,
+                  "content": "│       ├── stt_new.png          # STT new evaluation settings tab"
+                },
+                {
+                  "lineNumber": 824,
+                  "content": "│       ├── stt-dataset.png      # STT dataset upload tab",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 825,
+                  "content": "│       ├── stt_outputs.png      # STT outputs view with metrics"
+                },
+                {
+                  "lineNumber": 826,
+                  "content": "│       └── stt_leaderboard.png  # STT leaderboard with charts",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 827,
+                  "content": "│       # Note: Other guides reference placeholder images that need screenshots",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 833,
+                  "content": "│   │   │   └── [uuid]/layout.tsx  # Detail page metadata",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 834,
+                  "content": "│   │   ├── tools/             # Tools management (each route has layout.tsx)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 835,
+                  "content": "│   │   ├── stt/               # Speech-to-Text evaluation (list + new + [uuid] detail)"
+                },
+                {
+                  "lineNumber": 836,
+                  "content": "│   │   │   ├── layout.tsx     # \"Speech to Text | Calibrate\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 837,
+                  "content": "│   │   │   ├── page.tsx       # List of STT evaluation jobs"
+                },
+                {
+                  "lineNumber": 838,
+                  "content": "│   │   │   ├── new/           # Create new STT evaluation (has layout.tsx)"
+                },
+                {
+                  "lineNumber": 839,
+                  "content": "│   │   │   └── [uuid]/        # View STT evaluation results (has layout.tsx)"
+                },
+                {
+                  "lineNumber": 840,
+                  "content": "│   │   ├── tts/               # Text-to-Speech evaluation (list + new + [uuid] detail)"
+                },
+                {
+                  "lineNumber": 841,
+                  "content": "│   │   │   ├── layout.tsx     # \"Text to Speech | Calibrate\"",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 842,
+                  "content": "│   │   │   ├── page.tsx       # List of TTS evaluation jobs"
+                },
+                {
+                  "lineNumber": 843,
+                  "content": "│   │   │   ├── new/           # Create new TTS evaluation (has layout.tsx)"
+                },
+                {
+                  "lineNumber": 844,
+                  "content": "│   │   │   └── [uuid]/        # View TTS evaluation results (has layout.tsx)"
+                },
+                {
+                  "lineNumber": 845,
+                  "content": "│   │   ├── tests/             # Tests page (has layout.tsx)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 846,
+                  "content": "│   │   ├── personas/          # User persona definitions (has layout.tsx)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 986,
+                  "content": "  - **Right column**: Images stacked vertically (&#96;flex-col gap-4&#96;)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 987,
+                  "content": "- **Mobile layout** (below &#96;md&#96;): All sections shown sequentially (&#96;space-y-12&#96;), each with heading (&#96;text-2xl&#96;), description (&#96;text-sm&#96;), and images",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 988,
+                  "content": "- Static files in &#96;public/&#96;: &#96;logo.svg&#96; (app logo, uses &#96;currentColor&#96;), &#96;logo-dark.svg&#96; (white stroke for dark backgrounds), &#96;stt_1.png&#96; to &#96;stt_4.png&#96;, &#96;tts_1.png&#96; to &#96;tts_4.png&#96;, &#96;llm-leaderboard.png&#96;, &#96;llm-output.png&#96;, &#96;simulation-all.png&#96;, &#96;simulation-run.png&#96;"
+                },
+                {
+                  "lineNumber": 989,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 990,
+                  "content": "**Integrations Section:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1393,
+                  "content": "- Sort controls (when needed) appear as a separate mobile-only button above the card list",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1394,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1395,
+                  "content": "**Enhanced Mobile Card Design Pattern** (implemented in STT and TTS evaluations, can be adopted for other list pages):"
+                },
+                {
+                  "lineNumber": 1396,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1397,
+                  "content": "For pages where visual hierarchy and engagement are important, use this enhanced card pattern:",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1462,
+                  "content": "const customHeader = (",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1463,
+                  "content": "  &lt;BackHeader",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1464,
+                  "content": "    label=\"TTS Evaluations\""
+                },
+                {
+                  "lineNumber": 1465,
+                  "content": "    onBack={() =&gt; router.push(\"/tts\")}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1466,
+                  "content": "    title=\"Back to TTS Evaluations\""
+                },
+                {
+                  "lineNumber": 1467,
+                  "content": "  /&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1468,
+                  "content": ");",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1540,
+                  "content": "### Detail Page Responsive Patterns",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1541,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1542,
+                  "content": "Detail pages (AgentDetail, SimulationDetail, STT/TTS Evaluation, Simulation Runs) follow responsive patterns similar to list pages:"
+                },
+                {
+                  "lineNumber": 1543,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1544,
+                  "content": "**Container spacing:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1821,
+                  "content": "**Evaluation &amp; Simulation Pages Responsive Spacing:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1822,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1823,
+                  "content": "STT/TTS evaluation detail pages and simulation run detail pages use these responsive patterns:"
+                },
+                {
+                  "lineNumber": 1824,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1825,
+                  "content": "&#96;&#96;&#96;tsx",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1865,
+                  "content": "### Evaluation Page Pattern (TTS/STT)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1866,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1867,
+                  "content": "Both TTS and STT evaluation pages follow the same list → new → detail pattern:"
+                },
+                {
+                  "lineNumber": 1868,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1869,
+                  "content": "&#96;&#96;&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1870,
+                  "content": "/tts                    # List all TTS evaluation jobs"
+                },
+                {
+                  "lineNumber": 1871,
+                  "content": "/tts/new                # Create new TTS evaluation (form + submit)"
+                },
+                {
+                  "lineNumber": 1872,
+                  "content": "/tts/[uuid]             # View TTS evaluation results (polling + tabs)"
+                },
+                {
+                  "lineNumber": 1873,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1874,
+                  "content": "/stt                    # List all STT evaluation jobs"
+                },
+                {
+                  "lineNumber": 1875,
+                  "content": "/stt/new                # Create new STT evaluation (form + submit)"
+                },
+                {
+                  "lineNumber": 1876,
+                  "content": "/stt/[uuid]             # View STT evaluation results (polling + tabs)"
+                },
+                {
+                  "lineNumber": 1877,
+                  "content": "&#96;&#96;&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1878,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1881,
+                  "content": "- Fetches jobs from &#96;GET /jobs?job_type=tts&#96; or &#96;GET /jobs?job_type=stt&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1882,
+                  "content": "- Displays in sortable table with columns: Providers (as pills), Language, Status, Samples count, Created At",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1883,
+                  "content": "- \"New [TTS/STT] Evaluation\" button below header navigates to &#96;/[tts|stt]/new&#96;"
+                },
+                {
+                  "lineNumber": 1884,
+                  "content": "- Clicking a row navigates to &#96;/[tts|stt]/{uuid}&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1885,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1923,
+                  "content": "- **TTS metrics**: LLM Judge, TTFB (latency metrics are objects with &#96;mean&#96;, &#96;std&#96;, &#96;values&#96;; Processing Time removed from UI)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1924,
+                  "content": "- **Null-safe metric rendering**: Numeric metrics (string_similarity, wer, llm_judge_score, ttfb.mean) can be null. Always check before formatting: &#96;value != null ? parseFloat(value.toFixed(4)) : \"-\"&#96;. Use &#96;parseFloat()&#96; wrapper to remove trailing zeros. Max 4 decimal places for all metrics to prevent column overflow",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1925,
+                  "content": "- **STT Outputs tab**: Shows Ground Truth vs Prediction text; metrics columns (WER, String Similarity, LLM Judge) shown when status is \"done\" OR when all rows have metrics available. Rows with empty predictions are highlighted with &#96;bg-red-500/10&#96; and show \"_No transcript produced_\" in italicized muted text"
+                },
+                {
+                  "lineNumber": 1926,
+                  "content": "  - **Table layout**: Uses &#96;table-fixed&#96; with explicit column widths (ID: &#96;w-12&#96;, Ground Truth/Prediction: &#96;w-[30%]&#96; each) to prevent long text from overflowing. Text columns use &#96;break-words&#96; for wrapping. Container uses &#96;overflow-x-auto&#96; for horizontal scroll fallback",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1927,
+                  "content": "  - **Empty prediction detection**: Helper functions &#96;hasEmptyPredictions()&#96; and &#96;getFirstEmptyPredictionIndex()&#96; check for rows without transcripts. Provider status shows red X if any empty, and clicking scrolls to first empty row via &#96;data-row-index&#96; attribute",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1928,
+                  "content": "- **TTS Outputs tab**: Shows text input with audio playback; LLM Judge column shown when status is \"done\" OR when all rows have metrics available"
+                },
+                {
+                  "lineNumber": 1929,
+                  "content": "- **LLM Judge column display**: Shows Pass/Fail badges (green/red) as static indicators. Backend returns &#96;\"True\"&#96;/&#96;\"False\"&#96; strings (or &#96;\"1\"&#96;/&#96;\"0\"&#96;). Parsing: convert to lowercase string, Pass when value is &#96;\"true\"&#96; or &#96;\"1\"&#96;. A small info icon button (ⓘ) next to the badge shows the reasoning tooltip on hover (falls back to \"Score: X\" if no reasoning). The info icon uses Heroicons-style info-circle SVG with &#96;hover:bg-muted&#96; for interactivity feedback. This makes it intuitive that users can view the reasoning rather than requiring them to guess they should hover over the badge",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1930,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1979,
+                  "content": "**Language-based Provider Filtering:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1980,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1981,
+                  "content": "Both TTS and STT evaluations filter available providers based on the selected language:"
+                },
+                {
+                  "lineNumber": 1982,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1983,
+                  "content": "&#96;&#96;&#96;tsx",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2078,
+                  "content": "   - Props: &#96;isOpen&#96;, &#96;onClose&#96;, &#96;onConfirm&#96;, &#96;title&#96;, &#96;message&#96;, &#96;confirmText&#96;, &#96;isDeleting&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2079,
+                  "content": "   - Shows loading spinner during deletion",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2080,
+                  "content": "   - **Skip confirmation for empty items**: When deleting empty rows (e.g., in TTS/STT evaluation input), call &#96;deleteRow()&#96; directly instead of showing confirmation dialog"
+                },
+                {
+                  "lineNumber": 2081,
+                  "content": "   - **Fully responsive**: Uses mobile-first sizing with &#96;p-4&#96; outer margin, &#96;p-5 md:p-6&#96; dialog padding, &#96;h-9 md:h-10&#96; buttons, &#96;text-base md:text-lg&#96; title, &#96;gap-2 md:gap-3&#96; between actions",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2082,
+                  "content": "5. **Toast Notifications**: Bottom-right success toasts",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2091,
+                  "content": "   - Props: &#96;columns&#96; (array of &#96;{key, header, render?}&#96;), &#96;data&#96;, &#96;filename&#96;, &#96;title&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2092,
+                  "content": "   - Includes \"Download CSV\" button in top-right corner",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2093,
+                  "content": "   - Used in: BenchmarkResultsDialog, STT/TTS detail pages (&#96;/stt/[uuid]&#96;, &#96;/tts/[uuid]&#96;)"
+                },
+                {
+                  "lineNumber": 2094,
+                  "content": "   - Custom cell rendering via optional &#96;render&#96; function in column definition",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2095,
+                  "content": "8. **Charts with PNG Export**: &#96;LeaderboardBarChart&#96; component includes built-in PNG download",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2159,
+                  "content": "      - **Merged providers**: &#96;getProvidersToDisplay()&#96; function merges &#96;modelResults&#96; from API with placeholders for any models that don't have results yet",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2160,
+                  "content": "      - Types support null values: &#96;success: boolean | null&#96;, &#96;test_results: BenchmarkTestResult[] | null&#96;, &#96;passed: boolean | null&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2161,
+                  "content": "      - **Header status badge**: Uses &#96;StatusBadge&#96; component (same as STT/TTS evaluation pages) to show task status (\"Queued\" with gray badge, \"Running\" with yellow badge) plus spinner while benchmark is in progress"
+                },
+                {
+                  "lineNumber": 2162,
+                  "content": "      - **Loading state**: Shows simple \"Loading...\" spinner until first API response (doesn't try to guess status)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2163,
+                  "content": "      - **Interactive list items**: Test items use &#96;&lt;button type=\"button\"&gt;&#96; with &#96;w-full&#96; for proper mobile touch support",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2294,
+                  "content": "│   ├── scenarios.mdx     # Scenario CRUD for simulations",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2295,
+                  "content": "│   ├── metrics.mdx       # Metric CRUD for evaluation",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2296,
+                  "content": "│   ├── stt.mdx           # STT evaluation"
+                },
+                {
+                  "lineNumber": 2297,
+                  "content": "│   ├── tts.mdx           # TTS evaluation"
+                },
+                {
+                  "lineNumber": 2298,
+                  "content": "│   ├── llm-testing.mdx   # LLM testing (agent, tools, tests, benchmarks)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2299,
+                  "content": "│   └── simulations.mdx   # End-to-end simulations (single page)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2319,
+                  "content": "| **Metrics**     | Create/update/delete/duplicate metrics with evaluation instructions                                                                                                                              |",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2320,
+                  "content": "| **STT**         | Upload audio, select providers, view WER/latency metrics, leaderboard                                                                                                                            |",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2321,
+                  "content": "| **TTS**         | Add text samples, select providers, listen to outputs, view metrics                                                                                                                              |"
+                },
+                {
+                  "lineNumber": 2322,
+                  "content": "| **LLM Testing** | Complete workflow: create agent → create tool → attach tool → create Next Reply test → run test → create Tool Invocation test → run test → attach tests to agent → run all tests → run benchmark |",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2323,
+                  "content": "| **Simulations** | Setup (agent, tool, personas, scenarios, metrics) → Text simulation section (per-row metrics, overall metrics, transcripts) → Voice simulation section (latency metrics, audio transcripts)      |",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2663,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2664,
+                  "content": "- **STT**: Upload audio + transcription, compare providers",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2665,
+                  "content": "- **TTS**: Upload text, compare provider outputs"
+                },
+                {
+                  "lineNumber": 2666,
+                  "content": "- Metrics: STT (WER, String Similarity, LLM Judge), TTS (LLM Judge, TTFB)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2667,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2685,
+                  "content": "| Tests           | &#96;GET/POST /tests&#96;, &#96;GET/PUT/DELETE /tests/{uuid}&#96;                                                                                                                                                                                                                 |",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2686,
+                  "content": "| Agent Tests     | &#96;GET /agent-tests/agent/{uuid}/tests&#96;, &#96;GET /agent-tests/agent/{uuid}/runs&#96;, &#96;POST/DELETE /agent-tests&#96;, &#96;POST /agent-tests/agent/{uuid}/run&#96;, &#96;GET /agent-tests/run/{taskId}&#96;, &#96;POST /agent-tests/agent/{uuid}/benchmark&#96;, &#96;GET /agent-tests/benchmark/{taskId}&#96; |",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2687,
+                  "content": "| STT Evaluation  | &#96;POST /stt/evaluate&#96;, &#96;GET /stt/evaluate/{uuid}&#96;                                                                                                                                                                                                                  |"
+                },
+                {
+                  "lineNumber": 2688,
+                  "content": "| TTS Evaluation  | &#96;POST /tts/evaluate&#96;, &#96;GET /tts/evaluate/{uuid}&#96;                                                                                                                                                                                                                  |"
+                },
+                {
+                  "lineNumber": 2689,
+                  "content": "| Jobs            | &#96;GET /jobs&#96; (optional &#96;job_type&#96; query param: &#96;stt&#96; or &#96;tts&#96;)                                                                                                                                                                                                     |",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 2690,
+                  "content": "| Presigned URLs  | &#96;POST /presigned-url&#96;                                                                                                                                                                                                                                             |",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3019,
+                  "content": "// Used as customHeader prop of AppLayout",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3020,
+                  "content": "&lt;BackHeader",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3021,
+                  "content": "  label=\"TTS Evaluations\""
+                },
+                {
+                  "lineNumber": 3022,
+                  "content": "  onBack={() =&gt; router.push(\"/tts\")}",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3023,
+                  "content": "  title=\"Back to TTS Evaluations\"  // optional tooltip"
+                },
+                {
+                  "lineNumber": 3024,
+                  "content": "/&gt;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3025,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3272,
+                  "content": "### Polling for Async Tasks",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3273,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3274,
+                  "content": "Async operations (simulations, tests, benchmarks, STT/TTS evaluations) follow this status flow:"
+                },
+                {
+                  "lineNumber": 3275,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3276,
+                  "content": "&#96;&#96;&#96;",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3353,
+                  "content": "**Files implementing this pattern:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3354,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3355,
+                  "content": "- &#96;src/app/stt/[uuid]/page.tsx&#96; - STT evaluation detail page"
+                },
+                {
+                  "lineNumber": 3356,
+                  "content": "- &#96;src/app/tts/[uuid]/page.tsx&#96; - TTS evaluation detail page"
+                },
+                {
+                  "lineNumber": 3357,
+                  "content": "- &#96;src/app/simulations/[uuid]/runs/[runId]/page.tsx&#96; - Simulation run detail page",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3358,
+                  "content": "- &#96;src/components/agent-tabs/TestsTabContent.tsx&#96; - Background polling for past runs",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3362,
+                  "content": "**Status Types:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3363,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3364,
+                  "content": "The &#96;EvaluationResult&#96; type for STT/TTS evaluations:"
+                },
+                {
+                  "lineNumber": 3365,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3366,
+                  "content": "&#96;&#96;&#96;tsx",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3377,
+                  "content": "**Polling stop conditions**: Polling stops when status is &#96;\"done\"&#96; OR &#96;\"failed\"&#96; (not just on fetch errors). Initial fetch also skips starting polling if status is already terminal.",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3378,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3379,
+                  "content": "**Files using &#96;POLLING_INTERVAL_MS&#96;:** TestRunnerDialog, BenchmarkResultsDialog (with intermediate results support), TestsTabContent, STT/TTS evaluation pages, simulation run page."
+                },
+                {
+                  "lineNumber": 3380,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3381,
+                  "content": "### Usage Limits and Toast Notifications",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3428,
+                  "content": "**Features using limits:**",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3429,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3430,
+                  "content": "- TTS evaluation: CSV upload and manual row addition"
+                },
+                {
+                  "lineNumber": 3431,
+                  "content": "- STT evaluation: ZIP upload, manual row addition, and audio file duration (60s max)"
+                },
+                {
+                  "lineNumber": 3432,
+                  "content": "- Simulations: Persona and scenario selection",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3433,
+                  "content": "- Tests tab: \"Run all tests\" button",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3434,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3435,
+                  "content": "**Audio Duration Validation Pattern** (STT evaluation):"
+                },
+                {
+                  "lineNumber": 3436,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3437,
+                  "content": "&#96;&#96;&#96;tsx",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3925,
+                  "content": "- **Nested parameters**: Tool parameters support arbitrary nesting (object → properties, array → items)",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3926,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3927,
+                  "content": "### ZIP and CSV File Parsing (STT/TTS Evaluations)"
+                },
+                {
+                  "lineNumber": 3928,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3929,
+                  "content": "- **Direct path lookup, not search**: Instead of iterating through all ZIP entries, directly check expected locations. First try root (&#96;data.csv&#96;), then check top-level folders (&#96;folder/data.csv&#96;). This avoids accidentally matching macOS metadata files.",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3993,
+                  "content": "| &#96;/simulations/[uuid]/runs&#96; | \"Simulation Run \\| Calibrate\"                                 |",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3994,
+                  "content": "| &#96;/stt&#96;                     | \"Speech to Text \\| Calibrate\"                                 |",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3995,
+                  "content": "| &#96;/stt/[uuid]&#96;              | \"STT Evaluation \\| Calibrate\"                                 |"
+                },
+                {
+                  "lineNumber": 3996,
+                  "content": "| &#96;/stt/new&#96;                 | \"New STT Evaluation \\| Calibrate\"                             |"
+                },
+                {
+                  "lineNumber": 3997,
+                  "content": "| &#96;/tts&#96;                     | \"Text to Speech \\| Calibrate\"                                 |",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 3998,
+                  "content": "| &#96;/tts/[uuid]&#96;              | \"TTS Evaluation \\| Calibrate\"                                 |"
+                },
+                {
+                  "lineNumber": 3999,
+                  "content": "| &#96;/tts/new&#96;                 | \"New TTS Evaluation \\| Calibrate\"                             |"
+                },
+                {
+                  "lineNumber": 4000,
+                  "content": "| &#96;/login&#96;                   | \"Calibrate \\| Scale conversational AI agents with confidence\" |",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 4001,
+                  "isContextLine": true
+                }
+              ]
+            }
+          ],
+          "totalLines": 210,
+          "totalMatchedLines": 65
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+Let me read the specific detail page sections for both STT and TTS to see what needs updating.
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+Now I have the full picture. I need to update:
+
+1. **STT Detail Page section** (~line 417
 
 ---
 
