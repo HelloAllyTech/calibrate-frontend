@@ -2826,7 +2826,19 @@ The `GET /agent-tests/benchmark/{taskId}` endpoint returns intermediate results 
 - `model_results[].success`: `true`/`false` when provider complete, `null` when still processing
 - `model_results[].test_results`: Array of test results when complete, `null` when processing
 - `model_results[].test_results[].passed`: `true`/`false` when test complete, `null` if test still running
-- `leaderboard_summary`: Only populated when status is `done`/`completed`
+- `leaderboard_summary`: Only populated when status is `done`/`completed`. Shape differs from STT/TTS leaderboard summaries:
+
+```tsx
+// Benchmark LeaderboardSummary (BenchmarkResultsDialog)
+type LeaderboardSummary = {
+  model: string;       // e.g. "anthropic__claude-opus-4.5" (double underscore, not slash)
+  passed: string;      // e.g. "1" (string, not number)
+  total: string;       // e.g. "2" (string, not number)
+  pass_rate: string;   // e.g. "50.0" (string, not number)
+};
+```
+
+Note: The `model` field uses double underscores (`__`) as separator; the UI replaces them with `/` for display.
 
 ### JWT Authentication
 

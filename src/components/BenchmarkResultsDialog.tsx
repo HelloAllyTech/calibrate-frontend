@@ -34,8 +34,9 @@ type ModelResult = {
 
 type LeaderboardSummary = {
   model: string;
-  test_config: string;
-  overall: string;
+  passed: string;
+  total: string;
+  pass_rate: string;
 };
 
 type BenchmarkStatusResponse = {
@@ -510,11 +511,11 @@ export function BenchmarkResultsDialog({
                         header: "Model",
                         render: (value) => value.replace("__", "/"),
                       },
-                      { key: "overall", header: "Test pass rate (%)" },
+                      { key: "pass_rate", header: "Test pass rate (%)" },
                     ]}
                     data={leaderboardSummary.map((s) => ({
                       model: s.model,
-                      overall: s.overall,
+                      pass_rate: s.pass_rate,
                     }))}
                     filename={`benchmark-leaderboard-${agentName}`}
                   />
@@ -526,7 +527,7 @@ export function BenchmarkResultsDialog({
                     title="Test pass rate (%)"
                     data={leaderboardSummary.map((s) => ({
                       label: s.model.replace("__", "/"),
-                      value: parseFloat(s.overall),
+                      value: parseFloat(s.pass_rate),
                       colorKey: s.model,
                     }))}
                     yDomain={[0, 100]}
