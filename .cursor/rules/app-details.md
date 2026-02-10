@@ -745,7 +745,7 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
   - Role-based message styling
   - **Tool call details as form fields**: Arguments are displayed as labeled form fields (matching AddTestDialog style). Each arg key (body, query) is shown as a field label, with its value displayed as pretty-printed JSON. Headers are filtered out and not shown
   - **Tool response display** (for webhook calls): Only shows `role: "tool"` messages where content is valid JSON with `type: "webhook_response"`. Displays the `response` object as **pretty-printed JSON** in a monospace `<pre>` block with "Agent Tool Response" header (intentionally different from tool call form fields to distinguish input vs output). **Error handling**: If `response.status === "error"`, displays with red styling: warning icon, "Tool Response Error" label in red, `border-red-500` border, and `text-red-400` for the JSON content
-  - Per-message audio players for voice simulations (matching `audio_urls`)
+  - Per-message audio players for voice simulations (matching `audio_urls`). Audio is only shown for user messages and assistant text messages — tool calls (`tool_calls` present) and tool responses (`role: "tool"`) are skipped
 
 - **Simulation Results Conditional Display**:
   - **Mobile with metrics (voice type)**: Only shows in "Results" tab (`activeMetricsTab === "results"`)
@@ -3951,8 +3951,8 @@ Set `MAINTENANCE_MODE=true` in `.env.local` to show a maintenance page. When ena
 - **Audio file naming convention**: Both user and bot audio files use **1-based indexing**:
   - User files: `1_user.wav`, `2_user.wav`, `3_user.wav`, etc.
   - Bot files: `1_bot.wav`, `2_bot.wav`, `3_bot.wav`, etc.
-- **Audio URL matching**: The `getAudioUrlForEntry` function in the simulation run page counts previous messages of the same role and adds 1 to get the correct file index
-- **Common mistake**: Don't use 0-based indexing for user audio files - they follow the same 1-indexed pattern as bot files
+- **Audio URL matching**: The `getAudioUrlForEntry` function in the simulation run page counts previous messages of the same role and adds 1 to get the correct file index. **Tool calls and tool responses are excluded** — the function returns `null` for entries with `tool_calls` or `role: "tool"`, and only counts assistant messages without `tool_calls` when computing the bot audio index. This keeps the `N_bot.wav` numbering aligned with actual spoken text messages
+- **Common mistake**: Don't use 0-based indexing for user audio files - they follow the same 1-indexed pattern as bot files. Don't count tool call assistant messages when computing audio indices — only text messages have corresponding audio files
 - **Full conversation audio**: The API returns a `conversation_wav_url` field containing a combined audio file of the entire conversation. This is displayed below the Transcript header (before the messages) with a "Full Conversation" label and speaker icon
 - **Presigned URL expiration handling**: S3 presigned URLs for audio files expire after a period. When audio fails to load (e.g., expired URL), the `onError` handler triggers a `refreshRunData` callback that fetches fresh run data from the API with new presigned URLs. The callback also clears any frozen simulation data to ensure the fresh URLs are used
 

@@ -464,14 +464,21 @@ export default function SimulationRunPage() {
       return null;
     }
 
-    // Count user and assistant messages up to this entry
+    // Skip tool calls and tool responses — audio only applies to text messages
+    if (entry.role === "tool" || entry.tool_calls) {
+      return null;
+    }
+
+    // Count user and assistant text messages up to this entry
+    // Only count assistant messages without tool_calls (text-only)
     let userCount = 0;
     let assistantCount = 0;
 
     for (let i = 0; i < entryIndex; i++) {
-      if (filteredTranscript[i]?.role === "user") {
+      const msg = filteredTranscript[i];
+      if (msg?.role === "user") {
         userCount++;
-      } else if (filteredTranscript[i]?.role === "assistant") {
+      } else if (msg?.role === "assistant" && !msg.tool_calls) {
         assistantCount++;
       }
     }
