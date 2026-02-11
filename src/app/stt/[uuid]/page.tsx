@@ -430,12 +430,14 @@ export default function STTEvaluationDetailPage() {
                               <td className="px-4 py-3 text-[13px] text-foreground">
                                 This metric is used because WER and string
                                 similarity may not provide an accurate picture.
-                                For example, when a transcript says &quot;9&quot; but the
-                                model predicts &quot;nine&quot;, both might be considered
-                                correct for the agent&apos;s specific use case. The
-                                LLM judge evaluates semantic equivalence rather
-                                than exact string matching, returning Pass if
-                                the transcription is semantically correct.
+                                For example, when a transcript says
+                                &quot;9&quot; but the model predicts
+                                &quot;nine&quot;, both might be considered
+                                correct for the agent&apos;s specific use case.
+                                The LLM judge evaluates semantic equivalence
+                                rather than exact string matching, returning
+                                Pass if the transcription is semantically
+                                correct.
                               </td>
                               <td className="px-4 py-3 text-[13px] text-foreground">
                                 Pass is better
@@ -484,46 +486,66 @@ export default function STTEvaluationDetailPage() {
                         {[
                           {
                             metric: "WER (Word Error Rate)",
-                            description: "Word error rate measures the percentage of words that differ between the reference transcription and the predicted transcription.",
+                            description:
+                              "Word error rate measures the percentage of words that differ between the reference transcription and the predicted transcription.",
                             preference: "Lower is better",
                             range: "0 - ∞",
                           },
                           {
                             metric: "String Similarity",
-                            description: "Measures the similarity between the reference and predicted strings using string matching algorithms.",
+                            description:
+                              "Measures the similarity between the reference and predicted strings using string matching algorithms.",
                             preference: "Higher is better",
                             range: "0 - 1",
                           },
                           {
                             metric: "LLM Judge",
-                            description: "This metric is used because WER and string similarity may not provide an accurate picture. The LLM judge evaluates semantic equivalence rather than exact string matching, returning Pass if the transcription is semantically correct.",
+                            description:
+                              "This metric is used because WER and string similarity may not provide an accurate picture. The LLM judge evaluates semantic equivalence rather than exact string matching, returning Pass if the transcription is semantically correct.",
                             preference: "Pass is better",
                             range: "Pass / Fail",
                           },
                           {
                             metric: "TTFB (Time To First Byte)",
-                            description: "Time to first byte measures the latency from when a request is sent until the first byte of the response is received.",
+                            description:
+                              "Time to first byte measures the latency from when a request is sent until the first byte of the response is received.",
                             preference: "Lower is better",
                             range: "0 - ∞",
                           },
                           {
                             metric: "Processing Time",
-                            description: "Total time taken to process the audio and generate the transcription.",
+                            description:
+                              "Total time taken to process the audio and generate the transcription.",
                             preference: "Lower is better",
                             range: "0 - ∞",
                           },
                         ].map((item) => (
-                          <div key={item.metric} className="border border-border rounded-xl p-4 space-y-2">
-                            <h4 className="text-[13px] font-semibold text-foreground">{item.metric}</h4>
-                            <p className="text-[13px] text-muted-foreground">{item.description}</p>
+                          <div
+                            key={item.metric}
+                            className="border border-border rounded-xl p-4 space-y-2"
+                          >
+                            <h4 className="text-[13px] font-semibold text-foreground">
+                              {item.metric}
+                            </h4>
+                            <p className="text-[13px] text-muted-foreground">
+                              {item.description}
+                            </p>
                             <div className="flex gap-4 pt-1">
                               <div>
-                                <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Preference</span>
-                                <p className="text-[13px] text-foreground">{item.preference}</p>
+                                <span className="text-[11px] text-muted-foreground uppercase tracking-wide">
+                                  Preference
+                                </span>
+                                <p className="text-[13px] text-foreground">
+                                  {item.preference}
+                                </p>
                               </div>
                               <div>
-                                <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Range</span>
-                                <p className="text-[13px] text-foreground">{item.range}</p>
+                                <span className="text-[11px] text-muted-foreground uppercase tracking-wide">
+                                  Range
+                                </span>
+                                <p className="text-[13px] text-foreground">
+                                  {item.range}
+                                </p>
                               </div>
                             </div>
                           </div>
@@ -878,10 +900,22 @@ export default function STTEvaluationDetailPage() {
                                                 <th className="w-12 px-4 py-3 text-left text-[12px] font-medium text-foreground">
                                                   ID
                                                 </th>
-                                                <th className="w-[30%] px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                <th
+                                                  className={`${
+                                                    showMetrics
+                                                      ? "w-[30%]"
+                                                      : "w-[calc(50%-24px)]"
+                                                  } px-4 py-3 text-left text-[12px] font-medium text-foreground`}
+                                                >
                                                   Ground Truth
                                                 </th>
-                                                <th className="w-[30%] px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                <th
+                                                  className={`${
+                                                    showMetrics
+                                                      ? "w-[30%]"
+                                                      : "w-[calc(50%-24px)]"
+                                                  } px-4 py-3 text-left text-[12px] font-medium text-foreground`}
+                                                >
                                                   Prediction
                                                 </th>
                                                 {showMetrics && (
@@ -964,7 +998,8 @@ export default function STTEvaluationDetailPage() {
                                                               const passed =
                                                                 scoreStr ===
                                                                   "true" ||
-                                                                scoreStr === "1";
+                                                                scoreStr ===
+                                                                  "1";
                                                               const tooltipContent =
                                                                 result.llm_judge_reasoning
                                                                   ? result.llm_judge_reasoning
@@ -1025,7 +1060,10 @@ export default function STTEvaluationDetailPage() {
                                       </div>
 
                                       {/* Mobile: Card layout */}
-                                      <div className="md:hidden space-y-3" ref={tableContainerRef}>
+                                      <div
+                                        className="md:hidden space-y-3"
+                                        ref={tableContainerRef}
+                                      >
                                         {providerResult.results.map(
                                           (result, index) => {
                                             const isEmptyPrediction =
@@ -1036,53 +1074,104 @@ export default function STTEvaluationDetailPage() {
                                                 key={index}
                                                 data-row-index={index}
                                                 className={`border border-border rounded-xl p-4 space-y-3 ${
-                                                  isEmptyPrediction ? "bg-red-500/10" : ""
+                                                  isEmptyPrediction
+                                                    ? "bg-red-500/10"
+                                                    : ""
                                                 }`}
                                               >
                                                 <div className="flex items-center justify-between">
-                                                  <span className="text-[12px] text-muted-foreground font-medium">#{index + 1}</span>
-                                                  {showMetrics && (() => {
-                                                    const scoreStr = String(result.llm_judge_score || "").toLowerCase();
-                                                    const passed = scoreStr === "true" || scoreStr === "1";
-                                                    return (
-                                                      <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
-                                                        passed
-                                                          ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400"
-                                                          : "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400"
-                                                      }`}>
-                                                        {passed ? "Pass" : "Fail"}
-                                                      </span>
-                                                    );
-                                                  })()}
+                                                  <span className="text-[12px] text-muted-foreground font-medium">
+                                                    #{index + 1}
+                                                  </span>
+                                                  {showMetrics &&
+                                                    (() => {
+                                                      const scoreStr = String(
+                                                        result.llm_judge_score ||
+                                                          ""
+                                                      ).toLowerCase();
+                                                      const passed =
+                                                        scoreStr === "true" ||
+                                                        scoreStr === "1";
+                                                      return (
+                                                        <span
+                                                          className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
+                                                            passed
+                                                              ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400"
+                                                              : "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400"
+                                                          }`}
+                                                        >
+                                                          {passed
+                                                            ? "Pass"
+                                                            : "Fail"}
+                                                        </span>
+                                                      );
+                                                    })()}
                                                 </div>
                                                 <div>
-                                                  <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Ground Truth</span>
-                                                  <p className="text-[13px] text-foreground mt-0.5">{result.gt}</p>
+                                                  <span className="text-[11px] text-muted-foreground uppercase tracking-wide">
+                                                    Ground Truth
+                                                  </span>
+                                                  <p className="text-[13px] text-foreground mt-0.5">
+                                                    {result.gt}
+                                                  </p>
                                                 </div>
                                                 <div>
-                                                  <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Prediction</span>
+                                                  <span className="text-[11px] text-muted-foreground uppercase tracking-wide">
+                                                    Prediction
+                                                  </span>
                                                   {isEmptyPrediction ? (
-                                                    <p className="text-[13px] text-muted-foreground mt-0.5">No transcript generated</p>
+                                                    <p className="text-[13px] text-muted-foreground mt-0.5">
+                                                      No transcript generated
+                                                    </p>
                                                   ) : (
-                                                    <p className="text-[13px] text-foreground mt-0.5">{result.pred}</p>
+                                                    <p className="text-[13px] text-foreground mt-0.5">
+                                                      {result.pred}
+                                                    </p>
                                                   )}
                                                 </div>
                                                 {showMetrics && (
                                                   <div className="space-y-2 pt-1 border-t border-border">
                                                     <div className="flex gap-4">
                                                       <div>
-                                                        <span className="text-[11px] text-muted-foreground uppercase tracking-wide">WER</span>
-                                                        <p className="text-[13px] text-foreground">{result.wer != null ? parseFloat(parseFloat(result.wer).toFixed(4)) : "-"}</p>
+                                                        <span className="text-[11px] text-muted-foreground uppercase tracking-wide">
+                                                          WER
+                                                        </span>
+                                                        <p className="text-[13px] text-foreground">
+                                                          {result.wer != null
+                                                            ? parseFloat(
+                                                                parseFloat(
+                                                                  result.wer
+                                                                ).toFixed(4)
+                                                              )
+                                                            : "-"}
+                                                        </p>
                                                       </div>
                                                       <div>
-                                                        <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Similarity</span>
-                                                        <p className="text-[13px] text-foreground">{result.string_similarity != null ? parseFloat(parseFloat(result.string_similarity).toFixed(4)) : "-"}</p>
+                                                        <span className="text-[11px] text-muted-foreground uppercase tracking-wide">
+                                                          Similarity
+                                                        </span>
+                                                        <p className="text-[13px] text-foreground">
+                                                          {result.string_similarity !=
+                                                          null
+                                                            ? parseFloat(
+                                                                parseFloat(
+                                                                  result.string_similarity
+                                                                ).toFixed(4)
+                                                              )
+                                                            : "-"}
+                                                        </p>
                                                       </div>
                                                     </div>
                                                     {result.llm_judge_reasoning && (
                                                       <div>
-                                                        <span className="text-[11px] text-muted-foreground uppercase tracking-wide">LLM Judge Reasoning</span>
-                                                        <p className="text-[12px] text-muted-foreground mt-0.5">{result.llm_judge_reasoning}</p>
+                                                        <span className="text-[11px] text-muted-foreground uppercase tracking-wide">
+                                                          LLM Judge Reasoning
+                                                        </span>
+                                                        <p className="text-[12px] text-muted-foreground mt-0.5">
+                                                          {
+                                                            result.llm_judge_reasoning
+                                                          }
+                                                        </p>
                                                       </div>
                                                     )}
                                                   </div>

@@ -383,8 +383,8 @@ export function TextToSpeechEvaluation() {
   return (
     <div className="space-y-6">
       {/* Header with Evaluate Button */}
-      <div className="flex items-center justify-between">
-        <p className="text-muted-foreground text-[15px] leading-relaxed">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <p className="text-muted-foreground text-sm md:text-[15px] leading-relaxed">
           Provide text inputs to evaluate TTS quality across multiple providers
         </p>
         {isEvaluating ? (
@@ -434,10 +434,10 @@ export function TextToSpeechEvaluation() {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="flex items-center gap-6 border-b border-border">
+      <div className="flex items-center gap-4 md:gap-6 border-b border-border">
         <button
           onClick={() => setActiveTab("settings")}
-          className={`pb-2 text-base font-medium transition-colors cursor-pointer ${
+          className={`pb-2 text-sm md:text-base font-medium transition-colors cursor-pointer ${
             activeTab === "settings"
               ? "text-foreground border-b-2 border-foreground"
               : "text-muted-foreground hover:text-foreground"
@@ -447,7 +447,7 @@ export function TextToSpeechEvaluation() {
         </button>
         <button
           onClick={() => setActiveTab("input")}
-          className={`pb-2 text-base font-medium transition-colors cursor-pointer ${
+          className={`pb-2 text-sm md:text-base font-medium transition-colors cursor-pointer ${
             activeTab === "input"
               ? "text-foreground border-b-2 border-foreground"
               : "text-muted-foreground hover:text-foreground"
@@ -520,7 +520,8 @@ export function TextToSpeechEvaluation() {
                 ({selectedProviders.size} selected)
               </span>
             </div>
-            <div className="border border-border rounded-lg overflow-hidden">
+            {/* Desktop: Table layout */}
+            <div className="hidden md:block border border-border rounded-lg overflow-hidden">
               <table className="w-full">
                 <thead className="bg-muted/50 border-b border-border">
                   <tr>
@@ -661,6 +662,139 @@ export function TextToSpeechEvaluation() {
                 </tbody>
               </table>
             </div>
+
+            {/* Mobile: Card layout */}
+            <div className="md:hidden space-y-2">
+              {/* Select All */}
+              <div
+                className="flex items-center gap-3 px-3 py-2.5 border border-border rounded-lg cursor-pointer hover:bg-muted/30 transition-colors"
+                onClick={() => {
+                  if (selectedProviders.size === providerLabels.length) {
+                    setSelectedProviders(new Set());
+                  } else {
+                    selectAllProviders();
+                  }
+                }}
+              >
+                <div
+                  className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors flex-shrink-0 ${
+                    selectedProviders.size === providerLabels.length
+                      ? "bg-foreground border-foreground"
+                      : selectedProviders.size > 0
+                      ? "bg-foreground/50 border-foreground"
+                      : "border-border"
+                  }`}
+                >
+                  {selectedProviders.size === providerLabels.length ? (
+                    <svg
+                      className="w-3 h-3 text-background"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={3}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M4.5 12.75l6 6 9-13.5"
+                      />
+                    </svg>
+                  ) : selectedProviders.size > 0 ? (
+                    <svg
+                      className="w-3 h-3 text-background"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={3}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 12h14"
+                      />
+                    </svg>
+                  ) : null}
+                </div>
+                <span className="text-[13px] font-medium text-foreground">
+                  Select all
+                </span>
+              </div>
+
+              {filteredProviders.map((provider) => {
+                const isSelected = selectedProviders.has(provider.label);
+                return (
+                  <div
+                    key={provider.label}
+                    className={`border rounded-lg p-3 cursor-pointer transition-colors ${
+                      isSelected
+                        ? "border-foreground/30 bg-muted/30"
+                        : "border-border hover:bg-muted/20"
+                    }`}
+                    onClick={() => toggleProvider(provider.label)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors flex-shrink-0 ${
+                          isSelected
+                            ? "bg-foreground border-foreground"
+                            : "border-border"
+                        }`}
+                      >
+                        {isSelected && (
+                          <svg
+                            className="w-3 h-3 text-background"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={3}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M4.5 12.75l6 6 9-13.5"
+                            />
+                          </svg>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className={`text-[13px] ${isSelected ? "text-foreground font-medium" : "text-muted-foreground"}`}>
+                            {provider.label}
+                          </span>
+                          {provider.website && (
+                            <a
+                              href={provider.website}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
+                              title={`Visit ${provider.label} website`}
+                            >
+                              <svg
+                                className="w-3.5 h-3.5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2}
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                                />
+                              </svg>
+                            </a>
+                          )}
+                        </div>
+                        <p className="text-[12px] text-muted-foreground font-mono truncate mt-0.5">
+                          {provider.modelOverrides?.[languageDisplayName[language]] || provider.model}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
@@ -760,9 +894,9 @@ export function TextToSpeechEvaluation() {
           </div>
 
           {/* CSV Upload Section */}
-          <div className="border border-border rounded-xl p-6 bg-muted/10">
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+          <div className="border border-border rounded-xl p-4 md:p-6 bg-muted/10">
+            <div className="flex items-start gap-3 md:gap-4">
+              <div className="flex-shrink-0 w-9 h-9 md:w-10 md:h-10 rounded-full bg-muted flex items-center justify-center">
                 <svg
                   className="w-5 h-5 text-muted-foreground"
                   fill="none"
@@ -784,7 +918,7 @@ export function TextToSpeechEvaluation() {
                 <p className="text-[13px] text-muted-foreground mb-4">
                   Upload a CSV file with all the texts you want to be spoken
                 </p>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
                   <input
                     ref={fileInputRef}
                     type="file"

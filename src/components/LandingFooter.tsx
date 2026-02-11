@@ -23,7 +23,7 @@ export function LandingFooter() {
               </li>
               <li>
                 <a
-                  href="https://docs.google.com/document/d/e/2PACX-1vRk2LZDD3ZtMHBocQVl5Qh14PtThP2nB1DFUsC0_9w028yx6LrDKHE77IgOxY-PojVgtyGp-hClts8l/pub"
+                  href="https://docs.google.com/document/d/e/2PACX-1vScdz5QUGyo_q4fBSAymagmoi55K8Ss77t2AcnsDYriYXp0LyM8GQ1Pnj3EDjrCUg/pub"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-gray-900 transition-colors"
@@ -70,7 +70,7 @@ export function LandingFooter() {
               </li>
               <li>
                 <a
-                  href="https://docs.google.com/document/d/e/2PACX-1vTRkPJ3-aoibS0ySGfN62w-ytqZrsQ4EogQNTO01Ts4epzT8KJTXpbgSFV1Nb2xihnVpxniC11se5Cx/pub"
+                  href="https://docs.google.com/document/d/e/2PACX-1vR6h4w6CrrucGhf1LKrQZGQx6IzmoOTYgAlOvqFuaObeDtStMy5UC0kNT8z2efNEQ/pub"
                   target="_blank"
                   className="hover:text-gray-900 transition-colors"
                 >

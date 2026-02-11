@@ -1893,19 +1893,31 @@ Both TTS and STT evaluation pages follow the same list → new → detail patter
 **New Page:**
 
 - Contains the evaluation form component (`TextToSpeechEvaluation` or `SpeechToTextEvaluation`)
+- **Header**: Description text + Evaluate button. Uses `flex flex-col sm:flex-row sm:items-center justify-between gap-3` — stacks vertically on mobile, side-by-side on desktop
+- **Tabs**: Settings and Dataset tabs use `text-sm md:text-base` with `gap-4 md:gap-6`
 - Both components use the same tab layout:
-  - **Settings tab**: Language selection dropdown + provider selection table (no limit on providers)
+  - **Settings tab**: Language selection dropdown + provider selection (responsive: table on desktop, cards on mobile)
   - **Dataset tab**: Sample rows + add sample button (TTS also has CSV upload with OR divider and sample download)
-- **Provider selection UI** (table format):
-  - Table with border, rounded corners (`border border-border rounded-lg`)
-  - Header row with select-all checkbox and column titles (`bg-muted/50 border-b`)
-  - **STT columns**: Checkbox | Label | Model | Website
-  - **TTS columns**: Checkbox | Label | Model | Voice ID | Website
-  - Website column has external link icon that opens provider's website in new tab (uses `stopPropagation()` to prevent row selection toggle)
-  - Clickable rows (`hover:bg-muted/30 cursor-pointer`) - clicking anywhere on row toggles selection
-  - Select-all checkbox in header with tri-state: empty (none), minus icon (some), checkmark (all)
-  - Model and Voice ID columns use `font-mono` for technical values
+- **Provider selection UI** (responsive):
+  - **Desktop** (`hidden md:block`): Table with border, rounded corners (`border border-border rounded-lg`)
+    - Header row with select-all checkbox and column titles (`bg-muted/50 border-b`)
+    - **STT columns**: Checkbox | Label | Model | Website
+    - **TTS columns**: Checkbox | Label | Model | Voice ID | Website
+    - Website column has external link icon that opens provider's website in new tab (uses `stopPropagation()` to prevent row selection toggle)
+    - Clickable rows (`hover:bg-muted/30 cursor-pointer`) - clicking anywhere on row toggles selection
+    - Select-all checkbox in header with tri-state: empty (none), minus icon (some), checkmark (all)
+    - Model and Voice ID columns use `font-mono` for technical values
+  - **Mobile** (`md:hidden`): Card layout with select-all card at top, then individual provider cards
+    - Each card shows checkbox + provider label + website link icon in a row, with model name (`font-mono truncate`) below
+    - Selected state uses `border-foreground/30 bg-muted/30`, unselected uses `border-border hover:bg-muted/20`
   - Shows "(X selected)" count next to the header title
+- **STT Dataset rows** (responsive):
+  - **Desktop** (`hidden md:flex`): Single horizontal row with row number, audio player/upload, text input, delete button
+  - **Mobile** (`md:hidden`): Stacked layout — row number + delete button on top, full-width audio upload/player, full-width text input
+  - Audio player uses `w-full h-8` on mobile (no min-width), `w-96 min-width: 250px` on desktop
+  - Upload button is `w-full justify-center` on mobile for full-width tap target
+- **STT ZIP upload section**: `w-full md:w-2/3 md:mx-auto` — full width on mobile, 2/3 centered on desktop. Buttons stack vertically on small screens (`flex-col sm:flex-row`)
+- **TTS CSV upload section**: Buttons stack vertically on small screens (`flex-col sm:flex-row`)
 - **Providers start unselected by default** - user must select at least 1 provider before evaluating
 - Evaluate button always enabled; clicking without providers shows red border around provider selection and switches to Settings tab
 - On submit: calls `POST /[tts|stt]/evaluate`, then redirects to `/[tts|stt]/{uuid}` using the returned `task_id`
@@ -1930,11 +1942,11 @@ Both TTS and STT evaluation pages follow the same list → new → detail patter
 - **TTS metrics**: LLM Judge, TTFB (latency metrics are objects with `mean`, `std`, `values`; Processing Time removed from UI)
 - **Null-safe metric rendering**: Numeric metrics (string_similarity, wer, llm_judge_score, ttfb.mean) can be null. Always check before formatting: `value != null ? parseFloat(value.toFixed(4)) : "-"`. Use `parseFloat()` wrapper to remove trailing zeros. Max 4 decimal places for all metrics to prevent column overflow
 - **STT Outputs tab**: Shows Ground Truth vs Prediction text; metrics columns (WER, String Similarity, LLM Judge) shown when status is "done" OR when all rows have metrics available. Rows with empty predictions are highlighted with `bg-red-500/10` and show "No transcript generated" in muted text
-  - **Desktop table layout**: Uses `table-fixed` with explicit column widths (ID: `w-12`, Ground Truth/Prediction: `w-[30%]` each) to prevent long text from overflowing. Text columns use `break-words` for wrapping. Wrapped in `hidden md:block`
+  - **Desktop table layout**: Uses `table-fixed` with explicit column widths — ID: `w-12`, Ground Truth/Prediction: dynamic widths based on `showMetrics` (`w-[30%]` when metrics visible, `w-[calc(50%-24px)]` when hidden so columns expand to fill space during streaming). Text columns use `break-words` for wrapping. Wrapped in `hidden md:block`
   - **Mobile card layout**: `md:hidden` card list — each result is a bordered `rounded-xl` card showing: row number + Pass/Fail badge header, Ground Truth section, Prediction section, then WER/Similarity metrics and LLM Judge reasoning below a border separator
   - **Empty prediction detection**: Helper functions `hasEmptyPredictions()` and `getFirstEmptyPredictionIndex()` check for rows without transcripts. Provider status shows red X if any empty, and clicking scrolls to first empty row via `data-row-index` attribute
 - **TTS Outputs tab**: Shows text input with audio playback; LLM Judge column shown when status is "done" OR when all rows have metrics available
-  - **Desktop table layout**: Standard table with ID, Text (`max-w-[200px] break-words`), Audio (`min-w-[280px]`), LLM Judge columns. Wrapped in `hidden md:block`
+  - **Desktop table layout**: Uses `table-fixed` with explicit column widths — ID: `w-12`, Text: `w-[25%]` when LLM Judge visible, Audio: `w-[50%]` when LLM Judge visible (wider to give audio player more room), both `w-[calc(50%-24px)]` when hidden so columns expand during streaming. Audio uses `min-w-[280px]`. Wrapped in `hidden md:block`
   - **Mobile card layout**: `md:hidden` card list — each result card shows: row number + Pass/Fail badge header, Text section, Audio player (full-width, no min-width constraint), and LLM Judge reasoning inline
 - **LLM Judge display**:
   - **Desktop**: Pass/Fail badges (green/red) with info icon button (ⓘ) that shows reasoning via `Tooltip` component on hover (falls back to "Score: X" if no reasoning)
@@ -2151,6 +2163,7 @@ const getFilteredProviders = (language: LanguageOption) => {
     - **TestRunnerDialog behavior based on `initialRunStatus`**:
       - **Completed runs** (`done`/`completed`): Clears test results initially, fetches fresh from API once (no polling), displays actual pass/fail status
       - **In-progress runs** (`pending`/`queued`/`in_progress`): Initializes tests as "running" (yellow), polls API at `POLLING_INTERVAL_MS` until complete
+      - **Overall error state** (`isOverallError`): When `runStatus === "failed"` AND all tests have errors (none have real results), replaces the entire split-panel layout with a centered error card ("Something went wrong" / "We're looking into it..."). Header pass/fail stats are also hidden. This prevents showing a confusing split-panel with every test errored individually
     - **BenchmarkResultsDialog intermediate results**:
       - **When in progress**: Shows Outputs view directly (no tabs visible), all providers displayed immediately
       - **When done**: Shows both Leaderboard and Outputs tabs, auto-switches to Leaderboard tab
@@ -2860,10 +2873,10 @@ The `GET /agent-tests/benchmark/{taskId}` endpoint returns intermediate results 
 ```tsx
 // Benchmark LeaderboardSummary (BenchmarkResultsDialog)
 type LeaderboardSummary = {
-  model: string;       // e.g. "anthropic__claude-opus-4.5" (double underscore, not slash)
-  passed: string;      // e.g. "1" (string, not number)
-  total: string;       // e.g. "2" (string, not number)
-  pass_rate: string;   // e.g. "50.0" (string, not number)
+  model: string; // e.g. "anthropic__claude-opus-4.5" (double underscore, not slash)
+  passed: string; // e.g. "1" (string, not number)
+  total: string; // e.g. "2" (string, not number)
+  pass_rate: string; // e.g. "50.0" (string, not number)
 };
 ```
 
@@ -3690,6 +3703,7 @@ Set `MAINTENANCE_MODE=true` in `.env.local` to show a maintenance page. When ena
   - **404 Not Found**: Shows `NotFoundState` with "404 Not found" message
   - Pattern: add `errorCode` state (`useState<401 | 403 | 404 | null>(null)`), check status codes before `!response.ok`, render `<NotFoundState errorCode={errorCode} />`
   - For simulation runs, a special `notFoundHeader` is used that shows empty header and navigates back to `/simulations` (main page) instead of the specific simulation
+- **User-facing error messages**: Never expose raw error strings from the API or catch blocks to users. Show generic, friendly messages instead. Pattern: "Something went wrong" as the heading with "We're looking into it. Please reach out to us if this issue persists." as the description. Raw errors should only be logged to `console.error`. Applied in: `TestRunnerDialog` (individual test error detail view AND overall error state when entire run fails), `BenchmarkResultsDialog` (error state panel), STT/TTS evaluation provider error banners ("There was an error running this provider. Please contact us by posting your issue to help us help you.")
 - **Wait for token**: In `useEffect` hooks, return early if `backendAccessToken` is not yet available; include it in the dependency array
 - **ngrok header**: `"ngrok-skip-browser-warning": "true"` header is included automatically by API utilities
 - **Backend URL check**: API utilities will throw an error if `NEXT_PUBLIC_BACKEND_URL` is not set

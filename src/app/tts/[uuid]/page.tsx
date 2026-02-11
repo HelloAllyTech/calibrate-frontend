@@ -421,28 +421,45 @@ export default function TTSEvaluationDetailPage() {
                         {[
                           {
                             metric: "LLM Judge",
-                            description: "The LLM judge evaluates whether the synthesized audio accurately matches the reference text. It checks for semantic equivalence and pronunciation accuracy, returning Pass if the audio correctly represents the input text.",
+                            description:
+                              "The LLM judge evaluates whether the synthesized audio accurately matches the reference text. It checks for semantic equivalence and pronunciation accuracy, returning Pass if the audio correctly represents the input text.",
                             preference: "Pass is better",
                             range: "Pass / Fail",
                           },
                           {
                             metric: "TTFB (Time To First Byte)",
-                            description: "Time to first byte measures the latency from when a request is sent until the first byte of the response is received.",
+                            description:
+                              "Time to first byte measures the latency from when a request is sent until the first byte of the response is received.",
                             preference: "Lower is better",
                             range: "0 - ∞",
                           },
                         ].map((item) => (
-                          <div key={item.metric} className="border border-border rounded-xl p-4 space-y-2">
-                            <h4 className="text-[13px] font-semibold text-foreground">{item.metric}</h4>
-                            <p className="text-[13px] text-muted-foreground">{item.description}</p>
+                          <div
+                            key={item.metric}
+                            className="border border-border rounded-xl p-4 space-y-2"
+                          >
+                            <h4 className="text-[13px] font-semibold text-foreground">
+                              {item.metric}
+                            </h4>
+                            <p className="text-[13px] text-muted-foreground">
+                              {item.description}
+                            </p>
                             <div className="flex gap-4 pt-1">
                               <div>
-                                <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Preference</span>
-                                <p className="text-[13px] text-foreground">{item.preference}</p>
+                                <span className="text-[11px] text-muted-foreground uppercase tracking-wide">
+                                  Preference
+                                </span>
+                                <p className="text-[13px] text-foreground">
+                                  {item.preference}
+                                </p>
                               </div>
                               <div>
-                                <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Range</span>
-                                <p className="text-[13px] text-foreground">{item.range}</p>
+                                <span className="text-[11px] text-muted-foreground uppercase tracking-wide">
+                                  Range
+                                </span>
+                                <p className="text-[13px] text-foreground">
+                                  {item.range}
+                                </p>
                               </div>
                             </div>
                           </div>
@@ -730,16 +747,28 @@ export default function TTSEvaluationDetailPage() {
                                       {/* Desktop: Table layout */}
                                       <div className="hidden md:block border rounded-xl overflow-visible">
                                         <div className="overflow-hidden rounded-xl">
-                                          <table className="w-full">
+                                          <table className="w-full table-fixed">
                                             <thead className="bg-muted/50 border-b border-border">
                                               <tr>
-                                                <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                <th className="w-12 px-4 py-3 text-left text-[12px] font-medium text-foreground">
                                                   ID
                                                 </th>
-                                                <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground max-w-[200px]">
+                                                <th
+                                                  className={`${
+                                                    showMetrics
+                                                      ? "w-[30%]"
+                                                      : "w-[calc(50%-24px)]"
+                                                  } px-4 py-3 text-left text-[12px] font-medium text-foreground`}
+                                                >
                                                   Text
                                                 </th>
-                                                <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">
+                                                <th
+                                                  className={`${
+                                                    showMetrics
+                                                      ? "w-[50%]"
+                                                      : "w-[calc(50%-24px)]"
+                                                  } px-4 py-3 text-left text-[12px] font-medium text-foreground`}
+                                                >
                                                   Audio
                                                 </th>
                                                 {showMetrics && (
@@ -759,7 +788,7 @@ export default function TTSEvaluationDetailPage() {
                                                     <td className="px-4 py-3 text-[13px] text-foreground">
                                                       {index + 1}
                                                     </td>
-                                                    <td className="px-4 py-3 text-[13px] text-foreground max-w-[200px] break-words">
+                                                    <td className="px-4 py-3 text-[13px] text-foreground break-words">
                                                       {result.text}
                                                     </td>
                                                     <td className="px-4 py-3 text-[13px] text-foreground">
@@ -769,18 +798,21 @@ export default function TTSEvaluationDetailPage() {
                                                         src={result.audio_path}
                                                       >
                                                         Your browser does not
-                                                        support the audio element.
+                                                        support the audio
+                                                        element.
                                                       </audio>
                                                     </td>
                                                     {showMetrics && (
                                                       <td className="px-4 py-3">
                                                         {(() => {
-                                                          const scoreStr = String(
-                                                            result.llm_judge_score ||
-                                                              ""
-                                                          ).toLowerCase();
+                                                          const scoreStr =
+                                                            String(
+                                                              result.llm_judge_score ||
+                                                                ""
+                                                            ).toLowerCase();
                                                           const passed =
-                                                            scoreStr === "true" ||
+                                                            scoreStr ===
+                                                              "true" ||
                                                             scoreStr === "1";
                                                           const tooltipContent =
                                                             result.llm_judge_reasoning
@@ -843,45 +875,67 @@ export default function TTSEvaluationDetailPage() {
                                       <div className="md:hidden space-y-3">
                                         {providerResult.results.map(
                                           (result, index) => {
-                                            const scoreStr = String(result.llm_judge_score || "").toLowerCase();
-                                            const passed = scoreStr === "true" || scoreStr === "1";
+                                            const scoreStr = String(
+                                              result.llm_judge_score || ""
+                                            ).toLowerCase();
+                                            const passed =
+                                              scoreStr === "true" ||
+                                              scoreStr === "1";
                                             return (
                                               <div
                                                 key={index}
                                                 className="border border-border rounded-xl p-4 space-y-3"
                                               >
                                                 <div className="flex items-center justify-between">
-                                                  <span className="text-[12px] text-muted-foreground font-medium">#{index + 1}</span>
+                                                  <span className="text-[12px] text-muted-foreground font-medium">
+                                                    #{index + 1}
+                                                  </span>
                                                   {showMetrics && (
-                                                    <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
-                                                      passed
-                                                        ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400"
-                                                        : "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400"
-                                                    }`}>
+                                                    <span
+                                                      className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
+                                                        passed
+                                                          ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400"
+                                                          : "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400"
+                                                      }`}
+                                                    >
                                                       {passed ? "Pass" : "Fail"}
                                                     </span>
                                                   )}
                                                 </div>
                                                 <div>
-                                                  <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Text</span>
-                                                  <p className="text-[13px] text-foreground mt-0.5">{result.text}</p>
+                                                  <span className="text-[11px] text-muted-foreground uppercase tracking-wide">
+                                                    Text
+                                                  </span>
+                                                  <p className="text-[13px] text-foreground mt-0.5">
+                                                    {result.text}
+                                                  </p>
                                                 </div>
                                                 <div>
-                                                  <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Audio</span>
+                                                  <span className="text-[11px] text-muted-foreground uppercase tracking-wide">
+                                                    Audio
+                                                  </span>
                                                   <audio
                                                     controls
                                                     className="w-full mt-1"
                                                     src={result.audio_path}
                                                   >
-                                                    Your browser does not support the audio element.
+                                                    Your browser does not
+                                                    support the audio element.
                                                   </audio>
                                                 </div>
-                                                {showMetrics && result.llm_judge_reasoning && (
-                                                  <div className="pt-1 border-t border-border">
-                                                    <span className="text-[11px] text-muted-foreground uppercase tracking-wide">LLM Judge Reasoning</span>
-                                                    <p className="text-[12px] text-muted-foreground mt-0.5">{result.llm_judge_reasoning}</p>
-                                                  </div>
-                                                )}
+                                                {showMetrics &&
+                                                  result.llm_judge_reasoning && (
+                                                    <div className="pt-1 border-t border-border">
+                                                      <span className="text-[11px] text-muted-foreground uppercase tracking-wide">
+                                                        LLM Judge Reasoning
+                                                      </span>
+                                                      <p className="text-[12px] text-muted-foreground mt-0.5">
+                                                        {
+                                                          result.llm_judge_reasoning
+                                                        }
+                                                      </p>
+                                                    </div>
+                                                  )}
                                               </div>
                                             );
                                           }

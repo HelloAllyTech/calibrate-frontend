@@ -784,6 +784,12 @@ export function TestRunnerDialog({
   const runningTests = testResults.filter((r) => r.status === "running");
   const pendingTests = testResults.filter((r) => r.status === "pending");
 
+  // Check if the entire run errored (all tests have errors, none have real results)
+  const isOverallError =
+    runStatus === "failed" &&
+    testResults.length > 0 &&
+    testResults.every((r) => r.error);
+
   if (!isOpen) return null;
 
   return (
@@ -796,7 +802,8 @@ export function TestRunnerDialog({
           </h2>
           <div className="flex items-center gap-3">
             {/* Passed/Failed counts - desktop only */}
-            {testResults.length > 0 &&
+            {!isOverallError &&
+              testResults.length > 0 &&
               (passedTests.length > 0 || failedTests.length > 0) && (
                 <div className="hidden md:block">
                   <TestStats
@@ -814,7 +821,36 @@ export function TestRunnerDialog({
           </div>
         </div>
 
-        {/* Content */}
+        {/* Overall Error State - replaces split panel */}
+        {isOverallError ? (
+          <div className="flex-1 flex items-center justify-center p-6">
+            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-6 max-w-md text-center">
+              <div className="flex items-center justify-center gap-2 mb-3">
+                <svg
+                  className="w-5 h-5 text-red-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+                  />
+                </svg>
+                <span className="font-medium text-red-500">
+                  Something went wrong
+                </span>
+              </div>
+              <p className="text-sm text-red-400">
+                We&apos;re looking into it. Please reach out to us if this issue
+                persists.
+              </p>
+            </div>
+          </div>
+        ) : (
+        /* Content - Split panel */
         <div className="flex-1 flex overflow-hidden">
           {/* Left Panel - Test List */}
           <div
@@ -964,6 +1000,7 @@ export function TestRunnerDialog({
             )}
           </div>
         </div>
+        )}
       </div>
     </div>
   );
@@ -1050,9 +1087,11 @@ function LocalTestDetailView({ result }: { result: TestResult }) {
                 d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
               />
             </svg>
-            <span className="font-medium text-red-500">Error</span>
+            <span className="font-medium text-red-500">Something went wrong</span>
           </div>
-          <p className="text-sm text-red-400">{result.error}</p>
+          <p className="text-sm text-red-400">
+            We&apos;re looking into it. Please reach out to us if this issue persists.
+          </p>
         </div>
       </div>
     );

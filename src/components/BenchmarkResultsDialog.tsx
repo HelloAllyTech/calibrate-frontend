@@ -212,6 +212,7 @@ export function BenchmarkResultsDialog({
         }
 
         if (result.error) {
+          console.error("Benchmark error:", result.error);
           setError(result.error);
         } else {
           setLeaderboardSummary(result.leaderboard_summary);
@@ -440,9 +441,12 @@ export function BenchmarkResultsDialog({
                     d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
                   />
                 </svg>
-                <span className="font-medium text-red-500">Error</span>
+                <span className="font-medium text-red-500">Something went wrong</span>
               </div>
-              <p className="text-sm text-red-400 mb-4">{error}</p>
+              <p className="text-sm text-red-400 mb-4">
+                We&apos;re looking into it. Please reach out to us if this issue
+                persists.
+              </p>
               {onGoBack && (
                 <button
                   onClick={onGoBack}
