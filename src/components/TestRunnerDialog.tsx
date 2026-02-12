@@ -13,6 +13,7 @@ import {
   TestStats,
 } from "./test-results/shared";
 import { POLLING_INTERVAL_MS } from "@/constants/polling";
+import { useHideFloatingButton } from "@/components/AppLayout";
 
 type TestData = {
   uuid: string;
@@ -106,6 +107,9 @@ export function TestRunnerDialog({
   initialRunStatus,
   onStatusUpdate,
 }: TestRunnerDialogProps) {
+  // Hide the floating "Talk to Us" button when this dialog is open
+  useHideFloatingButton(isOpen);
+
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
   const [testResults, setTestResults] = useState<TestResult[]>([]);

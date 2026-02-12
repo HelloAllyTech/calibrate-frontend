@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { AppLayout } from "@/components/AppLayout";
+import { AppLayout, useHideFloatingButton } from "@/components/AppLayout";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
 import { useSidebarState } from "@/lib/sidebar";
 
@@ -25,6 +25,9 @@ export default function ScenariosPage() {
   const [sidebarOpen, setSidebarOpen] = useSidebarState();
   const [searchQuery, setSearchQuery] = useState("");
   const [addScenarioSidebarOpen, setAddScenarioSidebarOpen] = useState(false);
+
+  // Hide the floating "Talk to Us" button when the add/edit scenario sidebar is open
+  useHideFloatingButton(addScenarioSidebarOpen);
 
   // Set page title
   useEffect(() => {

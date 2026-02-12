@@ -3,6 +3,7 @@
 import React from "react";
 import { CloseIcon, SpinnerIcon } from "@/components/icons";
 import { Button } from "./Button";
+import { useHideFloatingButton } from "@/components/AppLayout";
 
 type SlidePanelProps = {
   isOpen: boolean;
@@ -27,6 +28,9 @@ export function SlidePanel({
   footer,
   width = "w-[40%] min-w-[500px]",
 }: SlidePanelProps) {
+  // Hide the floating "Talk to Us" button when this panel is open
+  useHideFloatingButton(isOpen);
+
   if (!isOpen) return null;
 
   return (

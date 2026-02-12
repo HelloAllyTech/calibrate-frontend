@@ -4,6 +4,7 @@ import React, { useState, useRef } from "react";
 import { ParameterCard, Parameter } from "@/components/ParameterCard";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
 import { NestedContainer } from "@/components/ui/NestedContainer";
+import { useHideFloatingButton } from "@/components/AppLayout";
 
 // Type alias for backward compatibility
 type DataFieldProperty = Parameter;
@@ -42,6 +43,9 @@ export function DataExtractionTabContent({
 }: DataExtractionTabContentProps) {
   // Data extraction sidebar state
   const [addDataFieldSidebarOpen, setAddDataFieldSidebarOpen] = useState(false);
+
+  // Hide the floating "Talk to Us" button when the add/edit data field sidebar is open
+  useHideFloatingButton(addDataFieldSidebarOpen);
   const [editingFieldUuid, setEditingFieldUuid] = useState<string | null>(null);
   const [dataFieldDataType, setDataFieldDataType] = useState("string");
   const [dataFieldIdentifier, setDataFieldIdentifier] = useState("");

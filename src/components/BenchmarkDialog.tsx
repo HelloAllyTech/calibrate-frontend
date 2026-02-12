@@ -12,6 +12,7 @@ import {
   PlayIcon,
 } from "@/components/icons";
 import { Button } from "@/components/ui";
+import { useHideFloatingButton } from "@/components/AppLayout";
 
 type TestData = {
   uuid: string;
@@ -40,6 +41,9 @@ export function BenchmarkDialog({
   tests,
   onBenchmarkCreated,
 }: BenchmarkDialogProps) {
+  // Hide the floating "Talk to Us" button when this dialog is open
+  useHideFloatingButton(isOpen);
+
   const [selectedModels, setSelectedModels] = useState<(LLMModel | null)[]>([
     null,
   ]);

@@ -16,6 +16,7 @@ import type {
   LLMModel,
   DataExtractionFieldData,
 } from "@/components/agent-tabs";
+import { useHideFloatingButton } from "@/components/AppLayout";
 
 export type AgentDetailHeaderState = {
   agentName: string;
@@ -83,6 +84,9 @@ export function AgentDetail({
   // Name editing dialog state
   const [isEditNameDialogOpen, setIsEditNameDialogOpen] = useState(false);
   const [editedName, setEditedName] = useState("");
+
+  // Hide the floating "Talk to Us" button when the edit name dialog is open
+  useHideFloatingButton(isEditNameDialogOpen);
 
   // Update URL when tab changes
   const handleTabChange = (tab: TabType) => {

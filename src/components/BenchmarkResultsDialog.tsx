@@ -14,6 +14,7 @@ import { StatusBadge } from "@/components/ui";
 import { LeaderboardBarChart, getColorMap } from "./charts/LeaderboardBarChart";
 import { DownloadableTable } from "./DownloadableTable";
 import { POLLING_INTERVAL_MS } from "@/constants/polling";
+import { useHideFloatingButton } from "@/components/AppLayout";
 
 type BenchmarkTestResult = {
   name?: string;
@@ -73,6 +74,9 @@ export function BenchmarkResultsDialog({
   taskId,
   onBenchmarkCreated,
 }: BenchmarkResultsDialogProps) {
+  // Hide the floating "Talk to Us" button when this dialog is open
+  useHideFloatingButton(isOpen);
+
   const [activeTab, setActiveTab] = useState<"leaderboard" | "outputs">(
     "outputs"
   );

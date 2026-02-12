@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
+import { useHideFloatingButton } from "@/components/AppLayout";
 
 type NewSimulationDialogProps = {
   onClose: () => void;
@@ -12,6 +13,10 @@ export function NewSimulationDialog({
   onClose,
   onCreateSimulation,
 }: NewSimulationDialogProps) {
+  // Hide the floating "Talk to Us" button when this dialog is rendered
+  // (this component is only rendered when the dialog should be visible)
+  useHideFloatingButton(true);
+
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
   const [simulationName, setSimulationName] = useState("");

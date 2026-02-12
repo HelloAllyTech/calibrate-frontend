@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
+import { useHideFloatingButton } from "@/components/AppLayout";
 
 type Agent = {
   uuid: string;
@@ -52,6 +53,10 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
   // Duplicate dialog state
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
   const [agentToDuplicate, setAgentToDuplicate] = useState<Agent | null>(null);
+
+  // Hide the floating "Talk to Us" button when any dialog is open
+  useHideFloatingButton(dialogOpen);
+  useHideFloatingButton(duplicateDialogOpen);
 
   const backendAccessToken = (session as any)?.backendAccessToken;
 

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { ToolPicker, AvailableTool } from "@/components/ToolPicker";
 import { INBUILT_TOOLS } from "@/constants/inbuilt-tools";
+import { useHideFloatingButton } from "@/components/AppLayout";
 
 type SelectedToolConfig = {
   id: string;
@@ -76,6 +77,9 @@ export function AddTestDialog({
   initialTab,
   initialConfig,
 }: AddTestDialogProps) {
+  // Hide the floating "Talk to Us" button when this dialog is open
+  useHideFloatingButton(isOpen);
+
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
   const [activeTab, setActiveTab] = useState<"next-reply" | "tool-invocation">(

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "@/components/providers/SessionProvider";
+import { FloatingButtonProvider } from "@/components/providers/FloatingButtonProvider";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Toaster } from "sonner";
@@ -45,7 +46,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${dmSans.variable} antialiased`}
       >
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          <FloatingButtonProvider>{children}</FloatingButtonProvider>
+        </SessionProvider>
         <Toaster richColors position="top-right" />
         <Analytics />
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (

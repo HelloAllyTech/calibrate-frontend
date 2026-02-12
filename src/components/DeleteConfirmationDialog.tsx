@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useHideFloatingButton } from "@/components/AppLayout";
 
 type DeleteConfirmationDialogProps = {
   isOpen: boolean;
@@ -23,6 +24,9 @@ export function DeleteConfirmationDialog({
   cancelText = "Cancel",
   isDeleting = false,
 }: DeleteConfirmationDialogProps) {
+  // Hide the floating "Talk to Us" button when this dialog is open
+  useHideFloatingButton(isOpen);
+
   if (!isOpen) return null;
 
   const handleClose = () => {

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { AppLayout } from "@/components/AppLayout";
+import { AppLayout, useHideFloatingButton } from "@/components/AppLayout";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
 import { Tooltip } from "@/components/Tooltip";
 import { useSidebarState } from "@/lib/sidebar";
@@ -36,6 +36,9 @@ export default function PersonasPage() {
   }, []);
   const [searchQuery, setSearchQuery] = useState("");
   const [addPersonaSidebarOpen, setAddPersonaSidebarOpen] = useState(false);
+
+  // Hide the floating "Talk to Us" button when the add/edit persona sidebar is open
+  useHideFloatingButton(addPersonaSidebarOpen);
   const [personas, setPersonas] = useState<PersonaData[]>([]);
   const [personasLoading, setPersonasLoading] = useState(true);
   const [personasError, setPersonasError] = useState<string | null>(null);

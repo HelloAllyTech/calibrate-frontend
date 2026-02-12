@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { AppLayout } from "@/components/AppLayout";
+import { AppLayout, useHideFloatingButton } from "@/components/AppLayout";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
 import { useSidebarState } from "@/lib/sidebar";
 
@@ -24,6 +24,9 @@ export default function MetricsPage() {
   const [addMetricSidebarOpen, setAddMetricSidebarOpen] = useState(false);
   const [metrics, setMetrics] = useState<MetricData[]>([]);
   const [metricsLoading, setMetricsLoading] = useState(true);
+
+  // Hide the floating "Talk to Us" button when the add/edit metric sidebar is open
+  useHideFloatingButton(addMetricSidebarOpen);
 
   // Set page title
   useEffect(() => {
@@ -901,6 +904,9 @@ function DuplicateMetricDialog({
   onDuplicated: (metric: MetricData) => void;
   backendAccessToken?: string;
 }) {
+  // Hide the floating "Talk to Us" button when this dialog is rendered
+  useHideFloatingButton(true);
+
   const [metricName, setMetricName] = useState(
     `Copy of ${originalMetric.name}`
   );

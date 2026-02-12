@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { signOut } from "next-auth/react";
 import { ParameterCard, Parameter } from "@/components/ParameterCard";
 import { NestedContainer } from "@/components/ui/NestedContainer";
+import { useHideFloatingButton } from "@/components/AppLayout";
 
 type ToolData = {
   uuid: string;
@@ -51,6 +52,9 @@ export function AddToolDialog({
   backendAccessToken,
   onToolsUpdated,
 }: AddToolDialogProps) {
+  // Hide the floating "Talk to Us" button when this dialog is open
+  useHideFloatingButton(isOpen);
+
   const [toolName, setToolName] = useState("");
   const [toolDescription, setToolDescription] = useState("");
   const [parameters, setParameters] = useState<Parameter[]>([]);

@@ -9,7 +9,7 @@ import React, {
 } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { AppLayout } from "@/components/AppLayout";
+import { AppLayout, useHideFloatingButton } from "@/components/AppLayout";
 import { Tooltip } from "@/components/Tooltip";
 import { NotFoundState } from "@/components/ui";
 import { formatStatus, getStatusBadgeClass } from "@/lib/status";
@@ -91,6 +91,9 @@ export default function SimulationRunPage() {
   const [errorCode, setErrorCode] = useState<401 | 403 | 404 | null>(null);
   const [isAborting, setIsAborting] = useState(false);
   const [transcriptDialogOpen, setTranscriptDialogOpen] = useState(false);
+
+  // Hide the floating "Talk to Us" button when the transcript dialog is open
+  useHideFloatingButton(transcriptDialogOpen);
   const [selectedSimulationKey, setSelectedSimulationKey] = useState<
     string | null
   >(null);

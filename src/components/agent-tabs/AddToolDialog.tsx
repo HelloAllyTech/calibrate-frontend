@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
+import { useHideFloatingButton } from "@/components/AppLayout";
 
 type ToolData = {
   uuid: string;
@@ -31,6 +32,9 @@ export function AddToolDialog({
   allToolsLoading,
   onToolsAdded,
 }: AddToolDialogProps) {
+  // Hide the floating "Talk to Us" button when this dialog is open
+  useHideFloatingButton(isOpen);
+
   const { data: session } = useSession();
   const backendAccessToken = (session as any)?.backendAccessToken;
   const [searchQuery, setSearchQuery] = useState("");

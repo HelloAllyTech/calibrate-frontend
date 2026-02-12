@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { AgentPicker, Agent } from "@/components/AgentPicker";
+import { useHideFloatingButton } from "@/components/AppLayout";
 
 type RunTestDialogProps = {
   isOpen: boolean;
@@ -22,6 +23,9 @@ export function RunTestDialog({
   testUuid,
   onRunTest,
 }: RunTestDialogProps) {
+  // Hide the floating "Talk to Us" button when this dialog is open
+  useHideFloatingButton(isOpen);
+
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [attachToAgent, setAttachToAgent] = useState(true);
 

@@ -860,7 +860,7 @@ This enables:
 │   │   ├── evaluations/       # Evaluation UI components
 │   │   ├── charts/            # Recharts visualization components
 │   │   ├── icons/             # Shared SVG icon components
-│   │   ├── providers/         # React context providers
+│   │   ├── providers/         # React context providers (SessionProvider, FloatingButtonProvider)
 │   │   ├── simulation-tabs/   # Simulation detail components
 │   │   ├── test-results/      # Shared test result components
 │   │   └── ui/                # Reusable UI components (Button, SearchInput, etc.)
@@ -1138,7 +1138,7 @@ The app uses NextAuth.js v5 with middleware-based route protection and backend s
    - Authenticated users on `/login` → redirected to `/agents`
    - Auth API routes (`/api/auth/*`), debug routes (`/debug*`), and docs routes (`/docs*`) are always accessible
 
-2. **SessionProvider** wraps the app in `layout.tsx` for client-side session access
+2. **SessionProvider** wraps the app in `layout.tsx` for client-side session access. **FloatingButtonProvider** also wraps the app (inside SessionProvider) to enable the FAB hide/show functionality across all pages
 
 3. **Login page** (`/login`) shows landing page with Google OAuth CTA
 
@@ -1314,6 +1314,21 @@ The entire application is fully responsive and works on mobile, tablet, and desk
 - **State**: `talkToUsOpen` boolean state, toggled by clicking the FAB
 - **Click-outside**: Uses a `talkToUsRef` ref with the same `mousedown` click-outside handler that manages the profile dropdown
 - **Note**: The community invite URLs here differ from those on the landing page (see naming note at the top of this file)
+- **Hidden when dialogs open**: The FAB automatically hides when any dialog, sidebar, or modal is open. This uses a global context provider (`FloatingButtonProvider`) that tracks a hide count. Any component can call the `useHideFloatingButton(isOpen)` hook to participate in this behavior:
+  
+  ```tsx
+  import { useHideFloatingButton } from "@/components/AppLayout";
+  
+  function MyDialog({ isOpen }: { isOpen: boolean }) {
+    useHideFloatingButton(isOpen); // FAB hides when isOpen is true
+    // ... rest of component
+  }
+  ```
+  
+  - **Provider location**: `FloatingButtonProvider` is in the root layout (`src/app/layout.tsx`), wrapping the entire app
+  - **Hook export**: `useHideFloatingButton` is exported from `@/components/AppLayout` for convenience (re-exported from the provider)
+  - **Components using this**: All dialog components (`AddToolDialog`, `AddTestDialog`, `DeleteConfirmationDialog`, etc.), slide panels (`SlidePanel`), and page-level sidebars (personas, scenarios, metrics add/edit sidebars, simulation transcript dialogs)
+  - **How it works**: Uses a counter-based system — multiple dialogs can be open, and the FAB only shows when the count is 0
 
 **Key difference from landing page**: The `/login` marketing/landing page does not use `AppLayout`, so it has its own responsive behavior defined separately (see Landing Page section).
 

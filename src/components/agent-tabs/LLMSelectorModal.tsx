@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { llmProviders, type LLMModel } from "./constants/providers";
 import { ChevronLeftIcon, CloseIcon } from "@/components/icons";
+import { useHideFloatingButton } from "@/components/AppLayout";
 
 type LLMProvider = {
   name: string;
@@ -25,6 +26,9 @@ export function LLMSelectorModal({
   onSelect,
   availableProviders,
 }: LLMSelectorModalProps) {
+  // Hide the floating "Talk to Us" button when this modal is open
+  useHideFloatingButton(isOpen);
+
   const [searchQuery, setSearchQuery] = useState("");
 
   if (!isOpen) return null;

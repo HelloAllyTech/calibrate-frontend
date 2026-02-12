@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
+import { useHideFloatingButton } from "@/components/AppLayout";
 
 type EvaluationCriteriaData = {
   uuid: string;
@@ -35,6 +36,9 @@ export function EvaluationTabContent({
 }: EvaluationTabContentProps) {
   // Evaluation criteria sidebar state
   const [addCriteriaSidebarOpen, setAddCriteriaSidebarOpen] = useState(false);
+
+  // Hide the floating "Talk to Us" button when the add/edit criteria sidebar is open
+  useHideFloatingButton(addCriteriaSidebarOpen);
   const [editingCriteriaUuid, setEditingCriteriaUuid] = useState<string | null>(
     null
   );
