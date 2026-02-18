@@ -3889,7 +3889,7 @@ Set `MAINTENANCE_MODE=true` in `.env.local` to show a maintenance page. When ena
 - **User-facing error messages**: Never expose raw error strings from the API or catch blocks to users. Show generic, friendly messages instead. Pattern: "Something went wrong" as the heading with "We're looking into it. Please reach out to us if this issue persists." as the description. Raw errors should only be logged to `console.error`. Applied in: `TestRunnerDialog` (individual test error detail view AND overall error state when entire run fails), `BenchmarkResultsDialog` (error state panel), STT/TTS evaluation provider error banners ("There was an error running this provider. Please contact us by posting your issue to help us help you.")
 - **Wait for token**: In `useEffect` hooks, return early if access token is not yet available; include it in the dependency array
 - **Dual auth support**: Use `useAccessToken()` hook from `@/hooks` to get token from either NextAuth session (Google OAuth) or localStorage (email/password). Components using only `(session as any)?.backendAccessToken` will NOT work with email/password login.
-  - **Migrated components**: `Agents.tsx` uses `useAccessToken` hook
+  - **Migrated components**: `Agents.tsx`, `AgentDetail.tsx` use `useAccessToken` hook
   - **Not yet migrated**: Most other components still use session-only pattern and need migration for email/password login support
 - **ngrok header**: `"ngrok-skip-browser-warning": "true"` header is included automatically by API utilities
 - **Backend URL check**: API utilities will throw an error if `NEXT_PUBLIC_BACKEND_URL` is not set

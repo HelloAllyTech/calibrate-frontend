@@ -65,8 +65,7 @@ export function AgentDetail({
 }: AgentDetailProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { data: session } = useSession();
-  const backendAccessToken = (session as any)?.backendAccessToken;
+  const backendAccessToken = useAccessToken();
 
   // Get initial tab from URL or default to "agent"
   const getInitialTab = (): TabType => {
