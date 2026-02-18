@@ -596,7 +596,7 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
         <NewAgentDialog
           onClose={() => setDialogOpen(false)}
           onCreateAgent={onNavigateToAgent}
-          backendAccessToken={backendAccessToken}
+          backendAccessToken={backendAccessToken ?? undefined}
         />
       )}
 
@@ -618,7 +618,7 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
           onClose={closeDuplicateDialog}
           onDuplicated={handleAgentDuplicated}
           onNavigateToAgent={onNavigateToAgent}
-          backendAccessToken={backendAccessToken}
+          backendAccessToken={backendAccessToken ?? undefined}
         />
       )}
     </div>
