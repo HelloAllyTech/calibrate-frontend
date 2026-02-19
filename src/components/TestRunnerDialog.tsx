@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useAccessToken } from "@/hooks";
 import {
   TestCaseOutput,
   TestCaseData,
@@ -110,8 +111,7 @@ export function TestRunnerDialog({
   // Hide the floating "Talk to Us" button when this dialog is open
   useHideFloatingButton(isOpen);
 
-  const { data: session } = useSession();
-  const backendAccessToken = (session as any)?.backendAccessToken;
+  const backendAccessToken = useAccessToken();
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [selectedTestUuid, setSelectedTestUuid] = useState<string | null>(null);
   const [isRunning, setIsRunning] = useState(false);

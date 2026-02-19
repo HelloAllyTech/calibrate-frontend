@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useAccessToken } from "@/hooks";
 import { toast } from "sonner";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
 import { TestRunnerDialog } from "@/components/TestRunnerDialog";
@@ -123,8 +124,7 @@ export function TestsTabContent({
   agentUuid,
   agentName = "Agent",
 }: TestsTabContentProps) {
-  const { data: session } = useSession();
-  const backendAccessToken = (session as any)?.backendAccessToken;
+  const backendAccessToken = useAccessToken();
   // Agent tests state (tests attached to the agent)
   const [agentTests, setAgentTests] = useState<TestData[]>([]);
   const [agentTestsLoading, setAgentTestsLoading] = useState(true);

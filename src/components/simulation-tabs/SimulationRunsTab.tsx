@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useAccessToken } from "@/hooks";
 import { formatStatus, getStatusBadgeClass } from "@/lib/status";
 
 type Run = {
@@ -19,8 +20,7 @@ type SimulationRunsTabProps = {
 };
 
 export function SimulationRunsTab({ simulationUuid }: SimulationRunsTabProps) {
-  const { data: session } = useSession();
-  const backendAccessToken = (session as any)?.backendAccessToken;
+  const backendAccessToken = useAccessToken();
   const [runs, setRuns] = useState<Run[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

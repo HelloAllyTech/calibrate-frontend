@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useAccessToken } from "@/hooks";
 
 export type Agent = {
   uuid: string;
@@ -25,8 +26,7 @@ export function AgentPicker({
   className = "",
   disabled = false,
 }: AgentPickerProps) {
-  const { data: session } = useSession();
-  const backendAccessToken = (session as any)?.backendAccessToken;
+  const backendAccessToken = useAccessToken();
   const [agents, setAgents] = useState<Agent[]>([]);
   const [agentsLoading, setAgentsLoading] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);

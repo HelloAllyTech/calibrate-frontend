@@ -2,7 +2,8 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useAccessToken } from "@/hooks";
 import { toast } from "sonner";
 import { sttProviders, STTProvider } from "../agent-tabs/constants/providers";
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog";
@@ -83,8 +84,7 @@ const getAudioDuration = (file: File): Promise<number> => {
 
 export function SpeechToTextEvaluation() {
   const router = useRouter();
-  const { data: session } = useSession();
-  const backendAccessToken = (session as any)?.backendAccessToken;
+  const backendAccessToken = useAccessToken();
   const [activeTab, setActiveTab] = useState<TabType>("settings");
   const [rows, setRows] = useState<AudioTextRow[]>([
     { id: "1", audioFile: null, audioUrl: null, text: "", s3Path: null },

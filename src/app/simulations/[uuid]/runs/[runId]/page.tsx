@@ -8,7 +8,8 @@ import React, {
   useCallback,
 } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useAccessToken } from "@/hooks";
 import { AppLayout, useHideFloatingButton } from "@/components/AppLayout";
 import { Tooltip } from "@/components/Tooltip";
 import { NotFoundState } from "@/components/ui";
@@ -79,8 +80,7 @@ type RunData = {
 export default function SimulationRunPage() {
   const router = useRouter();
   const params = useParams();
-  const { data: session } = useSession();
-  const backendAccessToken = (session as any)?.backendAccessToken;
+  const backendAccessToken = useAccessToken();
   const uuid = params.uuid as string;
   const runId = params.runId as string;
   const [sidebarOpen, setSidebarOpen] = useSidebarState();

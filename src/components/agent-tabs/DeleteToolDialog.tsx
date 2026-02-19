@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useAccessToken } from "@/hooks";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
 import { useHideFloatingButton } from "@/components/AppLayout";
 
@@ -31,8 +32,7 @@ export function DeleteToolDialog({
   // Hide the floating "Talk to Us" button when this dialog is open
   useHideFloatingButton(isOpen);
 
-  const { data: session } = useSession();
-  const backendAccessToken = (session as any)?.backendAccessToken;
+  const backendAccessToken = useAccessToken();
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleClose = () => {

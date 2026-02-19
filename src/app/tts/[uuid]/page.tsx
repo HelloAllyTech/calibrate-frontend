@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useAccessToken } from "@/hooks";
 import { AppLayout } from "@/components/AppLayout";
 import { BackHeader, StatusBadge, NotFoundState } from "@/components/ui";
 import { Tooltip } from "@/components/Tooltip";
@@ -67,8 +68,7 @@ const getProviderLabel = (value: string): string => {
 export default function TTSEvaluationDetailPage() {
   const router = useRouter();
   const params = useParams();
-  const { data: session } = useSession();
-  const backendAccessToken = (session as any)?.backendAccessToken;
+  const backendAccessToken = useAccessToken();
   const taskId = params.uuid as string;
   const [sidebarOpen, setSidebarOpen] = useSidebarState();
   const [evaluationResult, setEvaluationResult] =

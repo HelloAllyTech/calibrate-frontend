@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useAccessToken } from "@/hooks";
 import { AppLayout } from "@/components/AppLayout";
 import { AddToolDialog } from "@/components/AddToolDialog";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
@@ -19,8 +20,7 @@ type ToolData = {
 
 export default function ToolsPage() {
   const router = useRouter();
-  const { data: session } = useSession();
-  const backendAccessToken = (session as any)?.backendAccessToken;
+  const backendAccessToken = useAccessToken();
   const [sidebarOpen, setSidebarOpen] = useSidebarState();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -431,7 +431,7 @@ export default function ToolsPage() {
         onClose={closeToolDialog}
         toolType={toolType}
         editingToolUuid={editingToolUuid}
-        backendAccessToken={backendAccessToken}
+        backendAccessToken={backendAccessToken ?? undefined}
         onToolsUpdated={setTools}
       />
 

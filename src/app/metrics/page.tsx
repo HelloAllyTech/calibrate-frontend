@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useAccessToken } from "@/hooks";
 import { AppLayout, useHideFloatingButton } from "@/components/AppLayout";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
 import { useSidebarState } from "@/lib/sidebar";
@@ -17,8 +18,7 @@ type MetricData = {
 
 export default function MetricsPage() {
   const router = useRouter();
-  const { data: session } = useSession();
-  const backendAccessToken = (session as any)?.backendAccessToken;
+  const backendAccessToken = useAccessToken();
   const [sidebarOpen, setSidebarOpen] = useSidebarState();
   const [searchQuery, setSearchQuery] = useState("");
   const [addMetricSidebarOpen, setAddMetricSidebarOpen] = useState(false);
@@ -873,7 +873,7 @@ export default function MetricsPage() {
           existingMetrics={metrics}
           onClose={closeDuplicateDialog}
           onDuplicated={handleMetricDuplicated}
-          backendAccessToken={backendAccessToken}
+          backendAccessToken={backendAccessToken ?? undefined}
         />
       )}
 

@@ -1333,14 +1333,15 @@ const { isAuthenticated, isLoading, accessToken } = useAuth();
 // accessToken: the JWT token string or null
 ```
 
-**Legacy pattern (still used in some files):**
+**Legacy pattern (DO NOT USE for new code):**
 
 ```tsx
+// DEPRECATED - only works for Google OAuth, not email/password login
 import { useSession, signOut } from "next-auth/react";
 
 const { data: session, status } = useSession();
 const backendAccessToken = (session as any)?.backendAccessToken;
-// Note: This only works for Google OAuth, not email/password login
+// Use useAccessToken() hook instead!
 ```
 
 **Sign out / Logout (clears all auth state):**
@@ -2454,13 +2455,13 @@ const { items, isLoading, isCreating, error, create, update, remove, refetch } =
   });
 ```
 
-**Legacy: Manual fetch pattern** (still used in some files):
+**Manual fetch pattern** (used in pages/components that don't use API utilities):
 
 ```tsx
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useAccessToken } from "@/hooks";
 
-const { data: session } = useSession();
-const backendAccessToken = (session as any)?.backendAccessToken;
+const backendAccessToken = useAccessToken();
 
 useEffect(() => {
   if (!backendAccessToken) return;
@@ -2475,6 +2476,10 @@ useEffect(() => {
     });
 
     if (response.status === 401) {
+      // Clear all auth state
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("user");
+      document.cookie = "access_token=; path=/; max-age=0; SameSite=Lax";
       await signOut({ callbackUrl: "/login" });
       return;
     }
@@ -3889,10 +3894,9 @@ Set `MAINTENANCE_MODE=true` in `.env.local` to show a maintenance page. When ena
   - For simulation runs, a special `notFoundHeader` is used that shows empty header and navigates back to `/simulations` (main page) instead of the specific simulation
 - **User-facing error messages**: Never expose raw error strings from the API or catch blocks to users. Show generic, friendly messages instead. Pattern: "Something went wrong" as the heading with "We're looking into it. Please reach out to us if this issue persists." as the description. Raw errors should only be logged to `console.error`. Applied in: `TestRunnerDialog` (individual test error detail view AND overall error state when entire run fails), `BenchmarkResultsDialog` (error state panel), STT/TTS evaluation provider error banners ("There was an error running this provider. Please contact us by posting your issue to help us help you.")
 - **Wait for token**: In `useEffect` hooks, return early if access token is not yet available; include it in the dependency array
-- **Dual auth support**: Use `useAccessToken()` hook from `@/hooks` to get token from either NextAuth session (Google OAuth) or localStorage (email/password). Components using only `(session as any)?.backendAccessToken` will NOT work with email/password login.
-  - **Migrated components**: `Agents.tsx`, `AgentDetail.tsx` use `useAccessToken` hook
-  - **Not yet migrated**: Most other components still use session-only pattern and need migration for email/password login support
-  - **Type gotcha**: `useAccessToken()` returns `string | null`, but many component props expect `string | undefined`. Use nullish coalescing when passing to child components: `backendAccessToken={accessToken ?? undefined}`
+- **Dual auth support**: All components now use `useAccessToken()` hook from `@/hooks` to get token from either NextAuth session (Google OAuth) or localStorage (email/password).
+  - **Type gotcha**: `useAccessToken()` returns `string | null`, but some component props expect `string | undefined`. Use nullish coalescing when passing to child components: `backendAccessToken={accessToken ?? undefined}`
+  - **Exception**: `src/app/debug-client/page.tsx` still uses `useSession` directly for debugging purposes
 - **ngrok header**: `"ngrok-skip-browser-warning": "true"` header is included automatically by API utilities
 - **Backend URL check**: API utilities will throw an error if `NEXT_PUBLIC_BACKEND_URL` is not set
 - **Date formatting**: API returns ISO dates; use `toLocaleString()` for display

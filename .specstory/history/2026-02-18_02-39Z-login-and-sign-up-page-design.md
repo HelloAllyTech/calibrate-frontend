@@ -8317,6 +8317,1863 @@ Keep the file organized and don't remove existing relevant context.
 
 _**Agent (model claude-4.5-opus-high, mode Agent)**_
 
+I made code changes (fixed type mismatch in `Agents.tsx`), so I'll update the documentation:
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "useAccessToken|null.*undefined" in "/Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md" • 7 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `.cursor/rules/app-details.md` | `- **Graceful null handling**: All transcript accesses use optional chaining (`transcript?.length ?? 0`, `transcript ?? []`) since transcript can be undefined during intermediate results` | L737 |
+| `.cursor/rules/app-details.md` | `│   │   └── useAccessToken.ts  # Unified auth token hook (useAccessToken, useAuth)` | L877 |
+| `.cursor/rules/app-details.md` | `Use the `useAccessToken` hook from `@/hooks` to get the JWT token regardless of auth method:` | L1309 |
+| `.cursor/rules/app-details.md` | `import \{ useAccessToken \} from "@/hooks";` | L1312 |
+| `.cursor/rules/app-details.md` | `const accessToken = useAccessToken();` | L1315 |
+| `.cursor/rules/app-details.md` | `- **Dual auth support**: Use `useAccessToken()` hook from `@/hooks` to get token from either NextAuth session (Google OAuth) or localStorage (email/password). Components using only `(session as any)?.backendAccessToken` will NOT work with email/password login.` | L3891 |
+| `.cursor/rules/app-details.md` | `- **Migrated components**: `Agents.tsx`, `AgentDetail.tsx` use `useAccessToken` hook` | L3892 |
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: undefined
+
+```diff
+@@ -1313,4 +1313,5 @@
+  
+  // Gets token from NextAuth session OR localStorage automatically
++ // Returns string | null
+  const accessToken = useAccessToken();
+  
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/.cursor/rules/app-details.md</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: undefined
+
+```diff
+@@ -3893,4 +3893,5 @@
+    - **Migrated components**: &#96;Agents.tsx&#96;, &#96;AgentDetail.tsx&#96; use &#96;useAccessToken&#96; hook
+    - **Not yet migrated**: Most other components still use session-only pattern and need migration for email/password login support
++   - **Type gotcha**: &#96;useAccessToken()&#96; returns &#96;string | null&#96;, but many component props expect &#96;string | undefined&#96;. Use nullish coalescing when passing to child components: &#96;backendAccessToken={accessToken ?? undefined}&#96;
+  - **ngrok header**: &#96;"ngrok-skip-browser-warning": "true"&#96; header is included automatically by API utilities
+  - **Backend URL check**: API utilities will throw an error if &#96;NEXT_PUBLIC_BACKEND_URL&#96; is not set
+```
+
+</details>
+
+</tool-use>
+
+---
+
+Updated the documentation with:
+
+1. **Added return type note**: Clarified that `useAccessToken()` returns `string | null`
+
+2. **Added type gotcha**: Documented the pattern for handling the type mismatch when passing the token to child components that expect `string | undefined` - use `accessToken ?? undefined`
+
+---
+
+_**User (2026-02-17 21:32Z)**_
+
+what you did for agents page - stt/tts/llm/personas/scenarios/metrics/simulations and every other api call where token is sent - fix it
+
+---
+
+_**Agent (model claude-4.5-opus-high, mode Agent)**_
+
+I'll find all components that use `(session as any)?.backendAccessToken` and update them to use the `useAccessToken` hook.
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "\(session as any\)\?\.backendAccessToken" • 24 matches</summary>
+
+Output mode: files_with_matches
+
+
+| File |
+|------|
+| `./src/hooks/useAccessToken.ts` |
+| `./src/components/agent-tabs/TestsTabContent.tsx` |
+| `./src/components/agent-tabs/DeleteToolDialog.tsx` |
+| `./src/components/agent-tabs/AddToolDialog.tsx` |
+| `./src/components/TestRunnerDialog.tsx` |
+| `./src/components/NewSimulationDialog.tsx` |
+| `./src/components/AddTestDialog.tsx` |
+| `./src/app/simulations/[uuid]/runs/[runId]/page.tsx` |
+| `./src/app/scenarios/page.tsx` |
+| `./src/app/personas/page.tsx` |
+| `./src/app/metrics/page.tsx` |
+| `./src/app/stt/page.tsx` |
+| `./src/app/tts/page.tsx` |
+| `./src/app/tools/page.tsx` |
+| `./src/app/simulations/[uuid]/page.tsx` |
+| `./src/app/tests/page.tsx` |
+| `./src/app/simulations/page.tsx` |
+| `./src/components/evaluations/SpeechToTextEvaluation.tsx` |
+| `./src/components/evaluations/TextToSpeechEvaluation.tsx` |
+| `./src/app/tts/[uuid]/page.tsx` |
+| `./src/app/stt/[uuid]/page.tsx` |
+| `./src/components/simulation-tabs/SimulationRunsTab.tsx` |
+| `./src/components/AgentPicker.tsx` |
+| `./src/app/debug-client/page.tsx` |
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [-] Update src/app/scenarios/page.tsx to use useAccessToken
+- [ ] Update src/app/personas/page.tsx to use useAccessToken
+- [ ] Update src/app/metrics/page.tsx to use useAccessToken
+- [ ] Update src/app/stt/page.tsx to use useAccessToken
+- [ ] Update src/app/tts/page.tsx to use useAccessToken
+- [ ] Update src/app/tools/page.tsx to use useAccessToken
+- [ ] Update src/app/tests/page.tsx to use useAccessToken
+- [ ] Update src/app/simulations/page.tsx to use useAccessToken
+- [ ] Update src/app/simulations/[uuid]/page.tsx to use useAccessToken
+- [ ] Update src/app/simulations/[uuid]/runs/[runId]/page.tsx to use useAccessToken
+- [ ] Update src/app/stt/[uuid]/page.tsx to use useAccessToken
+- [ ] Update src/app/tts/[uuid]/page.tsx to use useAccessToken
+- [ ] Update component files (TestsTabContent, dialogs, evaluations, etc.)
+- [ ] Run npm run build to verify all changes
+
+</details>
+</tool-use>
+
+---
+
+Let me start updating all the files. I'll update them in batches:
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/scenarios/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/scenarios/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -4,5 +4,6 @@
+  import { useRouter } from "next/navigation";
+  import Link from "next/link";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { AppLayout, useHideFloatingButton } from "@/components/AppLayout";
+  import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/scenarios/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -22,6 +22,5 @@
+  export default function ScenariosPage() {
+    const router = useRouter();
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const [sidebarOpen, setSidebarOpen] = useSidebarState();
+    const [searchQuery, setSearchQuery] = useState("");
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/personas/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/personas/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -4,5 +4,6 @@
+  import { useRouter } from "next/navigation";
+  import Link from "next/link";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { AppLayout, useHideFloatingButton } from "@/components/AppLayout";
+  import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/personas/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -28,6 +28,5 @@
+  export default function PersonasPage() {
+    const router = useRouter();
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const [sidebarOpen, setSidebarOpen] = useSidebarState();
+  
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Update src/app/scenarios/page.tsx to use useAccessToken
+- [x] Update src/app/personas/page.tsx to use useAccessToken
+- [-] Update src/app/metrics/page.tsx to use useAccessToken
+- [ ] Update src/app/stt/page.tsx to use useAccessToken
+- [ ] Update src/app/tts/page.tsx to use useAccessToken
+- [ ] Update src/app/tools/page.tsx to use useAccessToken
+- [ ] Update src/app/tests/page.tsx to use useAccessToken
+- [ ] Update src/app/simulations/page.tsx to use useAccessToken
+- [ ] Update src/app/simulations/[uuid]/page.tsx to use useAccessToken
+- [ ] Update src/app/simulations/[uuid]/runs/[runId]/page.tsx to use useAccessToken
+- [ ] Update src/app/stt/[uuid]/page.tsx to use useAccessToken
+- [ ] Update src/app/tts/[uuid]/page.tsx to use useAccessToken
+- [ ] Update component files (TestsTabContent, dialogs, evaluations, etc.)
+- [ ] Run npm run build to verify all changes
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/metrics/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/metrics/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -3,5 +3,6 @@
+  import React, { useState, useEffect } from "react";
+  import { useRouter } from "next/navigation";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { AppLayout, useHideFloatingButton } from "@/components/AppLayout";
+  import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/metrics/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -19,6 +19,5 @@
+  export default function MetricsPage() {
+    const router = useRouter();
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const [sidebarOpen, setSidebarOpen] = useSidebarState();
+    const [searchQuery, setSearchQuery] = useState("");
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -4,5 +4,6 @@
+  import { useRouter } from "next/navigation";
+  import Link from "next/link";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { AppLayout } from "@/components/AppLayout";
+  import { sttProviders } from "@/components/agent-tabs/constants/providers";
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -33,6 +33,5 @@
+  export default function STTPage() {
+    const router = useRouter();
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const [sidebarOpen, setSidebarOpen] = useSidebarState();
+    const [jobs, setJobs] = useState&lt;STTJob[]&gt;([]);
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -4,5 +4,6 @@
+  import { useRouter } from "next/navigation";
+  import Link from "next/link";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { AppLayout } from "@/components/AppLayout";
+  import { ttsProviders } from "@/components/agent-tabs/constants/providers";
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -32,6 +32,5 @@
+  export default function TTSPage() {
+    const router = useRouter();
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const [sidebarOpen, setSidebarOpen] = useSidebarState();
+    const [jobs, setJobs] = useState&lt;TTSJob[]&gt;([]);
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tools/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tools/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -3,5 +3,6 @@
+  import { useState, useEffect } from "react";
+  import { useRouter } from "next/navigation";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { AppLayout } from "@/components/AppLayout";
+  import { AddToolDialog } from "@/components/AddToolDialog";
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tools/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -21,6 +21,5 @@
+  export default function ToolsPage() {
+    const router = useRouter();
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const [sidebarOpen, setSidebarOpen] = useSidebarState();
+    const [searchQuery, setSearchQuery] = useState("");
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tests/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tests/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -3,5 +3,6 @@
+  import { useState, useEffect, useRef } from "react";
+  import { useRouter } from "next/navigation";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { AppLayout } from "@/components/AppLayout";
+  import {
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tests/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -36,6 +36,5 @@
+  export default function LLMPage() {
+    const router = useRouter();
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const [sidebarOpen, setSidebarOpen] = useSidebarState();
+    const [searchQuery, setSearchQuery] = useState("");
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -4,5 +4,6 @@
+  import { useRouter } from "next/navigation";
+  import Link from "next/link";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { AppLayout } from "@/components/AppLayout";
+  import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -22,6 +22,5 @@
+  export default function SimulationsPage() {
+    const router = useRouter();
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const [sidebarOpen, setSidebarOpen] = useSidebarState();
+    const [searchQuery, setSearchQuery] = useState("");
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "backendAccessToken" in "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/page.tsx" • 3 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `src/app/simulations/[uuid]/page.tsx` | `const backendAccessToken = (session as any)?.backendAccessToken;` | L69 |
+| `src/app/simulations/[uuid]/page.tsx` | `Authorization: `Bearer $\{backendAccessToken\}`,` | L208 |
+| `src/app/simulations/[uuid]/page.tsx` | `Authorization: `Bearer $\{backendAccessToken\}`,` | L264 |
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -3,5 +3,6 @@
+  import React, { useState, useEffect, useRef } from "react";
+  import { useParams, useRouter, useSearchParams } from "next/navigation";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { toast } from "sonner";
+  import { AppLayout } from "@/components/AppLayout";
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -67,6 +67,5 @@
+    const params = useParams();
+    const searchParams = useSearchParams();
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const uuid = params.uuid as string;
+    const [sidebarOpen, setSidebarOpen] = useSidebarState();
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "backendAccessToken" in "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx" • 3 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `src/app/simulations/[uuid]/runs/[runId]/page.tsx` | `const backendAccessToken = (session as any)?.backendAccessToken;` | L83 |
+| `src/app/simulations/[uuid]/runs/[runId]/page.tsx` | `if (!backendAccessToken) return;` | L105 |
+| `src/app/simulations/[uuid]/runs/[runId]/page.tsx` | `Authorization: `Bearer $\{backendAccessToken\}`,` | L116 |
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -9,5 +9,6 @@
+  } from "react";
+  import { useParams, useRouter } from "next/navigation";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { AppLayout, useHideFloatingButton } from "@/components/AppLayout";
+  import { Tooltip } from "@/components/Tooltip";
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/simulations/[uuid]/runs/[runId]/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -81,6 +81,5 @@
+    const router = useRouter();
+    const params = useParams();
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const uuid = params.uuid as string;
+    const runId = params.runId as string;
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "backendAccessToken" in "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx" • 2 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `src/app/stt/[uuid]/page.tsx` | `const backendAccessToken = (session as any)?.backendAccessToken;` | L85 |
+| `src/app/stt/[uuid]/page.tsx` | `if (!backendAccessToken \|\| !taskId) return;` | L119 |
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -3,5 +3,6 @@
+  import React, { useState, useEffect, useRef } from "react";
+  import { useParams, useRouter } from "next/navigation";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { AppLayout } from "@/components/AppLayout";
+  import { BackHeader, StatusBadge, NotFoundState } from "@/components/ui";
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/stt/[uuid]/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -83,6 +83,5 @@
+    const router = useRouter();
+    const params = useParams();
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const taskId = params.uuid as string;
+    const [sidebarOpen, setSidebarOpen] = useSidebarState();
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "backendAccessToken" in "/Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx" • 2 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `src/app/tts/[uuid]/page.tsx` | `const backendAccessToken = (session as any)?.backendAccessToken;` | L71 |
+| `src/app/tts/[uuid]/page.tsx` | `if (!backendAccessToken \|\| !taskId) return;` | L104 |
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -3,5 +3,6 @@
+  import React, { useState, useEffect, useRef } from "react";
+  import { useParams, useRouter } from "next/navigation";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { AppLayout } from "@/components/AppLayout";
+  import { BackHeader, StatusBadge, NotFoundState } from "@/components/ui";
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/tts/[uuid]/page.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -69,6 +69,5 @@
+    const router = useRouter();
+    const params = useParams();
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const taskId = params.uuid as string;
+    const [sidebarOpen, setSidebarOpen] = useSidebarState();
+```
+
+</details>
+
+</tool-use>
+
+---
+
+Now let me update the component files:
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Update src/app/scenarios/page.tsx to use useAccessToken
+- [x] Update src/app/personas/page.tsx to use useAccessToken
+- [x] Update src/app/metrics/page.tsx to use useAccessToken
+- [x] Update src/app/stt/page.tsx to use useAccessToken
+- [x] Update src/app/tts/page.tsx to use useAccessToken
+- [x] Update src/app/tools/page.tsx to use useAccessToken
+- [x] Update src/app/tests/page.tsx to use useAccessToken
+- [x] Update src/app/simulations/page.tsx to use useAccessToken
+- [x] Update src/app/simulations/[uuid]/page.tsx to use useAccessToken
+- [x] Update src/app/simulations/[uuid]/runs/[runId]/page.tsx to use useAccessToken
+- [x] Update src/app/stt/[uuid]/page.tsx to use useAccessToken
+- [x] Update src/app/tts/[uuid]/page.tsx to use useAccessToken
+- [-] Update component files (TestsTabContent, dialogs, evaluations, etc.)
+- [ ] Run npm run build to verify all changes
+
+</details>
+</tool-use>
+
+---
+
+Now let me update the component files:
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "backendAccessToken" in "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx" • 2 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `src/components/agent-tabs/TestsTabContent.tsx` | `const backendAccessToken = (session as any)?.backendAccessToken;` | L127 |
+| `src/components/agent-tabs/TestsTabContent.tsx` | `if (!backendAccessToken) return;` | L193 |
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -2,5 +2,6 @@
+  
+  import React, { useState, useEffect, useRef, useCallback } from "react";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { toast } from "sonner";
+  import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/TestsTabContent.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -125,6 +125,5 @@
+    agentName = "Agent",
+  }: TestsTabContentProps) {
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    // Agent tests state (tests attached to the agent)
+    const [agentTests, setAgentTests] = useState&lt;TestData[]&gt;([]);
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/DeleteToolDialog.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/DeleteToolDialog.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -2,5 +2,6 @@
+  
+  import React, { useState } from "react";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
+  import { useHideFloatingButton } from "@/components/AppLayout";
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/DeleteToolDialog.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -33,6 +33,5 @@
+    useHideFloatingButton(isOpen);
+  
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const [isDeleting, setIsDeleting] = useState(false);
+  
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/AddToolDialog.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/AddToolDialog.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -2,5 +2,6 @@
+  
+  import React, { useState } from "react";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { useHideFloatingButton } from "@/components/AppLayout";
+  
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/agent-tabs/AddToolDialog.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -37,6 +37,5 @@
+    useHideFloatingButton(isOpen);
+  
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const [searchQuery, setSearchQuery] = useState("");
+    const [selectedTools, setSelectedTools] = useState&lt;Set&lt;string&gt;&gt;(new Set());
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/TestRunnerDialog.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "backendAccessToken" in "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/TestRunnerDialog.tsx" • 2 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `src/components/TestRunnerDialog.tsx` | `const backendAccessToken = (session as any)?.backendAccessToken;` | L114 |
+| `src/components/TestRunnerDialog.tsx` | `if (!isOpen \|\| !taskId \|\| !backendAccessToken) \{` | L141 |
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/TestRunnerDialog.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -2,5 +2,6 @@
+  
+  import React, { useState, useEffect, useRef } from "react";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import {
+    TestCaseOutput,
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/TestRunnerDialog.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/TestRunnerDialog.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -112,6 +112,5 @@
+    useHideFloatingButton(isOpen);
+  
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const [testResults, setTestResults] = useState&lt;TestResult[]&gt;([]);
+    const [selectedTestUuid, setSelectedTestUuid] = useState&lt;string | null&gt;(null);
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/NewSimulationDialog.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/NewSimulationDialog.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -2,5 +2,6 @@
+  
+  import React, { useState } from "react";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { useHideFloatingButton } from "@/components/AppLayout";
+  
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/NewSimulationDialog.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -19,6 +19,5 @@
+    useHideFloatingButton(true);
+  
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const [simulationName, setSimulationName] = useState("");
+    const [isCreating, setIsCreating] = useState(false);
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/AddTestDialog.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "backendAccessToken" in "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/AddTestDialog.tsx" • 2 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `src/components/AddTestDialog.tsx` | `const backendAccessToken = (session as any)?.backendAccessToken;` | L84 |
+| `src/components/AddTestDialog.tsx` | `if (!isOpen \|\| !backendAccessToken) return;` | L432 |
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/AddTestDialog.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -2,5 +2,6 @@
+  
+  import React, { useState, useEffect, useRef } from "react";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { ToolPicker, AvailableTool } from "@/components/ToolPicker";
+  import { INBUILT_TOOLS } from "@/constants/inbuilt-tools";
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/AddTestDialog.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/AddTestDialog.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -82,6 +82,5 @@
+    useHideFloatingButton(isOpen);
+  
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const [activeTab, setActiveTab] = useState&lt;"next-reply" | "tool-invocation"&gt;(
+      initialTab || "next-reply"
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "backendAccessToken" in "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx" • 2 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `src/components/evaluations/SpeechToTextEvaluation.tsx` | `const backendAccessToken = (session as any)?.backendAccessToken;` | L87 |
+| `src/components/evaluations/SpeechToTextEvaluation.tsx` | `Authorization: `Bearer $\{backendAccessToken\}`,` | L194 |
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -3,5 +3,6 @@
+  import { useState, useRef } from "react";
+  import { useRouter } from "next/navigation";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { toast } from "sonner";
+  import { sttProviders, STTProvider } from "../agent-tabs/constants/providers";
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/SpeechToTextEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -85,6 +85,5 @@
+  export function SpeechToTextEvaluation() {
+    const router = useRouter();
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const [activeTab, setActiveTab] = useState&lt;TabType&gt;("settings");
+    const [rows, setRows] = useState&lt;AudioTextRow[]&gt;([
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "backendAccessToken" in "/Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx" • 2 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `src/components/evaluations/TextToSpeechEvaluation.tsx` | `const backendAccessToken = (session as any)?.backendAccessToken;` | L66 |
+| `src/components/evaluations/TextToSpeechEvaluation.tsx` | `Authorization: `Bearer $\{backendAccessToken\}`,` | L349 |
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -3,5 +3,6 @@
+  import { useState, useRef } from "react";
+  import { useRouter } from "next/navigation";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { toast } from "sonner";
+  import { ttsProviders, TTSProvider } from "../agent-tabs/constants/providers";
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/evaluations/TextToSpeechEvaluation.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -64,6 +64,5 @@
+  export function TextToSpeechEvaluation() {
+    const router = useRouter();
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const [activeTab, setActiveTab] = useState&lt;TabType&gt;("settings");
+    const [rows, setRows] = useState&lt;TextRow[]&gt;([{ id: "1", text: "" }]);
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/simulation-tabs/SimulationRunsTab.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/simulation-tabs/SimulationRunsTab.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -3,5 +3,6 @@
+  import React, { useState, useEffect } from "react";
+  import Link from "next/link";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  import { formatStatus, getStatusBadgeClass } from "@/lib/status";
+  
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/simulation-tabs/SimulationRunsTab.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -21,6 +21,5 @@
+  
+  export function SimulationRunsTab({ simulationUuid }: SimulationRunsTabProps) {
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const [runs, setRuns] = useState&lt;Run[]&gt;([]);
+    const [isLoading, setIsLoading] = useState(true);
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/AgentPicker.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/AgentPicker.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -2,5 +2,6 @@
+  
+  import React, { useState, useEffect } from "react";
+- import { useSession, signOut } from "next-auth/react";
++ import { signOut } from "next-auth/react";
++ import { useAccessToken } from "@/hooks";
+  
+  export type Agent = {
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/AgentPicker.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 2
+
+```diff
+@@ -27,6 +27,5 @@
+    disabled = false,
+  }: AgentPickerProps) {
+-   const { data: session } = useSession();
+-   const backendAccessToken = (session as any)?.backendAccessToken;
++   const backendAccessToken = useAccessToken();
+    const [agents, setAgents] = useState&lt;Agent[]&gt;([]);
+    const [agentsLoading, setAgentsLoading] = useState(false);
+```
+
+</details>
+
+</tool-use>
+
+---
+
+Now let me check the debug-client page:
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/app/debug-client/page.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+This is a debug page that specifically shows session info, so I'll leave it as is since it's for debugging purposes.
+
+Now let me also check the AddToolDialog in the root components folder:
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: /Users/aman/Documents/repos/artpark/pense-frontend/src/components/AddToolDialog.tsx</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Error parsing todo list data</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep**</summary>
+
+Status: **loading**
+
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Error parsing todo list data</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+_**User (2026-02-17 21:32Z)**_
+
+Only go ahead if you made code changes (not just updated .cursor/rules/app-details.md):
+    
+    Update .cursor/rules/app-details.md with any new information about the codebase from the changes you just made. Include:
+- What changed
+- Why it changed
+- New patterns or conventions introduced
+- Dependencies or relationships affected
+- Any gotchas or edge cases discovered
+
+Don't maintain it as a changelog. Instead, look for what was already present but has become obsolete now. Remove or update it as necessary. Look for what is missing and add it.
+
+Keep the file organized and don't remove existing relevant context.
+
+---
+
+_**Agent (model claude-4.5-opus-high, mode Agent)**_
+
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep**</summary>
+
+Status: **loading**
+
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep**</summary>
+
+Status: **loading**
+
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep**</summary>
+
+Status: **loading**
+
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+
+---
+
 
 
 ---

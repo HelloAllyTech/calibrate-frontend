@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useAccessToken } from "@/hooks";
 import { AppLayout } from "@/components/AppLayout";
 import {
   ToolPicker,
@@ -34,8 +35,7 @@ type Tool = {
 
 export default function LLMPage() {
   const router = useRouter();
-  const { data: session } = useSession();
-  const backendAccessToken = (session as any)?.backendAccessToken;
+  const backendAccessToken = useAccessToken();
   const [sidebarOpen, setSidebarOpen] = useSidebarState();
   const [searchQuery, setSearchQuery] = useState("");
 

@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useAccessToken } from "@/hooks";
 import { toast } from "sonner";
 import { AppLayout } from "@/components/AppLayout";
 import { Agent } from "@/components/AgentPicker";
@@ -65,8 +66,7 @@ export default function SimulationDetailPage() {
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
-  const { data: session } = useSession();
-  const backendAccessToken = (session as any)?.backendAccessToken;
+  const backendAccessToken = useAccessToken();
   const uuid = params.uuid as string;
   const [sidebarOpen, setSidebarOpen] = useSidebarState();
   const [simulation, setSimulation] = useState<SimulationData | null>(null);

@@ -2,7 +2,8 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useAccessToken } from "@/hooks";
 import { toast } from "sonner";
 import { ttsProviders, TTSProvider } from "../agent-tabs/constants/providers";
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog";
@@ -62,8 +63,7 @@ const getFilteredProviders = (language: LanguageOption): TTSProvider[] => {
 
 export function TextToSpeechEvaluation() {
   const router = useRouter();
-  const { data: session } = useSession();
-  const backendAccessToken = (session as any)?.backendAccessToken;
+  const backendAccessToken = useAccessToken();
   const [activeTab, setActiveTab] = useState<TabType>("settings");
   const [rows, setRows] = useState<TextRow[]>([{ id: "1", text: "" }]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<string | null>(null);

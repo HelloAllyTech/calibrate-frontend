@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useAccessToken } from "@/hooks";
 import { AppLayout, useHideFloatingButton } from "@/components/AppLayout";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
 import { Tooltip } from "@/components/Tooltip";
@@ -26,8 +27,7 @@ const DEFAULT_CHARACTERISTICS = `You are Rajesh, a 45-year-old farmer from rural
 
 export default function PersonasPage() {
   const router = useRouter();
-  const { data: session } = useSession();
-  const backendAccessToken = (session as any)?.backendAccessToken;
+  const backendAccessToken = useAccessToken();
   const [sidebarOpen, setSidebarOpen] = useSidebarState();
 
   // Set page title

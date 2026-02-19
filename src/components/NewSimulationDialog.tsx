@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useAccessToken } from "@/hooks";
 import { useHideFloatingButton } from "@/components/AppLayout";
 
 type NewSimulationDialogProps = {
@@ -17,8 +18,7 @@ export function NewSimulationDialog({
   // (this component is only rendered when the dialog should be visible)
   useHideFloatingButton(true);
 
-  const { data: session } = useSession();
-  const backendAccessToken = (session as any)?.backendAccessToken;
+  const backendAccessToken = useAccessToken();
   const [simulationName, setSimulationName] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
