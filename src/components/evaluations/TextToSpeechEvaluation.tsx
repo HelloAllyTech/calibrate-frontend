@@ -808,7 +808,7 @@ export function TextToSpeechEvaluation({ evaluateRef, onEvaluatingChange }: Text
       {activeTab === "input" && (
         <div className="space-y-4">
           {/* Mode toggle */}
-          <div className="flex items-center gap-1 p-1 bg-muted/40 rounded-lg w-fit">
+          <div className="flex items-center gap-1 p-1 bg-muted border border-border rounded-lg w-fit">
             <button
               onClick={() => setInputMode("inline")}
               className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
@@ -876,8 +876,8 @@ export function TextToSpeechEvaluation({ evaluateRef, onEvaluatingChange }: Text
           {inputMode === "inline" && (
           <div className="space-y-4">
           {/* Dataset name (required) */}
-          <div className="space-y-1.5">
-            <label className="text-[13px] font-medium text-foreground">
+          <div>
+            <label className="text-[13px] font-medium text-foreground block mb-2">
               Dataset name
             </label>
             <input
