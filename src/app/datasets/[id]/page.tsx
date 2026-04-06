@@ -76,7 +76,7 @@ export default function DatasetDetailPage() {
 
   return (
     <AppLayout
-      activeItem="datasets"
+      activeItem={dataset?.dataset_type ?? "stt"}
       onItemChange={(itemId) => router.push(`/${itemId}`)}
       sidebarOpen={sidebarOpen}
       onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -84,7 +84,9 @@ export default function DatasetDetailPage() {
       <div className="space-y-4 md:space-y-6 py-4 md:py-6">
         {/* Back link */}
         <button
-          onClick={() => router.push("/datasets")}
+          onClick={() =>
+            router.push(`/${dataset?.dataset_type ?? "stt"}?tab=datasets`)
+          }
           className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
