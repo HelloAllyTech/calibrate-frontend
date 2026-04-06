@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useAccessToken } from "@/hooks";
@@ -9,6 +9,7 @@ import { sttProviders, STTProvider } from "../agent-tabs/constants/providers";
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog";
 import JSZip from "jszip";
 import { LIMITS, CONTACT_LINK } from "@/constants/limits";
+import { listDatasets, Dataset } from "@/lib/datasets";
 
 type AudioTextRow = {
   id: string;
@@ -123,6 +124,19 @@ export function SpeechToTextEvaluation() {
   const [isProcessingZip, setIsProcessingZip] = useState(false);
   const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
   const zipInputRef = useRef<HTMLInputElement>(null);
+
+  // Dataset mode
+  const [inputMode, setInputMode] = useState<"inline" | "dataset">("inline");
+  const [availableDatasets, setAvailableDatasets] = useState<Dataset[]>([]);
+  const [selectedDatasetId, setSelectedDatasetId] = useState<string>("");
+  const [datasetName, setDatasetName] = useState("");
+
+  useEffect(() => {
+    if (!backendAccessToken) return;
+    listDatasets(backendAccessToken, "stt")
+      .then(setAvailableDatasets)
+      .catch(() => {});
+  }, [backendAccessToken]);
 
   const addRow = () => {
     // Check row limit
@@ -714,19 +728,26 @@ export function SpeechToTextEvaluation() {
       return;
     }
 
-    // Validate all rows
-    const invalidIds = new Set<string>();
-    rows.forEach((row) => {
-      if (!row.audioFile || !row.text.trim() || !row.s3Path) {
-        invalidIds.add(row.id);
+    if (inputMode === "dataset") {
+      if (!selectedDatasetId) {
+        setActiveTab("input");
+        toast.error("Please select a dataset.");
+        return;
       }
-    });
+    } else {
+      // Validate all rows
+      const invalidIds = new Set<string>();
+      rows.forEach((row) => {
+        if (!row.audioFile || !row.text.trim() || !row.s3Path) {
+          invalidIds.add(row.id);
+        }
+      });
 
-    if (invalidIds.size > 0) {
-      // Highlight invalid rows and switch to input tab
-      setInvalidRowIds(invalidIds);
-      setActiveTab("input");
-      return; // Don't evaluate if validation fails
+      if (invalidIds.size > 0) {
+        setInvalidRowIds(invalidIds);
+        setActiveTab("input");
+        return;
+      }
     }
 
     // Clear validation errors and proceed with evaluation
@@ -742,17 +763,31 @@ export function SpeechToTextEvaluation() {
         return;
       }
 
-      // Collect audio paths and texts
-      const audioPaths = rows.map((row) => row.s3Path!);
-      const texts = rows.map((row) => row.text.trim());
-
       // Map provider labels to their actual values
       const providers = Array.from(selectedProviders).map((label) => {
         const provider = sttProviders.find((p) => p.label === label);
         return provider ? provider.value : label;
       });
 
-      // Make API call
+      let requestBody: Record<string, unknown>;
+      if (inputMode === "dataset") {
+        requestBody = {
+          dataset_id: selectedDatasetId,
+          providers,
+          language,
+        };
+      } else {
+        const audioPaths = rows.map((row) => row.s3Path!);
+        const texts = rows.map((row) => row.text.trim());
+        requestBody = {
+          audio_paths: audioPaths,
+          texts,
+          providers,
+          language,
+          ...(datasetName.trim() ? { dataset_name: datasetName.trim() } : {}),
+        };
+      }
+
       const response = await fetch(`${backendUrl}/stt/evaluate`, {
         method: "POST",
         headers: {
@@ -761,12 +796,7 @@ export function SpeechToTextEvaluation() {
           "ngrok-skip-browser-warning": "true",
           Authorization: `Bearer ${backendAccessToken}`,
         },
-        body: JSON.stringify({
-          audio_paths: audioPaths,
-          texts: texts,
-          providers: providers,
-          language: language,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (response.status === 401) {
@@ -780,7 +810,6 @@ export function SpeechToTextEvaluation() {
 
       const result: EvaluationResult = await response.json();
 
-      // Redirect to the evaluation detail page
       if (result.task_id) {
         router.push(`/stt/${result.task_id}`);
       }
@@ -1213,7 +1242,70 @@ export function SpeechToTextEvaluation() {
 
       {/* Input Tab Content */}
       {activeTab === "input" && (
-        <div className="space-y-2">
+        <div className="space-y-4">
+          {/* Mode toggle */}
+          <div className="flex items-center gap-1 p-1 bg-muted/40 rounded-lg w-fit">
+            <button
+              onClick={() => setInputMode("inline")}
+              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                inputMode === "inline"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Upload new
+            </button>
+            <button
+              onClick={() => setInputMode("dataset")}
+              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                inputMode === "dataset"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Use existing dataset
+            </button>
+          </div>
+
+          {/* Dataset picker */}
+          {inputMode === "dataset" && (
+            <div className="space-y-2">
+              {availableDatasets.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  No STT datasets found.{" "}
+                  <button
+                    onClick={() => setInputMode("inline")}
+                    className="underline hover:text-foreground transition-colors cursor-pointer"
+                  >
+                    Upload new data
+                  </button>{" "}
+                  and save it as a dataset for reuse.
+                </p>
+              ) : (
+                <div className="space-y-1.5">
+                  <label className="text-[13px] font-medium text-foreground">
+                    Select dataset
+                  </label>
+                  <select
+                    value={selectedDatasetId}
+                    onChange={(e) => setSelectedDatasetId(e.target.value)}
+                    className="w-full max-w-sm h-10 px-3 rounded-md text-sm border border-border bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-foreground/30 cursor-pointer"
+                  >
+                    <option value="">— choose a dataset —</option>
+                    {availableDatasets.map((ds) => (
+                      <option key={ds.uuid} value={ds.uuid}>
+                        {ds.name} ({ds.item_count} item{ds.item_count !== 1 ? "s" : ""})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Inline upload mode */}
+          {inputMode === "inline" && (
+          <div className="space-y-2">
           {/* Audio-Text Rows */}
           {rows.map((row, index) => {
             const isInvalid = invalidRowIds.has(row.id);
@@ -1446,6 +1538,21 @@ export function SpeechToTextEvaluation() {
             <div className="flex-1 h-px bg-border" />
           </div>
 
+          {/* Save as dataset (optional) */}
+          <div className="pt-2">
+            <label className="text-[13px] font-medium text-foreground block mb-1.5">
+              Save as dataset{" "}
+              <span className="text-muted-foreground font-normal">(optional)</span>
+            </label>
+            <input
+              type="text"
+              value={datasetName}
+              onChange={(e) => setDatasetName(e.target.value)}
+              placeholder="Dataset name — leave blank to skip"
+              className="w-full max-w-sm h-9 px-3 rounded-md text-sm border border-border bg-background focus:outline-none focus:ring-1 focus:ring-foreground/30"
+            />
+          </div>
+
           {/* ZIP Upload Section */}
           <div className="border border-border rounded-xl p-4 md:p-6 bg-muted/10 w-full md:w-2/3 md:mx-auto">
             <div className="flex items-start gap-3 md:gap-4">
@@ -1561,6 +1668,8 @@ export function SpeechToTextEvaluation() {
               </div>
             </div>
           </div>
+          </div>
+          )}
         </div>
       )}
 

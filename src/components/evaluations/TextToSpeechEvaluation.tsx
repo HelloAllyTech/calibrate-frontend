@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useAccessToken } from "@/hooks";
@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { ttsProviders, TTSProvider } from "../agent-tabs/constants/providers";
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog";
 import { LIMITS, CONTACT_LINK } from "@/constants/limits";
+import { listDatasets, Dataset } from "@/lib/datasets";
 
 type TextRow = {
   id: string;
@@ -74,6 +75,19 @@ export function TextToSpeechEvaluation() {
   );
   const [language, setLanguage] = useState<LanguageOption>("english");
   const [isEvaluating, setIsEvaluating] = useState(false);
+
+  // Dataset mode
+  const [inputMode, setInputMode] = useState<"inline" | "dataset">("inline");
+  const [availableDatasets, setAvailableDatasets] = useState<Dataset[]>([]);
+  const [selectedDatasetId, setSelectedDatasetId] = useState<string>("");
+  const [datasetName, setDatasetName] = useState("");
+
+  useEffect(() => {
+    if (!backendAccessToken) return;
+    listDatasets(backendAccessToken, "tts")
+      .then(setAvailableDatasets)
+      .catch(() => {});
+  }, [backendAccessToken]);
 
   // Get filtered providers based on selected language
   const filteredProviders = getFilteredProviders(language);
@@ -284,43 +298,50 @@ export function TextToSpeechEvaluation() {
       return;
     }
 
-    // Validate all rows (same check as addRow)
-    const invalidIds = new Set<string>();
-    rows.forEach((row) => {
-      if (!row.text.trim()) {
-        invalidIds.add(row.id);
+    if (inputMode === "dataset") {
+      if (!selectedDatasetId) {
+        setActiveTab("input");
+        toast.error("Please select a dataset.");
+        return;
       }
-    });
+    } else {
+      // Validate all rows
+      const invalidIds = new Set<string>();
+      rows.forEach((row) => {
+        if (!row.text.trim()) {
+          invalidIds.add(row.id);
+        }
+      });
 
-    if (invalidIds.size > 0) {
-      // Highlight invalid rows and switch to input tab
-      setInvalidRowIds(invalidIds);
-      setActiveTab("input");
-      return; // Don't evaluate if validation fails
-    }
+      if (invalidIds.size > 0) {
+        setInvalidRowIds(invalidIds);
+        setActiveTab("input");
+        return;
+      }
 
-    // Check text length limit
-    const longTextRow = rows.find(
-      (row) => row.text.length > LIMITS.TTS_MAX_TEXT_LENGTH
-    );
-    if (longTextRow) {
-      toast.error(
-        <span>
-          Text must be {LIMITS.TTS_MAX_TEXT_LENGTH} characters or less. Found
-          text with {longTextRow.text.length} characters.{" "}
-          <a
-            href={CONTACT_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline"
-          >
-            Contact us
-          </a>{" "}
-          to extend your limits.
-        </span>
+      // Check text length limit
+      const longTextRow = rows.find(
+        (row) => row.text.length > LIMITS.TTS_MAX_TEXT_LENGTH
       );
-      setActiveTab("input");
-      return;
+      if (longTextRow) {
+        toast.error(
+          <span>
+            Text must be {LIMITS.TTS_MAX_TEXT_LENGTH} characters or less. Found
+            text with {longTextRow.text.length} characters.{" "}
+            <a
+              href={CONTACT_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              Contact us
+            </a>{" "}
+            to extend your limits.
+          </span>
+        );
+        setActiveTab("input");
+        return;
+      }
     }
 
     // Clear validation errors and proceed with evaluation
@@ -336,10 +357,28 @@ export function TextToSpeechEvaluation() {
         return;
       }
 
-      // Collect texts
-      const texts = rows.map((row) => row.text.trim());
+      const providers = Array.from(selectedProviders).map((label) => {
+        const provider = ttsProviders.find((p) => p.label === label);
+        return provider ? provider.value : label;
+      });
 
-      // Make API call
+      let requestBody: Record<string, unknown>;
+      if (inputMode === "dataset") {
+        requestBody = {
+          dataset_id: selectedDatasetId,
+          providers,
+          language,
+        };
+      } else {
+        const texts = rows.map((row) => row.text.trim());
+        requestBody = {
+          texts,
+          providers,
+          language,
+          ...(datasetName.trim() ? { dataset_name: datasetName.trim() } : {}),
+        };
+      }
+
       const response = await fetch(`${backendUrl}/tts/evaluate`, {
         method: "POST",
         headers: {
@@ -348,15 +387,7 @@ export function TextToSpeechEvaluation() {
           "ngrok-skip-browser-warning": "true",
           Authorization: `Bearer ${backendAccessToken}`,
         },
-        body: JSON.stringify({
-          texts: texts,
-          // Map provider labels to their actual values
-          providers: Array.from(selectedProviders).map((label) => {
-            const provider = ttsProviders.find((p) => p.label === label);
-            return provider ? provider.value : label;
-          }),
-          language: language,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (response.status === 401) {
@@ -370,7 +401,6 @@ export function TextToSpeechEvaluation() {
 
       const result: EvaluationResult = await response.json();
 
-      // Redirect to the evaluation detail page
       if (result.task_id) {
         router.push(`/tts/${result.task_id}`);
       }
@@ -801,7 +831,70 @@ export function TextToSpeechEvaluation() {
 
       {/* Input Tab Content */}
       {activeTab === "input" && (
-        <div className="space-y-2">
+        <div className="space-y-4">
+          {/* Mode toggle */}
+          <div className="flex items-center gap-1 p-1 bg-muted/40 rounded-lg w-fit">
+            <button
+              onClick={() => setInputMode("inline")}
+              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                inputMode === "inline"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Enter manually
+            </button>
+            <button
+              onClick={() => setInputMode("dataset")}
+              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                inputMode === "dataset"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Use existing dataset
+            </button>
+          </div>
+
+          {/* Dataset picker */}
+          {inputMode === "dataset" && (
+            <div className="space-y-2">
+              {availableDatasets.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  No TTS datasets found.{" "}
+                  <button
+                    onClick={() => setInputMode("inline")}
+                    className="underline hover:text-foreground transition-colors cursor-pointer"
+                  >
+                    Enter data manually
+                  </button>{" "}
+                  and save it as a dataset for reuse.
+                </p>
+              ) : (
+                <div className="space-y-1.5">
+                  <label className="text-[13px] font-medium text-foreground">
+                    Select dataset
+                  </label>
+                  <select
+                    value={selectedDatasetId}
+                    onChange={(e) => setSelectedDatasetId(e.target.value)}
+                    className="w-full max-w-sm h-10 px-3 rounded-md text-sm border border-border bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-foreground/30 cursor-pointer"
+                  >
+                    <option value="">— choose a dataset —</option>
+                    {availableDatasets.map((ds) => (
+                      <option key={ds.uuid} value={ds.uuid}>
+                        {ds.name} ({ds.item_count} item{ds.item_count !== 1 ? "s" : ""})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Inline mode */}
+          {inputMode === "inline" && (
+          <div className="space-y-2">
           {/* Text Rows */}
           {rows.map((row, index) => {
             const isInvalid = invalidRowIds.has(row.id);
@@ -893,6 +986,21 @@ export function TextToSpeechEvaluation() {
             <div className="flex-1 h-px bg-border" />
           </div>
 
+          {/* Save as dataset (optional) */}
+          <div className="pt-2">
+            <label className="text-[13px] font-medium text-foreground block mb-1.5">
+              Save as dataset{" "}
+              <span className="text-muted-foreground font-normal">(optional)</span>
+            </label>
+            <input
+              type="text"
+              value={datasetName}
+              onChange={(e) => setDatasetName(e.target.value)}
+              placeholder="Dataset name — leave blank to skip"
+              className="w-full max-w-sm h-9 px-3 rounded-md text-sm border border-border bg-background focus:outline-none focus:ring-1 focus:ring-foreground/30"
+            />
+          </div>
+
           {/* CSV Upload Section */}
           <div className="border border-border rounded-xl p-4 md:p-6 bg-muted/10">
             <div className="flex items-start gap-3 md:gap-4">
@@ -969,6 +1077,8 @@ export function TextToSpeechEvaluation() {
               </div>
             </div>
           </div>
+          </div>
+          )}
         </div>
       )}
 
