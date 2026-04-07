@@ -9,7 +9,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { sttProviders } from "@/components/agent-tabs/constants/providers";
 import { formatStatus, getStatusBadgeClass } from "@/lib/status";
 import { useSidebarState } from "@/lib/sidebar";
-import { Dataset } from "@/lib/datasets";
+import { Dataset, getDataset } from "@/lib/datasets";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
 import { useDatasetManagement } from "@/hooks";
 
@@ -68,8 +68,18 @@ function STTPageInner() {
     isDeletingDataset,
     handleDeleteDataset,
     handleCreateDataset,
-  } = useDatasetManagement(backendAccessToken, "stt", (uuid) =>
-    router.push(`/datasets/${uuid}`),
+  } = useDatasetManagement(
+    backendAccessToken,
+    "stt",
+    (uuid) => router.push(`/datasets/${uuid}`),
+    (deletedId) =>
+      setJobs((prev) =>
+        prev.map((job) =>
+          job.dataset_id === deletedId
+            ? { ...job, dataset_id: null, dataset_name: null }
+            : job,
+        ),
+      ),
   );
 
   // Set page title
@@ -109,7 +119,34 @@ function STTPageInner() {
         }
 
         const data = await response.json();
-        setJobs(data.jobs || []);
+        const fetchedJobs: STTJob[] = data.jobs || [];
+
+        const datasetIds = [
+          ...new Set(
+            fetchedJobs
+              .filter((j) => j.dataset_id)
+              .map((j) => j.dataset_id!),
+          ),
+        ];
+        const validDatasetIds = new Set<string>();
+        await Promise.all(
+          datasetIds.map(async (id) => {
+            try {
+              await getDataset(backendAccessToken, id);
+              validDatasetIds.add(id);
+            } catch {
+              // Dataset no longer exists
+            }
+          }),
+        );
+        const validatedJobs = fetchedJobs.map((job) => {
+          if (job.dataset_id && !validDatasetIds.has(job.dataset_id)) {
+            return { ...job, dataset_id: null, dataset_name: null };
+          }
+          return job;
+        });
+
+        setJobs(validatedJobs);
       } catch (err) {
         console.error("Error fetching STT jobs:", err);
         setError(

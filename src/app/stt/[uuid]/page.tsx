@@ -16,6 +16,7 @@ import {
 import { DownloadableTable } from "@/components/DownloadableTable";
 import { POLLING_INTERVAL_MS } from "@/constants/polling";
 import { useSidebarState } from "@/lib/sidebar";
+import { getDataset } from "@/lib/datasets";
 
 type ProviderMetrics = {
   wer: number;
@@ -158,6 +159,16 @@ export default function STTEvaluationDetailPage() {
         }
 
         const result: EvaluationResult = await response.json();
+
+        if (result.dataset_id) {
+          try {
+            await getDataset(backendAccessToken, result.dataset_id);
+          } catch {
+            result.dataset_id = null;
+            result.dataset_name = null;
+          }
+        }
+
         setEvaluationResult(result);
 
         // Set first provider as active tab if results exist

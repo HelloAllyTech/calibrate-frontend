@@ -270,8 +270,7 @@ export function SpeechToTextEvaluation({
       </div>
 
       {/* Settings Tab Content */}
-      {activeTab === "settings" && (
-        <div className="space-y-8">
+      <div className={activeTab === "settings" ? "space-y-8" : "hidden"}>
           {/* Language Selection */}
           <div className="space-y-3">
             <div className="flex items-center">
@@ -613,11 +612,9 @@ export function SpeechToTextEvaluation({
             </div>
           </div>
         </div>
-      )}
 
       {/* Input Tab Content */}
-      {activeTab === "input" && (
-        <div className="space-y-4">
+      <div className={activeTab === "input" ? "space-y-4" : "hidden"}>
           {/* Mode toggle */}
           <div className="flex items-center gap-1 p-1 bg-muted border border-border rounded-lg w-fit">
             <button
@@ -710,8 +707,7 @@ export function SpeechToTextEvaluation({
               />
             </div>
           )}
-        </div>
-      )}
+      </div>
     </div>
   );
 }

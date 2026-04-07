@@ -11,6 +11,7 @@ export function useDatasetManagement(
   accessToken: string | null,
   datasetType: "stt" | "tts",
   onCreated: (uuid: string) => void,
+  onDeleted?: (uuid: string) => void,
 ) {
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [datasetsLoading, setDatasetsLoading] = useState(true);
@@ -48,6 +49,7 @@ export function useDatasetManagement(
       await deleteDataset(accessToken, uuid);
       setDatasets((prev) => prev.filter((d) => d.uuid !== uuid));
       setDeleteDatasetId(null);
+      onDeleted?.(uuid);
     } catch (err) {
       console.error("Failed to delete dataset:", err);
       toast.error("Failed to delete dataset. Please try again.");

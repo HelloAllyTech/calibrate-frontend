@@ -9,7 +9,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { ttsProviders } from "@/components/agent-tabs/constants/providers";
 import { formatStatus, getStatusBadgeClass } from "@/lib/status";
 import { useSidebarState } from "@/lib/sidebar";
-import { Dataset } from "@/lib/datasets";
+import { Dataset, getDataset } from "@/lib/datasets";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
 import { useDatasetManagement } from "@/hooks";
 
@@ -42,7 +42,7 @@ function TTSPageInner() {
 
   // Tab state – initialise from ?tab= query param
   const [activeTab, setActiveTab] = useState<"evaluations" | "datasets">(
-    searchParams.get("tab") === "datasets" ? "datasets" : "evaluations"
+    searchParams.get("tab") === "datasets" ? "datasets" : "evaluations",
   );
 
   // Evaluations state
@@ -67,8 +67,18 @@ function TTSPageInner() {
     isDeletingDataset,
     handleDeleteDataset,
     handleCreateDataset,
-  } = useDatasetManagement(backendAccessToken, "tts", (uuid) =>
-    router.push(`/datasets/${uuid}`),
+  } = useDatasetManagement(
+    backendAccessToken,
+    "tts",
+    (uuid) => router.push(`/datasets/${uuid}`),
+    (deletedId) =>
+      setJobs((prev) =>
+        prev.map((job) =>
+          job.dataset_id === deletedId
+            ? { ...job, dataset_id: null, dataset_name: null }
+            : job,
+        ),
+      ),
   );
 
   // Set page title
@@ -108,11 +118,36 @@ function TTSPageInner() {
         }
 
         const data = await response.json();
-        setJobs(data.jobs || []);
+        const fetchedJobs: TTSJob[] = data.jobs || [];
+
+        const datasetIds = [
+          ...new Set(
+            fetchedJobs.filter((j) => j.dataset_id).map((j) => j.dataset_id!),
+          ),
+        ];
+        const validDatasetIds = new Set<string>();
+        await Promise.all(
+          datasetIds.map(async (id) => {
+            try {
+              await getDataset(backendAccessToken, id);
+              validDatasetIds.add(id);
+            } catch {
+              // Dataset no longer exists
+            }
+          }),
+        );
+        const validatedJobs = fetchedJobs.map((job) => {
+          if (job.dataset_id && !validDatasetIds.has(job.dataset_id)) {
+            return { ...job, dataset_id: null, dataset_name: null };
+          }
+          return job;
+        });
+
+        setJobs(validatedJobs);
       } catch (err) {
         console.error("Error fetching TTS jobs:", err);
         setError(
-          err instanceof Error ? err.message : "Failed to load TTS jobs"
+          err instanceof Error ? err.message : "Failed to load TTS jobs",
         );
       } finally {
         setIsLoading(false);
@@ -245,7 +280,9 @@ function TTSPageInner() {
               </div>
             ) : error ? (
               <div className="border border-border rounded-xl p-8 md:p-12 flex flex-col items-center justify-center bg-muted/20">
-                <p className="text-sm md:text-base text-red-500 mb-2">{error}</p>
+                <p className="text-sm md:text-base text-red-500 mb-2">
+                  {error}
+                </p>
                 <button
                   onClick={() => window.location.reload()}
                   className="text-sm md:text-base text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
@@ -313,9 +350,12 @@ function TTSPageInner() {
                 {/* Desktop Table View */}
                 <div className="hidden md:block border border-border rounded-xl overflow-hidden">
                   {/* Table Header */}
-                  <div className="grid grid-cols-[2fr_100px_100px_80px_1fr] gap-4 px-4 py-2 border-b border-border bg-muted/30">
+                  <div className="grid grid-cols-[2fr_1fr_100px_100px_80px_1fr] gap-4 px-4 py-2 border-b border-border bg-muted/30">
                     <div className="text-sm font-medium text-muted-foreground">
                       Providers
+                    </div>
+                    <div className="text-sm font-medium text-muted-foreground">
+                      Dataset
                     </div>
                     <div className="text-sm font-medium text-muted-foreground">
                       Language
@@ -352,10 +392,10 @@ function TTSPageInner() {
                   </div>
                   {/* Table Rows */}
                   {sortedJobs.map((job) => (
-                    <Link
+                    <div
                       key={job.uuid}
-                      href={`/tts/${job.uuid}`}
-                      className="grid grid-cols-[2fr_100px_100px_80px_1fr] gap-4 px-4 py-3 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors items-center"
+                      onClick={() => router.push(`/tts/${job.uuid}`)}
+                      className="grid grid-cols-[2fr_1fr_100px_100px_80px_1fr] gap-4 px-4 py-3 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors items-center cursor-pointer"
                     >
                       {/* Providers as pills */}
                       <div className="flex flex-wrap gap-1.5">
@@ -367,7 +407,38 @@ function TTSPageInner() {
                             {getProviderLabel(provider)}
                           </span>
                         )) || (
-                          <span className="text-sm text-muted-foreground">—</span>
+                          <span className="text-sm text-muted-foreground">
+                            —
+                          </span>
+                        )}
+                      </div>
+                      {/* Dataset */}
+                      <div>
+                        {job.dataset_id && job.dataset_name ? (
+                          <Link
+                            href={`/datasets/${job.dataset_id}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-muted text-foreground hover:bg-muted/70 transition-colors max-w-[160px]"
+                          >
+                            <svg
+                              className="w-3 h-3 shrink-0"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"
+                              />
+                            </svg>
+                            <span className="truncate">{job.dataset_name}</span>
+                          </Link>
+                        ) : (
+                          <span className="text-sm text-muted-foreground">
+                            —
+                          </span>
                         )}
                       </div>
                       {/* Language */}
@@ -382,7 +453,7 @@ function TTSPageInner() {
                       <div>
                         <span
                           className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${getStatusBadgeClass(
-                            job.status
+                            job.status,
                           )}`}
                         >
                           {formatStatus(job.status)}
@@ -398,17 +469,17 @@ function TTSPageInner() {
                       <p className="text-sm text-muted-foreground">
                         {job.created_at ? formatDate(job.created_at) : "—"}
                       </p>
-                    </Link>
+                    </div>
                   ))}
                 </div>
 
                 {/* Mobile Card View */}
                 <div className="md:hidden space-y-4">
                   {sortedJobs.map((job) => (
-                    <Link
+                    <div
                       key={job.uuid}
-                      href={`/tts/${job.uuid}`}
-                      className="block border border-border rounded-xl overflow-hidden bg-background hover:shadow-lg hover:border-foreground/20 transition-all duration-200"
+                      onClick={() => router.push(`/tts/${job.uuid}`)}
+                      className="block border border-border rounded-xl overflow-hidden bg-background hover:shadow-lg hover:border-foreground/20 transition-all duration-200 cursor-pointer"
                     >
                       <div className="p-5">
                         {/* Header with Providers */}
@@ -431,7 +502,7 @@ function TTSPageInner() {
                         <div className="mb-4">
                           <span
                             className={`inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold ${getStatusBadgeClass(
-                              job.status
+                              job.status,
                             )}`}
                           >
                             {formatStatus(job.status)}
@@ -440,6 +511,39 @@ function TTSPageInner() {
 
                         {/* Details with Icons */}
                         <div className="space-y-3">
+                          {job.dataset_id && job.dataset_name && (
+                            <div className="flex items-center gap-3">
+                              <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center">
+                                <svg
+                                  className="w-4 h-4 text-muted-foreground"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                  strokeWidth={2}
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"
+                                  />
+                                </svg>
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-xs text-muted-foreground mb-0.5">
+                                  Dataset
+                                </p>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    router.push(`/datasets/${job.dataset_id}`);
+                                  }}
+                                  className="text-sm font-medium text-foreground hover:underline cursor-pointer text-left"
+                                >
+                                  {job.dataset_name}
+                                </button>
+                              </div>
+                            </div>
+                          )}
                           <div className="flex items-center gap-3">
                             <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center">
                               <svg
@@ -515,13 +619,15 @@ function TTSPageInner() {
                                 Created
                               </p>
                               <p className="text-sm font-medium text-foreground">
-                                {job.created_at ? formatDate(job.created_at) : "—"}
+                                {job.created_at
+                                  ? formatDate(job.created_at)
+                                  : "—"}
                               </p>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </Link>
+                    </div>
                   ))}
                 </div>
               </>
@@ -600,10 +706,18 @@ function TTSPageInner() {
               <div className="border border-border rounded-xl overflow-hidden">
                 {/* Table Header */}
                 <div className="hidden md:grid grid-cols-[2fr_80px_80px_1fr_40px] gap-4 px-4 py-2 border-b border-border bg-muted/30">
-                  <div className="text-sm font-medium text-muted-foreground">Name</div>
-                  <div className="text-sm font-medium text-muted-foreground">Items</div>
-                  <div className="text-sm font-medium text-muted-foreground">Evals</div>
-                  <div className="text-sm font-medium text-muted-foreground">Updated</div>
+                  <div className="text-sm font-medium text-muted-foreground">
+                    Name
+                  </div>
+                  <div className="text-sm font-medium text-muted-foreground">
+                    Items
+                  </div>
+                  <div className="text-sm font-medium text-muted-foreground">
+                    Evals
+                  </div>
+                  <div className="text-sm font-medium text-muted-foreground">
+                    Updated
+                  </div>
                   <div />
                 </div>
                 {datasets.map((dataset) => (
@@ -622,7 +736,9 @@ function TTSPageInner() {
                       {dataset.eval_count}
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      {dataset.updated_at ? formatDate(dataset.updated_at) : "—"}
+                      {dataset.updated_at
+                        ? formatDate(dataset.updated_at)
+                        : "—"}
                     </div>
                     <div className="flex justify-end">
                       <button
@@ -633,8 +749,18 @@ function TTSPageInner() {
                         }}
                         className="p-1.5 rounded hover:bg-muted/50 text-muted-foreground hover:text-red-500 transition-colors cursor-pointer"
                       >
-                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                        <svg
+                          className="w-3.5 h-3.5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                          />
                         </svg>
                       </button>
                     </div>
@@ -653,7 +779,7 @@ function TTSPageInner() {
           onClose={() => setDeleteDatasetId(null)}
           onConfirm={() => handleDeleteDataset(deleteDatasetId)}
           title="Delete dataset"
-          message={`Delete "${datasets.find((d) => d.uuid === deleteDatasetId)?.name}"? This cannot be undone.`}
+          message={`Are you sure you want to delete this dataset? This cannot be undone`}
           isDeleting={isDeletingDataset}
         />
       )}
