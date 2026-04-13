@@ -1963,11 +1963,11 @@ Key styling:
         </div>
       </div>
 
-      {/* Right panel - evaluation criteria (w-72), desktop only, shown when test selected */}
-      {selectedResult && (
+      {/* Right panel - evaluation criteria (w-72), desktop only, shown only after test completes */}
+      {selectedResult && (selectedResult.status === "passed" || selectedResult.status === "failed") && (
         <div className="hidden md:flex w-72 border-l border-border flex-col overflow-hidden">
           <div className="flex-1 overflow-y-auto">
-            <EvaluationCriteriaPanel evaluation={testCase?.evaluation} testType={test.type} />
+            <EvaluationCriteriaPanel evaluation={testCase?.evaluation} testType={testCase?.evaluation?.type} />
           </div>
         </div>
       )}
@@ -3398,8 +3398,13 @@ import {
 // Evaluation criteria panel - third column in test/benchmark runner dialogs
 // Shows test type badge ("Next Reply Text" blue / "Tool Call" purple), criteria text, expected tool calls
 // Desktop only (hidden on mobile), w-72, border-l
-// testType can come from TestData.type or inferred from evaluation.type / presence of evaluation.tool_calls
-<EvaluationCriteriaPanel evaluation={testCase?.evaluation} testType="response" />
+// IMPORTANT: Only rendered after test completes (status "passed" or "failed"). During running/pending/queued,
+// evaluation data isn't available yet, so showing the panel would display misleading defaults.
+// IMPORTANT: testType must come from evaluation.type (API data), NOT from test.type (synthesized data).
+// The hydration path for completed runs sets all placeholder tests to type:"response", which causes
+// tool-call tests to be misrendered as "Next Reply Text". Always prefer testCase.evaluation.type.
+// Fallback chain inside the component: testType -> evaluation.type -> infer from evaluation.tool_calls
+<EvaluationCriteriaPanel evaluation={testCase?.evaluation} testType={testCase?.evaluation?.type} />
 ```
 
 ---

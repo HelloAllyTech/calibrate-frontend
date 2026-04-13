@@ -80,11 +80,11 @@ export function BenchmarkResultsDialog({
   useHideFloatingButton(isOpen);
 
   const [activeTab, setActiveTab] = useState<"leaderboard" | "outputs">(
-    "outputs"
+    "outputs",
   );
   // Track which providers are expanded
   const [expandedProviders, setExpandedProviders] = useState<Set<string>>(
-    new Set()
+    new Set(),
   );
   // Track selected test: { model, testIndex }
   const [selectedTest, setSelectedTest] = useState<{
@@ -171,7 +171,7 @@ export function BenchmarkResultsDialog({
             accept: "application/json",
             "ngrok-skip-browser-warning": "true",
           },
-        }
+        },
       );
 
       if (!response.ok) {
@@ -192,7 +192,7 @@ export function BenchmarkResultsDialog({
           setExpandedProviders((prev) => {
             if (prev.size === 0) {
               const firstWithResults = result.model_results!.find(
-                (m) => m.test_results && m.test_results.length > 0
+                (m) => m.test_results && m.test_results.length > 0,
               );
               if (firstWithResults) {
                 return new Set([firstWithResults.model]);
@@ -266,7 +266,7 @@ export function BenchmarkResultsDialog({
             test_uuids: testUuids,
             models: models,
           }),
-        }
+        },
       );
 
       if (!response.ok) {
@@ -292,7 +292,7 @@ export function BenchmarkResultsDialog({
       console.error("Error starting benchmark:", err);
       setIsInitialLoading(false);
       setError(
-        err instanceof Error ? err.message : "Failed to start benchmark"
+        err instanceof Error ? err.message : "Failed to start benchmark",
       );
     }
   };
@@ -317,7 +317,7 @@ export function BenchmarkResultsDialog({
   const getSelectedTestResult = (): BenchmarkTestResult | null => {
     if (!selectedTest) return null;
     const modelResult = modelResults.find(
-      (m) => m.model === selectedTest.model
+      (m) => m.model === selectedTest.model,
     );
     if (!modelResult?.test_results) return null;
     return modelResult.test_results[selectedTest.testIndex] || null;
@@ -371,7 +371,7 @@ export function BenchmarkResultsDialog({
 
   // Check if we have any results to show
   const hasAnyResults = modelResults.some(
-    (m) => m.test_results && m.test_results.length > 0
+    (m) => m.test_results && m.test_results.length > 0,
   );
 
   return (
@@ -447,7 +447,9 @@ export function BenchmarkResultsDialog({
                     d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
                   />
                 </svg>
-                <span className="font-medium text-red-500">Something went wrong</span>
+                <span className="font-medium text-red-500">
+                  Something went wrong
+                </span>
               </div>
               <p className="text-sm text-red-400 mb-4">
                 We&apos;re looking into it. Please reach out to us if this issue
@@ -628,7 +630,7 @@ export function BenchmarkResultsDialog({
                           <div className="flex items-center gap-3">
                             <SpinnerIcon className="w-5 h-5 animate-spin text-muted-foreground" />
                             <p className="text-muted-foreground">
-                              Running test...
+                              Running test
                             </p>
                           </div>
                         </div>
@@ -745,7 +747,7 @@ function ProviderSection({
             const expectedCount = Math.max(
               totalTests,
               testNames.length,
-              resultsCount
+              resultsCount,
             );
 
             if (expectedCount === 0 && !hasResults) {
@@ -778,8 +780,8 @@ function ProviderSection({
                     ? testResult.passed === null
                       ? "running"
                       : testResult.passed
-                      ? "passed"
-                      : "failed"
+                        ? "passed"
+                        : "failed"
                     : "running";
 
                   // Only make clickable if we have a result
