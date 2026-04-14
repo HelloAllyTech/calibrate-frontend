@@ -17,8 +17,9 @@ import type {
   LLMModel,
   DataExtractionFieldData,
 } from "@/components/agent-tabs";
-import { useOpenRouterModels, findModelInProviders } from "@/hooks";
-import { SpinnerIcon, CheckCircleIcon, CloseIcon } from "@/components/icons";
+import { useOpenRouterModels, findModelInProviders, useVerifyConnection } from "@/hooks";
+import { SpinnerIcon, CheckCircleIcon } from "@/components/icons";
+import { VerifyErrorPopover } from "@/components/VerifyErrorPopover";
 import type { ConnectionConfig } from "@/components/agent-tabs/AgentConnectionTabContent";
 import { useHideFloatingButton } from "@/components/AppLayout";
 
@@ -162,62 +163,20 @@ export function AgentDetail({
     {},
   );
 
-  // Connection verification state (shown beside Save button)
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [verifyError, setVerifyError] = useState<string | null>(null);
-  const [verifySampleResponse, setVerifySampleResponse] = useState<Record<string, unknown> | null>(null);
+  // Connection verification via shared hook
+  const verify = useVerifyConnection();
 
   const isConnectionUnverified = agent?.type === "connection" && connectionConfig.connection_verified !== true;
 
   const handleVerifyConnection = async () => {
-    try {
-      setIsVerifying(true);
-      setVerifyError(null);
-      setVerifySampleResponse(null);
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-      if (!backendUrl) throw new Error("BACKEND_URL not set");
-
-      const response = await fetch(
-        `${backendUrl}/agents/${agentUuid}/verify-connection`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            accept: "application/json",
-            "ngrok-skip-browser-warning": "true",
-            Authorization: `Bearer ${backendAccessToken}`,
-          },
-          body: JSON.stringify({}),
-        },
-      );
-
-      if (response.status === 401) {
-        await signOut({ callbackUrl: "/login" });
-        return;
-      }
-
-      if (!response.ok) throw new Error("Verification request failed");
-
-      const result = await response.json();
-
-      if (result.success) {
-        setConnectionConfig((prev) => ({
-          ...prev,
-          connection_verified: true,
-          connection_verified_at: new Date().toISOString(),
-          connection_verified_error: null,
-        }));
-        setVerifyError(null);
-        setVerifySampleResponse(null);
-      } else {
-        setVerifyError(result.error || "Connection verification failed");
-        setVerifySampleResponse(result.sample_response ?? null);
-      }
-    } catch (err) {
-      console.error("Error verifying connection:", err);
-      setVerifyError(err instanceof Error ? err.message : "Verification failed");
-    } finally {
-      setIsVerifying(false);
+    const success = await verify.verifySavedAgent(agentUuid);
+    if (success) {
+      setConnectionConfig((prev) => ({
+        ...prev,
+        connection_verified: true,
+        connection_verified_at: new Date().toISOString(),
+        connection_verified_error: null,
+      }));
     }
   };
 
@@ -650,14 +609,14 @@ export function AgentDetail({
         onSave: () => saveRef.current(),
         onEditName: handleOpenEditNameDialog,
         isConnectionUnverified,
-        isVerifying,
+        isVerifying: verify.isVerifying,
         onVerify: handleVerifyConnection,
-        verifyError,
-        verifySampleResponse,
-        onDismissVerifyError: () => { setVerifyError(null); setVerifySampleResponse(null); },
+        verifyError: verify.verifyError,
+        verifySampleResponse: verify.verifySampleResponse,
+        onDismissVerifyError: verify.dismiss,
       });
     }
-  }, [agent?.name, activeTab, isLoading, isSaving, onHeaderStateChange, isConnectionUnverified, isVerifying, verifyError, verifySampleResponse]);
+  }, [agent?.name, activeTab, isLoading, isSaving, onHeaderStateChange, isConnectionUnverified, verify.isVerifying, verify.verifyError, verify.verifySampleResponse]);
 
   if (isLoading) {
     return (
@@ -745,10 +704,10 @@ export function AgentDetail({
               <div className="relative">
                 <button
                   onClick={handleVerifyConnection}
-                  disabled={isVerifying}
+                  disabled={verify.isVerifying}
                   className="h-8 md:h-9 px-3 md:px-4 rounded-md text-xs md:text-sm font-medium bg-yellow-500 text-black hover:bg-yellow-400 transition-colors cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
                 >
-                  {isVerifying ? (
+                  {verify.isVerifying ? (
                     <>
                       <SpinnerIcon className="w-4 h-4 animate-spin" />
                       <span>Verifying...</span>
@@ -760,39 +719,11 @@ export function AgentDetail({
                     </>
                   )}
                 </button>
-
-                {(verifyError || verifySampleResponse) && (
-                  <>
-                    <div
-                      className="fixed inset-0 z-[99]"
-                      onClick={() => { setVerifyError(null); setVerifySampleResponse(null); }}
-                    />
-                    <div className="absolute right-0 top-full mt-2 w-80 bg-background border border-border rounded-xl shadow-xl z-[100] overflow-hidden">
-                      <div className="flex items-center justify-between p-3 border-b border-border">
-                        <span className="text-sm font-medium text-red-400">Verification Failed</span>
-                        <button
-                          onClick={() => { setVerifyError(null); setVerifySampleResponse(null); }}
-                          className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-muted transition-colors cursor-pointer"
-                        >
-                          <CloseIcon className="w-4 h-4 text-muted-foreground" />
-                        </button>
-                      </div>
-                      <div className="p-3 space-y-2">
-                        {verifyError && (
-                          <p className="text-xs text-red-400">{verifyError}</p>
-                        )}
-                        {verifySampleResponse && (
-                          <div className="space-y-1">
-                            <p className="text-xs font-medium text-muted-foreground">Your agent responded with:</p>
-                            <pre className="text-xs bg-muted rounded-lg p-2 overflow-x-auto text-foreground max-h-32 overflow-y-auto">
-                              {JSON.stringify(verifySampleResponse, null, 2)}
-                            </pre>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </>
-                )}
+                <VerifyErrorPopover
+                  error={verify.verifyError}
+                  sampleResponse={verify.verifySampleResponse}
+                  onDismiss={verify.dismiss}
+                />
               </div>
             )}
             <button

@@ -3,8 +3,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { useAccessToken } from "@/hooks";
+import { useAccessToken, useVerifyConnection } from "@/hooks";
 import { toast } from "sonner";
+import { SpinnerIcon, CheckCircleIcon } from "@/components/icons";
+import { VerifyErrorPopover } from "@/components/VerifyErrorPopover";
 import { AppLayout } from "@/components/AppLayout";
 import { Agent } from "@/components/AgentPicker";
 import { PickerItem } from "@/components/MultiSelectPicker";
@@ -623,59 +625,14 @@ export default function SimulationDetailPage() {
   );
 
   const isAgentUnverified = selectedAgent?.verified === false;
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [verifyError, setVerifyError] = useState<string | null>(null);
-  const [verifySampleResponse, setVerifySampleResponse] = useState<Record<string, unknown> | null>(null);
+  const verify = useVerifyConnection();
 
   const handleVerifyAgent = async () => {
     if (!selectedAgent) return;
-
-    try {
-      setIsVerifying(true);
-      setVerifyError(null);
-      setVerifySampleResponse(null);
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-      if (!backendUrl) {
-        throw new Error("BACKEND_URL environment variable is not set");
-      }
-
-      const response = await fetch(
-        `${backendUrl}/agents/${selectedAgent.uuid}/verify-connection`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            accept: "application/json",
-            "ngrok-skip-browser-warning": "true",
-            Authorization: `Bearer ${backendAccessToken}`,
-          },
-          body: JSON.stringify({}),
-        }
-      );
-
-      if (response.status === 401) {
-        await signOut({ callbackUrl: "/login" });
-        return;
-      }
-
-      if (!response.ok) {
-        throw new Error("Verification request failed");
-      }
-
-      const result = await response.json();
-
-      if (result.success) {
-        setSelectedAgent({ ...selectedAgent, verified: true });
-        toast.success("Agent connection verified successfully");
-      } else {
-        setVerifyError(result.error || "Connection verification failed");
-        setVerifySampleResponse(result.sample_response ?? null);
-      }
-    } catch (err) {
-      console.error("Error verifying agent connection:", err);
-      setVerifyError(err instanceof Error ? err.message : "Verification failed");
-    } finally {
-      setIsVerifying(false);
+    const success = await verify.verifySavedAgent(selectedAgent.uuid);
+    if (success) {
+      setSelectedAgent({ ...selectedAgent, verified: true });
+      toast.success("Agent connection verified successfully");
     }
   };
 
@@ -687,88 +644,26 @@ export default function SimulationDetailPage() {
           <div className="relative">
             <button
               onClick={handleVerifyAgent}
-              disabled={isVerifying}
+              disabled={verify.isVerifying}
               className="h-8 px-4 rounded-md text-sm font-medium bg-yellow-500 text-black hover:bg-yellow-400 transition-colors cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
             >
-              {isVerifying ? (
+              {verify.isVerifying ? (
                 <>
-                  <svg
-                    className="w-4 h-4 animate-spin"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
+                  <SpinnerIcon className="w-4 h-4 animate-spin" />
                   <span>Verifying...</span>
                 </>
               ) : (
                 <>
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
+                  <CheckCircleIcon className="w-4 h-4" />
                   <span>Verify</span>
                 </>
               )}
             </button>
-
-            {(verifyError || verifySampleResponse) && (
-              <>
-                <div
-                  className="fixed inset-0 z-[99]"
-                  onClick={() => { setVerifyError(null); setVerifySampleResponse(null); }}
-                />
-                <div className="absolute right-0 top-full mt-2 w-80 bg-background border border-border rounded-xl shadow-xl z-[100] overflow-hidden">
-                  <div className="flex items-center justify-between p-3 border-b border-border">
-                    <span className="text-sm font-medium text-red-400">Verification Failed</span>
-                    <button
-                      onClick={() => { setVerifyError(null); setVerifySampleResponse(null); }}
-                      className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-muted transition-colors cursor-pointer"
-                    >
-                      <svg className="w-4 h-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="p-3 space-y-2">
-                    {verifyError && (
-                      <p className="text-xs text-red-400">{verifyError}</p>
-                    )}
-                    {verifySampleResponse && (
-                      <div className="space-y-1">
-                        <p className="text-xs font-medium text-muted-foreground">
-                          Your agent responded with:
-                        </p>
-                        <pre className="text-xs bg-muted rounded-lg p-3 overflow-x-auto text-foreground max-h-48 overflow-y-auto">
-                          {JSON.stringify(verifySampleResponse, null, 2)}
-                        </pre>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </>
-            )}
+            <VerifyErrorPopover
+              error={verify.verifyError}
+              sampleResponse={verify.verifySampleResponse}
+              onDismiss={verify.dismiss}
+            />
           </div>
         )}
         <div className="relative group" ref={launchDropdownRef}>
@@ -779,25 +674,7 @@ export default function SimulationDetailPage() {
         >
           {isLaunching ? (
             <>
-              <svg
-                className="w-4 h-4 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
+              <SpinnerIcon className="w-4 h-4 animate-spin" />
               <span>Launching...</span>
             </>
           ) : (
@@ -900,25 +777,7 @@ export default function SimulationDetailPage() {
         {/* Content */}
         {isLoading ? (
           <div className="flex items-center justify-center gap-3 py-8">
-            <svg
-              className="w-5 h-5 animate-spin"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+            <SpinnerIcon className="w-5 h-5 animate-spin" />
           </div>
         ) : error ? (
           <div className="border border-border rounded-xl p-8 md:p-12 flex flex-col items-center justify-center bg-muted/20">

@@ -243,7 +243,7 @@ Provider website links (external link icons) are shown only on the new evaluatio
   5. Clicking on an in-progress run opens the dialog with the correct `taskId` for real-time polling
 - **Actions**: Add test (button in tests table header), Run all tests (header action button, max 20 tests — sends empty body so backend runs all linked tests), Run single test (row button — sends `test_uuids: [uuid]`), Compare models (benchmark — sends only `models`, no `test_uuids`)
 - **Run all tests limit**: Maximum 20 tests at a time. Shows toast error with "Contact Us" link if exceeded
-- **Connection agent verification (header-level)**: When a connection agent is unverified, a yellow "Verify" button (`bg-yellow-500 text-black`) appears beside the Save button in the `AgentDetail` page header — visible on all tabs **except** the Connection tab (which has its own inline "Verify" / "Re-verify" button in the same yellow style). The header button is hidden via `headerState.activeTab !== "connection"`. It calls `POST /agents/{uuid}/verify-connection` with empty body. On success, updates `connectionConfig.connection_verified` directly. On failure, a popover drops down (fixed backdrop + absolute dropdown with "Verification Failed" header, close button, error text, optional sample response JSON). State: `isVerifying`, `verifyError`, `verifySampleResponse` live in `AgentDetail`. On the Tests tab, "Run all tests" and "Compare models" buttons are disabled (`opacity-50 cursor-not-allowed`) with a hover tooltip ("Verify agent connection first") using Tailwind named groups (`group/runall`, `group/compare`) when the connection is unverified.
+- **Connection agent verification (header-level)**: When a connection agent is unverified, a yellow "Verify" button (`bg-yellow-500 text-black`) appears beside the Save button in the `AgentDetail` page header — visible on all tabs **except** the Connection tab (which has its own inline "Verify" / "Re-verify" button in the same yellow style). The header button is hidden via `headerState.activeTab !== "connection"`. It calls `POST /agents/{uuid}/verify-connection` with empty body. On success, updates `connectionConfig.connection_verified` directly. On failure, a popover drops down (fixed backdrop + absolute dropdown with "Verification Failed" header, close button, error text, optional sample response JSON). State: `isVerifying`, `verifyError`, `verifySampleResponse` live in `AgentDetail`. On the Tests tab, "Run all tests" and "Compare models" buttons are disabled (`opacity-50 cursor-not-allowed`) with a hover tooltip ("Verify agent connection first") using Tailwind named groups (`group/runall`, `group/compare`) when the connection is unverified. **Important**: All verification is enforced *before* `TestRunnerDialog` opens — the dialog itself has no verification logic or props. It always runs tests immediately on open.
 - **API**: Fetches runs from `GET /agent-tests/agent/{uuid}/runs`
 - **Run types**: `llm-unit-test` (has passed/failed counts) and `llm-benchmark` (results in model_results)
 
@@ -3184,6 +3184,24 @@ import {
 
 **Important**: Always use shared icons from `@/components/icons` instead of inline SVGs for spinner, checkmark, alert, warning, close, etc. The `ConnectionConfig` type is exported from `AgentConnectionTabContent.tsx` and reused in `AgentDetail.tsx` for type safety.
 
+### Verify Error Popover (`@/components/VerifyErrorPopover`)
+
+Shared popover component for displaying connection verification errors. Used wherever a "Verify" button exists — `AgentDetail.tsx`, `agents/[uuid]/page.tsx`, and `simulations/[uuid]/page.tsx`. Renders an absolutely-positioned dropdown with a fixed backdrop for dismiss, a "Verification Failed" header, error text, and optional sample response JSON. Returns `null` when both `error` and `sampleResponse` are falsy.
+
+```tsx
+import { VerifyErrorPopover } from "@/components/VerifyErrorPopover";
+
+// Place inside a `relative` container next to the verify button
+<div className="relative">
+  <button onClick={handleVerify}>Verify</button>
+  <VerifyErrorPopover
+    error={verify.verifyError}
+    sampleResponse={verify.verifySampleResponse}
+    onDismiss={verify.dismiss}
+  />
+</div>
+```
+
 ### Status Utilities (`@/lib/status`)
 
 Centralized status formatting and styling:
@@ -3400,6 +3418,20 @@ const { providers, isLoading, error, retry } = useOpenRouterModels();
 // findModelInProviders - utility to look up a model by ID in the providers list
 import { findModelInProviders } from "@/hooks";
 const model = findModelInProviders(providers, "openai/gpt-5.2-chat");
+
+// useVerifyConnection - shared hook for all agent connection verification
+// Used by: AgentDetail, AgentConnectionTabContent, simulations/[uuid]/page
+import { useVerifyConnection } from "@/hooks";
+const verify = useVerifyConnection();
+// Verify a saved agent (POST /agents/{uuid}/verify-connection with empty body)
+const success = await verify.verifySavedAgent(agentUuid);
+// Verify unsaved URL/headers (POST /agents/verify-connection with url+headers body)
+const success = await verify.verifyAdHoc(agentUrl, agentHeaders);
+// Reactive state for UI binding
+verify.isVerifying; // boolean
+verify.verifyError; // string | null
+verify.verifySampleResponse; // Record<string, unknown> | null
+verify.dismiss(); // clears error + sample response
 ```
 
 ### Test Results Components (`@/components/test-results/shared`)

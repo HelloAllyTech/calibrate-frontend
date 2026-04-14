@@ -5,7 +5,8 @@ import { useParams, useRouter } from "next/navigation";
 import { AppLayout } from "@/components/AppLayout";
 import { AgentDetail, AgentDetailHeaderState } from "@/components/AgentDetail";
 import { useSidebarState } from "@/lib/sidebar";
-import { SpinnerIcon, CheckCircleIcon, CloseIcon } from "@/components/icons";
+import { SpinnerIcon, CheckCircleIcon } from "@/components/icons";
+import { VerifyErrorPopover } from "@/components/VerifyErrorPopover";
 
 // Map tab IDs to display names for page title
 const tabDisplayNames: Record<string, string> = {
@@ -99,38 +100,11 @@ export default function AgentDetailPage() {
               )}
             </button>
 
-            {(headerState.verifyError || headerState.verifySampleResponse) && (
-              <>
-                <div
-                  className="fixed inset-0 z-[99]"
-                  onClick={() => headerState.onDismissVerifyError()}
-                />
-                <div className="absolute right-0 top-full mt-2 w-80 bg-background border border-border rounded-xl shadow-xl z-[100] overflow-hidden">
-                  <div className="flex items-center justify-between p-3 border-b border-border">
-                    <span className="text-sm font-medium text-red-400">Verification Failed</span>
-                    <button
-                      onClick={() => headerState.onDismissVerifyError()}
-                      className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-muted transition-colors cursor-pointer"
-                    >
-                      <CloseIcon className="w-4 h-4 text-muted-foreground" />
-                    </button>
-                  </div>
-                  <div className="p-3 space-y-2">
-                    {headerState.verifyError && (
-                      <p className="text-xs text-red-400">{headerState.verifyError}</p>
-                    )}
-                    {headerState.verifySampleResponse && (
-                      <div className="space-y-1">
-                        <p className="text-xs font-medium text-muted-foreground">Your agent responded with:</p>
-                        <pre className="text-xs bg-muted rounded-lg p-2 overflow-x-auto text-foreground max-h-32 overflow-y-auto">
-                          {JSON.stringify(headerState.verifySampleResponse, null, 2)}
-                        </pre>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </>
-            )}
+            <VerifyErrorPopover
+              error={headerState.verifyError}
+              sampleResponse={headerState.verifySampleResponse}
+              onDismiss={() => headerState.onDismissVerifyError()}
+            />
           </div>
         )}
         <button

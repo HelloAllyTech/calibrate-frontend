@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { signOut } from "next-auth/react";
-import { useAccessToken } from "@/hooks";
+import React, { useEffect, useRef, useState } from "react";
+import { useVerifyConnection } from "@/hooks";
 import { SpinnerIcon, CheckCircleIcon, AlertIcon } from "@/components/icons";
 
 type VerificationStatus = "unverified" | "verifying" | "verified" | "failed";
@@ -46,7 +45,8 @@ export function AgentConnectionTabContent({
   onSave,
   isSaving,
 }: AgentConnectionTabContentProps) {
-  const backendAccessToken = useAccessToken();
+  const verify = useVerifyConnection();
+
   const [verifyStatus, setVerifyStatus] = useState<VerificationStatus>(() => {
     if (connectionConfig.connection_verified === true) return "verified";
     if (
@@ -72,10 +72,12 @@ export function AgentConnectionTabContent({
     connectionConfig.connection_verified_error,
   ]);
 
-  const [sampleResponse, setSampleResponse] = useState<Record<
-    string,
-    unknown
-  > | null>(null);
+  // Ref to avoid stale closure when reading connectionConfig in handleVerify
+  const connectionConfigRef = useRef(connectionConfig);
+  useEffect(() => {
+    connectionConfigRef.current = connectionConfig;
+  }, [connectionConfig]);
+
   const handleAddHeader = () => {
     onAgentHeadersChange([...agentHeaders, { key: "", value: "" }]);
   };
@@ -98,91 +100,36 @@ export function AgentConnectionTabContent({
   const handleVerify = async () => {
     setVerifyStatus("verifying");
 
-    try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-      if (!backendUrl) throw new Error("BACKEND_URL not set");
-
-      const currentHeadersObj: Record<string, string> = {};
-      for (const h of agentHeaders) {
-        if (h.key.trim()) {
-          currentHeadersObj[h.key] = h.value;
-        }
+    const currentHeadersObj: Record<string, string> = {};
+    for (const h of agentHeaders) {
+      if (h.key.trim()) {
+        currentHeadersObj[h.key] = h.value;
       }
-
-      const savedUrl = connectionConfig.agent_url || "";
-      const savedHeaders = connectionConfig.agent_headers || {};
-      const hasUnsavedChanges =
-        agentUrl.trim() !== savedUrl ||
-        JSON.stringify(currentHeadersObj) !== JSON.stringify(savedHeaders);
-
-      let response: Response;
-
-      if (hasUnsavedChanges) {
-        response = await fetch(`${backendUrl}/agents/verify-connection`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            accept: "application/json",
-            "ngrok-skip-browser-warning": "true",
-            Authorization: `Bearer ${backendAccessToken}`,
-          },
-          body: JSON.stringify({
-            agent_url: agentUrl.trim(),
-            ...(Object.keys(currentHeadersObj).length > 0 && {
-              agent_headers: currentHeadersObj,
-            }),
-          }),
-        });
-      } else {
-        response = await fetch(
-          `${backendUrl}/agents/${agentUuid}/verify-connection`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              accept: "application/json",
-              "ngrok-skip-browser-warning": "true",
-              Authorization: `Bearer ${backendAccessToken}`,
-            },
-            body: JSON.stringify({}),
-          },
-        );
-      }
-
-      if (response.status === 401) {
-        await signOut({ callbackUrl: "/login" });
-        return;
-      }
-
-      if (!response.ok) {
-        throw new Error("Verification request failed");
-      }
-
-      const result = await response.json();
-
-      onConnectionConfigChange({
-        ...connectionConfig,
-        connection_verified: result.success ?? false,
-        connection_verified_at: result.success
-          ? new Date().toISOString()
-          : null,
-        connection_verified_error: result.error ?? null,
-      });
-
-      setSampleResponse(result.sample_response ?? null);
-      setVerifyStatus(result.success ? "verified" : "failed");
-    } catch (err) {
-      console.error("Error verifying connection:", err);
-      onConnectionConfigChange({
-        ...connectionConfig,
-        connection_verified: false,
-        connection_verified_at: null,
-        connection_verified_error:
-          err instanceof Error ? err.message : "Verification failed",
-      });
-      setSampleResponse(null);
-      setVerifyStatus("failed");
     }
+
+    const cfg = connectionConfigRef.current;
+    const savedUrl = cfg.agent_url || "";
+    const savedHeaders = cfg.agent_headers || {};
+    const hasUnsavedChanges =
+      agentUrl.trim() !== savedUrl ||
+      JSON.stringify(currentHeadersObj) !== JSON.stringify(savedHeaders);
+
+    let success: boolean;
+    if (hasUnsavedChanges) {
+      success = await verify.verifyAdHoc(agentUrl, currentHeadersObj);
+    } else {
+      success = await verify.verifySavedAgent(agentUuid);
+    }
+
+    const latestCfg = connectionConfigRef.current;
+    onConnectionConfigChange({
+      ...latestCfg,
+      connection_verified: success,
+      connection_verified_at: success ? new Date().toISOString() : null,
+      connection_verified_error: verify.verifyError ?? null,
+    });
+
+    setVerifyStatus(success ? "verified" : "failed");
   };
 
   const verifiedAt = connectionConfig.connection_verified_at
@@ -499,7 +446,7 @@ export function AgentConnectionTabContent({
               type="button"
               onClick={handleVerify}
               disabled={
-                verifyStatus === "verifying" || !agentUrl.trim() || isSaving
+                verify.isVerifying || !agentUrl.trim() || isSaving
               }
               className="h-8 md:h-9 px-3 md:px-4 rounded-md text-xs md:text-sm font-medium bg-yellow-500 text-black hover:bg-yellow-400 transition-colors cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex-shrink-0 flex items-center gap-1.5"
             >
@@ -516,18 +463,18 @@ export function AgentConnectionTabContent({
             </button>
           </div>
 
-          {verifyStatus === "failed" && (verifyError || sampleResponse) && (
+          {verifyStatus === "failed" && (verifyError || verify.verifySampleResponse) && (
             <div className="space-y-2 rounded-lg border border-red-500/20 bg-red-500/5 p-3">
               {verifyError && (
                 <p className="text-xs text-red-400">{verifyError}</p>
               )}
-              {sampleResponse && (
+              {verify.verifySampleResponse && (
                 <div className="space-y-1">
                   <p className="text-xs font-medium text-muted-foreground">
                     Your agent responded with:
                   </p>
                   <pre className="text-xs bg-muted rounded-lg p-3 overflow-x-auto text-foreground max-h-48 overflow-y-auto">
-                    {JSON.stringify(sampleResponse, null, 2)}
+                    {JSON.stringify(verify.verifySampleResponse, null, 2)}
                   </pre>
                 </div>
               )}
