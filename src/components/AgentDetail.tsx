@@ -470,6 +470,10 @@ export function AgentDetail({
           body: JSON.stringify({
             name: agent.name,
             config: configPayload,
+            ...(agent.type === "connection" && {
+              connection_verified:
+                connectionConfig.connection_verified === true,
+            }),
           }),
         });
 

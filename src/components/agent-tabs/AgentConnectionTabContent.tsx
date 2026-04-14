@@ -78,6 +78,62 @@ export function AgentConnectionTabContent({
     connectionConfigRef.current = connectionConfig;
   }, [connectionConfig]);
 
+  // Snapshot of the last successfully verified URL + headers.
+  // Used to restore "verified" status if the user edits then reverts.
+  const verifiedSnapshotRef = useRef<{
+    url: string;
+    headers: string;
+    status: VerificationStatus;
+    at: string | null;
+  } | null>(
+    connectionConfig.connection_verified === true
+      ? {
+          url: connectionConfig.agent_url || "",
+          headers: JSON.stringify(connectionConfig.agent_headers || {}),
+          status: "verified" as const,
+          at: connectionConfig.connection_verified_at || null,
+        }
+      : null,
+  );
+
+  // Compare drafts against verified snapshot; reset or restore status
+  useEffect(() => {
+    const snapshot = verifiedSnapshotRef.current;
+    if (!snapshot) return;
+
+    const currentHeadersObj: Record<string, string> = {};
+    for (const h of agentHeaders) {
+      if (h.key.trim()) {
+        currentHeadersObj[h.key] = h.value;
+      }
+    }
+    const draftUrl = agentUrl.trim();
+    const draftHeaders = JSON.stringify(currentHeadersObj);
+    const matchesVerified =
+      draftUrl === snapshot.url && draftHeaders === snapshot.headers;
+
+    if (matchesVerified) {
+      setVerifyStatus(snapshot.status);
+      if (snapshot.status === "verified") {
+        onConnectionConfigChange({
+          ...connectionConfigRef.current,
+          connection_verified: true,
+          connection_verified_at: snapshot.at,
+          connection_verified_error: null,
+        });
+      }
+    } else {
+      setVerifyStatus("unverified");
+      verify.dismiss();
+      onConnectionConfigChange({
+        ...connectionConfigRef.current,
+        connection_verified: false,
+        connection_verified_at: null,
+        connection_verified_error: null,
+      });
+    }
+  }, [agentUrl, agentHeaders]);
+
   const handleAddHeader = () => {
     onAgentHeadersChange([...agentHeaders, { key: "", value: "" }]);
   };
@@ -107,29 +163,27 @@ export function AgentConnectionTabContent({
       }
     }
 
-    const cfg = connectionConfigRef.current;
-    const savedUrl = cfg.agent_url || "";
-    const savedHeaders = cfg.agent_headers || {};
-    const hasUnsavedChanges =
-      agentUrl.trim() !== savedUrl ||
-      JSON.stringify(currentHeadersObj) !== JSON.stringify(savedHeaders);
+    const success = await verify.verifyAdHoc(agentUrl, currentHeadersObj);
 
-    let success: boolean;
-    if (hasUnsavedChanges) {
-      success = await verify.verifyAdHoc(agentUrl, currentHeadersObj);
-    } else {
-      success = await verify.verifySavedAgent(agentUuid);
-    }
+    const newStatus: VerificationStatus = success ? "verified" : "failed";
+    const now = success ? new Date().toISOString() : null;
+
+    verifiedSnapshotRef.current = {
+      url: agentUrl.trim(),
+      headers: JSON.stringify(currentHeadersObj),
+      status: newStatus,
+      at: now,
+    };
 
     const latestCfg = connectionConfigRef.current;
     onConnectionConfigChange({
       ...latestCfg,
       connection_verified: success,
-      connection_verified_at: success ? new Date().toISOString() : null,
+      connection_verified_at: now,
       connection_verified_error: verify.verifyError ?? null,
     });
 
-    setVerifyStatus(success ? "verified" : "failed");
+    setVerifyStatus(newStatus);
   };
 
   const verifiedAt = connectionConfig.connection_verified_at
