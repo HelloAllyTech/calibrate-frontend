@@ -3,8 +3,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { useAccessToken } from "@/hooks";
+import { useAccessToken, useVerifyConnection } from "@/hooks";
 import { toast } from "sonner";
+import { SpinnerIcon, CheckCircleIcon } from "@/components/icons";
+import { VerifyErrorPopover } from "@/components/VerifyErrorPopover";
 import { AppLayout } from "@/components/AppLayout";
 import { Agent } from "@/components/AgentPicker";
 import { PickerItem } from "@/components/MultiSelectPicker";
@@ -44,6 +46,7 @@ type MetricData = {
 type AgentData = {
   uuid: string;
   name: string;
+  type?: "agent" | "connection";
   config?: Record<string, any>;
   created_at: string;
   updated_at: string;
@@ -114,6 +117,11 @@ export default function SimulationDetailPage() {
   // Configuration state (whether config has been saved/created)
   const [isConfigured, setIsConfigured] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+
+  // Name editing state
+  const [isEditNameDialogOpen, setIsEditNameDialogOpen] = useState(false);
+  const [editedName, setEditedName] = useState("");
+  const [isSavingName, setIsSavingName] = useState(false);
 
   // Launch dropdown state
   const [launchDropdownOpen, setLaunchDropdownOpen] = useState(false);
@@ -320,9 +328,15 @@ export default function SimulationDetailPage() {
 
         // Pre-populate agent if present
         if (data.agent) {
+          const agentType = data.agent.type === "connection" ? "connection" : "agent";
           setSelectedAgent({
             uuid: data.agent.uuid,
             name: data.agent.name,
+            type: agentType,
+            verified:
+              agentType === "connection"
+                ? data.agent.config?.connection_verified === true
+                : true,
           });
         }
 
@@ -519,6 +533,63 @@ export default function SimulationDetailPage() {
     fetchMetrics();
   }, [backendAccessToken]);
 
+  // Name editing handlers
+  const handleOpenEditName = () => {
+    if (simulation) {
+      setEditedName(simulation.name);
+      setIsEditNameDialogOpen(true);
+    }
+  };
+
+  const handleSaveName = async () => {
+    if (!simulation || !editedName.trim() || editedName.trim() === simulation.name) {
+      setIsEditNameDialogOpen(false);
+      return;
+    }
+
+    try {
+      setIsSavingName(true);
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+      if (!backendUrl) {
+        throw new Error("BACKEND_URL environment variable is not set");
+      }
+
+      const response = await fetch(`${backendUrl}/simulations/${uuid}`, {
+        method: "PUT",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${backendAccessToken}`,
+        },
+        body: JSON.stringify({ name: editedName.trim() }),
+      });
+
+      if (response.status === 401) {
+        await signOut({ callbackUrl: "/login" });
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error("Failed to update simulation name");
+      }
+
+      setSimulation({ ...simulation, name: editedName.trim() });
+      setIsEditNameDialogOpen(false);
+      toast.success("Simulation name updated");
+    } catch (err) {
+      console.error("Error saving simulation name:", err);
+      toast.error(err instanceof Error ? err.message : "Failed to save name");
+    } finally {
+      setIsSavingName(false);
+    }
+  };
+
+  const handleCancelEditName = () => {
+    setIsEditNameDialogOpen(false);
+    setEditedName("");
+  };
+
   // Header with back button and simulation name
   const customHeader = (
     <div className="flex items-center gap-3">
@@ -541,42 +612,69 @@ export default function SimulationDetailPage() {
           />
         </svg>
       </button>
-      <span className="text-base font-semibold text-foreground">
+      <span
+        className={`text-base font-semibold text-foreground ${
+          !isLoading && simulation ? "cursor-pointer hover:opacity-70 transition-opacity" : ""
+        }`}
+        onClick={!isLoading && simulation ? handleOpenEditName : undefined}
+        title={!isLoading && simulation ? "Click to edit name" : undefined}
+      >
         {isLoading ? "Loading..." : simulation?.name || "Simulation"}
       </span>
     </div>
   );
 
+  const isAgentUnverified = selectedAgent?.verified === false;
+  const verify = useVerifyConnection();
+
+  const handleVerifyAgent = async () => {
+    if (!selectedAgent) return;
+    const success = await verify.verifySavedAgent(selectedAgent.uuid);
+    if (success) {
+      setSelectedAgent({ ...selectedAgent, verified: true });
+      toast.success("Agent connection verified successfully");
+    }
+  };
+
   // Launch button for header actions
   const headerActions =
     !isLoading && !error && simulation && isConfigured ? (
-      <div className="relative mr-2" ref={launchDropdownRef}>
+      <div className="flex items-center gap-2 mr-2">
+        {isAgentUnverified && (
+          <div className="relative">
+            <button
+              onClick={handleVerifyAgent}
+              disabled={verify.isVerifying}
+              className="h-8 px-4 rounded-md text-sm font-medium bg-yellow-500 text-black hover:bg-yellow-400 transition-colors cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              {verify.isVerifying ? (
+                <>
+                  <SpinnerIcon className="w-4 h-4 animate-spin" />
+                  <span>Verifying...</span>
+                </>
+              ) : (
+                <>
+                  <CheckCircleIcon className="w-4 h-4" />
+                  <span>Verify</span>
+                </>
+              )}
+            </button>
+            <VerifyErrorPopover
+              error={verify.verifyError}
+              sampleResponse={verify.verifySampleResponse}
+              onDismiss={verify.dismiss}
+            />
+          </div>
+        )}
+        <div className="relative group" ref={launchDropdownRef}>
         <button
-          onClick={() => setLaunchDropdownOpen(!launchDropdownOpen)}
-          disabled={isLaunching}
+          onClick={() => !isAgentUnverified && setLaunchDropdownOpen(!launchDropdownOpen)}
+          disabled={isLaunching || isAgentUnverified}
           className="h-8 px-4 rounded-md text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
         >
           {isLaunching ? (
             <>
-              <svg
-                className="w-4 h-4 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
+              <SpinnerIcon className="w-4 h-4 animate-spin" />
               <span>Launching...</span>
             </>
           ) : (
@@ -604,9 +702,15 @@ export default function SimulationDetailPage() {
           )}
         </button>
 
+        {isAgentUnverified && (
+          <div className="absolute right-0 top-full mt-1 w-56 px-3 py-2 bg-foreground text-background text-xs rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-[60]">
+            Agent must be verified before launching a simulation
+          </div>
+        )}
+
         {/* Dropdown Menu */}
         {launchDropdownOpen && (
-          <div className="absolute right-0 top-full mt-2 bg-background border border-border rounded-xl shadow-xl z-50 overflow-hidden min-w-[180px]">
+          <div className="absolute right-0 top-full mt-2 bg-background border border-border rounded-xl shadow-xl z-50 min-w-[180px]">
             <button
               onClick={() => handleLaunch("text")}
               disabled={isLaunching}
@@ -627,28 +731,36 @@ export default function SimulationDetailPage() {
               </svg>
               Text Simulation
             </button>
-            <button
-              onClick={() => handleLaunch("voice")}
-              disabled={isLaunching}
-              className="w-full px-4 py-3 text-left text-sm text-foreground hover:bg-muted transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={1.5}
+            <div className="relative group/voice">
+              <button
+                onClick={() => handleLaunch("voice")}
+                disabled={isLaunching || selectedAgent?.type === "connection"}
+                className="w-full px-4 py-3 text-left text-sm text-foreground hover:bg-muted transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-3 rounded-b-xl"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"
-                />
-              </svg>
-              Voice Simulation
-            </button>
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"
+                  />
+                </svg>
+                Voice Simulation
+              </button>
+              {selectedAgent?.type === "connection" && (
+                <div className="absolute left-0 top-full mt-1 w-64 px-3 py-2 bg-foreground text-background text-xs rounded-lg shadow-lg opacity-0 group-hover/voice:opacity-100 pointer-events-none transition-opacity z-[60]">
+                  Agent connections don&apos;t support voice simulations yet
+                </div>
+              )}
+            </div>
           </div>
         )}
+        </div>
       </div>
     ) : null;
 
@@ -665,25 +777,7 @@ export default function SimulationDetailPage() {
         {/* Content */}
         {isLoading ? (
           <div className="flex items-center justify-center gap-3 py-8">
-            <svg
-              className="w-5 h-5 animate-spin"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+            <SpinnerIcon className="w-5 h-5 animate-spin" />
           </div>
         ) : error ? (
           <div className="border border-border rounded-xl p-8 md:p-12 flex flex-col items-center justify-center bg-muted/20">
@@ -757,6 +851,7 @@ export default function SimulationDetailPage() {
                 isConfigured={isConfigured}
                 isCreating={isCreating}
                 onCreateClick={handleCreate}
+                isAgentConnection={selectedAgent?.type === "connection"}
               />
             )}
 
@@ -767,6 +862,53 @@ export default function SimulationDetailPage() {
           </div>
         ) : null}
       </div>
+
+      {/* Edit Name Dialog */}
+      {isEditNameDialogOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          onClick={handleCancelEditName}
+        >
+          <div
+            className="bg-background border border-border rounded-xl p-5 md:p-6 max-w-md w-full shadow-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4">
+              Edit Simulation Name
+            </h2>
+            <input
+              type="text"
+              value={editedName}
+              onChange={(e) => setEditedName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSaveName();
+                } else if (e.key === "Escape") {
+                  handleCancelEditName();
+                }
+              }}
+              className="w-full h-9 md:h-10 px-3 rounded-md text-sm border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent mb-4"
+              maxLength={50}
+              autoFocus
+            />
+            <div className="flex items-center justify-end gap-2 md:gap-3">
+              <button
+                onClick={handleCancelEditName}
+                className="h-9 md:h-10 px-4 rounded-md text-xs md:text-sm font-medium border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveName}
+                disabled={!editedName.trim() || isSavingName}
+                className="h-9 md:h-10 px-4 rounded-md text-xs md:text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSavingName ? "Saving..." : "Save"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </AppLayout>
   );
 }

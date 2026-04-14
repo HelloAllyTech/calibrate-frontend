@@ -98,6 +98,7 @@ type TestRunnerDialogProps = {
     passed?: number | null,
     failed?: number | null,
   ) => void; // Called when run status changes (for coordinated polling)
+  runAllLinked?: boolean; // When true, omit test_uuids from run request (backend runs all linked tests)
 };
 
 export function TestRunnerDialog({
@@ -110,6 +111,7 @@ export function TestRunnerDialog({
   onRunCreated,
   initialRunStatus,
   onStatusUpdate,
+  runAllLinked,
 }: TestRunnerDialogProps) {
   // Hide the floating "Talk to Us" button when this dialog is open
   useHideFloatingButton(isOpen);
@@ -424,10 +426,8 @@ export function TestRunnerDialog({
     setTestResults((prev) => prev.map((r) => ({ ...r, status: "queued" })));
 
     try {
-      // Collect all test UUIDs
       const testUuids = initialResults.map((r) => r.test.uuid);
 
-      // Make batch API call
       const response = await fetch(
         `${backendUrl}/agent-tests/agent/${agentUuid}/run`,
         {
@@ -438,9 +438,7 @@ export function TestRunnerDialog({
             "ngrok-skip-browser-warning": "true",
             Authorization: `Bearer ${backendAccessToken}`,
           },
-          body: JSON.stringify({
-            test_uuids: testUuids,
-          }),
+          body: JSON.stringify(runAllLinked ? {} : { test_uuids: testUuids }),
         },
       );
 
@@ -808,7 +806,7 @@ export function TestRunnerDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-0 md:p-4">
-      <div className="bg-background rounded-none md:rounded-xl w-full max-w-7xl h-full md:h-[80vh] flex flex-col shadow-2xl">
+      <div className="bg-background rounded-none md:rounded-xl w-full max-w-7xl h-full md:h-[85vh] flex flex-col shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-b border-border">
           <h2 className="text-base md:text-lg font-semibold text-foreground">

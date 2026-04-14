@@ -7,6 +7,7 @@ import { signOut } from "next-auth/react";
 import { useAccessToken } from "@/hooks";
 import {
   AgentTabContent,
+  AgentConnectionTabContent,
   ToolsTabContent,
   DataExtractionTabContent,
   TestsTabContent,
@@ -16,7 +17,10 @@ import type {
   LLMModel,
   DataExtractionFieldData,
 } from "@/components/agent-tabs";
-import { useOpenRouterModels, findModelInProviders } from "@/hooks";
+import { useOpenRouterModels, findModelInProviders, useVerifyConnection } from "@/hooks";
+import { SpinnerIcon, CheckCircleIcon } from "@/components/icons";
+import { VerifyErrorPopover } from "@/components/VerifyErrorPopover";
+import type { ConnectionConfig } from "@/components/agent-tabs/AgentConnectionTabContent";
 import { useHideFloatingButton } from "@/components/AppLayout";
 
 export type AgentDetailHeaderState = {
@@ -26,6 +30,12 @@ export type AgentDetailHeaderState = {
   isSaving: boolean;
   onSave: () => void;
   onEditName: () => void;
+  isConnectionUnverified: boolean;
+  isVerifying: boolean;
+  onVerify: () => void;
+  verifyError: string | null;
+  verifySampleResponse: Record<string, unknown> | null;
+  onDismissVerifyError: () => void;
 };
 
 type AgentDetailProps = {
@@ -36,6 +46,7 @@ type AgentDetailProps = {
 type AgentData = {
   uuid: string;
   name: string;
+  type?: "agent" | "connection";
   config: Record<string, any>;
   created_at: string;
   updated_at: string;
@@ -49,15 +60,19 @@ type ToolData = {
   updated_at: string;
 };
 
-type TabType = "agent" | "tools" | "data-extraction" | "tests" | "settings";
+type TabType = "agent" | "connection" | "tools" | "data-extraction" | "tests" | "settings";
 
-const validTabs: TabType[] = [
-  "agent",
-  "tools",
-  "data-extraction",
-  "tests",
-  "settings",
-];
+const tabLabels: Record<TabType, string> = {
+  agent: "Agent",
+  connection: "Connection",
+  tools: "Tools",
+  "data-extraction": "Data extraction",
+  tests: "Tests",
+  settings: "Settings",
+};
+
+const calibrateTabs: TabType[] = ["agent", "tools", "data-extraction", "tests", "settings"];
+const connectionTabs: TabType[] = ["connection", "tests", "settings"];
 
 export function AgentDetail({
   agentUuid,
@@ -67,10 +82,10 @@ export function AgentDetail({
   const router = useRouter();
   const backendAccessToken = useAccessToken();
 
-  // Get initial tab from URL or default to "agent"
+  // Get initial tab from URL or default based on agent type
   const getInitialTab = (): TabType => {
     const tabParam = searchParams.get("tab");
-    if (tabParam && validTabs.includes(tabParam as TabType)) {
+    if (tabParam && [...calibrateTabs, ...connectionTabs].includes(tabParam as TabType)) {
       return tabParam as TabType;
     }
     return "agent";
@@ -139,6 +154,32 @@ export function AgentDetail({
     string | null
   >(null);
 
+  // Agent connection state
+  const [connectionUrl, setConnectionUrl] = useState("");
+  const [connectionHeaders, setConnectionHeaders] = useState<
+    Array<{ key: string; value: string }>
+  >([{ key: "", value: "" }]);
+  const [connectionConfig, setConnectionConfig] = useState<ConnectionConfig>(
+    {},
+  );
+
+  // Connection verification via shared hook
+  const verify = useVerifyConnection();
+
+  const isConnectionUnverified = agent?.type === "connection" && connectionConfig.connection_verified !== true;
+
+  const handleVerifyConnection = async () => {
+    const success = await verify.verifySavedAgent(agentUuid);
+    if (success) {
+      setConnectionConfig((prev) => ({
+        ...prev,
+        connection_verified: true,
+        connection_verified_at: new Date().toISOString(),
+        connection_verified_error: null,
+      }));
+    }
+  };
+
   // Fetch agent data
   useEffect(() => {
     const fetchAgent = async () => {
@@ -172,6 +213,32 @@ export function AgentDetail({
 
         const data: AgentData = await response.json();
         setAgent(data);
+
+        // Set initial tab based on agent type
+        const currentTab = searchParams.get("tab") as TabType | null;
+        if (data.type === "connection") {
+          if (!currentTab || !connectionTabs.includes(currentTab)) {
+            setActiveTab("connection");
+          }
+        } else {
+          if (!currentTab || !calibrateTabs.includes(currentTab)) {
+            setActiveTab("agent");
+          }
+        }
+
+        // Initialize connection fields if agent is a connection type
+        if (data.type === "connection" && data.config) {
+          setConnectionUrl(data.config.agent_url || "");
+          const headers = data.config.agent_headers || {};
+          const parsed = Object.entries(headers).map(([key, value]) => ({
+            key,
+            value: String(value),
+          }));
+          setConnectionHeaders(
+            parsed.length > 0 ? parsed : [{ key: "", value: "" }],
+          );
+          setConnectionConfig(data.config);
+        }
 
         // Initialize form fields from agent config if available
         if (data.config) {
@@ -358,6 +425,40 @@ export function AgentDetail({
           throw new Error("BACKEND_URL environment variable is not set");
         }
 
+        // Build config based on agent type
+        const configPayload =
+          agent.type === "connection"
+            ? {
+                ...connectionConfig,
+                agent_url: connectionUrl,
+                agent_headers: Object.fromEntries(
+                  connectionHeaders
+                    .filter((h) => h.key.trim())
+                    .map((h) => [h.key.trim(), h.value])
+                ),
+                settings: {
+                  agent_speaks_first: agentSpeaksFirst,
+                  max_assistant_turns: maxAssistantTurns,
+                },
+              }
+            : {
+                system_prompt: systemPrompt,
+                stt: { provider: sttProvider },
+                tts: { provider: ttsProvider },
+                llm: { model: selectedLLM?.id || "" },
+                settings: {
+                  agent_speaks_first: agentSpeaksFirst,
+                  max_assistant_turns: maxAssistantTurns,
+                },
+                system_tools: { end_call: endConversationEnabled },
+                data_extraction_fields: dataExtractionFields.map((field) => ({
+                  name: field.name,
+                  type: field.type,
+                  description: field.description,
+                  required: field.required,
+                })),
+              };
+
         const response = await fetch(`${backendUrl}/agents/${agentUuid}`, {
           method: "PUT",
           headers: {
@@ -368,23 +469,11 @@ export function AgentDetail({
           },
           body: JSON.stringify({
             name: agent.name,
-            config: {
-              system_prompt: systemPrompt,
-              stt: { provider: sttProvider },
-              tts: { provider: ttsProvider },
-              llm: { model: selectedLLM?.id || "" },
-              settings: {
-                agent_speaks_first: agentSpeaksFirst,
-                max_assistant_turns: maxAssistantTurns,
-              },
-              system_tools: { end_call: endConversationEnabled },
-              data_extraction_fields: dataExtractionFields.map((field) => ({
-                name: field.name,
-                type: field.type,
-                description: field.description,
-                required: field.required,
-              })),
-            },
+            config: configPayload,
+            ...(agent.type === "connection" && {
+              connection_verified:
+                connectionConfig.connection_verified === true,
+            }),
           }),
         });
 
@@ -395,6 +484,22 @@ export function AgentDetail({
 
         if (!response.ok) {
           throw new Error("Failed to save agent");
+        }
+
+        const savedAgent = await response.json();
+
+        if (agent.type === "connection" && savedAgent.config) {
+          setConnectionConfig((prev) => ({
+            ...prev,
+            connection_verified:
+              savedAgent.config.connection_verified ?? false,
+            connection_verified_at:
+              savedAgent.config.connection_verified_at ?? null,
+            connection_verified_error:
+              savedAgent.config.connection_verified_error ?? null,
+            benchmark_models_verified:
+              savedAgent.config.benchmark_models_verified ?? {},
+          }));
         }
 
         // Show success toast
@@ -418,6 +523,9 @@ export function AgentDetail({
     maxAssistantTurns,
     endConversationEnabled,
     dataExtractionFields,
+    connectionUrl,
+    connectionHeaders,
+    connectionConfig,
     backendAccessToken,
   ]);
 
@@ -504,9 +612,15 @@ export function AgentDetail({
         isSaving,
         onSave: () => saveRef.current(),
         onEditName: handleOpenEditNameDialog,
+        isConnectionUnverified,
+        isVerifying: verify.isVerifying,
+        onVerify: handleVerifyConnection,
+        verifyError: verify.verifyError,
+        verifySampleResponse: verify.verifySampleResponse,
+        onDismissVerifyError: verify.dismiss,
       });
     }
-  }, [agent?.name, activeTab, isLoading, isSaving, onHeaderStateChange]);
+  }, [agent?.name, activeTab, isLoading, isSaving, onHeaderStateChange, isConnectionUnverified, verify.isVerifying, verify.verifyError, verify.verifySampleResponse]);
 
   if (isLoading) {
     return (
@@ -589,34 +703,42 @@ export function AgentDetail({
               {agent.name}
             </h1>
           </div>
-          <button
-            onClick={() => saveRef.current()}
-            disabled={isSaving}
-            className="h-8 md:h-9 px-4 md:px-6 rounded-md text-xs md:text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2 flex-shrink-0"
-          >
-            {isSaving && (
-              <svg
-                className="w-4 h-4 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {isConnectionUnverified && (
+              <div className="relative">
+                <button
+                  onClick={handleVerifyConnection}
+                  disabled={verify.isVerifying}
+                  className="h-8 md:h-9 px-3 md:px-4 rounded-md text-xs md:text-sm font-medium bg-yellow-500 text-black hover:bg-yellow-400 transition-colors cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {verify.isVerifying ? (
+                    <>
+                      <SpinnerIcon className="w-4 h-4 animate-spin" />
+                      <span>Verifying...</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircleIcon className="w-4 h-4" />
+                      <span>Verify</span>
+                    </>
+                  )}
+                </button>
+                <VerifyErrorPopover
+                  error={verify.verifyError}
+                  sampleResponse={verify.verifySampleResponse}
+                  onDismiss={verify.dismiss}
+                />
+              </div>
             )}
-            {isSaving ? "" : "Save"}
-          </button>
+            <button
+              onClick={() => saveRef.current()}
+              disabled={isSaving}
+              className="h-8 md:h-9 px-4 md:px-6 rounded-md text-xs md:text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              {isSaving && <SpinnerIcon className="w-4 h-4 animate-spin" />}
+              {isSaving ? "" : "Save"}
+            </button>
+          </div>
         </div>
       )}
 
@@ -625,63 +747,42 @@ export function AgentDetail({
         className="hide-scrollbar flex items-center gap-3 md:gap-4 lg:gap-6 border-b border-border overflow-x-auto -mx-4 md:mx-0 px-4 md:px-0"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
-        <button
-          onClick={() => handleTabChange("agent")}
-          className={`pb-3 px-1 text-sm md:text-base font-medium transition-colors cursor-pointer whitespace-nowrap flex-shrink-0 ${
-            activeTab === "agent"
-              ? "text-foreground border-b-2 border-foreground"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          Agent
-        </button>
-        <button
-          onClick={() => handleTabChange("tools")}
-          className={`pb-3 px-1 text-sm md:text-base font-medium transition-colors cursor-pointer whitespace-nowrap flex-shrink-0 ${
-            activeTab === "tools"
-              ? "text-foreground border-b-2 border-foreground"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          Tools
-        </button>
-        <button
-          onClick={() => handleTabChange("data-extraction")}
-          className={`pb-3 px-1 text-sm md:text-base font-medium transition-colors cursor-pointer whitespace-nowrap flex-shrink-0 ${
-            activeTab === "data-extraction"
-              ? "text-foreground border-b-2 border-foreground"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          Data extraction
-        </button>
-        <button
-          onClick={() => handleTabChange("tests")}
-          className={`pb-3 px-1 text-sm md:text-base font-medium transition-colors cursor-pointer whitespace-nowrap flex-shrink-0 ${
-            activeTab === "tests"
-              ? "text-foreground border-b-2 border-foreground"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          Tests
-        </button>
-        {/* Settings tab button - commented out to hide the tab */}
-        <button
-          onClick={() => handleTabChange("settings")}
-          className={`pb-3 px-1 text-sm md:text-base font-medium transition-colors cursor-pointer whitespace-nowrap flex-shrink-0 ${
-            activeTab === "settings"
-              ? "text-foreground border-b-2 border-foreground"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          Settings
-        </button>
+        {(agent.type === "connection" ? connectionTabs : calibrateTabs).map(
+          (tab) => (
+            <button
+              key={tab}
+              onClick={() => handleTabChange(tab)}
+              className={`pb-3 px-1 text-sm md:text-base font-medium transition-colors cursor-pointer whitespace-nowrap flex-shrink-0 ${
+                activeTab === tab
+                  ? "text-foreground border-b-2 border-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {tabLabels[tab]}
+            </button>
+          ),
+        )}
       </div>
 
       {/* Tab Content Container */}
       <div className="pt-2 md:pt-4">
+        {/* Connection Tab Content */}
+        {activeTab === "connection" && agent.type === "connection" && (
+          <AgentConnectionTabContent
+            agentUuid={agentUuid}
+            agentUrl={connectionUrl}
+            onAgentUrlChange={setConnectionUrl}
+            agentHeaders={connectionHeaders}
+            onAgentHeadersChange={setConnectionHeaders}
+            connectionConfig={connectionConfig}
+            onConnectionConfigChange={setConnectionConfig}
+            onSave={() => saveRef.current()}
+            isSaving={isSaving}
+          />
+        )}
+
         {/* Agent Tab Content */}
-        {activeTab === "agent" && (
+        {activeTab === "agent" && agent.type !== "connection" && (
           <AgentTabContent
             systemPrompt={systemPrompt}
             setSystemPrompt={setSystemPrompt}
@@ -723,7 +824,26 @@ export function AgentDetail({
 
         {/* Tests Tab Content */}
         {activeTab === "tests" && (
-          <TestsTabContent agentUuid={agentUuid} agentName={agent.name} />
+          <TestsTabContent
+            agentUuid={agentUuid}
+            agentName={agent.name}
+            agentType={agent.type}
+            connectionVerified={
+              agent.type === "connection"
+                ? connectionConfig.connection_verified === true
+                : undefined
+            }
+            benchmarkModelsVerified={
+              agent.type === "connection"
+                ? connectionConfig.benchmark_models_verified
+                : undefined
+            }
+            benchmarkProvider={
+              agent.type === "connection"
+                ? connectionConfig.benchmark_provider
+                : undefined
+            }
+          />
         )}
 
         {/* Settings Tab Content - commented out to hide the tab */}
@@ -786,7 +906,7 @@ export function AgentDetail({
 
       {/* Success Toast */}
       {showSaveToast && (
-        <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom-4 fade-in duration-300">
+        <div className="fixed top-16 right-6 z-50 animate-in slide-in-from-top-4 fade-in duration-300">
           <div className="flex items-center gap-3 bg-foreground text-background px-4 py-3 rounded-lg shadow-lg">
             <svg
               className="w-5 h-5 text-green-400"
