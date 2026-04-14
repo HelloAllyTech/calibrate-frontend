@@ -153,9 +153,15 @@ export function TestsTabContent({
   const [testsSearchQuery, setTestsSearchQuery] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Selection state for bulk operations
+  const [selectedTestUuids, setSelectedTestUuids] = useState<Set<string>>(
+    new Set()
+  );
+
   // Delete confirmation state
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [testToDelete, setTestToDelete] = useState<TestData | null>(null);
+  const [testsToDeleteBulk, setTestsToDeleteBulk] = useState<string[]>([]);
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Test runner dialog state
@@ -553,9 +559,38 @@ export function TestsTabContent({
     }
   };
 
-  // Open delete confirmation dialog
+  const toggleTestSelection = (uuid: string) => {
+    setSelectedTestUuids((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(uuid)) {
+        newSet.delete(uuid);
+      } else {
+        newSet.add(uuid);
+      }
+      return newSet;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedTestUuids.size === filteredAgentTests.length) {
+      setSelectedTestUuids(new Set());
+    } else {
+      setSelectedTestUuids(new Set(filteredAgentTests.map((t) => t.uuid)));
+    }
+  };
+
+  // Open delete confirmation dialog (single)
   const openDeleteDialog = (test: TestData) => {
     setTestToDelete(test);
+    setTestsToDeleteBulk([]);
+    setDeleteDialogOpen(true);
+  };
+
+  // Open bulk delete confirmation dialog
+  const openBulkDeleteDialog = () => {
+    if (selectedTestUuids.size === 0) return;
+    setTestToDelete(null);
+    setTestsToDeleteBulk(Array.from(selectedTestUuids));
     setDeleteDialogOpen(true);
   };
 
@@ -564,6 +599,7 @@ export function TestsTabContent({
     if (!isDeleting) {
       setDeleteDialogOpen(false);
       setTestToDelete(null);
+      setTestsToDeleteBulk([]);
     }
   };
 
@@ -646,9 +682,15 @@ export function TestsTabContent({
     []
   );
 
-  // Remove test from agent
+  // Remove test(s) from agent
   const handleRemoveTest = async () => {
-    if (!testToDelete) return;
+    const uuidsToRemove =
+      testsToDeleteBulk.length > 0
+        ? testsToDeleteBulk
+        : testToDelete
+        ? [testToDelete.uuid]
+        : [];
+    if (uuidsToRemove.length === 0) return;
 
     try {
       setIsDeleting(true);
@@ -657,34 +699,37 @@ export function TestsTabContent({
         throw new Error("BACKEND_URL environment variable is not set");
       }
 
-      const response = await fetch(`${backendUrl}/agent-tests`, {
-        method: "DELETE",
-        headers: {
-          accept: "application/json",
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true",
-          Authorization: `Bearer ${backendAccessToken}`,
-        },
-        body: JSON.stringify({
-          agent_uuid: agentUuid,
-          test_uuid: testToDelete.uuid,
-        }),
-      });
+      for (const uuid of uuidsToRemove) {
+        const response = await fetch(`${backendUrl}/agent-tests`, {
+          method: "DELETE",
+          headers: {
+            accept: "application/json",
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${backendAccessToken}`,
+          },
+          body: JSON.stringify({
+            agent_uuid: agentUuid,
+            test_uuid: uuid,
+          }),
+        });
 
-      if (response.status === 401) {
-        await signOut({ callbackUrl: "/login" });
-        return;
+        if (response.status === 401) {
+          await signOut({ callbackUrl: "/login" });
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error("Failed to remove test from agent");
+        }
       }
 
-      if (!response.ok) {
-        throw new Error("Failed to remove test from agent");
-      }
-
-      // Remove the test from local state
-      setAgentTests((prev) => prev.filter((t) => t.uuid !== testToDelete.uuid));
+      const removedSet = new Set(uuidsToRemove);
+      setAgentTests((prev) => prev.filter((t) => !removedSet.has(t.uuid)));
+      setSelectedTestUuids(new Set());
       closeDeleteDialog();
     } catch (err) {
-      console.error("Error removing test from agent:", err);
+      console.error("Error removing test(s) from agent:", err);
     } finally {
       setIsDeleting(false);
     }
@@ -696,6 +741,14 @@ export function TestsTabContent({
       {agentTests.length > 0 && (
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div className="flex flex-wrap items-center gap-2 md:gap-3">
+            {selectedTestUuids.size > 0 && (
+              <button
+                onClick={openBulkDeleteDialog}
+                className="h-9 md:h-10 px-3 md:px-4 rounded-md text-sm md:text-base font-medium border border-red-500 text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+              >
+                Remove selected ({selectedTestUuids.size})
+              </button>
+            )}
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setShowTestDropdown(!showTestDropdown)}
@@ -813,7 +866,7 @@ export function TestsTabContent({
                           href={CONTACT_LINK}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="underline"
+                          className="font-bold"
                         >
                           Contact us
                         </a>{" "}
@@ -1087,6 +1140,10 @@ export function TestsTabContent({
               />
             </div>
 
+            <p className="text-sm text-muted-foreground mb-3 md:mb-4">
+              {agentTests.length} {agentTests.length === 1 ? "test" : "tests"}
+            </p>
+
             {/* Tests Table */}
             {filteredAgentTests.length === 0 ? (
               <div className="flex-1 border border-border rounded-xl p-6 md:p-12 flex flex-col items-center justify-center bg-muted/20">
@@ -1099,7 +1156,37 @@ export function TestsTabContent({
                 {/* Desktop Table */}
                 <div className="hidden md:block border border-border rounded-xl overflow-hidden">
                   {/* Table Header */}
-                  <div className="grid grid-cols-[2fr_1fr_auto_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
+                  <div className="grid grid-cols-[40px_2fr_1fr_auto_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
+                    <div className="flex items-center">
+                      <button
+                        type="button"
+                        onClick={toggleSelectAll}
+                        className={`w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors cursor-pointer ${
+                          selectedTestUuids.size === filteredAgentTests.length &&
+                          filteredAgentTests.length > 0
+                            ? "bg-foreground border-foreground"
+                            : "border-border hover:border-muted-foreground"
+                        }`}
+                        title="Select all"
+                      >
+                        {selectedTestUuids.size === filteredAgentTests.length &&
+                          filteredAgentTests.length > 0 && (
+                            <svg
+                              className="w-3 h-3 text-background"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={3}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M4.5 12.75l6 6 9-13.5"
+                              />
+                            </svg>
+                          )}
+                      </button>
+                    </div>
                     <div className="text-sm font-medium text-muted-foreground">
                       Name
                     </div>
@@ -1113,8 +1200,40 @@ export function TestsTabContent({
                   {filteredAgentTests.map((test) => (
                     <div
                       key={test.uuid}
-                      className="grid grid-cols-[2fr_1fr_auto_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors"
+                      className="grid grid-cols-[40px_2fr_1fr_auto_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors"
                     >
+                      {/* Checkbox */}
+                      <div className="flex items-center">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleTestSelection(test.uuid);
+                          }}
+                          className={`w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors cursor-pointer ${
+                            selectedTestUuids.has(test.uuid)
+                              ? "bg-foreground border-foreground"
+                              : "border-border hover:border-muted-foreground"
+                          }`}
+                          title="Select test"
+                        >
+                          {selectedTestUuids.has(test.uuid) && (
+                            <svg
+                              className="w-3 h-3 text-background"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={3}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M4.5 12.75l6 6 9-13.5"
+                              />
+                            </svg>
+                          )}
+                        </button>
+                      </div>
                       {/* Name Column with Edit Icon */}
                       <div className="flex items-center gap-2">
                         <svg
@@ -1230,15 +1349,46 @@ export function TestsTabContent({
                       className="border border-border rounded-xl p-3 bg-background"
                     >
                       <div className="flex items-start justify-between gap-2">
-                        <div className="flex-1 min-w-0">
-                          <h4 className="text-sm font-medium text-foreground truncate">
-                            {test.name}
-                          </h4>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {test.type === "tool_call"
-                              ? "Tool Call"
-                              : "Next Reply"}
-                          </p>
+                        <div className="flex items-start gap-2 flex-1 min-w-0">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleTestSelection(test.uuid);
+                            }}
+                            className={`w-5 h-5 mt-0.5 rounded border flex-shrink-0 flex items-center justify-center transition-colors cursor-pointer ${
+                              selectedTestUuids.has(test.uuid)
+                                ? "bg-foreground border-foreground"
+                                : "border-border hover:border-muted-foreground"
+                            }`}
+                            title="Select test"
+                          >
+                            {selectedTestUuids.has(test.uuid) && (
+                              <svg
+                                className="w-3 h-3 text-background"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={3}
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M4.5 12.75l6 6 9-13.5"
+                                />
+                              </svg>
+                            )}
+                          </button>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-sm font-medium text-foreground truncate">
+                              {test.name}
+                            </h4>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {test.type === "tool_call"
+                                ? "Tool Call"
+                                : "Next Reply"}
+                            </p>
+                          </div>
                         </div>
                         <div className="flex items-center gap-1 flex-shrink-0">
                           <button
@@ -1417,11 +1567,15 @@ export function TestsTabContent({
 
       {/* Delete Confirmation Dialog */}
       <DeleteConfirmationDialog
-        isOpen={deleteDialogOpen && !!testToDelete}
+        isOpen={deleteDialogOpen && (!!testToDelete || testsToDeleteBulk.length > 0)}
         onClose={closeDeleteDialog}
         onConfirm={handleRemoveTest}
-        title="Remove test"
-        message={`Are you sure you want to remove "${testToDelete?.name}" from this agent?`}
+        title={testsToDeleteBulk.length > 0 ? "Remove tests" : "Remove test"}
+        message={
+          testsToDeleteBulk.length > 0
+            ? `Are you sure you want to remove ${testsToDeleteBulk.length} test${testsToDeleteBulk.length > 1 ? "s" : ""} from this agent?`
+            : `Are you sure you want to remove "${testToDelete?.name}" from this agent?`
+        }
         confirmText="Remove"
         isDeleting={isDeleting}
       />

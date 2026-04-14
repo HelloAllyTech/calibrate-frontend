@@ -62,9 +62,15 @@ export default function LLMPage() {
     undefined
   );
 
+  // Selection state for bulk operations
+  const [selectedTestUuids, setSelectedTestUuids] = useState<Set<string>>(
+    new Set()
+  );
+
   // Delete confirmation state
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [testToDelete, setTestToDelete] = useState<TestData | null>(null);
+  const [testsToDeleteBulk, setTestsToDeleteBulk] = useState<string[]>([]);
   const [isTestDeleting, setIsTestDeleting] = useState(false);
 
   // Run test dialog state
@@ -124,9 +130,38 @@ export default function LLMPage() {
     fetchTests();
   }, [fetchTests]);
 
-  // Open delete confirmation dialog
+  const toggleTestSelection = (uuid: string) => {
+    setSelectedTestUuids((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(uuid)) {
+        newSet.delete(uuid);
+      } else {
+        newSet.add(uuid);
+      }
+      return newSet;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedTestUuids.size === filteredTests.length) {
+      setSelectedTestUuids(new Set());
+    } else {
+      setSelectedTestUuids(new Set(filteredTests.map((t) => t.uuid)));
+    }
+  };
+
+  // Open delete confirmation dialog (single)
   const openDeleteDialog = (test: TestData) => {
     setTestToDelete(test);
+    setTestsToDeleteBulk([]);
+    setDeleteDialogOpen(true);
+  };
+
+  // Open bulk delete confirmation dialog
+  const openBulkDeleteDialog = () => {
+    if (selectedTestUuids.size === 0) return;
+    setTestToDelete(null);
+    setTestsToDeleteBulk(Array.from(selectedTestUuids));
     setDeleteDialogOpen(true);
   };
 
@@ -135,12 +170,19 @@ export default function LLMPage() {
     if (!isTestDeleting) {
       setDeleteDialogOpen(false);
       setTestToDelete(null);
+      setTestsToDeleteBulk([]);
     }
   };
 
-  // Delete test from backend
+  // Delete test(s) from backend
   const deleteTest = async () => {
-    if (!testToDelete) return;
+    const uuidsToDelete =
+      testsToDeleteBulk.length > 0
+        ? testsToDeleteBulk
+        : testToDelete
+        ? [testToDelete.uuid]
+        : [];
+    if (uuidsToDelete.length === 0) return;
 
     try {
       setIsTestDeleting(true);
@@ -149,29 +191,32 @@ export default function LLMPage() {
         throw new Error("BACKEND_URL environment variable is not set");
       }
 
-      const response = await fetch(`${backendUrl}/tests/${testToDelete.uuid}`, {
-        method: "DELETE",
-        headers: {
-          accept: "application/json",
-          "ngrok-skip-browser-warning": "true",
-          Authorization: `Bearer ${backendAccessToken}`,
-        },
-      });
+      for (const uuid of uuidsToDelete) {
+        const response = await fetch(`${backendUrl}/tests/${uuid}`, {
+          method: "DELETE",
+          headers: {
+            accept: "application/json",
+            "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${backendAccessToken}`,
+          },
+        });
 
-      if (response.status === 401) {
-        await signOut({ callbackUrl: "/login" });
-        return;
+        if (response.status === 401) {
+          await signOut({ callbackUrl: "/login" });
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error("Failed to delete test");
+        }
       }
 
-      if (!response.ok) {
-        throw new Error("Failed to delete test");
-      }
-
-      // Remove the test from local state
-      setTests(tests.filter((test) => test.uuid !== testToDelete.uuid));
+      const deletedSet = new Set(uuidsToDelete);
+      setTests((prev) => prev.filter((t) => !deletedSet.has(t.uuid)));
+      setSelectedTestUuids(new Set());
       closeDeleteDialog();
     } catch (err) {
-      console.error("Error deleting test:", err);
+      console.error("Error deleting test(s):", err);
     } finally {
       setIsTestDeleting(false);
     }
@@ -469,6 +514,14 @@ export default function LLMPage() {
             </p>
           </div>
           <div className="flex items-center gap-2">
+            {selectedTestUuids.size > 0 && (
+              <button
+                onClick={openBulkDeleteDialog}
+                className="h-9 md:h-10 px-4 rounded-md text-sm md:text-base font-medium border border-red-500 text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer flex-shrink-0"
+              >
+                Delete selected ({selectedTestUuids.size})
+              </button>
+            )}
             <button
               onClick={() => setBulkUploadOpen(true)}
               className="h-9 md:h-10 px-4 rounded-md text-sm md:text-base font-medium border border-border bg-background text-foreground hover:bg-muted/50 transition-colors cursor-pointer flex-shrink-0"
@@ -512,6 +565,12 @@ export default function LLMPage() {
             className="w-full h-9 md:h-10 pl-10 pr-4 rounded-md text-sm md:text-base border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
           />
         </div>
+
+        {tests.length > 0 && (
+          <p className="text-sm text-muted-foreground">
+            {tests.length} {tests.length === 1 ? "test" : "tests"}
+          </p>
+        )}
 
         {/* Tests List / Loading / Error / Empty State */}
         {testsLoading ? (
@@ -582,7 +641,37 @@ export default function LLMPage() {
             {/* Desktop Table View */}
             <div className="hidden md:block border border-border rounded-xl overflow-hidden">
               {/* Table Header */}
-              <div className="grid grid-cols-[1fr_1fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
+              <div className="grid grid-cols-[40px_1fr_1fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
+                <div className="flex items-center">
+                  <button
+                    type="button"
+                    onClick={toggleSelectAll}
+                    className={`w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors cursor-pointer ${
+                      selectedTestUuids.size === filteredTests.length &&
+                      filteredTests.length > 0
+                        ? "bg-foreground border-foreground"
+                        : "border-border hover:border-muted-foreground"
+                    }`}
+                    title="Select all"
+                  >
+                    {selectedTestUuids.size === filteredTests.length &&
+                      filteredTests.length > 0 && (
+                        <svg
+                          className="w-3 h-3 text-background"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={3}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M4.5 12.75l6 6 9-13.5"
+                          />
+                        </svg>
+                      )}
+                  </button>
+                </div>
                 <div className="text-sm font-medium text-muted-foreground">
                   Name
                 </div>
@@ -596,8 +685,39 @@ export default function LLMPage() {
                 <div
                   key={test.uuid}
                   onClick={() => openEditTest(test.uuid)}
-                  className="grid grid-cols-[1fr_1fr_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer items-center"
+                  className="grid grid-cols-[40px_1fr_1fr_auto] gap-4 px-4 py-2 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer items-center"
                 >
+                  <div className="flex items-center">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleTestSelection(test.uuid);
+                      }}
+                      className={`w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors cursor-pointer ${
+                        selectedTestUuids.has(test.uuid)
+                          ? "bg-foreground border-foreground"
+                          : "border-border hover:border-muted-foreground"
+                      }`}
+                      title="Select test"
+                    >
+                      {selectedTestUuids.has(test.uuid) && (
+                        <svg
+                          className="w-3 h-3 text-background"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={3}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M4.5 12.75l6 6 9-13.5"
+                          />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
                   <div className="min-w-0">
                     <p className="text-sm font-medium text-foreground truncate">
                       {test.name}
@@ -673,15 +793,48 @@ export default function LLMPage() {
                     onClick={() => openEditTest(test.uuid)}
                     className="p-4 cursor-pointer"
                   >
-                    <div className="font-medium text-sm text-foreground mb-1">
-                      {test.name}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {test.type === "response"
-                        ? "Next Reply"
-                        : test.type === "tool_call"
-                        ? "Tool Call"
-                        : "—"}
+                    <div className="flex items-start gap-3">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleTestSelection(test.uuid);
+                        }}
+                        className={`w-5 h-5 mt-0.5 rounded border flex-shrink-0 flex items-center justify-center transition-colors cursor-pointer ${
+                          selectedTestUuids.has(test.uuid)
+                            ? "bg-foreground border-foreground"
+                            : "border-border hover:border-muted-foreground"
+                        }`}
+                        title="Select test"
+                      >
+                        {selectedTestUuids.has(test.uuid) && (
+                          <svg
+                            className="w-3 h-3 text-background"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={3}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M4.5 12.75l6 6 9-13.5"
+                            />
+                          </svg>
+                        )}
+                      </button>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm text-foreground mb-1">
+                          {test.name}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {test.type === "response"
+                            ? "Next Reply"
+                            : test.type === "tool_call"
+                            ? "Tool Call"
+                            : "—"}
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 px-4 pb-3 pt-0">
@@ -757,8 +910,12 @@ export default function LLMPage() {
         isOpen={deleteDialogOpen}
         onClose={closeDeleteDialog}
         onConfirm={deleteTest}
-        title="Delete test"
-        message={`Are you sure you want to delete "${testToDelete?.name}"?`}
+        title={testsToDeleteBulk.length > 0 ? "Delete tests" : "Delete test"}
+        message={
+          testsToDeleteBulk.length > 0
+            ? `Are you sure you want to delete ${testsToDeleteBulk.length} test${testsToDeleteBulk.length > 1 ? "s" : ""}?`
+            : `Are you sure you want to delete "${testToDelete?.name}"?`
+        }
         confirmText="Delete"
         isDeleting={isTestDeleting}
       />

@@ -161,6 +161,9 @@ export function ToolsTabContent({
             </div>
           ) : (
             <>
+              <p className="text-sm text-muted-foreground mb-3">
+                {agentTools.length} {agentTools.length === 1 ? "tool" : "tools"}
+              </p>
               {/* Desktop Table */}
               <div className="hidden md:block border border-border rounded-xl overflow-hidden">
                 {/* Table Header */}

@@ -110,7 +110,7 @@ export const TTSDatasetEditor = forwardRef<TTSDatasetEditorHandle, Props>(
         toast.error(
           <span>
             You can only add up to {LIMITS.TTS_MAX_ROWS} rows at a time.{" "}
-            <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="underline">
+            <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="font-bold">
               Contact us
             </a>{" "}
             to extend your limits.
@@ -197,7 +197,7 @@ export const TTSDatasetEditor = forwardRef<TTSDatasetEditorHandle, Props>(
           toast.error(
             <span>
               You can only upload up to {LIMITS.TTS_MAX_ROWS} rows.{" "}
-              <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="underline">
+              <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="font-bold">
                 Contact us
               </a>{" "}
               to extend your limits.
@@ -212,7 +212,7 @@ export const TTSDatasetEditor = forwardRef<TTSDatasetEditorHandle, Props>(
           toast.error(
             <span>
               Text must be {LIMITS.TTS_MAX_TEXT_LENGTH} characters or less.{" "}
-              <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="underline">
+              <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="font-bold">
                 Contact us
               </a>{" "}
               to extend your limits.

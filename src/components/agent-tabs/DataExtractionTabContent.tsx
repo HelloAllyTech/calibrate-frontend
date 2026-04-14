@@ -720,6 +720,9 @@ export function DataExtractionTabContent({
         ) : (
           /* Fields List */
           <>
+            <p className="text-sm text-muted-foreground mb-3">
+              {dataExtractionFields.length} {dataExtractionFields.length === 1 ? "field" : "fields"}
+            </p>
             {/* Desktop Table */}
             <div className="hidden md:block border border-border rounded-xl overflow-hidden">
               {/* Table Header */}

@@ -322,6 +322,9 @@ function TTSPageInner() {
               </div>
             ) : (
               <>
+                <p className="text-sm text-muted-foreground mb-3">
+                  {jobs.length} {jobs.length === 1 ? "evaluation" : "evaluations"}
+                </p>
                 {/* Mobile Sort Button */}
                 <div className="flex justify-end md:hidden mb-3">
                   <button
@@ -703,17 +706,21 @@ function TTSPageInner() {
                 </button>
               </div>
             ) : (
-              <div className="border border-border rounded-xl overflow-hidden">
-                {/* Table Header */}
-                <div className="hidden md:grid grid-cols-[2fr_80px_80px_1fr_40px] gap-4 px-4 py-2 border-b border-border bg-muted/30">
-                  <div className="text-sm font-medium text-muted-foreground">
-                    Name
-                  </div>
-                  <div className="text-sm font-medium text-muted-foreground">
-                    Items
-                  </div>
-                  <div className="text-sm font-medium text-muted-foreground">
-                    Evals
+              <>
+                <p className="text-sm text-muted-foreground mb-3">
+                  {datasets.length} {datasets.length === 1 ? "dataset" : "datasets"}
+                </p>
+                <div className="border border-border rounded-xl overflow-hidden">
+                  {/* Table Header */}
+                  <div className="hidden md:grid grid-cols-[2fr_80px_80px_1fr_40px] gap-4 px-4 py-2 border-b border-border bg-muted/30">
+                    <div className="text-sm font-medium text-muted-foreground">
+                      Name
+                    </div>
+                    <div className="text-sm font-medium text-muted-foreground">
+                      Items
+                    </div>
+                    <div className="text-sm font-medium text-muted-foreground">
+                      Evals
                   </div>
                   <div className="text-sm font-medium text-muted-foreground">
                     Updated
@@ -767,6 +774,7 @@ function TTSPageInner() {
                   </div>
                 ))}
               </div>
+              </>
             )}
           </>
         )}

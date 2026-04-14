@@ -313,6 +313,9 @@ export default function SimulationsPage() {
           </div>
         ) : (
           <>
+            <p className="text-sm text-muted-foreground mb-3">
+              {simulations.length} {simulations.length === 1 ? "simulation" : "simulations"}
+            </p>
             {/* Mobile Sort Button */}
             <div className="flex justify-end md:hidden mb-3">
               <button

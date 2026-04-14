@@ -541,6 +541,9 @@ export default function PersonasPage() {
           </div>
         ) : (
           <>
+            <p className="text-sm text-muted-foreground mb-3">
+              {personas.length} {personas.length === 1 ? "persona" : "personas"}
+            </p>
             {/* Desktop Table View */}
             <div className="hidden md:block border border-border rounded-xl overflow-hidden">
               {/* Table Header */}

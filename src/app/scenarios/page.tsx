@@ -486,6 +486,9 @@ export default function ScenariosPage() {
           </div>
         ) : (
           <>
+            <p className="text-sm text-muted-foreground mb-3">
+              {scenarios.length} {scenarios.length === 1 ? "scenario" : "scenarios"}
+            </p>
             {/* Desktop Table View */}
             <div className="hidden md:block border border-border rounded-xl overflow-hidden">
               {/* Table Header */}

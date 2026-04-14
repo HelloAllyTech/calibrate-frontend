@@ -240,7 +240,7 @@ Provider website links (external link icons) are shown only on the new evaluatio
      - When dialog closes, parent resumes polling for that run if still pending
   4. The "Running" badge with spinner is shown until the run completes
   5. Clicking on an in-progress run opens the dialog with the correct `taskId` for real-time polling
-- **Actions**: Add test (button in tests table header), Run all tests (header action button, max 20 tests — sends empty body so backend runs all linked tests), Run single test (row button — sends `test_uuids: [uuid]`), Compare models (benchmark — sends only `models`, no `test_uuids`)
+- **Actions**: Add test (button in tests table header), Run all tests (header action button, max 20 tests — sends empty body so backend runs all linked tests), Run single test (row button — sends `test_uuids: [uuid]`), Compare models (benchmark — sends only `models`, no `test_uuids`), Remove selected (bulk — checkbox selection with "Remove selected (N)" button, calls `DELETE /agent-tests` per test sequentially)
 - **Run all tests limit**: Maximum 20 tests at a time. Shows toast error with "Contact Us" link if exceeded
 - **Connection agent verification (header-level)**: When a connection agent is unverified, a yellow "Verify" button (`bg-yellow-500 text-black`) appears beside the Save button in the `AgentDetail` page header — visible on all tabs **except** the Connection tab (which has its own inline "Verify" / "Re-verify" button in the same yellow style). The header button is hidden via `headerState.activeTab !== "connection"`. Verification logic uses the shared `useVerifyConnection` hook (calls `verify.verifySavedAgent(agentUuid)`). On success, updates `connectionConfig.connection_verified` via functional setState. On failure, error details are shown via the shared `<VerifyErrorPopover>` component. On the Tests tab, "Run all tests" and "Compare models" buttons are disabled (`opacity-50 cursor-not-allowed`) with a hover tooltip ("Verify agent connection first") using Tailwind named groups (`group/runall`, `group/compare`) when the connection is unverified. Additionally, the "Compare models" button has a second disable condition: when `supports_benchmark` is off in the connection config, it is disabled even if the connection is verified, with a distinct tooltip ("You have turned off benchmarking models in connection settings — turn it on to enable this"). The unverified tooltip takes priority if both conditions are true. The `supportsBenchmark` prop is passed from `AgentDetail.tsx` → `TestsTabContent` and used to derive `isBenchmarkDisabled` (`agentType === "connection" && supportsBenchmark !== true`). **Important**: All verification is enforced *before* `TestRunnerDialog` opens — the dialog itself has no verification logic or props. It always runs tests immediately on open.
 - **API**: Fetches runs from `GET /agent-tests/agent/{uuid}/runs`
@@ -579,7 +579,7 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
   - Uses `papaparse` for robust CSV parsing (handles quoted fields containing JSON with commas/quotes)
   - **Data refresh**: The tests page uses a shared `fetchTests` function (wrapped in `useCallback`) for both initial load and post-upload refresh, with consistent 401 handling and loading/error states
 - **View all tests**
-- **Edit/delete tests**
+- **Edit/delete tests** (single or bulk — checkbox selection with "Delete selected (N)" button)
 - **Link tests to agents** for benchmarking
 
 ### 6. Personas Management (`/personas`)
@@ -1591,6 +1591,13 @@ List pages (Agents, Simulations, Personas, Scenarios, Tools, Tests, Metrics, STT
     <input className="w-full h-9 md:h-10 pl-10 pr-4 rounded-md text-sm md:text-base..." />
   </div>
 
+  {/* Total item count - shown above table when items exist */}
+  {items.length > 0 && (
+    <p className="text-sm text-muted-foreground">
+      {items.length} {items.length === 1 ? "item" : "items"}
+    </p>
+  )}
+
   {/* Content: Loading / Error / Empty / Desktop Table / Mobile Cards */}
   {isLoading ? (
     <LoadingState />
@@ -1636,6 +1643,7 @@ List pages (Agents, Simulations, Personas, Scenarios, Tools, Tests, Metrics, STT
   - Desktop (768px+): Traditional table layout with `hidden md:block`
   - Mobile (below 768px): Card-based layout with `md:hidden`, cards in `space-y-3`
   - For pages with simpler lists (e.g., Agents), mobile sort button appears separately above cards
+- **Item count above table**: Every list page and agent tab with a table shows the total item count as plain muted text (`text-sm text-muted-foreground`) right above the table. Uses the unfiltered total (e.g., `items.length`, not `filteredItems.length`) with proper singular/plural (e.g., "1 agent", "12 agents", "1 criterion", "3 criteria"). Applied to: Agents, Simulations, Personas, Scenarios, Tools, Tests, Metrics, STT evaluations, STT datasets, TTS evaluations, TTS datasets, and agent detail tabs (Tests, Tools, Evaluation criteria, Data extraction fields).
 - **Empty/Error states**: Responsive padding `p-8 md:p-12`, icon sizing `w-12 h-12 md:w-14 md:h-14`
 
 This responsive pattern applies to: Agents, Simulations, Personas, Scenarios, Tools, Tests (LLM Evaluation), Metrics, STT, and TTS list pages.
@@ -2905,6 +2913,26 @@ Responsive (in dialogs):
 </button>
 ```
 
+### Bulk Selection & Delete Pattern
+
+Tables that support bulk delete use a consistent pattern with checkbox selection. Currently applied to: **Tests** (`/tests`), **Agent Tests tab** (`TestsTabContent`), and **Data Extraction Fields** (`DataExtractionTabContent`).
+
+**State:**
+- `selectedUuids: Set<string>` — tracks selected items
+- `itemsToDeleteBulk: string[]` — populated when bulk delete dialog opens
+- Reuses existing single-delete state (`itemToDelete`) alongside bulk state
+
+**UI elements:**
+- **Select-all checkbox** in table header (40px column) — toggles all *filtered* items
+- **Per-row checkbox** (same 40px column) — uses `e.stopPropagation()` to prevent row click
+- **Mobile cards** — checkbox at top-left of card content area with `mt-0.5` alignment
+- **"Delete/Remove selected (N)" button** — appears in header only when `selectedUuids.size > 0`, styled `border border-red-500 text-red-500 hover:bg-red-500/10`
+- **DeleteConfirmationDialog** — dynamic title/message: "Delete 3 tests?" for bulk vs "Delete 'Test Name'?" for single
+
+**Delete handler:** Loops through selected UUIDs calling the single-delete API endpoint sequentially (no bulk API endpoint). On success, filters local state and clears selection.
+
+**Grid column change:** Adding the checkbox column changes the grid template (e.g., `grid-cols-[1fr_1fr_auto]` → `grid-cols-[40px_1fr_1fr_auto]`).
+
 ---
 
 ## Domain Concepts
@@ -3745,7 +3773,7 @@ type EvaluationResult = {
 
 ### Usage Limits and Toast Notifications
 
-The app enforces usage limits on certain features. When limits are exceeded, a toast notification is shown with an inline underlined "Contact us" hyperlink.
+The app enforces usage limits on certain features. When limits are exceeded, a toast notification is shown with an inline bold "Contact us" hyperlink (no underline).
 
 **Limits Configuration** (`@/constants/limits.ts`):
 
@@ -3779,7 +3807,7 @@ toast.error(
       href={CONTACT_LINK}
       target="_blank"
       rel="noopener noreferrer"
-      className="underline"
+      className="font-bold"
     >
       Contact us
     </a>{" "}

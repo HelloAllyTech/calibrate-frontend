@@ -183,7 +183,7 @@ export function TextToSpeechEvaluation({ evaluateRef, onEvaluatingChange, initia
         toast.error(
           <span>
             Text must be {LIMITS.TTS_MAX_TEXT_LENGTH} characters or less.{" "}
-            <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="underline">
+            <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="font-bold">
               Contact us
             </a>{" "}
             to extend your limits.

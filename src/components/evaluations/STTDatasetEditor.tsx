@@ -203,7 +203,7 @@ export const STTDatasetEditor = forwardRef<STTDatasetEditorHandle, Props>(
         toast.error(
           <span>
             You can only add up to {LIMITS.STT_MAX_ROWS} rows at a time.{" "}
-            <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="underline">
+            <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="font-bold">
               Contact us
             </a>{" "}
             to extend your limits.
@@ -251,7 +251,7 @@ export const STTDatasetEditor = forwardRef<STTDatasetEditorHandle, Props>(
         toast.error(
           <span>
             Audio file must be less than {LIMITS.STT_MAX_AUDIO_FILE_SIZE_MB} MB. This file is {sizeMB.toFixed(2)} MB.{" "}
-            <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="underline">Contact us</a> to extend your limits.
+            <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="font-bold">Contact us</a> to extend your limits.
           </span>,
         );
         return;
@@ -264,7 +264,7 @@ export const STTDatasetEditor = forwardRef<STTDatasetEditorHandle, Props>(
           toast.error(
             <span>
               Audio file must be less than {LIMITS.STT_MAX_AUDIO_DURATION_SECONDS} seconds. This file is {Math.round(duration)} seconds.{" "}
-              <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="underline">Contact us</a> to extend your limits.
+              <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="font-bold">Contact us</a> to extend your limits.
             </span>,
           );
           return;
@@ -397,7 +397,7 @@ export const STTDatasetEditor = forwardRef<STTDatasetEditorHandle, Props>(
           toast.error(
             <span>
               You can only upload up to {LIMITS.STT_MAX_ROWS} rows at a time.{" "}
-              <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="underline">Contact us</a> to extend your limits.
+              <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="font-bold">Contact us</a> to extend your limits.
             </span>,
           );
           return;

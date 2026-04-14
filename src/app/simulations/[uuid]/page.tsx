@@ -154,7 +154,7 @@ export default function SimulationDetailPage() {
             href={CONTACT_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline"
+            className="font-bold"
           >
             Contact us
           </a>{" "}
@@ -177,7 +177,7 @@ export default function SimulationDetailPage() {
             href={CONTACT_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline"
+            className="font-bold"
           >
             Contact us
           </a>{" "}

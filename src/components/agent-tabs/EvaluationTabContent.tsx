@@ -198,7 +198,11 @@ export function EvaluationTabContent({
           </div>
         ) : (
           /* Criteria List */
-          <div className="border border-border rounded-xl overflow-hidden">
+          <>
+            <p className="text-sm text-muted-foreground mb-3">
+              {evaluationCriteria.length} {evaluationCriteria.length === 1 ? "criterion" : "criteria"}
+            </p>
+            <div className="border border-border rounded-xl overflow-hidden">
             {/* Table Header */}
             <div className="grid grid-cols-[1fr_2fr_auto] gap-4 px-4 py-2 border-b border-border bg-muted/30">
               <div className="text-sm font-medium text-muted-foreground">
@@ -256,6 +260,7 @@ export function EvaluationTabContent({
               </div>
             ))}
           </div>
+          </>
         )}
       </div>
 

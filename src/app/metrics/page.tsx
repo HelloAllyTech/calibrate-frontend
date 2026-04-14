@@ -534,6 +534,9 @@ export default function MetricsPage() {
           </div>
         ) : (
           <>
+            <p className="text-sm text-muted-foreground mb-3">
+              {metrics.length} {metrics.length === 1 ? "metric" : "metrics"}
+            </p>
             {/* Desktop Table View */}
             <div className="hidden md:block border border-border rounded-xl overflow-hidden">
               {/* Table Header */}

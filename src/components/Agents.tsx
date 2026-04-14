@@ -321,6 +321,9 @@ export function Agents({ onNavigateToAgent }: AgentsProps) {
         </div>
       ) : (
         <>
+          <p className="text-sm text-muted-foreground mb-3">
+            {agents.length} {agents.length === 1 ? "agent" : "agents"}
+          </p>
           {/* Mobile Sort Button */}
           <div className="flex justify-end md:hidden mb-3">
             <button
