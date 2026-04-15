@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { useAccessToken } from "@/hooks";
+import { useAccessToken, useMaxRowsPerEval } from "@/hooks";
 import { toast } from "sonner";
 import { sttProviders, STTProvider } from "../agent-tabs/constants/providers";
 import { listDatasets, Dataset } from "@/lib/datasets";
@@ -73,6 +73,7 @@ export function SpeechToTextEvaluation({
   const backendAccessToken = useAccessToken();
   const [activeTab, setActiveTab] = useState<TabType>(initialDatasetId ? "settings" : "input");
   const editorRef = useRef<STTDatasetEditorHandle | null>(null);
+  const maxRowsPerEval = useMaxRowsPerEval();
   const [providersInvalid, setProvidersInvalid] = useState(false);
   const [selectedProviders, setSelectedProviders] = useState<Set<string>>(
     new Set(),
@@ -704,6 +705,7 @@ export function SpeechToTextEvaluation({
               <STTDatasetEditor
                 ref={editorRef}
                 accessToken={backendAccessToken}
+                maxRowsPerEval={maxRowsPerEval}
               />
             </div>
           )}

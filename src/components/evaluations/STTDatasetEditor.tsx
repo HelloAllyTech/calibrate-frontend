@@ -10,7 +10,7 @@ import {
 import { signOut } from "next-auth/react";
 import { toast } from "sonner";
 import JSZip from "jszip";
-import { LIMITS, CONTACT_LINK } from "@/constants/limits";
+import { LIMITS, showLimitToast } from "@/constants/limits";
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog";
 import type { DatasetItem } from "@/lib/datasets";
 
@@ -51,6 +51,8 @@ type Props = {
   datasetName?: string;
   onDatasetNameChange?: (name: string) => void;
   datasetNameInvalid?: boolean;
+  /** Dynamic max rows per eval from backend */
+  maxRowsPerEval?: number;
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -86,6 +88,7 @@ export const STTDatasetEditor = forwardRef<STTDatasetEditorHandle, Props>(
       datasetName = "",
       onDatasetNameChange,
       datasetNameInvalid = false,
+      maxRowsPerEval = LIMITS.DEFAULT_MAX_ROWS_PER_EVAL,
     },
     ref,
   ) {
@@ -199,16 +202,8 @@ export const STTDatasetEditor = forwardRef<STTDatasetEditorHandle, Props>(
     // ── Row management ────────────────────────────────────────────────────
 
     const addRow = () => {
-      if (newRows.length >= LIMITS.STT_MAX_ROWS) {
-        toast.error(
-          <span>
-            You can only add up to {LIMITS.STT_MAX_ROWS} rows at a time.{" "}
-            <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="font-bold">
-              Contact us
-            </a>{" "}
-            to extend your limits.
-          </span>,
-        );
+      if (newRows.length >= maxRowsPerEval) {
+        showLimitToast(`You can only add up to ${maxRowsPerEval} rows at a time.`);
         return;
       }
       const invalid = new Set<string>();
@@ -248,12 +243,7 @@ export const STTDatasetEditor = forwardRef<STTDatasetEditorHandle, Props>(
       // Validate size
       const sizeMB = file.size / (1024 * 1024);
       if (sizeMB > LIMITS.STT_MAX_AUDIO_FILE_SIZE_MB) {
-        toast.error(
-          <span>
-            Audio file must be less than {LIMITS.STT_MAX_AUDIO_FILE_SIZE_MB} MB. This file is {sizeMB.toFixed(2)} MB.{" "}
-            <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="font-bold">Contact us</a> to extend your limits.
-          </span>,
-        );
+        showLimitToast(`Audio file must be less than ${LIMITS.STT_MAX_AUDIO_FILE_SIZE_MB} MB. This file is ${sizeMB.toFixed(2)} MB.`);
         return;
       }
 
@@ -261,12 +251,7 @@ export const STTDatasetEditor = forwardRef<STTDatasetEditorHandle, Props>(
       try {
         const duration = await getAudioDuration(file);
         if (duration > LIMITS.STT_MAX_AUDIO_DURATION_SECONDS) {
-          toast.error(
-            <span>
-              Audio file must be less than {LIMITS.STT_MAX_AUDIO_DURATION_SECONDS} seconds. This file is {Math.round(duration)} seconds.{" "}
-              <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="font-bold">Contact us</a> to extend your limits.
-            </span>,
-          );
+          showLimitToast(`Audio file must be less than ${LIMITS.STT_MAX_AUDIO_DURATION_SECONDS} seconds. This file is ${Math.round(duration)} seconds.`);
           return;
         }
       } catch {
@@ -393,13 +378,8 @@ export const STTDatasetEditor = forwardRef<STTDatasetEditorHandle, Props>(
         }
 
         if (dataRows.length === 0) { toast.error("No valid data rows found in data.csv"); return; }
-        if (dataRows.length > LIMITS.STT_MAX_ROWS) {
-          toast.error(
-            <span>
-              You can only upload up to {LIMITS.STT_MAX_ROWS} rows at a time.{" "}
-              <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="font-bold">Contact us</a> to extend your limits.
-            </span>,
-          );
+        if (dataRows.length > maxRowsPerEval) {
+          showLimitToast(`You can only upload up to ${maxRowsPerEval} rows at a time.`);
           return;
         }
 

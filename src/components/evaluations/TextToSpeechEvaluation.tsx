@@ -3,10 +3,10 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { useAccessToken } from "@/hooks";
+import { useAccessToken, useMaxRowsPerEval } from "@/hooks";
 import { toast } from "sonner";
 import { ttsProviders, TTSProvider } from "../agent-tabs/constants/providers";
-import { LIMITS, CONTACT_LINK } from "@/constants/limits";
+import { LIMITS, showLimitToast } from "@/constants/limits";
 import { listDatasets, Dataset } from "@/lib/datasets";
 import { DatasetPicker } from "./DatasetPicker";
 import { TTSDatasetEditor, TTSDatasetEditorHandle } from "./TTSDatasetEditor";
@@ -93,6 +93,7 @@ export function TextToSpeechEvaluation({ evaluateRef, onEvaluatingChange, initia
   const [datasetNameInvalid, setDatasetNameInvalid] = useState(false);
 
   const editorRef = useRef<TTSDatasetEditorHandle | null>(null);
+  const maxRowsPerEval = useMaxRowsPerEval();
 
   useEffect(() => {
     if (!backendAccessToken) return;
@@ -180,15 +181,7 @@ export function TextToSpeechEvaluation({ evaluateRef, onEvaluatingChange, initia
         (r) => r.text.length > LIMITS.TTS_MAX_TEXT_LENGTH
       );
       if (longTextRow) {
-        toast.error(
-          <span>
-            Text must be {LIMITS.TTS_MAX_TEXT_LENGTH} characters or less.{" "}
-            <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="font-bold">
-              Contact us
-            </a>{" "}
-            to extend your limits.
-          </span>
-        );
+        showLimitToast(`Text must be ${LIMITS.TTS_MAX_TEXT_LENGTH} characters or less.`);
         setActiveTab("input");
         return;
       }
@@ -693,6 +686,7 @@ export function TextToSpeechEvaluation({ evaluateRef, onEvaluatingChange, initia
                 if (v.trim()) setDatasetNameInvalid(false);
               }}
               datasetNameInvalid={datasetNameInvalid}
+              maxRowsPerEval={maxRowsPerEval}
             />
           </div>
           )}

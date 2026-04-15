@@ -14,7 +14,7 @@ import {
   SimulationConfigTab,
   SimulationRunsTab,
 } from "@/components/simulation-tabs";
-import { LIMITS, CONTACT_LINK } from "@/constants/limits";
+import { LIMITS, showLimitToast } from "@/constants/limits";
 import { useSidebarState } from "@/lib/sidebar";
 
 type PersonaData = {
@@ -146,21 +146,7 @@ export default function SimulationDetailPage() {
   // Handle personas change with limit check
   const handlePersonasChange = (items: PickerItem[]) => {
     if (items.length > LIMITS.SIMULATION_MAX_PERSONAS) {
-      toast.error(
-        <span>
-          You can only select up to {LIMITS.SIMULATION_MAX_PERSONAS} personas at
-          a time.{" "}
-          <a
-            href={CONTACT_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-bold"
-          >
-            Contact us
-          </a>{" "}
-          to extend your limits.
-        </span>
-      );
+      showLimitToast(`You can only select up to ${LIMITS.SIMULATION_MAX_PERSONAS} personas at a time.`);
       return;
     }
     setSelectedPersonas(items);
@@ -169,21 +155,7 @@ export default function SimulationDetailPage() {
   // Handle scenarios change with limit check
   const handleScenariosChange = (items: PickerItem[]) => {
     if (items.length > LIMITS.SIMULATION_MAX_SCENARIOS) {
-      toast.error(
-        <span>
-          You can only select up to {LIMITS.SIMULATION_MAX_SCENARIOS} scenarios
-          at a time.{" "}
-          <a
-            href={CONTACT_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-bold"
-          >
-            Contact us
-          </a>{" "}
-          to extend your limits.
-        </span>
-      );
+      showLimitToast(`You can only select up to ${LIMITS.SIMULATION_MAX_SCENARIOS} scenarios at a time.`);
       return;
     }
     setSelectedScenarios(items);

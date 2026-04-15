@@ -240,8 +240,8 @@ Provider website links (external link icons) are shown only on the new evaluatio
      - When dialog closes, parent resumes polling for that run if still pending
   4. The "Running" badge with spinner is shown until the run completes
   5. Clicking on an in-progress run opens the dialog with the correct `taskId` for real-time polling
-- **Actions**: Add test (button in tests table header), Run all tests (header action button, max 20 tests — sends empty body so backend runs all linked tests), Run single test (row button — sends `test_uuids: [uuid]`), Compare models (benchmark — sends only `models`, no `test_uuids`), Remove selected (bulk — checkbox selection with "Remove selected (N)" button, calls `DELETE /agent-tests` per test sequentially)
-- **Run all tests limit**: Maximum 20 tests at a time. Shows toast error with "Contact Us" link if exceeded
+- **Actions**: Add test (button in tests table header), Run all tests (header action button, limit fetched from backend per user — sends empty body so backend runs all linked tests), Run single test (row button — sends `test_uuids: [uuid]`), Compare models (benchmark — sends only `models`, no `test_uuids`), Remove selected (bulk — checkbox selection with "Remove selected (N)" button, calls `DELETE /agent-tests` per test sequentially)
+- **Run all tests limit**: Dynamic per-user limit fetched from `GET /user-limits/me/max-rows-per-eval` (default 20). Shows limit toast via `showLimitToast()` if exceeded
 - **Connection agent verification (header-level)**: When a connection agent is unverified, a yellow "Verify" button (`bg-yellow-500 text-black`) appears beside the Save button in the `AgentDetail` page header — visible on all tabs **except** the Connection tab (which has its own inline "Verify" / "Re-verify" button in the same yellow style). The header button is hidden via `headerState.activeTab !== "connection"`. Verification logic uses the shared `useVerifyConnection` hook (calls `verify.verifySavedAgent(agentUuid)`). On success, updates `connectionConfig.connection_verified` via functional setState. On failure, error details are shown via the shared `<VerifyErrorPopover>` component. On the Tests tab, "Run all tests" and "Compare models" buttons are disabled (`opacity-50 cursor-not-allowed`) with a hover tooltip ("Verify agent connection first") using Tailwind named groups (`group/runall`, `group/compare`) when the connection is unverified. Additionally, the "Compare models" button has a second disable condition: when `supports_benchmark` is off in the connection config, it is disabled even if the connection is verified, with a distinct tooltip ("You have turned off benchmarking models in connection settings — turn it on to enable this"). The unverified tooltip takes priority if both conditions are true. The `supportsBenchmark` prop is passed from `AgentDetail.tsx` → `TestsTabContent` and used to derive `isBenchmarkDisabled` (`agentType === "connection" && supportsBenchmark !== true`). **Important**: All verification is enforced *before* `TestRunnerDialog` opens — the dialog itself has no verification logic or props. It always runs tests immediately on open.
 - **API**: Fetches runs from `GET /agent-tests/agent/{uuid}/runs`
 - **Run types**: `llm-unit-test` (has passed/failed counts) and `llm-benchmark` (results in model_results)
@@ -422,15 +422,15 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
 **Create Page (`/stt/new`):**
 
 - **Upload audio files** (.wav format, max 60 seconds each) with reference transcriptions
-- **Add multiple test samples** for batch evaluation (max 20 rows per evaluation)
+- **Add multiple test samples** for batch evaluation (max rows per evaluation fetched from backend via `useMaxRowsPerEval` hook)
 - **ZIP upload option**: Upload a ZIP file containing an `audios/` folder with .wav files and a `data.csv` mapping audio files to transcriptions
 - **Download sample ZIP**: Button to download a template ZIP with correct structure
 - **Select providers to evaluate** (compare multiple simultaneously)
 - **Choose language** (11 Indic languages: English, Hindi, Kannada, Bengali, Malayalam, Marathi, Odia, Punjabi, Tamil, Telugu, Gujarati) - provider list filters based on language support
 - **Run evaluation** - creates evaluation and redirects to detail page
-- **Row limit**: Maximum 20 rows per evaluation. Shows toast error with "Contact Us" link if exceeded
-- **Audio duration limit**: Each audio file must be under 60 seconds. Validated client-side using Web Audio API before upload. Shows toast error with "Contact Us" link if exceeded
-- **Audio file size limit**: Each audio file must be under 5 MB. Validated client-side before upload. Shows toast error with "Contact Us" link if exceeded
+- **Row limit**: Dynamic per-user limit fetched from `GET /user-limits/me/max-rows-per-eval` (default 20). Shows limit toast via `showLimitToast()` if exceeded
+- **Audio duration limit**: Each audio file must be under 60 seconds. Validated client-side using Web Audio API before upload. Shows limit toast via `showLimitToast()` if exceeded
+- **Audio file size limit**: Each audio file must be under 5 MB. Validated client-side before upload. Shows limit toast via `showLimitToast()` if exceeded
 
 **Detail Page (`/stt/[uuid]`):**
 
@@ -496,14 +496,14 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
 
 **Create Page (`/tts/new`):**
 
-- **Add text samples** to convert to speech (manual input OR CSV upload, max 20 rows)
+- **Add text samples** to convert to speech (manual input OR CSV upload, max rows fetched from backend per user)
 - **CSV upload option**: Upload a CSV file with a `text` column to bulk import samples
 - **Download sample CSV**: Button to download a template CSV with correct format
 - **Select language** (11 Indic languages: English, Hindi, Kannada, Bengali, Malayalam, Marathi, Odia, Punjabi, Tamil, Telugu, Gujarati) - provider list filters based on language support
 - **Select providers to compare**
 - **Run evaluation** - creates evaluation and redirects to detail page
-- **Row limit**: Maximum 20 rows per evaluation. Shows toast error with "Contact Us" link if exceeded
-- **Text length limit**: Each text input must be 200 characters or less. Validated on CSV upload and before evaluation. Shows toast error with "Contact Us" link if exceeded
+- **Row limit**: Dynamic per-user limit fetched from `GET /user-limits/me/max-rows-per-eval` (default 20). Shows limit toast via `showLimitToast()` if exceeded
+- **Text length limit**: Each text input must be 200 characters or less. Validated on CSV upload and before evaluation. Shows limit toast via `showLimitToast()` if exceeded
 
 **Detail Page (`/tts/[uuid]`):**
 
@@ -676,8 +676,8 @@ A reusable sidebar dialog for creating and editing tools. Contains all form logi
 
 **Selection Limits:**
 
-- **Personas**: Maximum 2 personas per simulation. Shows toast error with "Contact Us" link if exceeded
-- **Scenarios**: Maximum 5 scenarios per simulation. Shows toast error with "Contact Us" link if exceeded
+- **Personas**: Maximum 2 personas per simulation. Shows limit toast via `showLimitToast()` if exceeded
+- **Scenarios**: Maximum 5 scenarios per simulation. Shows limit toast via `showLimitToast()` if exceeded
 
 **Running Simulations:**
 
@@ -932,13 +932,14 @@ This enables:
 │   │   └── ui/                # Reusable UI components (Button, SearchInput, etc.)
 │   ├── constants/             # Static configuration data
 │   │   ├── inbuilt-tools.ts   # Built-in tool definitions
-│   │   ├── limits.ts          # Usage limits and contact link for upgrade requests
+│   │   ├── limits.tsx         # Usage limits, contact link, and showLimitToast helper
 │   │   ├── links.ts           # WHATSAPP_INVITE_URL, DISCORD_INVITE_URL - community invite links
 │   │   └── polling.ts         # POLLING_INTERVAL_MS (3000ms) - shared polling interval
 │   ├── hooks/                 # Custom React hooks
 │   │   ├── index.ts           # Re-exports all hooks
 │   │   ├── useCrudResource.ts # CRUD operations hook for resource pages
 │   │   ├── useAccessToken.ts  # Unified auth token hook (useAccessToken, useAuth)
+│   │   ├── useMaxRowsPerEval.ts # Fetches user-specific max rows per eval from backend API (module-level cached)
 │   │   └── useOpenRouterModels.ts # Fetches LLM models from OpenRouter API with 10-min cache
 │   ├── lib/                   # Utility libraries (api.ts, status.ts, etc.)
 │   ├── auth.ts               # NextAuth.js configuration
@@ -3773,57 +3774,59 @@ type EvaluationResult = {
 
 ### Usage Limits and Toast Notifications
 
-The app enforces usage limits on certain features. When limits are exceeded, a toast notification is shown with an inline bold "Contact us" hyperlink (no underline).
+The app enforces usage limits on certain features. There are two categories of limits:
 
-**Limits Configuration** (`@/constants/limits.ts`):
+1. **Dynamic (per-user) limits** — fetched from the backend via `GET /user-limits/me/max-rows-per-eval`. Returns `{ max_rows_per_eval: number }` with the user-specific override or server default.
+2. **Static limits** — hardcoded in `@/constants/limits.tsx` (audio duration, file size, text length, simulation caps).
+
+When limits are exceeded, use `showLimitToast(message)` from `@/constants/limits`. It renders: `<message> **Click here** to contact us.` — where "Click here" is a bold link to `CONTACT_LINK`.
 
 ```tsx
-import { LIMITS, CONTACT_LINK } from "@/constants/limits";
+import { showLimitToast } from "@/constants/limits";
 
-// Current limits:
-LIMITS.TTS_MAX_ROWS; // 20 - max rows for TTS CSV upload
+showLimitToast(`You can only add up to ${maxRowsPerEval} rows at a time.`);
+// Renders: "You can only add up to 20 rows at a time. **Click here** to contact us."
+```
+
+**Dynamic row limit — `useMaxRowsPerEval` hook** (`@/hooks/useMaxRowsPerEval.ts`):
+
+```tsx
+import { useMaxRowsPerEval } from "@/hooks";
+
+const maxRowsPerEval = useMaxRowsPerEval(); // number (never null)
+```
+
+- Initialises with `LIMITS.DEFAULT_MAX_ROWS_PER_EVAL` (20) and updates when the API responds. Falls back to the same default on API failure. Never returns `null`.
+- Uses a module-level cached promise so all hook instances share a single API request per access token. Cache is invalidated when the token changes and cleared on fetch errors (so the next mount retries).
+- The cached value persists for the lifetime of the browser tab — backend changes are picked up on page refresh.
+- Used by: `TTSDatasetEditor` (prop), `STTDatasetEditor` (prop), `TestsTabContent` (direct hook call).
+- Parent components (`TextToSpeechEvaluation`, `SpeechToTextEvaluation`, `datasets/[id]/page`) call the hook and pass `maxRowsPerEval` as a prop to the editor components.
+- Editor components also default the prop to `LIMITS.DEFAULT_MAX_ROWS_PER_EVAL` if not passed.
+
+**Static limits** (`@/constants/limits.tsx`):
+
+```tsx
+import { LIMITS, showLimitToast } from "@/constants/limits";
+
+// Static limits (still hardcoded):
 LIMITS.TTS_MAX_TEXT_LENGTH; // 200 - max characters per text input
-LIMITS.STT_MAX_ROWS; // 20 - max rows for STT ZIP upload
 LIMITS.STT_MAX_AUDIO_DURATION_SECONDS; // 60 - max audio file duration in seconds
 LIMITS.STT_MAX_AUDIO_FILE_SIZE_MB; // 5 - max audio file size in MB
 LIMITS.SIMULATION_MAX_PERSONAS; // 2 - max personas per simulation
 LIMITS.SIMULATION_MAX_SCENARIOS; // 5 - max scenarios per simulation
-LIMITS.TESTS_MAX_RUN_ALL; // 20 - max tests for "Run all tests"
+LIMITS.DEFAULT_MAX_ROWS_PER_EVAL; // 20 - fallback when per-user limit API fails
 
-CONTACT_LINK; // URL for contacting support to extend limits
-```
-
-**Toast Notifications** (using `sonner` library):
-
-```tsx
-import { toast } from "sonner";
-
-// Show error toast with inline hyperlink (NOT action button)
-toast.error(
-  <span>
-    You can only select up to {LIMITS.SIMULATION_MAX_PERSONAS} personas at a
-    time.{" "}
-    <a
-      href={CONTACT_LINK}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="font-bold"
-    >
-      Contact us
-    </a>{" "}
-    to extend your limits.
-  </span>
-);
+CONTACT_LINK; // URL for contacting support (used internally by showLimitToast)
 ```
 
 **Toaster Component**: Added to root layout (`src/app/layout.tsx`) with `richColors`, `position="top-right"`, and `closeButton` (all toasts show an X button for dismissal).
 
 **Features using limits:**
 
-- TTS evaluation: CSV upload and manual row addition
-- STT evaluation: ZIP upload, manual row addition, and audio file duration (60s max)
-- Simulations: Persona and scenario selection
-- Tests tab: "Run all tests" button
+- TTS evaluation: CSV upload and manual row addition (dynamic, via `maxRowsPerEval` prop)
+- STT evaluation: ZIP upload, manual row addition (dynamic, via `maxRowsPerEval` prop), and audio file duration/size (static)
+- Tests tab: "Run all tests" button (dynamic, via `useMaxRowsPerEval` hook directly)
+- Simulations: Persona and scenario selection (static, hardcoded)
 
 **Audio Duration Validation Pattern** (STT evaluation):
 
