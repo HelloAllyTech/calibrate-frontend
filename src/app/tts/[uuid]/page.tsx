@@ -339,7 +339,7 @@ export default function TTSEvaluationDetailPage() {
               {evaluationResult.status !== "done" && (
                 <StatusBadge status={evaluationResult.status} showSpinner />
               )}
-              {evaluationResult.status === "done" && backendAccessToken && (
+              {(evaluationResult.status === "done" || evaluationResult.status === "failed") && backendAccessToken && (
                 <ShareButton
                   entityType="tts"
                   entityId={taskId}

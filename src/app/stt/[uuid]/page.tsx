@@ -348,7 +348,7 @@ export default function STTEvaluationDetailPage() {
               {evaluationResult.status !== "done" && (
                 <StatusBadge status={evaluationResult.status} showSpinner />
               )}
-              {evaluationResult.status === "done" && backendAccessToken && (
+              {(evaluationResult.status === "done" || evaluationResult.status === "failed") && backendAccessToken && (
                 <ShareButton
                   entityType="stt"
                   entityId={taskId}
