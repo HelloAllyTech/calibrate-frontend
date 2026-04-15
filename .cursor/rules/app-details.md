@@ -932,14 +932,14 @@ This enables:
 │   │   └── ui/                # Reusable UI components (Button, SearchInput, etc.)
 │   ├── constants/             # Static configuration data
 │   │   ├── inbuilt-tools.ts   # Built-in tool definitions
-│   │   ├── limits.ts          # Usage limits and contact link for upgrade requests
+│   │   ├── limits.tsx         # Usage limits, contact link, and showLimitToast helper
 │   │   ├── links.ts           # WHATSAPP_INVITE_URL, DISCORD_INVITE_URL - community invite links
 │   │   └── polling.ts         # POLLING_INTERVAL_MS (3000ms) - shared polling interval
 │   ├── hooks/                 # Custom React hooks
 │   │   ├── index.ts           # Re-exports all hooks
 │   │   ├── useCrudResource.ts # CRUD operations hook for resource pages
 │   │   ├── useAccessToken.ts  # Unified auth token hook (useAccessToken, useAuth)
-│   │   ├── useMaxRowsPerEval.ts # Fetches user-specific max rows per eval from backend API
+│   │   ├── useMaxRowsPerEval.ts # Fetches user-specific max rows per eval from backend API (module-level cached)
 │   │   └── useOpenRouterModels.ts # Fetches LLM models from OpenRouter API with 10-min cache
 │   ├── lib/                   # Utility libraries (api.ts, status.ts, etc.)
 │   ├── auth.ts               # NextAuth.js configuration
@@ -3777,7 +3777,7 @@ type EvaluationResult = {
 The app enforces usage limits on certain features. There are two categories of limits:
 
 1. **Dynamic (per-user) limits** — fetched from the backend via `GET /user-limits/me/max-rows-per-eval`. Returns `{ max_rows_per_eval: number }` with the user-specific override or server default.
-2. **Static limits** — hardcoded in `@/constants/limits.ts` (audio duration, file size, text length, simulation caps).
+2. **Static limits** — hardcoded in `@/constants/limits.tsx` (audio duration, file size, text length, simulation caps).
 
 When limits are exceeded, use `showLimitToast(message)` from `@/constants/limits`. It renders: `<message> **Click here** to contact us.` — where "Click here" is a bold link to `CONTACT_LINK`.
 
@@ -3793,15 +3793,17 @@ showLimitToast(`You can only add up to ${maxRowsPerEval} rows at a time.`);
 ```tsx
 import { useMaxRowsPerEval } from "@/hooks";
 
-const maxRowsPerEval = useMaxRowsPerEval(); // number | null
+const maxRowsPerEval = useMaxRowsPerEval(); // number (never null)
 ```
 
-- Returns `null` while loading or if the API call fails (shows a toast error on failure).
-- Consumers must guard on `null` before allowing row-add, CSV/ZIP upload, or "Run all tests" actions. When `null`, show: `"Usage limits are still loading. Please try again in a moment."`
+- Initialises with `LIMITS.DEFAULT_MAX_ROWS_PER_EVAL` (20) and updates when the API responds. Falls back to the same default on API failure. Never returns `null`.
+- Uses a module-level cached promise so all hook instances share a single API request per access token. Cache is invalidated when the token changes and cleared on fetch errors (so the next mount retries).
+- The cached value persists for the lifetime of the browser tab — backend changes are picked up on page refresh.
 - Used by: `TTSDatasetEditor` (prop), `STTDatasetEditor` (prop), `TestsTabContent` (direct hook call).
 - Parent components (`TextToSpeechEvaluation`, `SpeechToTextEvaluation`, `datasets/[id]/page`) call the hook and pass `maxRowsPerEval` as a prop to the editor components.
+- Editor components also default the prop to `LIMITS.DEFAULT_MAX_ROWS_PER_EVAL` if not passed.
 
-**Static limits** (`@/constants/limits.ts`):
+**Static limits** (`@/constants/limits.tsx`):
 
 ```tsx
 import { LIMITS, showLimitToast } from "@/constants/limits";
@@ -3812,9 +3814,7 @@ LIMITS.STT_MAX_AUDIO_DURATION_SECONDS; // 60 - max audio file duration in second
 LIMITS.STT_MAX_AUDIO_FILE_SIZE_MB; // 5 - max audio file size in MB
 LIMITS.SIMULATION_MAX_PERSONAS; // 2 - max personas per simulation
 LIMITS.SIMULATION_MAX_SCENARIOS; // 5 - max scenarios per simulation
-
-// Legacy row limits (TTS_MAX_ROWS, STT_MAX_ROWS, TESTS_MAX_RUN_ALL) still exist
-// in the file but are NO LONGER used at runtime — replaced by useMaxRowsPerEval.
+LIMITS.DEFAULT_MAX_ROWS_PER_EVAL; // 20 - fallback when per-user limit API fails
 
 CONTACT_LINK; // URL for contacting support (used internally by showLimitToast)
 ```

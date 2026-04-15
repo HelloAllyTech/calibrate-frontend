@@ -41,8 +41,8 @@ type Props = {
   datasetName?: string;
   onDatasetNameChange?: (name: string) => void;
   datasetNameInvalid?: boolean;
-  /** Dynamic max rows per eval from backend; null means still loading or failed */
-  maxRowsPerEval?: number | null;
+  /** Dynamic max rows per eval from backend */
+  maxRowsPerEval?: number;
 };
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -57,7 +57,7 @@ export const TTSDatasetEditor = forwardRef<TTSDatasetEditorHandle, Props>(
       datasetName = "",
       onDatasetNameChange,
       datasetNameInvalid = false,
-      maxRowsPerEval,
+      maxRowsPerEval = LIMITS.DEFAULT_MAX_ROWS_PER_EVAL,
     },
     ref,
   ) {
@@ -109,10 +109,6 @@ export const TTSDatasetEditor = forwardRef<TTSDatasetEditorHandle, Props>(
     // ── Row management ─────────────────────────────────────────────────────
 
     const addRow = () => {
-      if (maxRowsPerEval == null) {
-        toast.error("Usage limits are still loading. Please try again in a moment.");
-        return;
-      }
       if (newRows.length >= maxRowsPerEval) {
         showLimitToast(`You can only add up to ${maxRowsPerEval} rows at a time.`);
         return;
@@ -191,10 +187,6 @@ export const TTSDatasetEditor = forwardRef<TTSDatasetEditorHandle, Props>(
           cols.push(current.trim());
           const text = cols[textIdx]?.trim();
           if (text) parsed.push({ id: Date.now().toString() + i, text });
-        }
-        if (maxRowsPerEval == null) {
-          toast.error("Usage limits are still loading. Please try again in a moment.");
-          return;
         }
         if (parsed.length > maxRowsPerEval) {
           showLimitToast(`You can only upload up to ${maxRowsPerEval} rows.`);

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { signOut } from "next-auth/react";
 import { useAccessToken, useMaxRowsPerEval } from "@/hooks";
-import { toast } from "sonner";
+
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
 import { TestRunnerDialog } from "@/components/TestRunnerDialog";
 import { BenchmarkDialog } from "@/components/BenchmarkDialog";
@@ -858,10 +858,6 @@ export function TestsTabContent({
               <button
                 onClick={() => {
                   if (isConnectionUnverified) return;
-                  if (maxRowsPerEval == null) {
-                    toast.error("Usage limits are still loading. Please try again in a moment.");
-                    return;
-                  }
                   if (agentTests.length > maxRowsPerEval) {
                     showLimitToast(`You can only run up to ${maxRowsPerEval} tests at a time.`);
                     return;

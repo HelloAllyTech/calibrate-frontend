@@ -51,8 +51,8 @@ type Props = {
   datasetName?: string;
   onDatasetNameChange?: (name: string) => void;
   datasetNameInvalid?: boolean;
-  /** Dynamic max rows per eval from backend; null means still loading or failed */
-  maxRowsPerEval?: number | null;
+  /** Dynamic max rows per eval from backend */
+  maxRowsPerEval?: number;
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -88,7 +88,7 @@ export const STTDatasetEditor = forwardRef<STTDatasetEditorHandle, Props>(
       datasetName = "",
       onDatasetNameChange,
       datasetNameInvalid = false,
-      maxRowsPerEval,
+      maxRowsPerEval = LIMITS.DEFAULT_MAX_ROWS_PER_EVAL,
     },
     ref,
   ) {
@@ -202,10 +202,6 @@ export const STTDatasetEditor = forwardRef<STTDatasetEditorHandle, Props>(
     // ── Row management ────────────────────────────────────────────────────
 
     const addRow = () => {
-      if (maxRowsPerEval == null) {
-        toast.error("Usage limits are still loading. Please try again in a moment.");
-        return;
-      }
       if (newRows.length >= maxRowsPerEval) {
         showLimitToast(`You can only add up to ${maxRowsPerEval} rows at a time.`);
         return;
@@ -382,10 +378,6 @@ export const STTDatasetEditor = forwardRef<STTDatasetEditorHandle, Props>(
         }
 
         if (dataRows.length === 0) { toast.error("No valid data rows found in data.csv"); return; }
-        if (maxRowsPerEval == null) {
-          toast.error("Usage limits are still loading. Please try again in a moment.");
-          return;
-        }
         if (dataRows.length > maxRowsPerEval) {
           showLimitToast(`You can only upload up to ${maxRowsPerEval} rows at a time.`);
           return;
