@@ -4,13 +4,10 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   TestCaseOutput,
   TestCaseData,
-  StatusIcon,
   CloseIcon,
   SpinnerIcon,
-  TestDetailView,
-  EmptyStateView,
-  EvaluationCriteriaPanel,
 } from "./test-results/shared";
+import { BenchmarkOutputsPanel } from "./eval-details";
 import { StatusBadge } from "@/components/ui";
 import { LeaderboardBarChart, getColorMap } from "./charts/LeaderboardBarChart";
 import { DownloadableTable } from "./DownloadableTable";
@@ -331,16 +328,6 @@ export function BenchmarkResultsDialog({
     setSelectedTest({ model, testIndex });
   };
 
-  // Get the selected test result
-  const getSelectedTestResult = (): BenchmarkTestResult | null => {
-    if (!selectedTest) return null;
-    const modelResult = modelResults.find(
-      (m) => m.model === selectedTest.model,
-    );
-    if (!modelResult?.test_results) return null;
-    return modelResult.test_results[selectedTest.testIndex] || null;
-  };
-
   // Get providers to display (includes placeholders for models without results yet)
   const getProvidersToDisplay = (): ModelResult[] => {
     // When in progress and no results yet, show all models as placeholders
@@ -380,8 +367,6 @@ export function BenchmarkResultsDialog({
   const providersToDisplay = getProvidersToDisplay();
 
   if (!isOpen) return null;
-
-  const selectedTestResult = getSelectedTestResult();
 
   // Get color map for charts
   const modelNames = leaderboardSummary?.map((s) => s.model) || [];
@@ -594,268 +579,23 @@ export function BenchmarkResultsDialog({
 
             {/* Outputs Tab - Show during progress and when outputs tab is active when done */}
             {(!isDone || activeTab === "outputs") && (
-              <div className="flex h-full overflow-hidden">
-                {/* Left Panel - Provider Toggles with Tests */}
-                <div
-                  className={`w-full md:w-80 border-r border-border flex flex-col overflow-hidden ${
-                    selectedTest ? "hidden md:flex" : "flex"
-                  }`}
-                >
-                  <div className="flex-1 overflow-y-auto">
-                    {providersToDisplay.length > 0 ? (
-                      providersToDisplay.map((modelResult) => (
-                        <ProviderSection
-                          key={modelResult.model}
-                          modelResult={modelResult}
-                          isExpanded={expandedProviders.has(modelResult.model)}
-                          onToggle={() => toggleProvider(modelResult.model)}
-                          selectedTest={selectedTest}
-                          onTestSelect={(testIndex) =>
-                            handleTestSelect(modelResult.model, testIndex)
-                          }
-                          testNames={testNames}
-                        />
-                      ))
-                    ) : (
-                      <div className="p-4 text-sm text-muted-foreground">
-                        Waiting for results...
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Right Panel - Test Details */}
-                <div
-                  className={`flex-1 ${
-                    selectedTest ? "flex" : "hidden md:flex"
-                  } flex-col overflow-hidden`}
-                >
-                  {/* Mobile Back Button */}
-                  {selectedTest && (
-                    <div className="md:hidden px-4 md:px-6 py-3 md:py-4 border-b border-border flex-shrink-0">
-                      <button
-                        onClick={() => setSelectedTest(null)}
-                        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                          />
-                        </svg>
-                        Back to models
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Test Details Content */}
-                  <div className="flex-1 overflow-y-auto">
-                    {selectedTestResult ? (
-                      selectedTestResult.passed === null ? (
-                        <div className="flex items-center justify-center h-full">
-                          <div className="flex items-center gap-3">
-                            <SpinnerIcon className="w-5 h-5 animate-spin text-muted-foreground" />
-                            <p className="text-muted-foreground">
-                              Running test...
-                            </p>
-                          </div>
-                        </div>
-                      ) : (
-                        <TestDetailView
-                          history={selectedTestResult.test_case?.history || []}
-                          output={selectedTestResult.output}
-                          passed={selectedTestResult.passed}
-                          reasoning={selectedTestResult.reasoning}
-                        />
-                      )
-                    ) : (
-                      <EmptyStateView message="Select a test to view details" />
-                    )}
-                  </div>
-                </div>
-
-                {/* Right Panel - Evaluation Criteria */}
-                {selectedTestResult && selectedTestResult.passed !== null && (
-                  <div className="hidden md:flex w-72 border-l border-border flex-col overflow-hidden">
-                    <div className="flex-1 overflow-y-auto">
-                      <EvaluationCriteriaPanel
-                        evaluation={selectedTestResult.test_case?.evaluation}
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
+              <BenchmarkOutputsPanel
+                modelResults={providersToDisplay}
+                expandedModels={expandedProviders}
+                onToggleModel={toggleProvider}
+                onSetExpandedModels={setExpandedProviders}
+                selectedTest={selectedTest}
+                onSelectTest={handleTestSelect}
+                onClearSelection={() => setSelectedTest(null)}
+                testNames={testNames}
+                formatModelName={(n) => n.replace("__", "/")}
+                showControls={isDone}
+                showRunningSpinner={true}
+              />
             )}
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-// Provider Section Component with toggle and test list
-function ProviderSection({
-  modelResult,
-  isExpanded,
-  onToggle,
-  selectedTest,
-  onTestSelect,
-  testNames,
-}: {
-  modelResult: ModelResult;
-  isExpanded: boolean;
-  onToggle: () => void;
-  selectedTest: { model: string; testIndex: number } | null;
-  onTestSelect: (testIndex: number) => void;
-  testNames: string[];
-}) {
-  const isProcessing = modelResult.success === null;
-  const hasResults =
-    modelResult.test_results && modelResult.test_results.length > 0;
-
-  // Get test status counts
-  const passedCount = modelResult.passed ?? 0;
-  const failedCount = modelResult.failed ?? 0;
-  const totalTests = modelResult.total_tests ?? testNames.length;
-
-  return (
-    <div className="border-b border-border">
-      {/* Provider Header */}
-      <button
-        onClick={onToggle}
-        className="w-full px-4 py-3 flex items-center justify-between hover:bg-muted/50 transition-colors cursor-pointer"
-      >
-        <div className="flex items-center gap-2 min-w-0">
-          {/* Expand/Collapse Icon */}
-          <svg
-            className={`w-4 h-4 text-muted-foreground transition-transform flex-shrink-0 ${
-              isExpanded ? "rotate-90" : ""
-            }`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M8.25 4.5l7.5 7.5-7.5 7.5"
-            />
-          </svg>
-          {/* Provider Name */}
-          <span className="text-sm font-medium text-foreground truncate">
-            {modelResult.model.replace("__", "/")}
-          </span>
-          {/* Processing Spinner */}
-          {isProcessing && (
-            <SpinnerIcon className="w-3.5 h-3.5 animate-spin text-yellow-500 flex-shrink-0" />
-          )}
-        </div>
-        {/* Stats */}
-        {!isProcessing && modelResult.success !== null && (
-          <div className="flex items-center gap-2 text-xs flex-shrink-0">
-            {passedCount > 0 && (
-              <span className="text-green-500">{passedCount} passed</span>
-            )}
-            {failedCount > 0 && (
-              <span className="text-red-500">{failedCount} failed</span>
-            )}
-          </div>
-        )}
-      </button>
-
-      {/* Test List */}
-      {isExpanded && (
-        <div className="px-4 pb-3">
-          {(() => {
-            // Build a combined list of tests: results we have + placeholders for missing ones
-            const resultsCount = modelResult.test_results?.length ?? 0;
-            const expectedCount = Math.max(
-              totalTests,
-              testNames.length,
-              resultsCount,
-            );
-
-            if (expectedCount === 0 && !hasResults) {
-              return (
-                <div className="ml-4 px-3 py-2 text-sm text-muted-foreground">
-                  {isProcessing ? "Processing..." : "No test results"}
-                </div>
-              );
-            }
-
-            return (
-              <div className="space-y-1 ml-4">
-                {Array.from({ length: expectedCount }).map((_, index) => {
-                  const testResult = modelResult.test_results?.[index];
-                  const hasResult = !!testResult;
-                  const isSelected =
-                    selectedTest?.model === modelResult.model &&
-                    selectedTest?.testIndex === index;
-
-                  // Get test name from result, or fall back to testNames array
-                  const testName = hasResult
-                    ? testResult.name ||
-                      testResult.test_case?.name ||
-                      testNames[index] ||
-                      `Test ${index + 1}`
-                    : testNames[index] || `Test ${index + 1}`;
-
-                  // Determine status: if we have a result use it, otherwise show as running
-                  const status = hasResult
-                    ? testResult.passed === null
-                      ? "running"
-                      : testResult.passed
-                        ? "passed"
-                        : "failed"
-                    : "running";
-
-                  // Only make clickable if we have a result
-                  if (hasResult) {
-                    return (
-                      <button
-                        key={index}
-                        type="button"
-                        onClick={() => onTestSelect(index)}
-                        className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
-                          isSelected ? "bg-muted" : "hover:bg-muted/50"
-                        }`}
-                      >
-                        <StatusIcon
-                          status={status as "running" | "passed" | "failed"}
-                        />
-                        <span className="text-sm text-foreground truncate">
-                          {testName}
-                        </span>
-                      </button>
-                    );
-                  }
-
-                  // No result yet - show as running placeholder (not clickable)
-                  return (
-                    <div
-                      key={index}
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg"
-                    >
-                      <StatusIcon status="running" />
-                      <span className="text-sm text-foreground truncate">
-                        {testName}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })()}
-        </div>
-      )}
     </div>
   );
 }
