@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Tooltip } from "@/components/Tooltip";
 
 export type ShareableEntityType =
@@ -49,6 +49,15 @@ export function ShareButton({
     initialShareToken,
   );
   const [isLoading, setIsLoading] = useState(false);
+
+  // Sync internal state when parent props change (e.g. after polling fetches actual share state)
+  useEffect(() => {
+    setIsPublic(initialIsPublic);
+  }, [initialIsPublic]);
+
+  useEffect(() => {
+    setShareToken(initialShareToken);
+  }, [initialShareToken]);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

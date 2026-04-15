@@ -3,10 +3,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { sttProviders } from "@/components/agent-tabs/constants/providers";
-import { LeaderboardBarChart, getColorMap } from "@/components/charts/LeaderboardBarChart";
-import { DownloadableTable } from "@/components/DownloadableTable";
-import { Tooltip } from "@/components/Tooltip";
 import { PublicPageLayout, PublicNotFound, PublicLoading } from "@/components/PublicPageLayout";
+import {
+  ProviderSidebar,
+  ProviderMetricsCard,
+  STTResultsTable,
+  LeaderboardTab,
+  AboutMetricsTable,
+} from "@/components/eval-details";
 
 type ProviderMetrics = {
   wer: number;
@@ -42,7 +46,6 @@ type EvaluationResult = {
   task_id: string;
   status: "queued" | "in_progress" | "done" | "failed";
   language?: string;
-  dataset_name?: string | null;
   provider_results?: ProviderResult[];
   leaderboard_summary?: LeaderboardSummary[];
   error?: string | null;
@@ -52,6 +55,14 @@ const getProviderLabel = (value: string): string => {
   const provider = sttProviders.find((p) => p.value === value);
   return provider ? provider.label : value;
 };
+
+const STT_ABOUT_METRICS = [
+  { metric: "WER", description: "Word error rate measures the percentage of words that differ between reference and predicted transcription.", preference: "Lower is better", range: "0 - \u221E" },
+  { metric: "String Similarity", description: "Measures similarity between reference and predicted strings using string matching algorithms.", preference: "Higher is better", range: "0 - 1" },
+  { metric: "LLM Judge", description: "Evaluates semantic equivalence rather than exact string matching, returning Pass if the transcription is semantically correct.", preference: "Pass is better", range: "Pass / Fail" },
+  { metric: "TTFB", description: "Time to first byte measures the latency from when a request is sent until the first byte of the response is received.", preference: "Lower is better", range: "0 - \u221E" },
+  { metric: "Processing Time", description: "Total time taken to process the audio and generate the transcription.", preference: "Lower is better", range: "0 - \u221E" },
+];
 
 export default function PublicSTTPage() {
   const params = useParams();
@@ -63,9 +74,7 @@ export default function PublicSTTPage() {
   const [activeTab, setActiveTab] = useState<"leaderboard" | "outputs" | "about">("leaderboard");
   const [activeProviderTab, setActiveProviderTab] = useState<string | null>(null);
 
-  useEffect(() => {
-    document.title = "Speech-to-text evaluation | Calibrate";
-  }, []);
+  useEffect(() => { document.title = "Speech-to-text evaluation | Calibrate"; }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,7 +90,6 @@ export default function PublicSTTPage() {
         if (!res.ok) throw new Error("Failed to load results");
 
         const result: EvaluationResult = await res.json();
-
         if (result.status !== "done") { setNotFound(true); return; }
 
         setData(result);
@@ -100,21 +108,21 @@ export default function PublicSTTPage() {
   if (isLoading) return <PublicPageLayout><PublicLoading /></PublicPageLayout>;
   if (notFound || !data) return <PublicPageLayout><PublicNotFound /></PublicPageLayout>;
 
+  const selectedProvider = activeProviderTab ?? data.provider_results?.[0]?.provider;
+  const providerResult = data.provider_results?.find((p) => p.provider === selectedProvider);
+
   return (
     <PublicPageLayout
       title="Speech-to-text evaluation"
       pills={
-        <>
-          {data.language && (
-            <span className="px-2 py-0.5 text-[11px] font-medium bg-muted rounded-full text-muted-foreground capitalize">
-              {data.language}
-            </span>
-          )}
-        </>
+        data.language ? (
+          <span className="px-2 py-0.5 text-[11px] font-medium bg-muted rounded-full text-muted-foreground capitalize">
+            {data.language}
+          </span>
+        ) : undefined
       }
     >
       <div className="space-y-4 md:space-y-6">
-
         {data.provider_results && data.provider_results.length > 0 && (
           <>
             {/* Tab Nav */}
@@ -124,9 +132,7 @@ export default function PublicSTTPage() {
                   key={tab}
                   onClick={() => setActiveTab(tab)}
                   className={`px-4 py-2 text-[13px] font-medium border-b-2 transition-colors cursor-pointer capitalize ${
-                    activeTab === tab
-                      ? "border-foreground text-foreground"
-                      : "border-transparent text-muted-foreground hover:text-foreground"
+                    activeTab === tab ? "border-foreground text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {tab}
@@ -135,245 +141,68 @@ export default function PublicSTTPage() {
             </div>
 
             {/* Leaderboard Tab */}
-            {activeTab === "leaderboard" && (
-              <div className="space-y-4 md:space-y-6">
-                {data.leaderboard_summary && data.leaderboard_summary.length > 0 && (
-                  <>
-                    <DownloadableTable
-                      columns={[
-                        { key: "run", header: "Run", render: (v) => getProviderLabel(v) },
-                        { key: "wer", header: "WER" },
-                        {
-                          key: "string_similarity",
-                          header: "String Similarity",
-                          render: (v) => v != null ? parseFloat(v.toFixed(4)) : "-",
-                        },
-                        { key: "llm_judge_score", header: "LLM Judge Score" },
-                      ]}
-                      data={data.leaderboard_summary}
-                      filename="stt-evaluation-leaderboard"
-                    />
-                    {(() => {
-                      const names = data.leaderboard_summary!.map((s) => s.run);
-                      const colorMap = getColorMap(names);
-                      return (
-                        <div className="space-y-4 md:space-y-6">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                            <LeaderboardBarChart
-                              title="WER"
-                              data={data.leaderboard_summary!.map((s) => ({ label: getProviderLabel(s.run), value: s.wer, colorKey: s.run }))}
-                              colorMap={colorMap}
-                            />
-                            <LeaderboardBarChart
-                              title="String Similarity"
-                              data={data.leaderboard_summary!.map((s) => ({ label: getProviderLabel(s.run), value: s.string_similarity, colorKey: s.run }))}
-                              colorMap={colorMap}
-                              yDomain={[0, 1]}
-                            />
-                          </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                            <LeaderboardBarChart
-                              title="LLM Judge Score"
-                              data={data.leaderboard_summary!.map((s) => ({ label: getProviderLabel(s.run), value: s.llm_judge_score, colorKey: s.run }))}
-                              colorMap={colorMap}
-                              yDomain={[0, 1]}
-                            />
-                          </div>
-                        </div>
-                      );
-                    })()}
-                  </>
-                )}
-              </div>
+            {activeTab === "leaderboard" && data.leaderboard_summary && (
+              <LeaderboardTab
+                columns={[
+                  { key: "run", header: "Run", render: (v) => getProviderLabel(v) },
+                  { key: "wer", header: "WER" },
+                  { key: "string_similarity", header: "String Similarity", render: (v) => v != null ? parseFloat(v.toFixed(4)) : "-" },
+                  { key: "llm_judge_score", header: "LLM Judge Score" },
+                ]}
+                data={data.leaderboard_summary}
+                charts={[
+                  [{ title: "WER", dataKey: "wer" }, { title: "String Similarity", dataKey: "string_similarity", yDomain: [0, 1] }],
+                  [{ title: "LLM Judge Score", dataKey: "llm_judge_score", yDomain: [0, 1] }],
+                ]}
+                filename="stt-evaluation-leaderboard"
+                getLabel={getProviderLabel}
+              />
             )}
 
             {/* Outputs Tab */}
             {activeTab === "outputs" && (
               <div className="flex flex-col md:flex-row border border-border rounded-xl overflow-hidden" style={{ minHeight: 480 }}>
-                {/* Provider sidebar */}
-                <div className="md:w-64 border-b md:border-b-0 md:border-r border-border flex flex-col overflow-hidden bg-muted/10">
-                  <div className="overflow-x-auto md:overflow-x-visible md:overflow-y-auto md:flex-1 p-2">
-                    <div className="flex md:flex-col gap-1 min-w-max md:min-w-0">
-                      {data.provider_results!.map((pr) => {
-                        const isSelected = (activeProviderTab ?? data.provider_results![0]?.provider) === pr.provider;
-                        return (
-                          <div
-                            key={pr.provider}
-                            onClick={() => setActiveProviderTab(pr.provider)}
-                            className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors whitespace-nowrap ${isSelected ? "bg-muted" : "hover:bg-muted/50"}`}
-                          >
-                            {pr.success ? (
-                              <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
-                                <svg className="w-3 h-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
-                              </div>
-                            ) : (
-                              <div className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0">
-                                <svg className="w-3 h-3 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                              </div>
-                            )}
-                            <span className="text-sm text-foreground truncate">{getProviderLabel(pr.provider)}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
+                <ProviderSidebar
+                  items={data.provider_results.map((pr) => ({
+                    key: pr.provider,
+                    label: getProviderLabel(pr.provider),
+                    success: pr.success,
+                  }))}
+                  activeKey={selectedProvider ?? null}
+                  onSelect={setActiveProviderTab}
+                />
 
-                {/* Right panel */}
                 <div className="flex-1 overflow-y-auto p-4 md:p-6">
-                  {(() => {
-                    const selectedProvider = activeProviderTab ?? data.provider_results![0]?.provider;
-                    const pr = data.provider_results!.find((p) => p.provider === selectedProvider);
-                    if (!pr) return <p className="text-muted-foreground">Select a provider</p>;
-                    if (!pr.success) return (
+                  {!providerResult ? (
+                    <p className="text-muted-foreground">Select a provider</p>
+                  ) : !providerResult.success ? (
+                    <div className="flex items-center justify-center h-full min-h-[200px]">
                       <div className="border border-red-500/50 bg-red-500/10 rounded-lg p-4 max-w-md text-center">
                         <div className="text-red-500 text-[14px] font-medium">There was an error running this provider.</div>
                       </div>
-                    );
-                    return (
-                      <div className="space-y-4 md:space-y-6">
-                        {/* Overall Metrics */}
-                        {pr.metrics && (
-                          <div className="border rounded-xl p-4 bg-muted/10">
-                            <h3 className="text-[15px] font-semibold mb-4">Overall Metrics</h3>
-                            <div className="grid grid-cols-3 gap-4">
-                              {[
-                                { label: "WER", value: pr.metrics.wer != null ? parseFloat(pr.metrics.wer.toFixed(4)) : "-" },
-                                { label: "String Similarity", value: pr.metrics.string_similarity != null ? parseFloat(pr.metrics.string_similarity.toFixed(4)) : "-" },
-                                { label: "LLM Judge Score", value: pr.metrics.llm_judge_score ?? "-" },
-                              ].map(({ label, value }) => (
-                                <div key={label}>
-                                  <div className="text-[12px] text-muted-foreground mb-1">{label}</div>
-                                  <div className="text-base md:text-[18px] font-semibold text-foreground">{String(value)}</div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Results Table */}
-                        {pr.results && pr.results.length > 0 && (
-                          <div className="hidden md:block border rounded-xl overflow-hidden">
-                            <div className="overflow-x-auto">
-                              <table className="w-full table-fixed">
-                                <thead className="bg-muted/50 border-b border-border">
-                                  <tr>
-                                    <th className="w-12 px-4 py-3 text-left text-[12px] font-medium text-foreground">ID</th>
-                                    <th className="w-[28%] px-4 py-3 text-left text-[12px] font-medium text-foreground">Ground Truth</th>
-                                    <th className="w-[28%] px-4 py-3 text-left text-[12px] font-medium text-foreground">Prediction</th>
-                                    <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">WER</th>
-                                    <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">Similarity</th>
-                                    <th className="px-4 py-3 text-left text-[12px] font-medium text-foreground">LLM Judge</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {pr.results.map((row, i) => {
-                                    const isEmpty = !row.pred || row.pred.trim() === "";
-                                    const scoreStr = String(row.llm_judge_score || "").toLowerCase();
-                                    const passed = scoreStr === "true" || scoreStr === "1";
-                                    return (
-                                      <tr key={i} className={`border-b border-border last:border-b-0 ${isEmpty ? "bg-red-500/10" : ""}`}>
-                                        <td className="px-4 py-3 text-[13px] text-foreground">{i + 1}</td>
-                                        <td className="px-4 py-3 text-[13px] text-foreground break-words">{row.gt}</td>
-                                        <td className="px-4 py-3 text-[13px] break-words">
-                                          {isEmpty ? <span className="text-muted-foreground">No transcript generated</span> : <span className="text-foreground">{row.pred}</span>}
-                                        </td>
-                                        <td className="px-4 py-3 text-[13px] text-foreground">
-                                          {row.wer != null ? parseFloat(parseFloat(row.wer).toFixed(4)) : "-"}
-                                        </td>
-                                        <td className="px-4 py-3 text-[13px] text-foreground">
-                                          {row.string_similarity != null ? parseFloat(parseFloat(row.string_similarity).toFixed(4)) : "-"}
-                                        </td>
-                                        <td className="px-4 py-3">
-                                          <div className="flex items-center gap-1.5">
-                                            <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${passed ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400" : "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400"}`}>
-                                              {passed ? "Pass" : "Fail"}
-                                            </span>
-                                            {row.llm_judge_reasoning && (
-                                              <Tooltip content={row.llm_judge_reasoning}>
-                                                <button type="button" className="p-1 rounded-md hover:bg-muted transition-colors cursor-pointer" aria-label="View reasoning">
-                                                  <svg className="w-4 h-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                  </svg>
-                                                </button>
-                                              </Tooltip>
-                                            )}
-                                          </div>
-                                        </td>
-                                      </tr>
-                                    );
-                                  })}
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Mobile cards */}
-                        {pr.results && pr.results.length > 0 && (
-                          <div className="md:hidden space-y-3">
-                            {pr.results.map((row, i) => {
-                              const isEmpty = !row.pred || row.pred.trim() === "";
-                              const scoreStr = String(row.llm_judge_score || "").toLowerCase();
-                              const passed = scoreStr === "true" || scoreStr === "1";
-                              return (
-                                <div key={i} className={`border border-border rounded-xl p-4 space-y-3 ${isEmpty ? "bg-red-500/10" : ""}`}>
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-[12px] text-muted-foreground font-medium">#{i + 1}</span>
-                                    <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${passed ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400" : "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400"}`}>
-                                      {passed ? "Pass" : "Fail"}
-                                    </span>
-                                  </div>
-                                  <div>
-                                    <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Ground Truth</span>
-                                    <p className="text-[13px] text-foreground mt-0.5">{row.gt}</p>
-                                  </div>
-                                  <div>
-                                    <span className="text-[11px] text-muted-foreground uppercase tracking-wide">Prediction</span>
-                                    {isEmpty ? <p className="text-[13px] text-muted-foreground mt-0.5">No transcript generated</p> : <p className="text-[13px] text-foreground mt-0.5">{row.pred}</p>}
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })()}
+                    </div>
+                  ) : (
+                    <div className="space-y-4 md:space-y-6">
+                      {providerResult.metrics && (
+                        <ProviderMetricsCard
+                          metrics={[
+                            { label: "WER", value: providerResult.metrics.wer != null ? parseFloat(providerResult.metrics.wer.toFixed(4)) : "-" },
+                            { label: "String Similarity", value: providerResult.metrics.string_similarity != null ? parseFloat(providerResult.metrics.string_similarity.toFixed(4)) : "-" },
+                            { label: "LLM Judge Score", value: providerResult.metrics.llm_judge_score ?? "-" },
+                          ]}
+                        />
+                      )}
+                      {providerResult.results && providerResult.results.length > 0 && (
+                        <STTResultsTable results={providerResult.results} />
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
 
             {/* About Tab */}
-            {activeTab === "about" && (
-              <div className="border rounded-xl overflow-hidden">
-                <table className="w-full">
-                  <thead className="bg-muted/50 border-b border-border">
-                    <tr>
-                      {["Metric", "Description", "Preference", "Range"].map((h) => (
-                        <th key={h} className="px-4 py-3 text-left text-[13px] font-medium text-foreground">{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[
-                      { metric: "WER", description: "Word error rate measures the percentage of words that differ between reference and predicted transcription.", preference: "Lower is better", range: "0 - ∞" },
-                      { metric: "String Similarity", description: "Measures similarity between reference and predicted strings using string matching algorithms.", preference: "Higher is better", range: "0 - 1" },
-                      { metric: "LLM Judge", description: "Evaluates semantic equivalence rather than exact string matching, returning Pass if the transcription is semantically correct.", preference: "Pass is better", range: "Pass / Fail" },
-                      { metric: "TTFB", description: "Time to first byte measures the latency from when a request is sent until the first byte of the response is received.", preference: "Lower is better", range: "0 - ∞" },
-                      { metric: "Processing Time", description: "Total time taken to process the audio and generate the transcription.", preference: "Lower is better", range: "0 - ∞" },
-                    ].map((row) => (
-                      <tr key={row.metric} className="border-b border-border last:border-b-0">
-                        <td className="px-4 py-3 text-[13px] font-medium text-foreground">{row.metric}</td>
-                        <td className="px-4 py-3 text-[13px] text-foreground">{row.description}</td>
-                        <td className="px-4 py-3 text-[13px] text-foreground">{row.preference}</td>
-                        <td className="px-4 py-3 text-[13px] text-foreground">{row.range}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+            {activeTab === "about" && <AboutMetricsTable metrics={STT_ABOUT_METRICS} />}
           </>
         )}
       </div>
