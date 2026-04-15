@@ -506,7 +506,7 @@ export default function TTSEvaluationDetailPage() {
 
                   {/* Leaderboard Tab */}
                   {activeTab === "leaderboard" && (
-                    <div className="space-y-4 md:space-y-6 -mx-4 md:-mx-8 px-4 md:px-8 w-[calc(100vw-32px)] md:w-[calc(100vw-260px)] ml-[calc((32px-100vw)/2+50%)] md:ml-[calc((260px-100vw)/2+50%)] relative">
+                    <div className="space-y-4 md:space-y-6 -mx-4 md:-mx-8 px-4 md:px-8 w-[calc(100vw-32px)] md:w-[calc(100vw-56px)] ml-[calc((32px-100vw)/2+50%)] md:ml-[calc((56px-100vw)/2+50%)] relative">
                       {evaluationResult.leaderboard_summary &&
                         evaluationResult.leaderboard_summary.length > 0 && (
                           <>
