@@ -156,8 +156,6 @@ export function TestRunnerDialog({
     // Initialize state for viewing existing run
     setSelectedTestUuid(null);
     setCurrentTaskId(taskId);
-    setIsPublic(false);
-    setShareToken(null);
 
     const isInProgress =
       initialRunStatus === "pending" ||
