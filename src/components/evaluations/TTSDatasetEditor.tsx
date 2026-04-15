@@ -8,7 +8,7 @@ import {
   useImperativeHandle,
 } from "react";
 import { toast } from "sonner";
-import { LIMITS, CONTACT_LINK } from "@/constants/limits";
+import { LIMITS, showLimitToast } from "@/constants/limits";
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog";
 import type { DatasetItem } from "@/lib/datasets";
 
@@ -41,6 +41,8 @@ type Props = {
   datasetName?: string;
   onDatasetNameChange?: (name: string) => void;
   datasetNameInvalid?: boolean;
+  /** Dynamic max rows per eval from backend; null means still loading or failed */
+  maxRowsPerEval?: number | null;
 };
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -55,6 +57,7 @@ export const TTSDatasetEditor = forwardRef<TTSDatasetEditorHandle, Props>(
       datasetName = "",
       onDatasetNameChange,
       datasetNameInvalid = false,
+      maxRowsPerEval,
     },
     ref,
   ) {
@@ -106,16 +109,12 @@ export const TTSDatasetEditor = forwardRef<TTSDatasetEditorHandle, Props>(
     // ── Row management ─────────────────────────────────────────────────────
 
     const addRow = () => {
-      if (newRows.length >= LIMITS.TTS_MAX_ROWS) {
-        toast.error(
-          <span>
-            You can only add up to {LIMITS.TTS_MAX_ROWS} rows at a time.{" "}
-            <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="font-bold">
-              Contact us
-            </a>{" "}
-            to extend your limits.
-          </span>,
-        );
+      if (maxRowsPerEval == null) {
+        toast.error("Usage limits are still loading. Please try again in a moment.");
+        return;
+      }
+      if (newRows.length >= maxRowsPerEval) {
+        showLimitToast(`You can only add up to ${maxRowsPerEval} rows at a time.`);
         return;
       }
       const invalidIds = new Set<string>();
@@ -193,31 +192,19 @@ export const TTSDatasetEditor = forwardRef<TTSDatasetEditorHandle, Props>(
           const text = cols[textIdx]?.trim();
           if (text) parsed.push({ id: Date.now().toString() + i, text });
         }
-        if (parsed.length > LIMITS.TTS_MAX_ROWS) {
-          toast.error(
-            <span>
-              You can only upload up to {LIMITS.TTS_MAX_ROWS} rows.{" "}
-              <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="font-bold">
-                Contact us
-              </a>{" "}
-              to extend your limits.
-            </span>,
-          );
+        if (maxRowsPerEval == null) {
+          toast.error("Usage limits are still loading. Please try again in a moment.");
+          return;
+        }
+        if (parsed.length > maxRowsPerEval) {
+          showLimitToast(`You can only upload up to ${maxRowsPerEval} rows.`);
           return;
         }
         const longRow = parsed.find(
           (r) => r.text.length > LIMITS.TTS_MAX_TEXT_LENGTH,
         );
         if (longRow) {
-          toast.error(
-            <span>
-              Text must be {LIMITS.TTS_MAX_TEXT_LENGTH} characters or less.{" "}
-              <a href={CONTACT_LINK} target="_blank" rel="noopener noreferrer" className="font-bold">
-                Contact us
-              </a>{" "}
-              to extend your limits.
-            </span>,
-          );
+          showLimitToast(`Text must be ${LIMITS.TTS_MAX_TEXT_LENGTH} characters or less.`);
           return;
         }
         if (parsed.length > 0) {

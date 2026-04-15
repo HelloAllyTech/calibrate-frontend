@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { signOut } from "next-auth/react";
-import { useAccessToken } from "@/hooks";
+import { useAccessToken, useMaxRowsPerEval } from "@/hooks";
 import { toast } from "sonner";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
 import { TestRunnerDialog } from "@/components/TestRunnerDialog";
 import { BenchmarkDialog } from "@/components/BenchmarkDialog";
 import { BenchmarkResultsDialog } from "@/components/BenchmarkResultsDialog";
 import { POLLING_INTERVAL_MS } from "@/constants/polling";
-import { LIMITS, CONTACT_LINK } from "@/constants/limits";
+import { showLimitToast } from "@/constants/limits";
 
 type TestData = {
   uuid: string;
@@ -138,6 +138,7 @@ export function TestsTabContent({
   benchmarkProvider,
 }: TestsTabContentProps) {
   const backendAccessToken = useAccessToken();
+  const maxRowsPerEval = useMaxRowsPerEval();
   // Agent tests state (tests attached to the agent)
   const [agentTests, setAgentTests] = useState<TestData[]>([]);
   const [agentTestsLoading, setAgentTestsLoading] = useState(true);
@@ -857,22 +858,12 @@ export function TestsTabContent({
               <button
                 onClick={() => {
                   if (isConnectionUnverified) return;
-                  if (agentTests.length > LIMITS.TESTS_MAX_RUN_ALL) {
-                    toast.error(
-                      <span>
-                        You can only run up to {LIMITS.TESTS_MAX_RUN_ALL} tests at
-                        a time.{" "}
-                        <a
-                          href={CONTACT_LINK}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="font-bold"
-                        >
-                          Contact us
-                        </a>{" "}
-                        to extend your limits.
-                      </span>
-                    );
+                  if (maxRowsPerEval == null) {
+                    toast.error("Usage limits are still loading. Please try again in a moment.");
+                    return;
+                  }
+                  if (agentTests.length > maxRowsPerEval) {
+                    showLimitToast(`You can only run up to ${maxRowsPerEval} tests at a time.`);
                     return;
                   }
                   setTestsToRun(agentTests);

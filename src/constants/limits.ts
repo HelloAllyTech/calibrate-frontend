@@ -1,3 +1,6 @@
+import React from "react";
+import { toast } from "sonner";
+
 // Usage limits for various features
 // Contact the Calibrate team to extend these limits
 
@@ -24,3 +27,27 @@ export const LIMITS = {
 // Contact link for extending limits
 // TODO: Replace with actual contact link
 export const CONTACT_LINK = "https://forms.gle/3VmAyWdWaCKnTqTs8";
+
+/**
+ * Show a limit-exceeded error toast with an inline "Contact us" link.
+ */
+export function showLimitToast(message: string) {
+  toast.error(
+    React.createElement(
+      "span",
+      null,
+      `${message} `,
+      React.createElement(
+        "a",
+        {
+          href: CONTACT_LINK,
+          target: "_blank",
+          rel: "noopener noreferrer",
+          className: "font-bold",
+        },
+        "Click here",
+      ),
+      " to contact us to extend your limits.",
+    ),
+  );
+}

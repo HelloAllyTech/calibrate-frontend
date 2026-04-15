@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { useAccessToken } from "@/hooks";
+import { useAccessToken, useMaxRowsPerEval } from "@/hooks";
 import { AppLayout } from "@/components/AppLayout";
 import { useSidebarState } from "@/lib/sidebar";
 import {
@@ -37,6 +37,7 @@ export default function DatasetDetailPage() {
 
   const sttEditorRef = useRef<STTDatasetEditorHandle | null>(null);
   const ttsEditorRef = useRef<TTSDatasetEditorHandle | null>(null);
+  const maxRowsPerEval = useMaxRowsPerEval();
 
   useEffect(() => {
     if (dataset) {
@@ -221,6 +222,7 @@ export default function DatasetDetailPage() {
                 )}
                 onDeleteSavedItem={handleDeleteItem}
                 onHasPendingChangesChange={setHasPendingChanges}
+                maxRowsPerEval={maxRowsPerEval}
               />
             ) : (
               <TTSDatasetEditor
@@ -230,6 +232,7 @@ export default function DatasetDetailPage() {
                 )}
                 onDeleteSavedItem={handleDeleteItem}
                 onHasPendingChangesChange={setHasPendingChanges}
+                maxRowsPerEval={maxRowsPerEval}
               />
             )}
           </>
