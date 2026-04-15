@@ -57,7 +57,7 @@ export default function PublicTestRunPage() {
   const [notFound, setNotFound] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  useEffect(() => { document.title = "Test Run | Calibrate"; }, []);
+  useEffect(() => { document.title = "LLM unit test | Calibrate"; }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -95,7 +95,7 @@ export default function PublicTestRunPage() {
   const selected = selectedIndex !== null ? results[selectedIndex] : null;
 
   return (
-    <PublicPageLayout>
+    <PublicPageLayout title="LLM unit test">
       <div className="space-y-4 md:space-y-6">
         {/* Summary stats */}
         <div className="flex items-center gap-4">

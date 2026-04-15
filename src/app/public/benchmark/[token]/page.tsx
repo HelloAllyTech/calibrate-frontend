@@ -57,7 +57,7 @@ export default function PublicBenchmarkPage() {
   const [expandedModels, setExpandedModels] = useState<Set<string>>(new Set());
   const [selectedTest, setSelectedTest] = useState<{ model: string; testIndex: number } | null>(null);
 
-  useEffect(() => { document.title = "Benchmark | Calibrate"; }, []);
+  useEffect(() => { document.title = "LLM benchmark | Calibrate"; }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -107,7 +107,7 @@ export default function PublicBenchmarkPage() {
   const selectedTestResult = selectedModelResult?.test_results?.[selectedTest?.testIndex ?? -1] ?? null;
 
   return (
-    <PublicPageLayout>
+    <PublicPageLayout title="LLM benchmark">
       <div className="space-y-4 md:space-y-6">
         {/* Tab nav */}
         <div className="flex gap-2 border-b border-border">
@@ -132,11 +132,8 @@ export default function PublicBenchmarkPage() {
                 { key: "total", header: "Total" },
                 {
                   key: "pass_rate",
-                  header: "Pass Rate",
-                  render: (v) => {
-                    const pct = parseFloat(v) * 100;
-                    return `${pct.toFixed(1)}%`;
-                  },
+                  header: "Test pass rate (%)",
+                  render: (v) => `${parseFloat(v).toFixed(1)}%`,
                 },
               ]}
               data={data.leaderboard_summary}
@@ -154,7 +151,8 @@ export default function PublicBenchmarkPage() {
                     colorKey: s.model,
                   }))}
                   colorMap={colorMap}
-                  yDomain={[0, 1]}
+                  yDomain={[0, 100]}
+                  formatTooltip={(value) => `${value.toFixed(1)}%`}
                 />
               );
             })()}

@@ -390,7 +390,6 @@ export function TestRunnerDialog({
         result.status === "done"
       ) {
         setIsRunning(false);
-        setCurrentTaskId(null);
         if (pollingIntervalRef.current) {
           clearInterval(pollingIntervalRef.current);
           pollingIntervalRef.current = null;

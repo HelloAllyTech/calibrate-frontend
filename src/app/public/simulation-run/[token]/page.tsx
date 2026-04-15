@@ -91,7 +91,9 @@ export default function PublicSimulationRunPage() {
   const [activeMetricsTab, setActiveMetricsTab] = useState<"performance" | "latency">("performance");
   const [selectedSim, setSelectedSim] = useState<SimulationResult | null>(null);
 
-  useEffect(() => { document.title = "Simulation Run | Calibrate"; }, []);
+  useEffect(() => {
+    document.title = data?.name ? `Simulation | ${data.name} | Calibrate` : "Simulation Run | Calibrate";
+  }, [data?.name]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -152,7 +154,7 @@ export default function PublicSimulationRunPage() {
 
   return (
     <PublicPageLayout
-      title={data.name}
+      title={`Simulation | ${data.name}`}
       pills={
         <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium ${data.type === "voice" ? "bg-orange-100 text-orange-700 dark:bg-orange-500/20 dark:text-orange-400" : "bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-400"}`}>
           {data.type}
