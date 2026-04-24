@@ -1,0 +1,28 @@
+name: Deploy Frontend to Prod
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: Prod
+
+    steps:
+      - name: Deploy to calibrate-prod
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.CALIBRATE_PROD_HOST }}
+          username: ally
+          key: ${{ secrets.CALIBRATE_SSH_PRIVATE_KEY }}
+          proxy_host: ${{ secrets.METAL05_HOST }}
+          proxy_username: ally
+          proxy_key: ${{ secrets.CALIBRATE_SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            cd /opt/calibrate/calibrate-frontend
+            git pull origin main
+            npm ci
+            npm run build
+            pm2 restart calibrate-frontend --update-env
+            echo "✅ Frontend deployed to prod successfully"
